@@ -16,6 +16,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TouristSiteController;
+use App\Http\Controllers\VisaController;
 use App\Http\Controllers\WhatsAppController;
 use Illuminate\Support\Facades\Route;
 
@@ -74,9 +75,12 @@ Route::get('/tourist-sites', [TouristSiteController::class, 'index']);
 Route::post('/papers', [PaperController::class, 'create']);
 Route::get('/papers/con/{conference_id}', [PaperController::class, 'getPapersByConferenceId'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/papers/{paper_id}', [PaperController::class, 'getPaperById']);
-// في ملف api.php
+
+// speakers
 Route::post('/speakers', [SpeakerController::class, 'store'])->middleware('auth:sanctum');
-Route::put('/speakers', [SpeakerController::class, 'updateSpeaker'])->middleware('auth:sanctum');
+Route::put('/speakers/admin/{user_id}', [SpeakerController::class, 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
+Route::put('/speakers/user', [SpeakerController::class, 'updateOnlineParticipation'])->middleware('auth:sanctum');
+Route::post('/speakers/certi/{user_id}', [SpeakerController::class, 'updateCertificateFile'])->middleware(['auth:sanctum', 'admin']);
 
 
 
@@ -84,3 +88,6 @@ Route::put('/speakers', [SpeakerController::class, 'updateSpeaker'])->middleware
 Route::post('/not', [NotificationController::class, 'sendNotification']);
 Route::get('/not/{userId}', [NotificationController::class, 'getAllNotificationsByUserId'])->middleware('auth:sanctum');
 
+// visa
+Route::post('/visa', [VisaController::class, 'postVisaByUser'])->middleware('auth:sanctum');
+Route::post('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin'])->name('admin.updateVisa');

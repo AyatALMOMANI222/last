@@ -44,7 +44,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
-   
+    public function visa()
+    {
+        return $this->hasOne(Visa::class);
+    }
+    
+    
     protected $attributes = [
         'isAdmin' => false, 
     ];
