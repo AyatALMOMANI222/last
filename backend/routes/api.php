@@ -26,6 +26,8 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
 
 Route::post('/users', [UserController::class, 'store']);
+// فقط الادمن يعدل على ال status   للمتحدث id 
+Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->middleware(['auth:sanctum', 'admin']);
 
 // notification
 Route::post('/users/not/email/{id}', [AuthController::class, 'sendNotification'])->middleware('auth:sanctum');
