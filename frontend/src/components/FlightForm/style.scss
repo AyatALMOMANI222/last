@@ -1,0 +1,239 @@
+.main-flight-form {
+  margin: 0 auto;
+  border: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+  font-family: "Arial", sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  .flight-information-header {
+    background-color: rgb(241, 241, 241);
+    padding: 0px 20px;
+    height: 60px;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .form-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: calc(99vh - 159px);
+    overflow: overlay;
+    background-color: #fff;
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--scrollbar-track-color);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb-color);
+      border-radius: 50px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover-color);
+    }
+  }
+
+  .actions-section-container {
+    height: 64px;
+    background-color: rgb(235, 235, 235);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    padding: 0px 20px;
+    .cancel-btn {
+      width: 100%;
+      height: 40px;
+      background-color: #fff;
+      border: 1px solid #005eeb;
+      color: #3b3b3b;
+      border-radius: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: #005eeb;
+        color: #fff;
+      }
+      &:active {
+        background-color: #4f75ff;
+        color: #fff;
+      }
+      font-size: 14px;
+    }
+    .submit-btn {
+      width: 100%;
+      height: 40px;
+      background-color: #005eeb;
+      font-size: 14px;
+
+      border: 1px solid rgb(222, 222, 222);
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: #005eeb;
+        color: #fff;
+      }
+      &:active {
+        background-color: #4f75ff;
+        color: #fff;
+      }
+    }
+  }
+}
+.companion-form {
+  margin: 0 auto;
+  border: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+  font-family: "Arial", sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  .flight-information-header {
+    background-color: rgb(241, 241, 241);
+    padding: 0px 20px;
+    height: 60px;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .form-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: calc(99vh - 159px);
+    overflow: overlay;
+    background-color: #fff;
+
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--scrollbar-track-color);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb-color);
+      border-radius: 50px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover-color);
+    }
+  }
+
+  .actions-section-container {
+    height: 64px;
+    background-color: rgb(235, 235, 235);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    padding: 0px 20px;
+    .cancel-btn {
+      width: 100%;
+      height: 40px;
+      background-color: #fff;
+      border: 1px solid #005eeb;
+      color: #3b3b3b;
+      border-radius: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: #005eeb;
+        color: #fff;
+      }
+      &:active {
+        background-color: #4f75ff;
+        color: #fff;
+      }
+      font-size: 14px;
+    }
+    .submit-btn {
+      width: 100%;
+      height: 40px;
+      background-color: #005eeb;
+      font-size: 14px;
+
+      border: 1px solid rgb(222, 222, 222);
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: #005eeb;
+        color: #fff;
+      }
+      &:active {
+        background-color: #4f75ff;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.flight-form-page-container {
+  .flight-form-header-container {
+    margin: 20px;
+    height: 30px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid rgb(242, 239, 239);
+    background-color: #4f75ff;
+    .flight-actions {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      button {
+        padding: 0px 20px;
+        height: 35px;
+        background-color: #fff;
+        border: 1px solid #005eeb;
+        color: #3b3b3b;
+        border-radius: 5px;
+        cursor: pointer;
+        &:hover {
+          background-color: #005eeb;
+          color: #fff;
+        }
+        &:active {
+          background-color: #4f75ff;
+          color: #fff;
+        }
+        font-size: 15px;
+      }
+    }
+    .title-container {
+      font-size: 19px;
+      font-weight: 500;
+      color: #fff;
+    }
+  }
+  .view-flight-details {
+    width: 70%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+}

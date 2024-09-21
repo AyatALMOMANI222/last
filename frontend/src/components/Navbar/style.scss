@@ -1,0 +1,95 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  // background-color: #1f1f1f;
+  // color: #fff;
+  border-bottom: 1px solid rgb(240, 237, 237);
+  height: 70px;
+  .navbar-logo {
+    .logo {
+      font-size: 1.7rem;
+      color: #4f75ff;
+      font-family: "Poppins", sans-serif;
+    }
+  }
+
+  .navbar-links {
+    display: flex;
+    gap: 1.5rem;
+    .option-btn {
+      text-decoration: none;
+      color: rgb(0, 68, 255);
+      font-size: 1rem;
+      transition: color 0.3s ease;
+      cursor: pointer;
+
+      &:hover {
+        color: #3da9af;
+      }
+    }
+  }
+
+  .navbar-auth {
+    display: flex;
+    gap: 1rem;
+
+    .auth-btn {
+      text-decoration: none;
+      background-color: #e701cc;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #cd00b5;
+      }
+    }
+
+    .register-btn {
+      background-color: #4f75ff;
+
+      &:hover {
+        background-color: #0834d1;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 1rem;
+    align-items: start;
+    .navbar-links {
+      padding: 0;
+    }
+
+    .navbar-links {
+      margin-top: 1rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .navbar-auth .auth-btn {
+      text-decoration: none;
+      background-color: unset;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+      padding: 0;
+      &:hover {
+        background-color: #3da9af;
+      }
+    }
+    .navbar-auth {
+      margin-top: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+}

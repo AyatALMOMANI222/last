@@ -1,0 +1,24 @@
+.slider-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .slides-container {
+    display: flex;
+  }
+  
+  .slides {
+    display: flex;
+  }
+  
+  .slide {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  
+  img {
+    width: 100%;
+    height: auto;
+  }
+  

@@ -1,0 +1,8 @@
+.home-page-container {
+  width: 100%;
+  overflow: hidden;
+  height: 100vh;
+  overflow: overlay;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}

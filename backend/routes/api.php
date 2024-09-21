@@ -12,12 +12,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConferenceImageController;
 use App\Http\Controllers\ExhibitionImagesController;
+use App\Http\Controllers\FlightController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TouristSiteController;
 use App\Http\Controllers\VisaController;
 use App\Http\Controllers\WhatsAppController;
+use App\Models\Flight;
 use Illuminate\Support\Facades\Route;
 
 // Sanctum::routes();
@@ -91,3 +93,12 @@ Route::get('/not/{userId}', [NotificationController::class, 'getAllNotifications
 // visa
 Route::post('/visa', [VisaController::class, 'postVisaByUser'])->middleware('auth:sanctum');
 Route::post('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin'])->name('admin.updateVisa');
+
+
+// Flight
+Route::post('/flights', [FlightController::class, 'createFlight'])->middleware('auth:sanctum');
+Route::post('/admin/flights', [FlightController::class, 'postByAdmin'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/flight', [FlightController ::class , 'getFlightByUserId'])->middleware('auth:sanctum');
+Route::get('/companion-flight', [FlightController ::class , 'getFlightByUserIdForCompanion'])->middleware('auth:sanctum');
+Route::get('/user/pag/filter', [FlightController ::class , 'getAllFlightsPaginationAndFilter'])->middleware(['auth:sanctum', 'admin']);
+Route::put('/user/update-flight/{flight_id}', [FlightController ::class , 'updateFlightByUser'])->middleware('auth:sanctum');

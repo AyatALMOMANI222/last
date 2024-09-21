@@ -48,7 +48,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(Visa::class);
     }
-    
+    public function flight()
+    {
+        return $this->hasOne(Flight::class, 'user_id', 'id');
+    }
+
     
     protected $attributes = [
         'isAdmin' => false, 

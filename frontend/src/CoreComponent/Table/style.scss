@@ -1,0 +1,28 @@
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table th,
+  .table td {
+    border: 1px solid #ebecf2;
+    padding: 8px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #12131A;
+  }
+
+  .table th {
+    background-color: #ebecf280;
+    text-align: left;
+    height: 30px;
+    gap: 0px;
+    opacity: 0px;
+    color: #828699;
+  }
+}

@@ -1,0 +1,142 @@
+.conference-form-admin {
+  .header-conference-form {
+    background-color: rgb(241, 241, 241);
+    padding: 20px;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+  }
+
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    height: calc(100vh - 161px);
+
+    overflow: overlay;
+
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--scrollbar-track-color);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb-color);
+      border-radius: 50px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover-color);
+    }
+  }
+  .actions-section-container {
+    height: 64px;
+    background-color: rgb(235, 235, 235);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    padding: 0px 20px;
+    .cancel-btn {
+      width: 100%;
+      height: 40px;
+      background-color: #fff;
+      border: 1px solid #005eeb;
+      color: #3b3b3b;
+      border-radius: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: #005eeb;
+        color: #fff;
+      }
+      &:active {
+        background-color: #4f75ff;
+        color: #fff;
+      }
+      font-size: 14px;
+    }
+    .submit-btn {
+      width: 100%;
+      height: 40px;
+      background-color: #005eeb;
+      font-size: 14px;
+
+      border: 1px solid rgb(222, 222, 222);
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: #005eeb;
+        color: #fff;
+      }
+      &:active {
+        background-color: #4f75ff;
+        color: #fff;
+      }
+    }
+  }
+
+  .new-section {
+    border-bottom: 1px solid rgb(244, 244, 244);
+    border-top: 1px solid rgb(244, 244, 244);
+    padding: 10px 20px;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+  }
+
+  .add-topic-btn-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    .add-topic-btn {
+      border: none;
+      background-color: rgba(255, 251, 251, 0.4862745098);
+      font-size: 15px;
+      font-weight: 500;
+      height: 40px;
+      cursor: pointer;
+      color: #9109e0;
+    }
+  }
+
+  .topics-container {
+    .topic-input-container {
+      display: grid;
+      grid-template-columns: 24fr 1fr;
+      align-items: center;
+      width: 100%;
+      padding: 10px 0px;
+      grid-column-gap: 20px;
+      justify-content: center;
+
+      .delete-icon {
+        cursor: pointer;
+      }
+    }
+    .new-section {
+      border-bottom: 1px solid rgb(244, 244, 244);
+      border-top: 1px solid rgb(244, 244, 244);
+      padding: 10px 20px;
+      font-size: 12px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: 500;
+    }
+
+    .topic-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 30px;
+      text-align: left;
+      color: var(--element-color);
+      .star {
+        color: red;
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+    "travelerId": "",
+    "arrivalDate": "2024-09-25",
+    "departureDate": "2024-09-27",
+    "passportImage": {},
+    "departureAirport": "Departure Airport*",
+    "returnAirport": "Return Airpor",
+    "specificFlightTime": true,
+    "flightTime": "09:36",
+    "flightNumber": "3333333",
+    "otherRequests": "2222222222",
+    "seatNumber": "12",
+    "upgradeClass": true,
+    "ticketCount": 2
+  }
