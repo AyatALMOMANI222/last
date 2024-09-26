@@ -20,7 +20,7 @@ const LoginPage = () => {
   });
 
   const login = async () => {
-    const url = "/user/login";
+    const url = "http://127.0.0.1:8000/api/login";
     const userData = {
       email,
       password,
@@ -31,7 +31,9 @@ const LoginPage = () => {
       toast.success(response?.data?.message);
 
       if (response.data.message === "Login Successfully") {
-        // Navigate to the desired page on successful login
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -109,7 +111,7 @@ const LoginPage = () => {
             errorMsg={error.password}
             type="password"
           />
-          <Input
+          {/* <Input
             label={"Confirm Password"}
             placeholder={"Your password"}
             inputValue={confirmPassword}
@@ -117,7 +119,7 @@ const LoginPage = () => {
             required={true}
             errorMsg={error.confirmPassword}
             type="password"
-          />
+          /> */}
         </div>
         <div className="login-btn-container">
           <button className="login-btn" type="submit">

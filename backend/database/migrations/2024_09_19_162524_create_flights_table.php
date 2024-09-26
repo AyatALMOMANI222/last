@@ -33,7 +33,8 @@ class CreateFlightsTable extends Migration
             $table->integer('ticket_count');  // عدد التذاكر المطلوبة
             $table->text('additional_requests')->nullable();  // طلبات خاصة متعلقة برحلة الطيران (اختياري)
             $table->string('passenger_name')->nullable();  // اسم المسافر (اختياري)
-           
+            $table->boolean('is_deleted')->default(false);  // حالة الحذف المنطقي
+
            
             $table->timestamp('last_speaker_update_at')->nullable();  // تاريخ آخر تحديث قام به المستخدم
             $table->timestamp('last_admin_update_at')->nullable();  // تاريخ آخر تحديث قام به المستخدم
@@ -49,7 +50,6 @@ class CreateFlightsTable extends Migration
            
 
 
-            $table->boolean('is_deleted')->default(false);  // حالة الحذف المنطقي
             $table->boolean('is_free')->default(false);  // هل التذكرة مجانية أم لا
             $table->string('ticket_number')->nullable();  // رقم التذكرة
             $table->boolean('is_available_for_download')->default(false);  // هل التذكرة متاحة للتحميل

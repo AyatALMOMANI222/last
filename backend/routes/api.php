@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcceptedFlightController;
 use Laravel\Sanctum\Sanctum;
 
 use App\Http\Controllers\CommitteeMemberController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\ScientificPaperController;
 use App\Http\Controllers\ScientificTopicController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AvailableFlightController;
 use App\Http\Controllers\ConferenceImageController;
 use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
@@ -19,6 +21,7 @@ use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TouristSiteController;
 use App\Http\Controllers\VisaController;
 use App\Http\Controllers\WhatsAppController;
+use App\Models\AvailableFlight;
 use App\Models\Flight;
 use Illuminate\Support\Facades\Route;
 
@@ -97,8 +100,19 @@ Route::post('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaBy
 
 // Flight
 Route::post('/flights', [FlightController::class, 'createFlight'])->middleware('auth:sanctum');
-Route::post('/admin/flights', [FlightController::class, 'postByAdmin'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/flight', [FlightController ::class , 'getFlightByUserId'])->middleware('auth:sanctum');
 Route::get('/companion-flight', [FlightController ::class , 'getFlightByUserIdForCompanion'])->middleware('auth:sanctum');
 Route::get('/user/pag/filter', [FlightController ::class , 'getAllFlightsPaginationAndFilter'])->middleware(['auth:sanctum', 'admin']);
-Route::put('/user/update-flight/{flight_id}', [FlightController ::class , 'updateFlightByUser'])->middleware('auth:sanctum');
+
+Route::post('/user/update-flight/{flight_id}', [FlightController ::class , 'updateFlightByUser'])->middleware('auth:sanctum');
+Route::put('/admin/update-flight/{flight_id}', [FlightController ::class , 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
+Route::delete('/flights/{flight_id}', [FlightController::class, 'deleteFlightByUser'])->middleware('auth:sanctum');
+
+// AvailableFlight
+Route::post('/available-flights', [AvailableFlightController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/available-flights/{flight_id}', [AvailableFlightController::class, 'getAvailableFlightByFlightId'])->middleware('auth:sanctum');
+// accepted_flight
+Route::post('/accepted-flights', [AcceptedFlightController::class, 'store'])->middleware('auth:sanctum');
+Route::get('/accepted-flights/{flight_id}', [AcceptedFlightController::class, 'getAcceptedFlightByFlightId']);
+Route::post('/accepted-flights/{flight_id}', [AcceptedFlightController::class, 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/ticket/download/{id}', [AcceptedFlightController::class, 'downloadTicket']);

@@ -18,9 +18,10 @@ class CreateAvailableFlightsTable extends Migration
             $table->foreignId('flight_id')->constrained('flights', 'flight_id')->onDelete('cascade');  // معرّف الرحلة من جدول الرحلات (Foreign Key)
 
             $table->date('departure_date');  // تاريخ الرحلة
-            $table->time('departure_time');  // وقت الرحلة
-            $table->decimal('price', 8, 2);  // سعر التذكرة
             $table->boolean('is_free')->default(false);  // هل التذكرة مجانية
+            $table->time('departure_time');  // وقت الرحلة
+          
+            $table->decimal('price', 8, 2);  // سعر التذكرة
             $table->timestamps();  // تاريخ الإنشاء والتحديث
         });
     }

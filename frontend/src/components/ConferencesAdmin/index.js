@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import Input from "../../CoreComponent/Input"; // Assuming Input component from earlier
-import ImageUpload from "../../CoreComponent/ImageUpload"; // Assuming ImageUpload component
-import DateInput from "../../CoreComponent/Date"; // Assuming ImageUpload component
+import axios from "axios"; // استيراد axios
+import Input from "../../CoreComponent/Input";
+import ImageUpload from "../../CoreComponent/ImageUpload";
+import DateInput from "../../CoreComponent/Date";
 import "./style.scss";
 import Select from "../../CoreComponent/Select";
 import TextArea from "../../CoreComponent/TextArea";
@@ -21,24 +22,6 @@ const ConferencesAdmin = ({ setIsOpen }) => {
   const [brochure, setBrochure] = useState(null);
   const [scientificProgram, setScientificProgram] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = {
-      title,
-      description,
-      start_date: startDate,
-      end_date: endDate,
-      location,
-      status,
-      image,
-      first_announcement_pdf: firstAnnouncement,
-      second_announcement_pdf: secondAnnouncement,
-      conference_brochure_pdf: brochure,
-      conference_scientific_program_pdf: scientificProgram,
-      timestamps: new Date().toISOString(),
-    };
-    console.log("Form Data Submitted: ", formData);
-  };
   const [topics, setTopics] = useState([""]);
 
   // Handler to update topics array
@@ -58,6 +41,46 @@ const ConferencesAdmin = ({ setIsOpen }) => {
     const updatedTopics = topics.filter((_, i) => i !== index);
     setTopics(updatedTopics);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // إعداد البيانات للإرسال
+    const formData = {
+      title,
+      description,
+      start_date: startDate,
+      end_date: endDate,
+      location,
+      status,
+      image,
+      first_announcement_pdf: firstAnnouncement,
+      second_announcement_pdf: secondAnnouncement,
+      conference_brochure_pdf: brochure,
+      conference_scientific_program_pdf: scientificProgram,
+      topics,
+      timestamps: new Date().toISOString(),
+    };
+
+    const token = localStorage.getItem('token')
+
+    axios
+      .post("http://127.0.0.1:8000/api/con", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("Data submitted successfully: ", response.data);
+        console.log(token);
+        
+      })
+      .catch((error) => {
+        console.error("Error submitting data: ", error);
+      });
+  };
+
   return (
     <div className="conference-form-admin">
       <div className="header-conference-form">Add New Conference</div>
@@ -73,8 +96,8 @@ const ConferencesAdmin = ({ setIsOpen }) => {
         <TextArea
           label="Description"
           placeholder="Enter description"
-          inputValue={description}
-          setInputValue={setDescription}
+          value={description}
+          setValue={setDescription}
           type="text"
           required
         />
@@ -146,8 +169,8 @@ const ConferencesAdmin = ({ setIsOpen }) => {
           allowedExtensions={["pdf"]}
         />
         <div className="topics-container">
-          <div className="topic-title">Topics
-
+          <div className="topic-title">
+            Topics
             <span className="star">*</span>
           </div>
           <div className="topics-container-inputs">
@@ -188,8 +211,10 @@ const ConferencesAdmin = ({ setIsOpen }) => {
         >
           Cancel
         </button>
-        <button className="submit-btn">Submit</button>
-      </div>{" "}
+        <button className="submit-btn" onClick={handleSubmit}>
+          Submit
+        </button>
+      </div>
     </div>
   );
 };

@@ -215,6 +215,9 @@ const ConferencesPage = () => {
   const selectedConference = previousConferences.find(
     (conference) => conference.id === selectedConferenceId
   );
+
+
+  
   return (
     <div className="conferences-page">
       <div className="conferences-form-admin-header">

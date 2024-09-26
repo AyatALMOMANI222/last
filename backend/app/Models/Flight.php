@@ -30,9 +30,21 @@ class Flight extends Model
         'additional_requests',
         'admin_update_deadline',
         'last_update_at',
+        'last_admin_update_at', // تأكد من إضافته
         'is_deleted',
         'passenger_name',
+        'business_class_upgrade_cost', // إضافة الحقول هنا
+        'reserved_seat_cost',
+        'additional_baggage_cost',
+        'other_additional_costs',
+        'is_free',
+        'ticket_number',
+        'is_available_for_download',
+        'valid_from',
+        'valid_until',
+        'download_url',
     ];
+    
 
     public function availableFlights()
     {
@@ -69,12 +81,12 @@ class Flight extends Model
         if ($user) {
             // إذا كان المستخدم هو المتحدث
             if ($user->id == $flight->user_id) {
-                $flight->last_speaker_update_at = now();
+                $flight->last_speaker_update_at = \Carbon\Carbon::now('Asia/Amman');
             }
 
             // إذا كان المستخدم هو الأدمن
             if ($user->is_admin) {
-                $flight->last_admin_update_at = now();
+                $flight->last_speaker_update_at = \Carbon\Carbon::now('Asia/Amman');
             }
         }
     });

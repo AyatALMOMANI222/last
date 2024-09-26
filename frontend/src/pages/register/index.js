@@ -39,7 +39,7 @@ const RegisterPage = () => {
   });
 
   const register = async () => {
-    const url = "/user/register";
+    const url = "http://127.0.0.1:8000/api/users";
     const userData = {
       firstName: name,
       email,

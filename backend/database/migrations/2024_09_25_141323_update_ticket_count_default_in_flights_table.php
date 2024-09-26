@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('flights', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable()->change();
-
-            //
+            $table->integer('ticket_count')->default(1)->change()->nullable(); // أو أي قيمة افتراضية سابقة كانت موجودة
         });
     }
 
