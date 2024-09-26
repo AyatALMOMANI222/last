@@ -29,12 +29,8 @@ const LoginPage = () => {
     try {
       const response = await axiosInstance.post(url, userData);
       toast.success(response?.data?.message);
-
-      if (response.data.message === "Login Successfully") {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        
-      }
+      const token = response.data.token;
+      localStorage.setItem("token", token);
     } catch (error) {
       console.error("Login error:", error);
       toast.error(error.response.data.message);

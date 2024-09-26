@@ -64,17 +64,20 @@ class ConferenceController extends Controller
             return response()->json(['message' => 'Failed to create conference.'], 500);
         }
     }
+
+
+    
     public function getAllConferences(Request $request)
     {
         // Ensure the user is authenticated
-        $user = Auth::user();
+        // $user = Auth::user();
     
-        if (!$user) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthenticated.',
-            ], 401);
-        }
+        // if (!$user) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Unauthenticated.',
+        //     ], 401);
+        // }
     
         try {
             // Retrieve all conferences

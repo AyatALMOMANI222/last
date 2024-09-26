@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios"; // استيراد axios
+import axios from "axios";
 import Input from "../../CoreComponent/Input";
 import ImageUpload from "../../CoreComponent/ImageUpload";
 import DateInput from "../../CoreComponent/Date";
@@ -8,8 +8,136 @@ import Select from "../../CoreComponent/Select";
 import TextArea from "../../CoreComponent/TextArea";
 import SVG from "react-inlinesvg";
 import deleteIcon from "../../icons/deleteIcon.svg";
+const CommitteeForm = ({ committeeMembers, setCommitteeMembers }) => {
+  const addCommitteeMember = () => {
+    setCommitteeMembers([
+      ...committeeMembers,
+      { id: Date.now(), name: "", image: null },
+    ]);
+  };
+
+  const deleteCommitteeMember = (id) => {
+    setCommitteeMembers(committeeMembers.filter((member) => member.id !== id));
+  };
+
+  const handleNameChange = (id, value) => {
+    const updatedMembers = committeeMembers.map((member) =>
+      member.id === id ? { ...member, name: value } : member
+    );
+    setCommitteeMembers(updatedMembers);
+  };
+
+  const handleImageChange = (id, file) => {
+    const updatedMembers = committeeMembers.map((member) =>
+      member.id === id ? { ...member, image: file } : member
+    );
+    setCommitteeMembers(updatedMembers);
+  };
+
+  return (
+    <div className="committee-form-container">
+      <h2>Add Committee Members</h2>
+      <button className="add-button" onClick={addCommitteeMember}>
+        Add Member
+      </button>
+
+      {committeeMembers.map((member) => (
+        <div key={member.id} className="committee-member">
+          <div className="member-info">
+            <Input
+              type="text"
+              placeholder="Enter name"
+              inputValue={member.name}
+              setInputValue={(value) => handleNameChange(member.id, value)}
+              className="name-input"
+            />
+
+            <ImageUpload
+              label="Upload Image"
+              inputValue={member.image}
+              setInputValue={(file) => handleImageChange(member.id, file)}
+              allowedExtensions={["jpg", "jpeg", "png"]}
+            />
+          </div>
+
+          <button
+            className="delete-button"
+            onClick={() => deleteCommitteeMember(member.id)}
+          >
+            Delete
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const PriceForm = () => {
+  const [entries, setEntries] = useState([]);
+
+  const addEntry = () => {
+    setEntries([...entries, { id: Date.now(), price_type: "", price: "", description: "" }]);
+  };
+
+  const deleteEntry = (id) => {
+    setEntries(entries.filter((entry) => entry.id !== id));
+  };
+
+  const handleInputChange = (id, key, value) => {
+    const updatedEntries = entries.map((entry) =>
+      entry.id === id ? { ...entry, [key]: value } : entry
+    );
+    setEntries(updatedEntries);
+  };
+
+  return (
+    <div className="price-form-container">
+      <h2>Add Pricing Information</h2>
+      <button className="add-button" onClick={addEntry}>
+        Add Entry
+      </button>
+
+      {entries.map((entry) => (
+        <div key={entry.id} className="entry-row">
+          <Input
+            label="Price Type"
+            placeholder="Enter Price Type"
+            inputValue={entry.price_type}
+            setInputValue={(value) => handleInputChange(entry.id, "price_type", value)}
+            type="text"
+          />
+
+          <Input
+            label="Price"
+            placeholder="Enter Price"
+            inputValue={entry.price}
+            setInputValue={(value) => handleInputChange(entry.id, "price", value)}
+            type="number"
+          />
+
+          <Input
+            label="Description"
+            placeholder="Enter Description"
+            inputValue={entry.description}
+            setInputValue={(value) => handleInputChange(entry.id, "description", value)}
+            type="text"
+          />
+
+          <button className="delete-button" onClick={() => deleteEntry(entry.id)}>
+            Delete
+          </button>
+        </div>
+      ))}
+
+      <button className="submit-button">Submit</button>
+    </div>
+  );
+};
+
+
 
 const ConferencesAdmin = ({ setIsOpen }) => {
+  const [committeeMembers, setCommitteeMembers] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -45,36 +173,35 @@ const ConferencesAdmin = ({ setIsOpen }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // إعداد البيانات للإرسال
-    const formData = {
-      title,
-      description,
-      start_date: startDate,
-      end_date: endDate,
-      location,
-      status,
-      image,
-      first_announcement_pdf: firstAnnouncement,
-      second_announcement_pdf: secondAnnouncement,
-      conference_brochure_pdf: brochure,
-      conference_scientific_program_pdf: scientificProgram,
-      topics,
-      timestamps: new Date().toISOString(),
-    };
+    // Create a new FormData object
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("start_date", startDate);
+    formData.append("end_date", endDate);
+    formData.append("location", location);
+    formData.append("status", status.value);
+    formData.append("image", image);
+    formData.append("first_announcement_pdf", firstAnnouncement);
+    formData.append("second_announcement_pdf", secondAnnouncement);
+    formData.append("conference_brochure_pdf", brochure);
+    formData.append("conference_scientific_program_pdf", scientificProgram);
+    formData.append("topics", topics);
+    // formData.append("committeeMembers", committeeMembers);
+    formData.append("timestamps", new Date().toISOString());
 
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
+    console.log({ token });
 
     axios
       .post("http://127.0.0.1:8000/api/con", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
         },
       })
       .then((response) => {
         console.log("Data submitted successfully: ", response.data);
         console.log(token);
-        
       })
       .catch((error) => {
         console.error("Error submitting data: ", error);
@@ -125,8 +252,8 @@ const ConferencesAdmin = ({ setIsOpen }) => {
         />
         <Select
           options={[
-            { value: "Upcoming", label: "Upcoming" },
-            { value: "Past", label: "Past" },
+            { value: "upcoming", label: "Upcoming" },
+            { value: "past", label: "Past" },
           ]}
           value={status}
           setValue={setStatus}
@@ -201,6 +328,11 @@ const ConferencesAdmin = ({ setIsOpen }) => {
             </div>
           </div>
         </div>
+        <CommitteeForm
+          committeeMembers={committeeMembers}
+          setCommitteeMembers={setCommitteeMembers}
+        />
+        <PriceForm/>
       </div>
       <div className="actions-section-container">
         <button
