@@ -8,6 +8,7 @@ import Select from "../../CoreComponent/Select";
 import TextArea from "../../CoreComponent/TextArea";
 import SVG from "react-inlinesvg";
 import deleteIcon from "../../icons/deleteIcon.svg";
+
 const CommitteeForm = ({ committeeMembers, setCommitteeMembers }) => {
   const addCommitteeMember = () => {
     setCommitteeMembers([
@@ -38,11 +39,10 @@ const CommitteeForm = ({ committeeMembers, setCommitteeMembers }) => {
     <div className="committee-form-container">
       <div className="title-committee"> Committee Members</div>
       <div className="button-section-container">
-      <button className="add-button-committee" onClick={addCommitteeMember}>
-        Add Member
-      </button>
+        <button className="add-button-committee" onClick={addCommitteeMember}>
+          Add Member
+        </button>
       </div>
-
 
       {committeeMembers.map((member) => (
         <div key={member.id} className="committee-member">
@@ -98,11 +98,10 @@ const PriceForm = ({ entries, setEntries }) => {
     <div className="price-form-container">
       <div className="price-header">Add Pricing Information</div>
       <div className="button-section-container">
-      <button className="add-button-pricing" onClick={addEntry}>
-        Add Entry
-      </button>
+        <button className="add-button-pricing" onClick={addEntry}>
+          Add Entry
+        </button>
       </div>
-
       {entries.map((entry) => (
         <div key={entry.id} className="entry-row">
           <Input
@@ -147,8 +146,10 @@ const PriceForm = ({ entries, setEntries }) => {
   );
 };
 
-const ConferencesAdmin = ({ setIsOpen }) => {
-  const [committeeMembers, setCommitteeMembers] = useState([ { id: Date.now(), name: "", image: null }]);
+const ConferencesAdmin = ({ setIsOpen , getConference }) => {
+  const [committeeMembers, setCommitteeMembers] = useState([
+    { id: Date.now(), name: "", image: null },
+  ]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -160,7 +161,9 @@ const ConferencesAdmin = ({ setIsOpen }) => {
   const [secondAnnouncement, setSecondAnnouncement] = useState(null);
   const [brochure, setBrochure] = useState(null);
   const [scientificProgram, setScientificProgram] = useState(null);
-  const [entries, setEntries] = useState([{ id: Date.now(), price_type: "", price: "", description: "" }]);
+  const [entries, setEntries] = useState([
+    { id: Date.now(), price_type: "", price: "", description: "" },
+  ]);
   const [topics, setTopics] = useState([""]);
 
   function convertPriceToObject(data) {
@@ -193,15 +196,53 @@ const ConferencesAdmin = ({ setIsOpen }) => {
     setTopics(updatedTopics);
   };
 
+  async function addCommitteeMembers(mainId, members) {
+    const formData = new FormData();
+    const token = localStorage.getItem("token");
+    members.forEach((member, index) => {
+      formData.append(`members[${index}][name]`, member.name);
+      if (member.committee_image) {
+        formData.append(
+          `members[${index}][committee_image]`,
+          member.committee_image
+        );
+      }
+      formData.append(`members[${index}][conference_id]`, mainId);
+    });
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/con/committee",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Success:", response.data);
+      setIsOpen(false);
+      getConference()
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const prices = convertPriceToObject(entries);
+    console.log({ prices });
+
     const formData = new FormData();
+
     for (const key in prices) {
       if (prices.hasOwnProperty(key)) {
         formData.append(key, prices[key]);
       }
     }
+
     formData.append("title", title);
     formData.append("description", description);
     formData.append("start_date", startDate);
@@ -213,7 +254,7 @@ const ConferencesAdmin = ({ setIsOpen }) => {
     formData.append("second_announcement_pdf", secondAnnouncement);
     formData.append("conference_brochure_pdf", brochure);
     formData.append("conference_scientific_program_pdf", scientificProgram);
-    formData.append("topics", topics);
+    formData.append("scientific_topics", topics);
     formData.append("timestamps", new Date().toISOString());
     const token = localStorage.getItem("token");
     axios
@@ -224,10 +265,10 @@ const ConferencesAdmin = ({ setIsOpen }) => {
       })
       .then((response) => {
         console.log("Data submitted successfully: ", response.data);
-        const id = response.data.id
+        const id = response.data.id;
 
+        addCommitteeMembers(id, committeeMembers);
 
-        
         console.log(token);
       })
       .catch((error) => {
@@ -355,7 +396,7 @@ const ConferencesAdmin = ({ setIsOpen }) => {
             </div>
           </div>
         </div>
-    
+
         <PriceForm entries={entries} setEntries={setEntries} />
         <CommitteeForm
           committeeMembers={committeeMembers}
@@ -367,6 +408,7 @@ const ConferencesAdmin = ({ setIsOpen }) => {
           className="cancel-btn"
           onClick={() => {
             setIsOpen(false);
+            getConference()
           }}
         >
           Cancel

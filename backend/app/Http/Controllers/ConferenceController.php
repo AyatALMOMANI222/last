@@ -101,25 +101,8 @@ class ConferenceController extends Controller
     }
 
 
-
-
-
-
-
-
-
     public function getAllConferences(Request $request)
     {
-        // Ensure the user is authenticated
-        // $user = Auth::user();
-
-        // if (!$user) {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'Unauthenticated.',
-        //     ], 401);
-        // }
-
         try {
             // Retrieve all conferences
             $conferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])->get();

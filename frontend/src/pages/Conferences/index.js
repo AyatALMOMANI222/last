@@ -295,7 +295,7 @@ const ConferencesPage = () => {
         })}
       </div>
       <MySideDrawer isOpen={openAddConference} setIsOpen={setOpenAddConference}>
-        <ConferencesAdmin setIsOpen={setOpenAddConference} />
+        <ConferencesAdmin setIsOpen={setOpenAddConference} getConference={getConference}/>
       </MySideDrawer>
 
       {/* <MySideDrawer isOpen={isViewDrawerOpen} setIsOpen={setIsViewDrawerOpen}>
