@@ -36,7 +36,7 @@ class ConferenceController extends Controller
             'prices.*.price' => 'required|numeric',
             'prices.*.price_description' => 'nullable|string|max:255',
         ]);
-    
+
         try {
             $conference = new Conference();
             $conference->title = $request->input('title');
@@ -45,7 +45,7 @@ class ConferenceController extends Controller
             $conference->end_date = $request->input('end_date');
             $conference->location = $request->input('location');
             $conference->status = $request->input('status');
-    
+
             // Handle file uploads
             if ($request->hasFile('image')) {
                 $conference->image = $request->file('image')->store('conference_images', 'public');
@@ -62,9 +62,9 @@ class ConferenceController extends Controller
             if ($request->hasFile('conference_scientific_program_pdf')) {
                 $conference->conference_scientific_program_pdf = $request->file('conference_scientific_program_pdf')->store('conference_programs', 'public');
             }
-    
+
             $conference->save();
-    
+
             // Handle scientific topics
             if ($request->filled('scientific_topics')) {
                 $topics = explode(',', $request->input('scientific_topics'));
@@ -78,11 +78,11 @@ class ConferenceController extends Controller
                     }
                 }
             }
-    
+
             // Handle prices
             if ($request->filled('prices')) {
                 $prices = $request->input('prices'); // Directly retrieve the prices array
-                
+
                 // Validate each price entry if necessary
                 foreach ($prices as $priceData) {
                     ConferencePrice::create([
@@ -93,37 +93,37 @@ class ConferenceController extends Controller
                     ]);
                 }
             }
-    
-            return response()->json(['message' => 'Conference created successfully!'], 201);
+
+            return response()->json(['message' => 'Conference created successfully!', "id" => $conference->id], 201);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to create conference.', 'error' => $e->getMessage()], 500);
         }
     }
-    
-
-
-    
 
 
 
 
-    
+
+
+
+
+
     public function getAllConferences(Request $request)
     {
         // Ensure the user is authenticated
         // $user = Auth::user();
-    
+
         // if (!$user) {
         //     return response()->json([
         //         'status' => 'error',
         //         'message' => 'Unauthenticated.',
         //     ], 401);
         // }
-    
+
         try {
             // Retrieve all conferences
             $conferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])->get();
-    
+
             return response()->json([
                 'status' => 'success',
                 'data' => $conferences
@@ -135,7 +135,7 @@ class ConferenceController extends Controller
             ], 500);
         }
     }
-    
+
 
 
     public function getConferenceByStatus($status)

@@ -224,6 +224,10 @@ const ConferencesAdmin = ({ setIsOpen }) => {
       })
       .then((response) => {
         console.log("Data submitted successfully: ", response.data);
+        const id = response.data.id
+
+
+        
         console.log(token);
       })
       .catch((error) => {

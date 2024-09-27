@@ -11,25 +11,35 @@ class CommitteeMemberController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'committee_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'conference_id' => 'required|exists:conferences,id',
+            'members' => 'required|array',
+            'members.*.name' => 'required|string|max:255',
+            'members.*.committee_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'members.*.conference_id' => 'required|exists:conferences,id',
         ]);
-
-        if ($request->hasFile('committee_image')) {
-            $imagePath = $request->file('committee_image')->store('committee_images', 'public');
-        } else {
+    
+        $committeeMembers = [];
+    
+        foreach ($validatedData['members'] as $index => $memberData) {
+            // Handle the image upload if it exists
             $imagePath = null; 
+            if (isset($memberData['committee_image']) && $request->hasFile("members.{$index}.committee_image")) {
+                $imagePath = $memberData['committee_image']->store('committee_images', 'public');
+            }
+    
+            // Create the committee member record
+            $committeeMember = CommitteeMember::create([
+                'name' => $memberData['name'],
+                'committee_image' => $imagePath,
+                'conference_id' => $memberData['conference_id'],
+            ]);
+    
+            $committeeMembers[] = $committeeMember;
         }
-
-        $committeeMember = CommitteeMember::create([
-            'name' => $validatedData['name'],
-            'committee_image' => $imagePath,
-            'conference_id' => $validatedData['conference_id'],
-        ]);
-
-        return response()->json(['message' => 'Committee member added successfully', 'data' => $committeeMember], 201);
+    
+        return response()->json(['message' => 'Committee members added successfully', 'data' => $committeeMembers], 201);
     }
+    
+
     public function getByConference($conference_id)
     {
         $members = CommitteeMember::where('conference_id', $conference_id)->get();
