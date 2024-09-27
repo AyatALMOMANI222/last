@@ -99,14 +99,21 @@ class ConferenceController extends Controller
             return response()->json(['message' => 'Failed to create conference.', 'error' => $e->getMessage()], 500);
         }
     }
-
-
     public function getAllConferences(Request $request)
     {
         try {
-            // Retrieve all conferences
-            $conferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])->get();
-
+            // Check if a search parameter is provided
+            $search = $request->input('search');
+    
+            // Retrieve all conferences, applying the search filter if provided
+            $query = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices']);
+    
+            if ($search) {
+                $query->where('title', 'like', '%' . $search . '%');
+            }
+    
+            $conferences = $query->get();
+    
             return response()->json([
                 'status' => 'success',
                 'data' => $conferences
@@ -118,6 +125,25 @@ class ConferenceController extends Controller
             ], 500);
         }
     }
+    
+
+    // public function getAllConferences(Request $request)
+    // {
+    //     try {
+    //         // Retrieve all conferences
+    //         $conferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])->get();
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'data' => $conferences
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Failed to retrieve conferences.',
+    //         ], 500);
+    //     }
+    // }
 
 
 

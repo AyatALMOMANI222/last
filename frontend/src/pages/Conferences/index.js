@@ -217,21 +217,25 @@ const ConferencesPage = () => {
   };
 
   const getConference = () => {
+    const searchQuery = conferenceName
+      ? `?search=${encodeURIComponent(conferenceName)}`
+      : "";
+    const url = `http://127.0.0.1:8000/api/con${searchQuery}`;
+
     axios
-      .get("http://127.0.0.1:8000/api/con")
+      .get(url)
       .then((response) => {
         console.log("Conferences retrieved successfully:", response.data.data);
         setAllConference(response.data.data);
       })
       .catch((error) => {
-        // معالجة الأخطاء
         console.error("Error retrieving conferences:", error);
-        // يمكنك أيضًا عرض رسالة للمستخدم أو اتخاذ إجراءات أخرى
       });
   };
+
   useEffect(() => {
     getConference();
-  }, []);
+  }, [conferenceName]);
   useEffect(() => {
     console.log({ selectedConference });
   }, [selectedConference]);
@@ -295,7 +299,10 @@ const ConferencesPage = () => {
         })}
       </div>
       <MySideDrawer isOpen={openAddConference} setIsOpen={setOpenAddConference}>
-        <ConferencesAdmin setIsOpen={setOpenAddConference} getConference={getConference}/>
+        <ConferencesAdmin
+          setIsOpen={setOpenAddConference}
+          getConference={getConference}
+        />
       </MySideDrawer>
 
       {/* <MySideDrawer isOpen={isViewDrawerOpen} setIsOpen={setIsViewDrawerOpen}>
