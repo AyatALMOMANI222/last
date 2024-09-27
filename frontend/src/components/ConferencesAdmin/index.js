@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Input from "../../CoreComponent/Input";
 import ImageUpload from "../../CoreComponent/ImageUpload";
@@ -36,16 +36,20 @@ const CommitteeForm = ({ committeeMembers, setCommitteeMembers }) => {
 
   return (
     <div className="committee-form-container">
-      <h2>Add Committee Members</h2>
-      <button className="add-button" onClick={addCommitteeMember}>
+      <div className="title-committee"> Committee Members</div>
+      <div className="button-section-container">
+      <button className="add-button-committee" onClick={addCommitteeMember}>
         Add Member
       </button>
+      </div>
+
 
       {committeeMembers.map((member) => (
         <div key={member.id} className="committee-member">
           <div className="member-info">
             <Input
               type="text"
+              label="Name"
               placeholder="Enter name"
               inputValue={member.name}
               setInputValue={(value) => handleNameChange(member.id, value)}
@@ -61,7 +65,7 @@ const CommitteeForm = ({ committeeMembers, setCommitteeMembers }) => {
           </div>
 
           <button
-            className="delete-button"
+            className="delete-button-committee"
             onClick={() => deleteCommitteeMember(member.id)}
           >
             Delete
@@ -72,11 +76,12 @@ const CommitteeForm = ({ committeeMembers, setCommitteeMembers }) => {
   );
 };
 
-const PriceForm = () => {
-  const [entries, setEntries] = useState([]);
-
+const PriceForm = ({ entries, setEntries }) => {
   const addEntry = () => {
-    setEntries([...entries, { id: Date.now(), price_type: "", price: "", description: "" }]);
+    setEntries([
+      ...entries,
+      { id: Date.now(), price_type: "", price: "", description: "" },
+    ]);
   };
 
   const deleteEntry = (id) => {
@@ -89,13 +94,14 @@ const PriceForm = () => {
     );
     setEntries(updatedEntries);
   };
-
   return (
     <div className="price-form-container">
-      <h2>Add Pricing Information</h2>
-      <button className="add-button" onClick={addEntry}>
+      <div className="price-header">Add Pricing Information</div>
+      <div className="button-section-container">
+      <button className="add-button-pricing" onClick={addEntry}>
         Add Entry
       </button>
+      </div>
 
       {entries.map((entry) => (
         <div key={entry.id} className="entry-row">
@@ -103,7 +109,9 @@ const PriceForm = () => {
             label="Price Type"
             placeholder="Enter Price Type"
             inputValue={entry.price_type}
-            setInputValue={(value) => handleInputChange(entry.id, "price_type", value)}
+            setInputValue={(value) =>
+              handleInputChange(entry.id, "price_type", value)
+            }
             type="text"
           />
 
@@ -111,7 +119,9 @@ const PriceForm = () => {
             label="Price"
             placeholder="Enter Price"
             inputValue={entry.price}
-            setInputValue={(value) => handleInputChange(entry.id, "price", value)}
+            setInputValue={(value) =>
+              handleInputChange(entry.id, "price", value)
+            }
             type="number"
           />
 
@@ -119,25 +129,26 @@ const PriceForm = () => {
             label="Description"
             placeholder="Enter Description"
             inputValue={entry.description}
-            setInputValue={(value) => handleInputChange(entry.id, "description", value)}
+            setInputValue={(value) =>
+              handleInputChange(entry.id, "description", value)
+            }
             type="text"
           />
 
-          <button className="delete-button" onClick={() => deleteEntry(entry.id)}>
+          <button
+            className="delete-button-entry"
+            onClick={() => deleteEntry(entry.id)}
+          >
             Delete
           </button>
         </div>
-      ))}
-
-      <button className="submit-button">Submit</button>
+      ))}{" "}
     </div>
   );
 };
 
-
-
 const ConferencesAdmin = ({ setIsOpen }) => {
-  const [committeeMembers, setCommitteeMembers] = useState([]);
+  const [committeeMembers, setCommitteeMembers] = useState([ { id: Date.now(), name: "", image: null }]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -149,8 +160,20 @@ const ConferencesAdmin = ({ setIsOpen }) => {
   const [secondAnnouncement, setSecondAnnouncement] = useState(null);
   const [brochure, setBrochure] = useState(null);
   const [scientificProgram, setScientificProgram] = useState(null);
-
+  const [entries, setEntries] = useState([{ id: Date.now(), price_type: "", price: "", description: "" }]);
   const [topics, setTopics] = useState([""]);
+
+  function convertPriceToObject(data) {
+    let result = {};
+
+    data.forEach((item, index) => {
+      result[`prices[${index}][price_description]`] = item.description;
+      result[`prices[${index}][price]`] = item.price;
+      result[`prices[${index}][price_type]`] = item.price_type;
+    });
+
+    return result;
+  }
 
   // Handler to update topics array
   const handleTopicChange = (index, newValue) => {
@@ -172,9 +195,13 @@ const ConferencesAdmin = ({ setIsOpen }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Create a new FormData object
+    const prices = convertPriceToObject(entries);
     const formData = new FormData();
+    for (const key in prices) {
+      if (prices.hasOwnProperty(key)) {
+        formData.append(key, prices[key]);
+      }
+    }
     formData.append("title", title);
     formData.append("description", description);
     formData.append("start_date", startDate);
@@ -187,12 +214,8 @@ const ConferencesAdmin = ({ setIsOpen }) => {
     formData.append("conference_brochure_pdf", brochure);
     formData.append("conference_scientific_program_pdf", scientificProgram);
     formData.append("topics", topics);
-    // formData.append("committeeMembers", committeeMembers);
     formData.append("timestamps", new Date().toISOString());
-
     const token = localStorage.getItem("token");
-    console.log({ token });
-
     axios
       .post("http://127.0.0.1:8000/api/con", formData, {
         headers: {
@@ -328,11 +351,12 @@ const ConferencesAdmin = ({ setIsOpen }) => {
             </div>
           </div>
         </div>
+    
+        <PriceForm entries={entries} setEntries={setEntries} />
         <CommitteeForm
           committeeMembers={committeeMembers}
           setCommitteeMembers={setCommitteeMembers}
         />
-        <PriceForm/>
       </div>
       <div className="actions-section-container">
         <button

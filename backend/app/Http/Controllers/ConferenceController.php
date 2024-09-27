@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 // use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Conference;
+use App\Models\ConferencePrice;
+use App\Models\ScientificTopic;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
 
@@ -13,7 +15,6 @@ use Carbon\Carbon;
 
 class ConferenceController extends Controller
 {
-   
     public function store(Request $request)
     {
         // Validate request
@@ -29,8 +30,13 @@ class ConferenceController extends Controller
             'second_announcement_pdf' => 'nullable|file|mimes:pdf',
             'conference_brochure_pdf' => 'nullable|file|mimes:pdf',
             'conference_scientific_program_pdf' => 'nullable|file|mimes:pdf',
+            'scientific_topics' => 'nullable|string',
+            'prices' => 'nullable|array', // Change to 'array' type
+            'prices.*.price_type' => 'required|string|max:255',
+            'prices.*.price' => 'required|numeric',
+            'prices.*.price_description' => 'nullable|string|max:255',
         ]);
-
+    
         try {
             $conference = new Conference();
             $conference->title = $request->input('title');
@@ -39,7 +45,7 @@ class ConferenceController extends Controller
             $conference->end_date = $request->input('end_date');
             $conference->location = $request->input('location');
             $conference->status = $request->input('status');
-
+    
             // Handle file uploads
             if ($request->hasFile('image')) {
                 $conference->image = $request->file('image')->store('conference_images', 'public');
@@ -56,14 +62,49 @@ class ConferenceController extends Controller
             if ($request->hasFile('conference_scientific_program_pdf')) {
                 $conference->conference_scientific_program_pdf = $request->file('conference_scientific_program_pdf')->store('conference_programs', 'public');
             }
-
+    
             $conference->save();
-
+    
+            // Handle scientific topics
+            if ($request->filled('scientific_topics')) {
+                $topics = explode(',', $request->input('scientific_topics'));
+                foreach ($topics as $topic) {
+                    $topic = trim($topic);
+                    if (!empty($topic)) {
+                        ScientificTopic::create([
+                            'conference_id' => $conference->id,
+                            'title' => $topic
+                        ]);
+                    }
+                }
+            }
+    
+            // Handle prices
+            if ($request->filled('prices')) {
+                $prices = $request->input('prices'); // Directly retrieve the prices array
+                
+                // Validate each price entry if necessary
+                foreach ($prices as $priceData) {
+                    ConferencePrice::create([
+                        'conference_id' => $conference->id,
+                        'price_type' => $priceData['price_type'],
+                        'price' => $priceData['price'],
+                        'description' => $priceData['price_description'] ?? null,
+                    ]);
+                }
+            }
+    
             return response()->json(['message' => 'Conference created successfully!'], 201);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to create conference.'], 500);
+            return response()->json(['message' => 'Failed to create conference.', 'error' => $e->getMessage()], 500);
         }
     }
+    
+
+
+    
+
+
 
 
     

@@ -56,9 +56,9 @@ Route::post('/con/topic', [ScientificTopicController::class, 'store'])->middlewa
 Route::get('/con/stopic/{id}', [ScientificTopicController::class, 'show']);
 Route::delete('/con/stopic/{id}', [ScientificTopicController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);
 
-Route::post('/con/{conference_id}/prices', [PricesController::class, 'store'])->middleware(['auth:sanctum', 'checkAdmin']);
+Route::post('/con/{conference_id}/prices', [PricesController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
 Route::delete('/con/{conference_id}/{price_id}/prices', [PricesController::class, 'deletePriceByConferenceId'])->middleware(['auth:sanctum', 'admin']);
-Route::get('/con/{conference_id}/prices', [PricesController::class, 'getPricesByConferenceId']);
+Route::get('/con/prices', [PricesController::class, 'getPricesByConferenceId']);
 
 Route::post('/con/scientific-papers/{conferenceId}', [ScientificPaperController::class, 'store']);
 

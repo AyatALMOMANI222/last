@@ -139,4 +139,67 @@
       }
     }
   }
+
+  .committee-form-container{
+  .title-committee{
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 30px;
+    text-align: left;
+    color: var(--element-color);
+  }  
+
+  .add-button-committee{
+    border: none;
+    background-color: rgba(255, 251, 251, 0.4862745098);
+    font-size: 15px;
+    font-weight: 500;
+    height: 40px;
+    cursor: pointer;
+    color: #9109e0;
+  }
+
+  .delete-button-committee{
+    border: none;
+    background-color: rgba(255, 251, 251, 0.4862745098);
+    font-size: 15px;
+    font-weight: 500;
+    height: 40px;
+    cursor: pointer;
+    color: red; 
+  }
+
+
+  }
+  .add-button-pricing{
+    border: none;
+    background-color: rgba(255, 251, 251, 0.4862745098);
+    font-size: 15px;
+    font-weight: 500;
+    height: 40px;
+    cursor: pointer;
+    color: #9109e0;
+  }
+  .price-header{
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 30px;
+    text-align: left;
+    color: var(--element-color);
+  }
+  .button-section-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+  }
+
+  .delete-button-entry{
+    border: none;
+    background-color: rgba(255, 251, 251, 0.4862745098);
+    font-size: 15px;
+    font-weight: 500;
+    height: 40px;
+    cursor: pointer;
+    color: red;  
+  }
 }

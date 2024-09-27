@@ -7,27 +7,32 @@ use Illuminate\Http\Request;
 
 class PricesController extends Controller
 {
-    public function store (Request $request, $conferenceId)
-{
-    $validatedData = $request->validate([
-        'price_type' => 'required|string|max:255',
-        'price' => 'required|numeric',
-        'description' => 'nullable|string',
-    ]);
-
-    $conferencePrice = new ConferencePrice();
-    $conferencePrice->conference_id = $conferenceId;
-    $conferencePrice->price_type = $validatedData['price_type'];
-    $conferencePrice->price = $validatedData['price'];
-    $conferencePrice->description = $validatedData['description'] ?? null;
-
-    $conferencePrice->save();
-
-    return response()->json([
-        'message' => 'Price added successfully!',
-        'data' => $conferencePrice
-    ], 201);
-}
+    public function store(Request $request, $conferenceId)
+    {
+        // التحقق من صحة الطلب
+        $validatedData = $request->validate([
+            'price' => 'required|array', // يجب أن يكون السعر مصفوفة
+            'price.*.price' => 'required|numeric', // تحقق من أن كل سعر في المصفوفة هو عدد
+            'price.*.priceType' => 'nullable|string|max:255', // تحقق من نوع السعر
+            'price.*.priceDescription' => 'nullable|string', // تحقق من وصف السعر
+        ]);
+    
+        // إدخال الأسعار في قاعدة البيانات
+        foreach ($validatedData['price'] as $priceData) {
+            $conferencePrice = new ConferencePrice();
+            $conferencePrice->conference_id = $conferenceId;
+            $conferencePrice->price_type = $priceData['priceType'] ?? null; // التأكد من استخدام الاسم الصحيح
+            $conferencePrice->price = $priceData['price'];
+            $conferencePrice->description = $priceData['priceDescription'] ?? null; // التأكد من وجود وصف
+    
+            $conferencePrice->save();
+        }
+    
+        return response()->json([
+            'message' => 'Prices added successfully!',
+        ], 201);
+    }
+    
 public function deletePriceByConferenceId($conferenceId, $priceId)
 {
     $conferencePrice = ConferencePrice::where('conference_id', $conferenceId)
