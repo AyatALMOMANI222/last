@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Input from "../../CoreComponent/Input";
 import Select from "../../CoreComponent/Select";
 import axiosInstance from "../../common/http";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import PhoneNumberInput from "../../CoreComponent/PhoneNumber";
 import { countriesOptions, nationalitiesOptions } from "../../constant";
@@ -11,9 +11,13 @@ import registerImg from "../../icons/registerImg.svg";
 import "./style.scss";
 import ImageUpload from "../../CoreComponent/ImageUpload";
 import TextArea from "../../CoreComponent/TextArea";
+import axios from "axios";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const {type , id} =useParams()  
+  console.log({id});
+  
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,34 +42,37 @@ const RegisterPage = () => {
     resume: "",
   });
 
-  const register = async () => {
-    const url = "http://127.0.0.1:8000/api/users";
-    const userData = {
-      firstName: name,
-      email,
-      password,
-      phone,
-      whatsApp,
-      specialization,
-      nationality: selectedNationality,
-      country,
-      resume: resumeText,
-      image, // Handle image upload separately if needed
-    };
+
+
+  const handleSubmit = async () => {
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('image', image);
+    formData.append('biography', resumeText);
+    formData.append('registration_type', type);
+    formData.append('phone_number', phone);
+    formData.append('whatsapp_number', whatsApp);
+    formData.append('specialization', specialization);
+    formData.append('nationality', selectedNationality.value);
+    formData.append('country_of_residence', country.value);
 
     try {
-      const response = await axiosInstance.post(url, userData);
-      if (
-        response.data.success === true &&
-        response.data.message === "Account Created Successfully"
-      ) {
-        toast.success(response.data.message);
-        navigate("/login");
-      } else {
-        toast.error(response.data.message);
-      }
+      const response = await axios.post('http://127.0.0.1:8000/api/users', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log({response});
+      
+      alert(response.data.message); // Handle success message
+      // Optionally reset form fields here
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.response) {
+      } else {
+      }
     }
   };
 
@@ -183,7 +190,7 @@ const RegisterPage = () => {
         image: "",
         resume: "",
       });
-      register();
+      handleSubmit();
     }
   };
 
@@ -292,7 +299,7 @@ const RegisterPage = () => {
         </div>
 
         <div className="register-btn-container">
-          <button className="register-btn" type="submit">
+          <button className="register-btn" type="submit" >
             Register
           </button>
         </div>

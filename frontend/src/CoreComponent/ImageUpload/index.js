@@ -3,9 +3,6 @@ import SVG from "react-inlinesvg";
 import { linkIcon, deleteIcon } from "../../icons";
 import "./style.scss";
 
-
-
-
 const ImageUpload = ({
   errorMsg,
   required = true,

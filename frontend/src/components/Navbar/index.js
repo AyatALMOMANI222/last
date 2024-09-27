@@ -51,7 +51,14 @@ const NavBar = () => {
           }}
         >
           About Us
-        </div>{" "}
+        </div>        <div
+          className="option-btn"
+          onClick={() => {
+            navigate("/exhibitions");
+          }}
+        >
+          Exhibitions
+        </div>
      
         <ListOption title="Admin" options={options} />
         <a

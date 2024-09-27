@@ -1,0 +1,35 @@
+$conferences-bg: #f8f9fa;
+$primary-color: #007bff;
+
+.conferences {
+  background-color: $conferences-bg;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .title {
+    text-align: center;
+    color: $primary-color;
+    margin-bottom: 20px;
+  }
+
+  .conference-list {
+    list-style: none;
+    padding: 0;
+
+    .conference-item {
+      background-color: white;
+      padding: 15px;
+      margin: 10px 0;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: $primary-color;
+        color: white;
+      }
+    }
+  }
+}

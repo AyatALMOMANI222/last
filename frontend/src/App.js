@@ -13,6 +13,8 @@ import RegisterType from "./pages/RegisterType";
 import FlightForm from "./components/FlightForm";
 import FlightFormAdmin from "./components/FlightFormAdmin";
 import ConferencesAdmin from "./components/ConferencesAdmin";
+import Exhibitions from "./pages/Exhibitions";
+import SelectConferences from "./pages/SelectConferences";
 
 const App = () => {
   const location = useLocation();
@@ -26,7 +28,8 @@ const App = () => {
     "/",
     "/flight/form",
     "/flights",
-    "/conferences"
+    "/conferences",
+    "/exhibitions"
   ];
 
   
@@ -36,11 +39,14 @@ const App = () => {
       {/* Conditionally render the NavBar based on the current route */}
       {navBarRoutes.includes(location.pathname) && <NavBar />}
       <Routes className="main">
+      <Route path="/exhibitions" element={<Exhibitions />} />
+
       <Route path="/conferences" element={<ConferencesAdmin />} />
         <Route path="/flights" element={<FlightFormAdmin />} />
         <Route path="/flight/form" element={<FlightForm />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register/:type" element={<RegisterPage />} />
+        <Route path="/register/:type/:id" element={<RegisterPage />} />
+        <Route path="/register/:type" element={<SelectConferences />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/dashboard" element={<Dashboard />} />
