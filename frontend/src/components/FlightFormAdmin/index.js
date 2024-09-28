@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../../CoreComponent/Table";
 import MySideDrawer from "../../CoreComponent/SideDrawer";
 import AddTripForm from "./tripForm";
@@ -6,77 +6,17 @@ import SeatCostForm from "./costForm";
 import FlightDetails from "./viewForm";
 import Input from "../../CoreComponent/Input";
 import "./style.scss";
+import axios from "axios";
 
 const FlightFormAdmin = () => {
-  const flights = [
-    {
-      flight_id: "FL001",
-      user_id: "USR123",
-      is_companion: false,
-      main_user_id: null,
-      passport_image: "passport_usr123.jpg",
-      departure_airport: "JFK",
-      arrival_airport: "LAX",
-      departure_date: "2024-09-25T10:30:00",
-      arrival_date: "2024-09-25T13:30:00",
-      flight_number: "AA101",
-      seat_preference: "Window",
-      upgrade_class: "Business",
-      ticket_count: 1,
-      additional_requests: "Vegetarian meal",
-      admin_update_deadline: "2024-09-24T18:00:00",
-      last_update_at: "2024-09-19T15:45:00",
-      is_deleted: false,
-      passenger_name: "John Doe",
-    },
-    {
-      flight_id: "FL002",
-      user_id: "USR456",
-      is_companion: true,
-      main_user_id: "USR123",
-      passport_image: "passport_usr456.jpg",
-      departure_airport: "JFK",
-      arrival_airport: "LAX",
-      departure_date: "2024-09-25T10:30:00",
-      arrival_date: "2024-09-25T13:30:00",
-      flight_number: "AA101",
-      seat_preference: "Aisle",
-      upgrade_class: null,
-      ticket_count: 1,
-      additional_requests: "Extra legroom",
-      admin_update_deadline: "2024-09-24T18:00:00",
-      last_update_at: "2024-09-19T15:45:00",
-      is_deleted: false,
-      passenger_name: "Jane Smith",
-    },
-    {
-      flight_id: "FL003",
-      user_id: "USR789",
-      is_companion: false,
-      main_user_id: null,
-      passport_image: "passport_usr789.jpg",
-      departure_airport: "LAX",
-      arrival_airport: "SFO",
-      departure_date: "2024-10-02T14:00:00",
-      arrival_date: "2024-10-02T15:30:00",
-      flight_number: "UA205",
-      seat_preference: "Window",
-      upgrade_class: "First Class",
-      ticket_count: 2,
-      additional_requests: "Wheelchair assistance",
-      admin_update_deadline: "2024-10-01T17:00:00",
-      last_update_at: "2024-09-19T15:50:00",
-      is_deleted: false,
-      passenger_name: "Emily Johnson",
-    },
-  ];
+ const[flights,setFlights]=useState([])
   const headers = [
     // { key: "flight_id", label: "Flight ID" },
     { key: "passenger_name", label: "Passenger Name" },
     { key: "departure_airport", label: "Departure Airport" },
     { key: "arrival_airport", label: "Arrival Airport" },
     { key: "departure_date", label: "Departure Date" },
-    // { key: "arrival_date", label: "Arrival Date" },
+    { key: "arrival_date", label: "Arrival Date" },
     // { key: "flight_number", label: "Flight Number" },
     // { key: "seat_preference", label: "Seat Preference" },
     // { key: "additional_requests", label: "Additional Requests" },
@@ -88,7 +28,29 @@ const FlightFormAdmin = () => {
   const [openPriceForm, setOpenPriceForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [travelerName, setTravelerName] = useState("");
-
+  const getFlight = () => {
+    const token = localStorage.getItem('token'); // الحصول على التوكن من localStorage
+    
+    axios.get("http://127.0.0.1:8000/api/user/pag/filter", {
+      headers: {
+        'Authorization': `Bearer ${token}` // تضمين التوكن في الهيدر
+      }
+    })
+    .then(response => {
+      console.log("Flight data fetched successfully:", response.data.data);
+      setFlights(response.data.data)
+  
+      
+      // يمكنك تنفيذ أي عملية أخرى تحتاجها عند الحصول على البيانات بنجاح
+    })
+    .catch(error => {
+      console.error("Error fetching flight data:", error.response ? error.response.data : error.message);
+      // يمكنك معالجة الخطأ أو عرض رسالة توضح السبب للمستخدم
+    });
+  };
+  useEffect(()=>{
+    getFlight()
+  },[])
   const handleTableData = () => {
     return flights?.map((item) => {
       return {
@@ -142,7 +104,7 @@ const FlightFormAdmin = () => {
       <div className="flight-table-container">
         <Table headers={headers} data={handleTableData()} />
       </div>
-      <MySideDrawer isOpen={openView} setIsOpen={setOpenView}>
+      <MySideDrawer isOpen={openView} setIsOpen={setOpenView} >
         <FlightDetails data={selectedItem} />
       </MySideDrawer>
       <MySideDrawer isOpen={openTripForm} setIsOpen={setOpenTripForm}>

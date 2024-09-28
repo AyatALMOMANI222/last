@@ -60,7 +60,7 @@ const RegisterPage = () => {
     formData.append('country_of_residence', country.value);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users', formData, {
+      const response = await axios.post(`http://127.0.0.1:8000/api/users/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

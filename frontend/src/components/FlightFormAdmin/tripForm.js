@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Input from "../../CoreComponent/Input";
 import DateInput from "../../CoreComponent/Date";
 import Checkbox from "../../CoreComponent/Checkbox";
+import axios from "axios";
 import "./style.scss";
 
 const AddTripForm = ({ data, setOpen }) => {
@@ -11,11 +12,45 @@ const AddTripForm = ({ data, setOpen }) => {
   const [departureTime, setDepartureTime] = useState("");
   const [price, setPrice] = useState("");
   const [isFree, setIsFree] = useState(false);
+
+
+
+
+  const handleSubmit = () => {
+    const token = localStorage.getItem('token'); 
+  
+    const formData = {
+      available_id: availableId,
+      flight_id: data.flight_id, // استخدام flight_id من props
+      departure_date: departureDate,
+      departure_time: departureTime,
+      price: price,
+      is_free: isFree,
+    };
+  
+    // إرسال البيانات باستخدام axios
+    axios.post("http://127.0.0.1:8000/api/available-flights", formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`, // تضمين التوكن في الهيدر
+        'Content-Type': 'application/json'  // تحديد نوع المحتوى
+      }
+    })
+    .then(response => {
+      console.log("Flight added successfully:", response.data);
+      // يمكنك التعامل مع النجاح هنا مثل إغلاق النموذج أو عرض رسالة نجاح
+      setOpen(false); // إغلاق النموذج بعد الإرسال
+    })
+    .catch(error => {
+      console.error("Error adding flight:", error.response?.data);
+      // يمكنك التعامل مع الخطأ هنا مثل عرض رسالة خطأ
+    });
+  };
+  
   return (
     <div className="add-trip-admin">
       <div className="header">{data.passenger_name}</div>
       <div className="form-section">
-        <Input
+        {/* <Input
           label="Available ID"
           placeholder="Enter available ID"
           inputValue={availableId}
@@ -30,7 +65,7 @@ const AddTripForm = ({ data, setOpen }) => {
           setInputValue={setFlightId}
           type="text"
           required={true}
-        />
+        /> */}
         <DateInput
           label="Departure Date"
           placeholder="Enter departure date"
@@ -71,7 +106,7 @@ const AddTripForm = ({ data, setOpen }) => {
         >
           Cancel
         </button>
-        <button className="submit-btn">Submit</button>
+        <button className="submit-btn" onClick={handleSubmit}>Submit</button>
       </div>
     </div>
   );

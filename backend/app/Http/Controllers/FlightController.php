@@ -5,84 +5,91 @@ namespace App\Http\Controllers;
 use App\Models\Flight;
 use App\Models\Notification;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class FlightController extends Controller
 {
     public function createFlight(Request $request)
-{
-    try {
-        // التحقق من البيانات المدخلة
-        $request->validate([
-            'departure_airport' => 'required|string|max:100',
-            'arrival_airport' => 'required|string|max:100',
-            'departure_date' => 'required|date',
-            'arrival_date' => 'required|date',
-            'ticket_count' => 'integer|min:1',
-            'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'is_companion' => 'required|boolean',
-
-            // إضافة الحقول الجديدة هنا
-            'flight_number' => 'sometimes|string',
-            'seat_preference' => 'sometimes|string',
-            'upgrade_class' => 'sometimes|boolean',
-            'additional_requests' => 'sometimes|string',
-            'passenger_name' => 'sometimes|string',
-        ]);
-
-        // احصل على المستخدم الحالي
-        $user = Auth::user();
-
-        $existingFlight = Flight::where('user_id', $user->id)->first();
-        $existingFlightId = $existingFlight ? $existingFlight->flight_id : null;
-
-        $flight = new Flight();
-
-        // تحقق من حالة is_companion
-        if ($request->is_companion) {
-            $flight->user_id = null; // ضع user_id كـ null إذا كان is_companion true
-            $flight->ticket_count = 1; // ضع عدد التذاكر 1 إذا كان is_companion true
-
-            // تعيين main_user_id إلى flight_id من الرحلة السابقة إذا وجدت
-            if ($existingFlightId) {
-                $flight->main_user_id = $existingFlightId; // تعيين main_user_id إلى flight_id من الرحلة السابقة
+    {
+        try {
+            // التحقق من البيانات المدخلة
+            $request->validate([
+                'departure_airport' => 'required|string|max:100',
+                'arrival_airport' => 'required|string|max:100',
+                'departure_date' => 'required|date',
+                'arrival_date' => 'required|date',
+                'ticket_count' => 'integer|min:1',
+                'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'is_companion' => 'required|boolean',
+                // إضافة الحقول الجديدة هنا
+                'flight_number' => 'sometimes|string',
+                'seat_preference' => 'sometimes|string',
+                'upgrade_class' => 'sometimes|boolean',
+                'additional_requests' => 'sometimes|string',
+                'passenger_name' => 'sometimes|string',
+'specific_flight_time' => 'sometimes',
+            ]);
+    
+            // احصل على المستخدم الحالي
+            $user = Auth::user();
+    
+            $existingFlight = Flight::where('user_id', $user->id)->first();
+            $existingFlightId = $existingFlight ? $existingFlight->flight_id : null;
+    
+            $flight = new Flight();
+    
+            // تحقق من حالة is_companion
+            if ($request->is_companion) {
+                $flight->user_id = null; // ضع user_id كـ null إذا كان is_companion true
+                $flight->ticket_count = 1; // ضع عدد التذاكر 1 إذا كان is_companion true
+    
+                // تعيين main_user_id إلى flight_id من الرحلة السابقة إذا وجدت
+                if ($existingFlightId) {
+                    $flight->main_user_id = $existingFlightId; // تعيين main_user_id إلى flight_id من الرحلة السابقة
+                }
+            } else {
+                $flight->user_id = $user->id; // استخدم user_id من التوكن
+                $flight->ticket_count = $request->ticket_count; // استخدم عدد التذاكر من الطلب
+                $flight->main_user_id = null; // ضع main_user_id كـ null إذا كان is_companion false
             }
-        } else {
-            $flight->user_id = $user->id; // استخدم user_id من التوكن
-            $flight->ticket_count = $request->ticket_count; // استخدم عدد التذاكر من الطلب
-            $flight->main_user_id = null; // ضع main_user_id كـ null إذا كان is_companion false
+    
+            // باقي الحقول
+            $flight->departure_airport = $request->departure_airport;
+            $flight->arrival_airport = $request->arrival_airport;
+            $flight->departure_date = $request->departure_date;
+            $flight->arrival_date = $request->arrival_date;
+            $flight->is_companion = $request->is_companion;
+    
+            // إذا كانت هناك صورة لجواز السفر
+            if ($request->hasFile('passport_image')) {
+                $image = $request->file('passport_image');
+                $imagePath = $image->store('public/passport_images');
+                $flight->passport_image = basename($imagePath);
+            }
+    
+            // تعيين الحقول الإضافية
+            $flight->flight_number = $request->flight_number;
+            $flight->seat_preference = $request->seat_preference;
+            $flight->upgrade_class = $request->upgrade_class;
+            $flight->additional_requests = $request->additional_requests;
+            $flight->passenger_name = $request->passenger_name;
+    
+            // تعيين specific_flight_time
+            $flight->specific_flight_time = $request->specific_flight_time;
+    
+            // حفظ بيانات الطيران في قاعدة البيانات
+            $flight->created_at = Carbon::now('Asia/Baghdad'); // أو أي منطقة زمنية تريدها
+
+            $flight->save();
+    
+            return response()->json(['message' => 'Flight created successfully'], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        // باقي الحقول
-        $flight->departure_airport = $request->departure_airport;
-        $flight->arrival_airport = $request->arrival_airport;
-        $flight->departure_date = $request->departure_date;
-        $flight->arrival_date = $request->arrival_date;
-        $flight->is_companion = $request->is_companion;
-
-        // إذا كانت هناك صورة لجواز السفر
-        if ($request->hasFile('passport_image')) {
-            $image = $request->file('passport_image');
-            $imagePath = $image->store('public/passport_images');
-            $flight->passport_image = basename($imagePath);
-        }
-
-        // تعيين الحقول الإضافية
-        $flight->flight_number = $request->flight_number;
-        $flight->seat_preference = $request->seat_preference;
-        $flight->upgrade_class = $request->upgrade_class;
-        $flight->additional_requests = $request->additional_requests;
-        $flight->passenger_name = $request->passenger_name;
-
-        // حفظ بيانات الطيران في قاعدة البيانات
-        $flight->save();
-
-        return response()->json(['message' => 'Flight created successfully'], 201);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
     }
-}
+    
 
 
 
@@ -230,97 +237,11 @@ class FlightController extends Controller
 
 
 
-    // public function updateFlightByUser(Request $request, $flight_id)
-    // {
-    //     try {
-    //         // Validate the incoming request data
-    //         $request->validate([
-    //             'departure_airport' => 'sometimes|required|string|max:100',
-    //             'arrival_airport' => 'sometimes|required|string|max:100',
-    //             'departure_date' => 'sometimes|required|date',
-    //             'arrival_date' => 'sometimes|required|date',
-    //             'ticket_count' => 'sometimes|required|integer|min:1',
-    //             'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    //             'is_companion' => 'sometimes|required|boolean',
-    //             'flight_number' => 'sometimes|string',
-    //             'seat_preference' => 'sometimes|string',
-    //             'upgrade_class' => 'sometimes|string',
-    //             'additional_requests' => 'sometimes|string',
-    //             'passenger_name' => 'sometimes|string',
-    //         ]);
-
-    //         // Get the authenticated user
-    //         $user = Auth::user();
-
-    //         // Find the flight by flight_id and user_id
-    //         $flight = Flight::where('flight_id', $flight_id)->where('user_id', $user->id)->firstOrFail();
-
-    //         // Check if the current date is before the admin's update deadline
-    //         $currentDateTime = \Carbon\Carbon::now('Asia/Amman');
-    //         if ($currentDateTime->greaterThan($flight->admin_update_deadline)) {
-    //             return response()->json(['error' => 'The update deadline has passed. No further updates are allowed.'], 403);
-    //         }
-
-    //         // Update only the fields present in the request
-    //         if ($request->has('departure_airport')) {
-    //             $flight->departure_airport = $request->input('departure_airport');
-    //         }
-    //         if ($request->has('arrival_airport')) {
-    //             $flight->arrival_airport = $request->input('arrival_airport');
-    //         }
-    //         if ($request->has('departure_date')) {
-    //             $flight->departure_date = $request->input('departure_date');
-    //         }
-    //         if ($request->has('arrival_date')) {
-    //             $flight->arrival_date = $request->input('arrival_date');
-    //         }
-    //         if ($request->has('ticket_count')) {
-    //             $flight->ticket_count = $request->input('ticket_count');
-    //         }
-    //         if ($request->has('is_companion')) {
-    //             $flight->is_companion = $request->input('is_companion');
-    //         }
-    //         if ($request->has('flight_number')) {
-    //             $flight->flight_number = $request->input('flight_number');
-    //         }
-    //         if ($request->has('seat_preference')) {
-    //             $flight->seat_preference = $request->input('seat_preference');
-    //         }
-    //         if ($request->has('upgrade_class')) {
-    //             $flight->upgrade_class = $request->input('upgrade_class');
-    //         }
-    //         if ($request->has('additional_requests')) {
-    //             $flight->additional_requests = $request->input('additional_requests');
-    //         }
-    //         if ($request->has('passenger_name')) {
-    //             $flight->passenger_name = $request->input('passenger_name');
-    //         }
-
-    //         // Handle the passport image if present
-    //         if ($request->hasFile('passport_image')) {
-    //             $image = $request->file('passport_image');
-    //             $imagePath = $image->store('public/passport_images');
-    //             $flight->passport_image = basename($imagePath);
-    //         }
-
-    //         // Update the last speaker update timestamp with local timezone
-    //         $flight->last_speaker_update_at = \Carbon\Carbon::now('Asia/Amman');
-
-    //         // Save changes to the flight
-    //         $flight->save();
-
-    //         return response()->json(['message' => 'Flight updated successfully'], 200);
-
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    // } 
+    
 
     public function updateFlightByUser(Request $request, $flight_id)
-
     {
         try {
-
             $request->validate([
                 'departure_airport' => 'sometimes|required|string|max:100',
                 'arrival_airport' => 'sometimes|required|string|max:100',
@@ -334,20 +255,22 @@ class FlightController extends Controller
                 'upgrade_class' => 'sometimes|boolean',
                 'additional_requests' => 'sometimes|string',
                 'passenger_name' => 'sometimes|string',
+                'specific_flight_time' => 'sometimes|date_format:H:i', // Add validation for specific_flight_time
             ]);
-
+    
             // Get the authenticated user
             $user = Auth::user();
-
+    
             // Find the flight by flight_id and user_id
             $flight = Flight::where('flight_id', $flight_id)->where('user_id', $user->id)->firstOrFail();
-
+    
             // Check if the current date is before the admin's update deadline
-            // $currentDateTime = \Carbon\Carbon::now('Asia/Amman');
-            // if ($currentDateTime->greaterThan($flight->admin_update_deadline)) {
-            //     return response()->json(['error' => 'The update deadline has passed. No further updates are allowed.'], 403);
-            // }
-
+            $currentDateTime = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
+    
+            if ($flight->admin_update_deadline && $currentDateTime->greaterThan($flight->admin_update_deadline)) {
+                return response()->json(['error' => 'The update deadline has passed. No further updates are allowed.'], 403);
+            }
+    
             // Update only the fields present in the request
             if ($request->has('departure_airport')) {
                 $flight->departure_airport = $request->input('departure_airport');
@@ -382,33 +305,26 @@ class FlightController extends Controller
             if ($request->has('passenger_name')) {
                 $flight->passenger_name = $request->input('passenger_name');
             }
-
+    
             // Handle the passport image if present
             if ($request->hasFile('passport_image')) {
                 $image = $request->file('passport_image');
                 $imagePath = $image->store('public/passport_images');
                 $flight->passport_image = basename($imagePath);
             }
-
-            // Update the last speaker update timestamp with local timezone
-            // $flight->last_speaker_update_at = \Carbon\Carbon::now('Asia/Amman');
-
-            // Save changes to the flight
-            // احصل على الوقت الحالي في منطقة آسيا/عمان
-            $currentDateTime = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
-
-            // تحقق مما إذا كانت قيمة admin_update_deadline موجودة
-            if ($flight->admin_update_deadline && $currentDateTime->greaterThan($flight->admin_update_deadline)) {
-                return response()->json(['error' => 'The update deadline has passed. No further updates are allowed.'], 403);
+    
+            // Update the specific_flight_time if present
+            if ($request->has('specific_flight_time')) {
+                $flight->specific_flight_time = $request->input('specific_flight_time');
             }
-
-            // تحديث الطابع الزمني لآخر تحديث للمتحدث
+    
+            // Update the last speaker update timestamp with local timezone
             $flight->last_speaker_update_at = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
-
-
+    
+            // Save changes to the flight
             $flight->save();
-
-            // إرسال إشعار إلى جميع الإداريين
+    
+            // Send notification to all admins
             $admins = User::where('isAdmin', true)->get();
             foreach ($admins as $admin) {
                 Notification::create([
@@ -416,13 +332,13 @@ class FlightController extends Controller
                     'message' => 'تم تعديل الرحلة رقم ' . $flight->flight_id . ' من قبل المستخدم ' . $user->name,
                 ]);
             }
-
+    
             return response()->json(['message' => 'Flight updated successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
+    
 
 
 

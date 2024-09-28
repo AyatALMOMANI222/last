@@ -27,6 +27,7 @@ class Flight extends Model
         'seat_preference',
         'upgrade_class',
         'ticket_count',
+       'specific_flight_time',
         'additional_requests',
         'admin_update_deadline',
         'last_update_at',

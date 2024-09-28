@@ -210,6 +210,10 @@
         color: #3b3b3b;
         border-radius: 5px;
         cursor: pointer;
+        &.disabled-btn {
+          background-color: rgb(214, 214, 214);
+          color: #fff;
+        }
         &:hover {
           background-color: #005eeb;
           color: #fff;
@@ -235,5 +239,11 @@
     padding: 20px;
     background-color: #fff;
     border-radius: 5px;
+  }
+  .no-data {
+    padding:30px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #005eeb;
   }
 }

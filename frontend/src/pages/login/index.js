@@ -30,7 +30,10 @@ const LoginPage = () => {
       const response = await axiosInstance.post(url, userData);
       toast.success(response?.data?.message);
       const token = response.data.token;
+      const user = response.data.user;
       localStorage.setItem("token", token);
+      localStorage.setItem('user_id', user.id); // تخزين user_id
+
     } catch (error) {
       console.error("Login error:", error);
       toast.error(error.response.data.message);

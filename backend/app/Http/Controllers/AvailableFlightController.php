@@ -21,12 +21,16 @@ class AvailableFlightController extends Controller
                 'is_free' => 'boolean',
             ]);
     
+            // إعداد المنطقة الزمنية إلى آسيا/عمان
+            date_default_timezone_set('Asia/Amman');
+            
             $availableFlight = AvailableFlight::create([
                 'flight_id' => $validatedData['flight_id'],
                 'departure_date' => $validatedData['departure_date'],
                 'departure_time' => $validatedData['departure_time'],
                 'price' => $validatedData['price'],
                 'is_free' => $validatedData['is_free'] ?? false,  
+                'created_at' => now(), // إضافة حقل created_at مع الوقت الحالي
             ]);
     
             return response()->json([
@@ -47,6 +51,7 @@ class AvailableFlightController extends Controller
             ], 500);
         }
     }
+    
     public function getAvailableFlightByFlightId($flight_id)
     {
         try {

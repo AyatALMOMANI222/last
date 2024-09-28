@@ -44,7 +44,7 @@ class NotificationController extends Controller
 
 
 
-    public function getAllNotificationsByAuthenticatedUser()
+    public function getAllNotificationsByUserId()
     {
         // الحصول على معرف المستخدم من التوكن
         $userId = Auth::id();

@@ -31,11 +31,12 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
 
 
-Route::post('/users', [UserController::class, 'store']);
+Route::post('/users/{conference_id}', [UserController::class, 'store']);
 // فقط الادمن يعدل على ال status   للمتحدث id 
 Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->middleware(['auth:sanctum', 'admin']);
 
 // notification
+
 Route::post('/users/not/email/{id}', [AuthController::class, 'sendNotification'])->middleware('auth:sanctum');
 // Route::post('/users/not/database/{id}', [NotificationController::class, 'sendNotification']);
 // whatsApp

@@ -49,6 +49,10 @@ class Conference extends Model
         {
             return $this->hasMany(Paper::class);
         }
+        public function users()
+        {
+            return $this->belongsToMany(User::class);
+        }
 
         public static function boot()
         {

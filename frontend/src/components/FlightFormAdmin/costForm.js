@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Input from "../../CoreComponent/Input";
 import "./style.scss";
 
-const SeatCostForm = ({ setOpen }) => {
+const SeatCostForm = ({ setOpen,data }) => {
   const [seatCost, setSeatCost] = useState("");
   const [upgradeClassCost, setUpgradeClassCost] = useState("");
   const [additionalRequestsCost, setAdditionalRequestsCost] = useState("");
