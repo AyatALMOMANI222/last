@@ -25,7 +25,8 @@ class User extends Authenticatable
         'specialization',
         'nationality', 
         'country_of_residence',
-        'isAdmin'
+        'isAdmin',
+        'passenger_name'
     ];
 
     protected $hidden = [

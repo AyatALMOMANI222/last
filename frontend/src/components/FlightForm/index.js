@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 import ImageUpload from "../../CoreComponent/ImageUpload";
 
-const MainFlightForm = ({ setOpenForm , getFlightData }) => {
+const MainFlightForm = ({ setOpenForm, getFlightData }) => {
   const [arrivalDate, setArrivalDate] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [passportImage, setPassportImage] = useState(null);
@@ -58,7 +58,7 @@ const MainFlightForm = ({ setOpenForm , getFlightData }) => {
       .then((response) => {
         toast.success(response?.data?.message);
         setOpenForm(false);
-        getFlightData()
+        getFlightData();
         console.log("Flight created successfully:", response.data);
         // Handle success (like showing a success message, redirecting, etc.)
       })
@@ -202,6 +202,7 @@ const MainFlightForm = ({ setOpenForm , getFlightData }) => {
 const CompanionForm = ({ setOpenForm }) => {
   const [companions, setCompanions] = useState([]); // Array to store companions' data
   const [currentCompanion, setCurrentCompanion] = useState({
+    name: "",
     arrivalDate: "",
     departureDate: "",
     passportImage: null,
@@ -248,6 +249,7 @@ const CompanionForm = ({ setOpenForm }) => {
     const formData = new FormData();
 
     // Append the necessary fields
+    formData.append("passenger_name", currentCompanion.name);
     formData.append("arrival_date", currentCompanion.arrivalDate);
     formData.append("departure_date", currentCompanion.departureDate);
     formData.append("passport_image", currentCompanion.passportImage); // Uncomment if needed
@@ -287,6 +289,14 @@ const CompanionForm = ({ setOpenForm }) => {
     <div className="companion-form">
       <div className="flight-information-header">Add Companion</div>
       <form className="form-section">
+        <Input
+          label="Name"
+          type="text"
+          inputValue={currentCompanion.name}
+          setInputValue={(value) => handleCompanionChange("name", value)}
+          placeholder="Name"
+          required
+        />
         <DateInput
           label="Arrival Date"
           inputValue={currentCompanion.arrivalDate}
@@ -447,7 +457,9 @@ const FlightForm = () => {
             type="button"
             onClick={() => setOpenFlight(true)}
             disabled={Object.keys(data).length ? false : true}
-            className={`add-companion-btn ${Object.keys(data).length ? "" : "disabled-btn"}`}
+            className={`add-companion-btn ${
+              Object.keys(data).length ? "" : "disabled-btn"
+            }`}
           >
             Add Companion
           </button>
@@ -504,11 +516,16 @@ const FlightForm = () => {
           />
         </div>
       ) : (
-        <div className="no-data">No Data Available , Please Enter Flight Information</div>
+        <div className="no-data">
+          No Data Available , Please Enter Flight Information
+        </div>
       )}
 
       <MySideDrawer isOpen={openCompanion} setIsOpen={setOpenCompanion}>
-        <MainFlightForm setOpenForm={setOpenCompanion} getFlightData={getFlightData}/>
+        <MainFlightForm
+          setOpenForm={setOpenCompanion}
+          getFlightData={getFlightData}
+        />
       </MySideDrawer>
 
       <MySideDrawer isOpen={openFlight} setIsOpen={setOpenFlight}>

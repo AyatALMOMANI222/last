@@ -12,7 +12,7 @@ const FlightFormAdmin = () => {
  const[flights,setFlights]=useState([])
   const headers = [
     // { key: "flight_id", label: "Flight ID" },
-    { key: "passenger_name", label: "Passenger Name" },
+    { key: "user_name", label: "Passenger Name" },
     { key: "departure_airport", label: "Departure Airport" },
     { key: "arrival_airport", label: "Arrival Airport" },
     { key: "departure_date", label: "Departure Date" },

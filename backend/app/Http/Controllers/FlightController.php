@@ -14,83 +14,104 @@ class FlightController extends Controller
     public function createFlight(Request $request)
     {
         try {
-            // التحقق من البيانات المدخلة
-            $request->validate([
-                'departure_airport' => 'required|string|max:100',
-                'arrival_airport' => 'required|string|max:100',
-                'departure_date' => 'required|date',
-                'arrival_date' => 'required|date',
-                'ticket_count' => 'integer|min:1',
-                'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-                'is_companion' => 'required|boolean',
-                // إضافة الحقول الجديدة هنا
-                'flight_number' => 'sometimes|string',
-                'seat_preference' => 'sometimes|string',
-                'upgrade_class' => 'sometimes|boolean',
-                'additional_requests' => 'sometimes|string',
-                'passenger_name' => 'sometimes|string',
-'specific_flight_time' => 'sometimes',
-            ]);
+            // Validate input data
+            $this->validateFlightData($request);
     
-            // احصل على المستخدم الحالي
+            // Get the current user
             $user = Auth::user();
+            
+            // Check for an existing flight
+            $existingFlightId = Flight::where('user_id', $user->id)->value('flight_id');
     
-            $existingFlight = Flight::where('user_id', $user->id)->first();
-            $existingFlightId = $existingFlight ? $existingFlight->flight_id : null;
-    
+            // Create a new Flight instance
             $flight = new Flight();
+            
+            // Set user_id and ticket_count based on is_companion
+            $this->setFlightDetails($flight, $request, $user, $existingFlightId);
     
-            // تحقق من حالة is_companion
-            if ($request->is_companion) {
-                $flight->user_id = null; // ضع user_id كـ null إذا كان is_companion true
-                $flight->ticket_count = 1; // ضع عدد التذاكر 1 إذا كان is_companion true
+            // Save the passport image if present
+            $this->handlePassportImage($request, $flight);
     
-                // تعيين main_user_id إلى flight_id من الرحلة السابقة إذا وجدت
-                if ($existingFlightId) {
-                    $flight->main_user_id = $existingFlightId; // تعيين main_user_id إلى flight_id من الرحلة السابقة
-                }
-            } else {
-                $flight->user_id = $user->id; // استخدم user_id من التوكن
-                $flight->ticket_count = $request->ticket_count; // استخدم عدد التذاكر من الطلب
-                $flight->main_user_id = null; // ضع main_user_id كـ null إذا كان is_companion false
-            }
+            // Set additional fields
+            $this->setAdditionalFields($request, $flight);
     
-            // باقي الحقول
-            $flight->departure_airport = $request->departure_airport;
-            $flight->arrival_airport = $request->arrival_airport;
-            $flight->departure_date = $request->departure_date;
-            $flight->arrival_date = $request->arrival_date;
-            $flight->is_companion = $request->is_companion;
-    
-            // إذا كانت هناك صورة لجواز السفر
-            if ($request->hasFile('passport_image')) {
-                $image = $request->file('passport_image');
-                $imagePath = $image->store('public/passport_images');
-                $flight->passport_image = basename($imagePath);
-            }
-    
-            // تعيين الحقول الإضافية
-            $flight->flight_number = $request->flight_number;
-            $flight->seat_preference = $request->seat_preference;
-            $flight->upgrade_class = $request->upgrade_class;
-            $flight->additional_requests = $request->additional_requests;
-            $flight->passenger_name = $request->passenger_name;
-    
-            // تعيين specific_flight_time
-            $flight->specific_flight_time = $request->specific_flight_time;
-    
-            // حفظ بيانات الطيران في قاعدة البيانات
-            $flight->created_at = Carbon::now('Asia/Baghdad'); // أو أي منطقة زمنية تريدها
-
+            // Save the flight data in the database
+            $flight->created_at = Carbon::now('Asia/Baghdad'); // Specify the timezone
             $flight->save();
     
             return response()->json(['message' => 'Flight created successfully'], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'An error occurred while creating the flight. Please try again later.'], 500);
         }
     }
     
-
+    private function validateFlightData(Request $request)
+    {
+        $request->validate([
+            'departure_airport' => 'required|string|max:100',
+            'arrival_airport' => 'required|string|max:100',
+            'departure_date' => 'required|date',
+            'arrival_date' => 'required|date',
+            'ticket_count' => 'integer|min:1',
+            'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'is_companion' => 'required|boolean',
+            'flight_number' => 'sometimes|string',
+            'seat_preference' => 'sometimes|string',
+            'upgrade_class' => 'sometimes|boolean',
+            'additional_requests' => 'sometimes|string',
+            'passenger_name' => 'sometimes|string',
+            'specific_flight_time' => 'sometimes',
+        ]);
+    }
+    
+    private function setFlightDetails(Flight $flight, Request $request, $user, $existingFlightId)
+    {
+        if ($request->is_companion) {
+            $flight->user_id = null;
+            $flight->ticket_count = 1;
+    
+            if ($existingFlightId) {
+                $flight->main_user_id = $existingFlightId;
+            }
+        } else {
+            $flight->user_id = $user->id;
+            $flight->ticket_count = $request->ticket_count;
+            $flight->main_user_id = null;
+    
+            // Set passenger name
+            $userDetails = User::find($flight->user_id);
+            if ($userDetails) {
+                $flight->passenger_name = $userDetails->name;
+            }
+        }
+    
+        // Set mandatory fields
+        $flight->departure_airport = $request->departure_airport;
+        $flight->arrival_airport = $request->arrival_airport;
+        $flight->departure_date = $request->departure_date;
+        $flight->arrival_date = $request->arrival_date;
+        $flight->is_companion = $request->is_companion;
+    }
+    
+    private function handlePassportImage(Request $request, Flight $flight)
+    {
+        if ($request->hasFile('passport_image')) {
+            $image = $request->file('passport_image');
+            $imagePath = $image->store('public/passport_images');
+            $flight->passport_image = basename($imagePath);
+        }
+    }
+    
+    private function setAdditionalFields(Request $request, Flight $flight)
+    {
+        $flight->flight_number = $request->flight_number;
+        $flight->seat_preference = $request->seat_preference;
+        $flight->upgrade_class = $request->upgrade_class;
+        $flight->additional_requests = $request->additional_requests;
+        $flight->passenger_name = $request->passenger_name;
+        $flight->specific_flight_time = $request->specific_flight_time;
+    }
+    
 
 
 
@@ -211,30 +232,31 @@ class FlightController extends Controller
 
     public function getAllFlightsPaginationAndFilter(Request $request)
     {
+        
         try {
             // إعدادات الفلترة والصفحات
             $perPage = $request->get('per_page', 10); // عدد العناصر في الصفحة (افتراضي 10)
             $nameFilter = $request->get('name'); // فلترة بالاسم إذا تم توفيره
-
+    
             // بناء الاستعلام
             $query = Flight::join('users', 'flights.user_id', '=', 'users.id')
                 ->select('flights.*', 'users.name as user_name'); // تحديد الحقول المراد إرجاعها
-
+    
             // إضافة فلتر للاسم إذا تم توفيره
             if ($nameFilter) {
                 $query->where('users.name', 'LIKE', '%' . $nameFilter . '%');
             }
-
+    
             // تنفيذ الاستعلام مع pagination
             $flights = $query->paginate($perPage);
-
+    
             // إرجاع النتائج
             return response()->json($flights, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
+    
 
 
     
