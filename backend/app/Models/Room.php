@@ -19,6 +19,7 @@ class Room extends Model
         'is_confirmed',
         'confirmation_message',
         'confirmation_number',
+        'confirmation_number',
     ];
 
     public function reservation()

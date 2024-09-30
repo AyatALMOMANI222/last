@@ -20,6 +20,7 @@ class Reservation extends Model
         'total_nights',
         'room_count',
         'companions',
+        'companions_count',
     ];
 
     public function rooms()

@@ -12,6 +12,7 @@ class Exhibition extends Model
     protected $table = 'exhibitions';
 
     protected $fillable = [
+        'conference_id',
         'title',
         'description',
         'location',
