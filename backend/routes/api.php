@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcceptedFlightController;
+use App\Http\Controllers\AdditionalOptionsController;
 use Laravel\Sanctum\Sanctum;
 
 use App\Http\Controllers\CommitteeMemberController;
@@ -13,12 +14,18 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvailableFlightController;
 use App\Http\Controllers\ConferenceImageController;
+use App\Http\Controllers\ConferenceTripController;
 use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
+use App\Http\Controllers\GroupTripParticipantController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaperController;
+use App\Http\Controllers\ReservationsController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\TouristSiteController;
+use App\Http\Controllers\TripController;
+use App\Http\Controllers\TripParticipantController;
 use App\Http\Controllers\VisaController;
 use App\Http\Controllers\WhatsAppController;
 use App\Models\AvailableFlight;
@@ -117,3 +124,35 @@ Route::post('/accepted-flights', [AcceptedFlightController::class, 'store'])->mi
 Route::get('/accepted-flights/{flight_id}', [AcceptedFlightController::class, 'getAcceptedFlightByFlightId']);
 Route::post('/accepted-flights/{flight_id}', [AcceptedFlightController::class, 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/ticket/download/{id}', [AcceptedFlightController::class, 'downloadTicket']);
+
+
+Route::post('/reservation', [ReservationsController::class, 'createReservation'])->middleware('auth:sanctum');
+Route::delete('/reservation/{id}', [ReservationsController::class, 'deleteReservation'])->middleware('auth:sanctum');
+Route::put('/reservation/{id}', [ReservationsController::class, 'updateReservation'])->middleware('auth:sanctum');
+Route::get('/reservation', [ReservationsController::class, 'getReservationsByUserId'])->middleware('auth:sanctum');
+Route::get('/all_reservation', [ReservationsController::class, 'getAllReservations'])->middleware(['auth:sanctum','admin']);
+Route::put('/reservations/{id}/update-deadline', [ReservationsController::class, 'updateDeadlineByAdmin'])->middleware(['auth:sanctum','admin']);
+
+
+Route::post('/room', [RoomController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/update_admin/room/{id}', [RoomController::class, 'updateByAdmin'])->middleware(['auth:sanctum','admin']);
+Route::put('/update_user/room/{id}', [RoomController::class, 'updateByUser'])->middleware('auth:sanctum');
+
+
+
+// trips
+Route::post('/trips', [TripController::class, 'addTrip'])->middleware(['auth:sanctum','admin']);
+Route::post('/add_group-trip', [TripController::class, 'addGroupTrip'])->middleware(['auth:sanctum','admin']);
+
+// trip-participants
+Route::post('/trip-participants', [TripParticipantController::class, 'addParticipant'])->middleware('auth:sanctum');
+// group-trip-participants
+Route::post('/group-trip-participants', [GroupTripParticipantController::class, 'store'])->middleware('auth:sanctum');
+
+// conference-trips
+Route::post('/conference-trips', [ConferenceTripController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('conferences/{conferenceId}/trips/{tripType}', [ConferenceTripController::class, 'getTripsByConferenceId'])->middleware('auth:sanctum');
+Route::delete('/conference/{conferenceId}/trip/{tripId}', [ConferenceTripController::class, 'destroy']);
+// additional-options
+Route::post('/additional-options', [AdditionalOptionsController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/additional-options/trip/{trip_id}', [AdditionalOptionsController::class, 'getAdditionalOptionsByTripId']);

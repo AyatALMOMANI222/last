@@ -53,6 +53,14 @@ class Conference extends Model
         {
             return $this->belongsToMany(User::class);
         }
+        public function exhibition()
+        {
+            return $this->hasOne(Exhibition::class, 'conference_id');
+        }
+        public function trips()
+        {
+            return $this->belongsToMany(Trip::class, 'conference_trip');
+        }
 
         public static function boot()
         {

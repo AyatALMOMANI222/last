@@ -17,6 +17,8 @@ class ExhibitionController extends Controller
             'end_date' => 'nullable|date',
             'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
             'status' => 'required|in:upcoming,past',
+            'conference_id' => 'nullable|exists:conferences,id', // إضافة conference_id هنا
+
         ]);
 
         $exhibition = new Exhibition();
@@ -26,6 +28,7 @@ class ExhibitionController extends Controller
         $exhibition->start_date = $validatedData['start_date'];
         $exhibition->end_date = $validatedData['end_date'];
         $exhibition->status = $validatedData['status'];
+        $exhibition->conference_id = $validatedData['conference_id']; // إضافة conference_id هنا
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');

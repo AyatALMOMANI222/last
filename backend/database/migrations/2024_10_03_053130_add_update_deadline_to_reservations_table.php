@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('rooms', function (Blueprint $table) {
-            $table->string('confirmation_number')->nullable()->change(); 
-
+        Schema::table('reservations', function (Blueprint $table) {
+            
+            $table->dateTime('update_deadline')->nullable()->after('is_delete'); // إضافة عمود تاريخ التحديث
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('rooms', function (Blueprint $table) {
+        Schema::table('reservations', function (Blueprint $table) {
             //
         });
     }

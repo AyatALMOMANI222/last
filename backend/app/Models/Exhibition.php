@@ -31,4 +31,8 @@ class Exhibition extends Model
     {
         return $this->hasMany(ExhibitionImage::class, 'exhibition_id');
     }
+    public function conference()
+    {
+        return $this->belongsTo(Conference::class, 'conference_id');
+    }
 }
