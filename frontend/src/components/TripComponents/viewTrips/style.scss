@@ -1,0 +1,71 @@
+.trips-page-container{
+  height: calc(100vh - 100px)
+  ;
+  padding: 20px;
+  overflow: overlay;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
+  .trips-form-admin-header {
+    margin: 20px 0px;
+    height: 60px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid rgb(242, 239, 239);
+  
+
+    .add-trips-btn {
+      padding: 0px 20px;
+      height: 35px;
+      background-color: #fff;
+      border: 1px solid #005eeb;
+      color: #3b3b3b;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      &:hover {
+        background-color: #005eeb;
+        color: #fff;
+      }
+      &:active {
+        background-color: #4f75ff;
+        color: #fff;
+      }
+    }
+
+    .filters{
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        align-items: center;
+    }
+  }
+  .add-price-btn{
+    padding: 0px 20px;
+    height: 35px;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    color: #3b3b3b;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #005eeb;
+  }
+}

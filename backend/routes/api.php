@@ -143,6 +143,7 @@ Route::put('/update_user/room/{id}', [RoomController::class, 'updateByUser'])->m
 // trips
 Route::post('/trips', [TripController::class, 'addTrip'])->middleware(['auth:sanctum','admin']);
 Route::post('/add_group-trip', [TripController::class, 'addGroupTrip'])->middleware(['auth:sanctum','admin']);
+Route::get('/all-trip', [TripController::class, 'getAllTrips'])->middleware(['auth:sanctum','admin']);
 
 // trip-participants
 Route::post('/trip-participants', [TripParticipantController::class, 'addParticipant'])->middleware('auth:sanctum');

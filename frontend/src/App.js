@@ -17,6 +17,7 @@ import Exhibitions from "./pages/Exhibitions";
 import SelectConferences from "./pages/SelectConferences";
 import Reservation from "./components/Reservation";
 import CreateTrip from "./components/TripComponents/AddTrip";
+import ViewTrip from "./components/TripComponents/viewTrips";
 
 const App = () => {
   const location = useLocation();
@@ -55,7 +56,7 @@ const App = () => {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/registertype" element={<RegisterType />} />
-        <Route path="/create/trip" element={<CreateTrip />} />
+        <Route path="/create/trip" element={<ViewTrip />} />
       </Routes>
     </div>
   );

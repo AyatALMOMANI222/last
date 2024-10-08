@@ -73,7 +73,6 @@ class TripController extends Controller
 
     public function addGroupTrip(Request $request)
     {
-        // الحصول على معرف المستخدم (لو كنت تستخدم المصادقة)
         $userId = Auth::id();
         if (!$userId) {
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -83,7 +82,6 @@ class TripController extends Controller
             // تحقق من صحة المدخلات
             $validatedData = $request->validate([
                 'trip_type' => 'required|in:private,group',
-
                 'available_dates' => 'nullable|json',
                 'location' => 'nullable|string|max:255',
                 'duration' => 'nullable|integer',
@@ -96,7 +94,6 @@ class TripController extends Controller
             // إنشاء الرحلة الجديدة
             $trip = Trip::create([
                 'trip_type' => $validatedData['trip_type'],
-
                 'available_dates' => $validatedData['available_dates'],
                 'location' => $validatedData['location'],
                 'duration' => $validatedData['duration'],
@@ -108,10 +105,33 @@ class TripController extends Controller
 
             return response()->json(['message' => 'Trip added successfully', 'trip' => $trip], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // إرجاع رسالة الخطأ من عملية التحقق
             return response()->json(['error' => $e->validator->errors()->first()], 422);
         } catch (\Exception $e) {
-            // إرجاع رسالة الخطأ العامة
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getAllTrips(Request $request)
+    {
+        try {
+            // استرجاع جميع الرحلات مع إمكانية التصفية
+            $query = Trip::query();
+
+            // تصفية حسب نوع الرحلة إذا تم توفيره
+            if ($request->has('trip_type')) {
+                $query->where('trip_type', $request->input('trip_type'));
+            }
+
+            // تصفية حسب اسم الرحلة إذا تم توفيره
+            if ($request->has('name')) {
+                $query->where('name', 'like', '%' . $request->input('name') . '%');
+            }
+
+            // استرجاع الرحلات
+            $trips = $query->get();
+
+            return response()->json(['trips' => $trips], 200);
+        } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
