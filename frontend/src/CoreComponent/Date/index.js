@@ -9,6 +9,7 @@ const DateInput = ({
   label,
   inputValue,
   setInputValue,
+  type
 }) => {
   const handleChange = (e) => {
     const newValue = e.target.value;
@@ -28,7 +29,7 @@ const DateInput = ({
           className={`text-field ${errorMsg ? "error-msg" : ""} ${!inputValue ? "empty" : ""}`}
           value={inputValue}
           onChange={handleChange}
-          type="date"
+          type={type || "date"}
         />
         {icon && (
           <SVG

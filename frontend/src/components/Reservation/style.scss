@@ -1,0 +1,63 @@
+.reservation-form-header-container {
+  margin: 20px;
+  height: 30px;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid rgb(242, 239, 239);
+  background-color: #4f75ff;
+  .reservation-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    button {
+      padding: 0px 20px;
+      height: 35px;
+      background-color: #fff;
+      border: 1px solid #005eeb;
+      color: #3b3b3b;
+      border-radius: 5px;
+      cursor: pointer;
+      &.disabled-btn {
+        background-color: rgb(214, 214, 214);
+        color: #fff;
+      }
+      &:hover {
+        background-color: #005eeb;
+        color: #fff;
+      }
+      &:active {
+        background-color: #4f75ff;
+        color: #fff;
+      }
+      font-size: 15px;
+    }
+  }
+  .title-container {
+    font-size: 19px;
+    font-weight: 500;
+    color: #fff;
+  }
+}
+
+.reservation-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.view-reservation-info{
+  width: 70%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-row-gap: 20px;
+  padding: 30px;
+}
+.room-form-container{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

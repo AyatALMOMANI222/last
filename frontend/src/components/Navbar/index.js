@@ -47,6 +47,14 @@ const NavBar = () => {
         <div
           className="option-btn"
           onClick={() => {
+            navigate("/reservation/form");
+          }}
+        >
+          Reservation Page
+        </div>
+        <div
+          className="option-btn"
+          onClick={() => {
             navigate("/about");
           }}
         >

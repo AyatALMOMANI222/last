@@ -15,6 +15,8 @@ import FlightFormAdmin from "./components/FlightFormAdmin";
 import ConferencesAdmin from "./components/ConferencesAdmin";
 import Exhibitions from "./pages/Exhibitions";
 import SelectConferences from "./pages/SelectConferences";
+import Reservation from "./components/Reservation";
+import CreateTrip from "./components/TripComponents/AddTrip";
 
 const App = () => {
   const location = useLocation();
@@ -29,19 +31,21 @@ const App = () => {
     "/flight/form",
     "/flights",
     "/conferences",
-    "/exhibitions"
+    "/exhibitions",
+    "/reservation/form",
+   "/create/trip"
   ];
 
-  
   return (
     <div id="main" className="main">
       <ToastContainer />
       {/* Conditionally render the NavBar based on the current route */}
       {navBarRoutes.includes(location.pathname) && <NavBar />}
       <Routes className="main">
-      <Route path="/exhibitions" element={<Exhibitions />} />
+        <Route path="/exhibitions" element={<Exhibitions />} />
+        <Route path="/reservation/form" element={<Reservation />} />
 
-      <Route path="/conferences" element={<ConferencesAdmin />} />
+        <Route path="/conferences" element={<ConferencesAdmin />} />
         <Route path="/flights" element={<FlightFormAdmin />} />
         <Route path="/flight/form" element={<FlightForm />} />
         <Route path="/login" element={<LoginPage />} />
@@ -51,6 +55,7 @@ const App = () => {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/registertype" element={<RegisterType />} />
+        <Route path="/create/trip" element={<CreateTrip />} />
       </Routes>
     </div>
   );

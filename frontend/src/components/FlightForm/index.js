@@ -74,7 +74,7 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
   return (
     <form className="main-flight-form" onSubmit={handleSubmit}>
       <div className="flight-information-header">Flight Information</div>
-      <div className="form-section">
+     <div className="form-section">
         <DateInput
           label="Arrival Date"
           inputValue={arrivalDate}
