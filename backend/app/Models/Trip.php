@@ -44,4 +44,9 @@ class Trip extends Model
     {
         return $this->belongsToMany(Conference::class, 'conference_trip');
     }
+    public function additionalOptions()
+    {
+        return $this->hasMany(AdditionalOption::class);
+    }
+    
 }

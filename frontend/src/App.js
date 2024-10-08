@@ -57,6 +57,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/registertype" element={<RegisterType />} />
         <Route path="/create/trip" element={<ViewTrip />} />
+        <Route path="/trip/:tripId" element={<h1>test</h1>} />
       </Routes>
     </div>
   );

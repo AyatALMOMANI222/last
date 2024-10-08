@@ -4,8 +4,10 @@ import Input from "../../../CoreComponent/Input";
 import Select from "../../../CoreComponent/Select";
 import axios from "axios";
 import CreateTrip from "../AddTrip";
-import "./style.scss";
 import AddOption from "../AddOptions";
+import ViewOneTrip from "../ViewOneTrip";
+import "./style.scss";
+import { useNavigate } from "react-router-dom";
 
 const headers = [
   { key: "id", label: "ID" },
@@ -24,13 +26,14 @@ const tripTypes = [
 ];
 
 const ViewTrip = () => {
+  const navigate = useNavigate();
   const [tripData, setTripData] = useState([]);
   const [tripName, setTripName] = useState("");
   const [tripType, setTripType] = useState("");
   const [isAddTrip, setAddTrip] = useState(false);
   const [isAddPrice, setAddPrice] = useState(false);
   const [tripId, setTripId] = useState(false);
-
+  const [viewOneTrip, setViewOneTrip] = useState(false);
 
   const fetchTrips = async () => {
     const params = {};
@@ -61,10 +64,27 @@ const ViewTrip = () => {
                 className="add-price-btn"
                 onClick={() => {
                   setAddPrice(true);
-                  setTripId(item?.id)
+                  setTripId(item?.id);
                 }}
               >
                 Add Prices
+              </button>
+              <button
+                className="add-price-btn"
+                onClick={() => {
+                  setViewOneTrip(true);
+                  setTripId(item?.id);
+                }}
+              >
+               View 
+              </button>
+              <button
+                className="add-price-btn"
+                onClick={() => {
+                  navigate(`/trip/${item.id}`)
+                }}
+              >
+               Edit 
               </button>
             </div>
           ),
@@ -104,7 +124,12 @@ const ViewTrip = () => {
         </button>
       </div>
       <CreateTrip isOpen={isAddTrip} setIsOpen={setAddTrip} />
-      <AddOption isOpen={isAddPrice} setIsOpen={setAddPrice} tripId={tripId}/>
+      <AddOption isOpen={isAddPrice} setIsOpen={setAddPrice} tripId={tripId} />
+      <ViewOneTrip
+        isOpen={viewOneTrip}
+        setIsOpen={setViewOneTrip}
+        tripId={tripId}
+      />
       <Table data={tripData} headers={headers} />
     </div>
   );

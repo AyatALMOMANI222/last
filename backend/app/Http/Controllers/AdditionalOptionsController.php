@@ -75,4 +75,51 @@ class AdditionalOptionsController extends Controller
             ], 500);
         }
     }
+
+
+    public function updateSelectedOptionsPrices(Request $request, $trip_id)
+{
+    // Validate the request data
+    $request->validate([
+        'options' => 'required|array',  // Ensure 'options' is an array
+        'options.*.id' => 'required|exists:additional_options,id', // Validate each option ID
+        'options.*.price' => 'required|numeric|min:0',  // Validate the price for each option
+    ]);
+
+    try {
+        $updatedOptions = [];
+
+        // Loop through the options provided in the request
+        foreach ($request->options as $optionData) {
+            $option = AdditionalOption::where('trip_id', $trip_id)
+                ->where('id', $optionData['id'])
+                ->first();
+
+            // Check if option exists for the given trip
+            if ($option) {
+                $option->price = $optionData['price'];  // Update the price
+                $option->save();  // Save the updated option
+                $updatedOptions[] = $option;  // Collect updated options for the response
+            }
+        }
+
+        // Check if any options were updated
+        if (count($updatedOptions) > 0) {
+            return response()->json([
+                'message' => 'Prices updated successfully for selected options.',
+                'data' => $updatedOptions,
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'No matching options found for the given trip ID and option IDs.',
+            ], 404);
+        }
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'An unexpected error occurred.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 }

@@ -135,4 +135,25 @@ class TripController extends Controller
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
+
+    public function getTripById($id)
+    {
+        try {
+            // Eager load additional options for the trip
+            $trip = Trip::with('additionalOptions')->find($id);
+
+            if (!$trip) {
+                return response()->json(['error' => 'Trip not found'], 404);
+            }
+
+            // Get additional options associated with the trip
+            $additionalOptions = $trip->additionalOptions;
+
+            return response()->json([
+                'trip' => $trip,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+        }
+    }
 }

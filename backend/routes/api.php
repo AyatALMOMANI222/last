@@ -144,6 +144,7 @@ Route::put('/update_user/room/{id}', [RoomController::class, 'updateByUser'])->m
 Route::post('/trips', [TripController::class, 'addTrip'])->middleware(['auth:sanctum','admin']);
 Route::post('/add_group-trip', [TripController::class, 'addGroupTrip'])->middleware(['auth:sanctum','admin']);
 Route::get('/all-trip', [TripController::class, 'getAllTrips'])->middleware(['auth:sanctum','admin']);
+Route::get('/trip/{id}', [TripController::class, 'getTripById'])->middleware(['auth:sanctum','admin']);
 
 // trip-participants
 Route::post('/trip-participants', [TripParticipantController::class, 'addParticipant'])->middleware('auth:sanctum');
@@ -157,3 +158,4 @@ Route::delete('/conference/{conferenceId}/trip/{tripId}', [ConferenceTripControl
 // additional-options
 Route::post('/additional-options', [AdditionalOptionsController::class, 'store'])->middleware(['auth:sanctum','admin']);
 Route::get('/additional-options/trip/{trip_id}', [AdditionalOptionsController::class, 'getAdditionalOptionsByTripId']);
+Route::put('/additional-options/update-selected-prices/{trip_id}', [AdditionalOptionsController::class, 'updateSelectedOptionsPrices']);
