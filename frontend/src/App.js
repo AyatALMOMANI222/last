@@ -18,7 +18,6 @@ import SelectConferences from "./pages/SelectConferences";
 import Reservation from "./components/Reservation";
 import CreateTrip from "./components/TripComponents/AddTrip";
 import ViewTrip from "./components/TripComponents/viewTrips";
-import EditTrip from "./components/EditTrip";
 import UsersList from "./components/UserList";
 
 const App = () => {

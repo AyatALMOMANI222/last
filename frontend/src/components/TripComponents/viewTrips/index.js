@@ -8,7 +8,7 @@ import AddOption from "../AddOptions";
 import ViewOneTrip from "../ViewOneTrip";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
-import EditTrip from "../../EditTrip";
+import EditTrip from "../EditTrip";
 
 const headers = [
   { key: "id", label: "ID" },

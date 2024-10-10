@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Input from "../../CoreComponent/Input/index";
-import Select from "../../CoreComponent/Select/index";
-
+import Input from "../../../CoreComponent/Input/index";
+import Select from "../../../CoreComponent/Select/index";
+import MySideDrawer from "../../../CoreComponent/SideDrawer";
+import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
 import "./style.scss";
-import MySideDrawer from "../../CoreComponent/SideDrawer";
-import CustomFormWrapper from "../../CoreComponent/CustomFormWrapper";
 
 const EditTrip = ({ isOpen, setIsOpen, tripId }) => {
   const [trip, setTrip] = useState(null);
