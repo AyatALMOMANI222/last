@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdditionalOption;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -156,4 +157,151 @@ class TripController extends Controller
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
+
+    public function updateTripById(Request $request, $id)
+{
+    $userId = Auth::id();
+    if (!$userId) {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
+    try {
+        // تحقق من وجود الرحلة
+        $trip = Trip::find($id);
+        if (!$trip) {
+            return response()->json(['error' => 'Trip not found'], 404);
+        }
+
+        // تحقق من صحة المدخلات
+        $validatedData = $request->validate([
+            'trip_type' => 'sometimes|required|in:private,group',
+            'name' => 'sometimes|nullable|string|max:255',
+            'images' => 'sometimes|nullable|array|max:5', // مجموعة من الصور
+            'images.*' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // صور فردية
+            'price_per_person' => 'sometimes|nullable|numeric',
+            'price_for_two' => 'sometimes|nullable|numeric',
+            'price_for_three_or_more' => 'sometimes|nullable|numeric',
+            'description' => 'sometimes|nullable|string',
+            'additional_info' => 'sometimes|nullable|string',
+        ]);
+
+        // تحديث الصور
+        $imagePaths = [];
+        if ($request->has('images')) {
+            foreach ($request->images as $image) {
+                $imagePaths[] = $image->store('trip_images', 'public');
+            }
+        }
+
+        // تحديث بيانات الرحلة
+        $trip->trip_type = $validatedData['trip_type'] ?? $trip->trip_type;
+        $trip->name = $validatedData['name'] ?? $trip->name;
+        $trip->image_1 = $imagePaths[0] ?? $trip->image_1;
+        $trip->image_2 = $imagePaths[1] ?? $trip->image_2;
+        $trip->image_3 = $imagePaths[2] ?? $trip->image_3;
+        $trip->image_4 = $imagePaths[3] ?? $trip->image_4;
+        $trip->image_5 = $imagePaths[4] ?? $trip->image_5;
+        $trip->price_per_person = $validatedData['price_per_person'] ?? $trip->price_per_person;
+        $trip->price_for_two = $validatedData['price_for_two'] ?? $trip->price_for_two;
+        $trip->price_for_three_or_more = $validatedData['price_for_three_or_more'] ?? $trip->price_for_three_or_more;
+        $trip->description = $validatedData['description'] ?? $trip->description;
+        $trip->additional_info = $validatedData['additional_info'] ?? $trip->additional_info;
+
+        // حفظ التعديلات
+        $trip->save();
+
+        return response()->json(['message' => 'Trip updated successfully', 'trip' => $trip], 200);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json(['error' => $e->validator->errors()], 422);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+    }
+}
+
+
+public function updateTripAndOptions(Request $request, $id)
+{
+    $userId = Auth::id();
+    if (!$userId) {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
+    try {
+        // تحقق من وجود الرحلة
+        $trip = Trip::find($id);
+        if (!$trip) {
+            return response()->json(['error' => 'Trip not found'], 404);
+        }
+
+        // التحقق من صحة مدخلات تحديث الرحلة
+        $validatedTripData = $request->validate([
+            'trip_type' => 'sometimes|required|in:private,group',
+            'name' => 'sometimes|nullable|string|max:255',
+            'images' => 'sometimes|nullable|array|max:5', // مجموعة من الصور
+            'images.*' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // صور فردية
+            'price_per_person' => 'sometimes|nullable|numeric',
+            'price_for_two' => 'sometimes|nullable|numeric',
+            'price_for_three_or_more' => 'sometimes|nullable|numeric',
+            'description' => 'sometimes|nullable|string',
+            'additional_info' => 'sometimes|nullable|string',
+        ]);
+
+        // تحديث الصور
+        $imagePaths = [];
+        if ($request->has('images')) {
+            foreach ($request->images as $image) {
+                $imagePaths[] = $image->store('trip_images', 'public');
+            }
+        }
+
+        // تحديث بيانات الرحلة
+        $trip->trip_type = $validatedTripData['trip_type'] ?? $trip->trip_type;
+        $trip->name = $validatedTripData['name'] ?? $trip->name;
+        $trip->image_1 = $imagePaths[0] ?? $trip->image_1;
+        $trip->image_2 = $imagePaths[1] ?? $trip->image_2;
+        $trip->image_3 = $imagePaths[2] ?? $trip->image_3;
+        $trip->image_4 = $imagePaths[3] ?? $trip->image_4;
+        $trip->image_5 = $imagePaths[4] ?? $trip->image_5;
+        $trip->price_per_person = $validatedTripData['price_per_person'] ?? $trip->price_per_person;
+        $trip->price_for_two = $validatedTripData['price_for_two'] ?? $trip->price_for_two;
+        $trip->price_for_three_or_more = $validatedTripData['price_for_three_or_more'] ?? $trip->price_for_three_or_more;
+        $trip->description = $validatedTripData['description'] ?? $trip->description;
+        $trip->additional_info = $validatedTripData['additional_info'] ?? $trip->additional_info;
+
+        // حفظ التعديلات على بيانات الرحلة
+        $trip->save();
+
+        $validatedOptionData = $request->validate([
+            'options' => 'sometimes|array',
+            'options.*.id' => 'sometimes|required|exists:additional_options,id',
+            'options.*.price' => 'sometimes|required|numeric|min:0',
+        ]);
+
+        $updatedOptions = [];
+        if (!empty($validatedOptionData['options'])) {
+            foreach ($validatedOptionData['options'] as $optionData) {
+                $option = AdditionalOption::where('trip_id', $id)
+                    ->where('id', $optionData['id'])
+                    ->first();
+
+                if ($option) {
+                    $option->price = $optionData['price'];
+                    $option->save();
+                    $updatedOptions[] = $option;
+                }
+            }
+        }
+
+        return response()->json([
+            'message' => 'Trip and options updated successfully',
+            'trip' => $trip,
+            'updated_options' => $updatedOptions,
+        ], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json(['error' => $e->validator->errors()], 422);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+    }}
+
 }

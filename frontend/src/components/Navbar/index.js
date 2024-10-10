@@ -59,7 +59,24 @@ const NavBar = () => {
           }}
         >
           About Us
-        </div>        <div
+        </div> 
+        <div
+          className="option-btn"
+          onClick={() => {
+            navigate('create/trip');
+          }}
+        >
+          Admin Trip
+        </div>   
+        <div
+          className="option-btn"
+          onClick={() => {
+            navigate('user');
+          }}
+        >
+          users
+        </div>
+            <div
           className="option-btn"
           onClick={() => {
             navigate("/exhibitions");

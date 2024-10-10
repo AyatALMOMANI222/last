@@ -41,6 +41,7 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 Route::post('/users/{conference_id}', [UserController::class, 'store']);
 // فقط الادمن يعدل على ال status   للمتحدث id 
 Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/users', [UserController::class, 'getAllUsers']);
 
 // notification
 
@@ -145,6 +146,9 @@ Route::post('/trips', [TripController::class, 'addTrip'])->middleware(['auth:san
 Route::post('/add_group-trip', [TripController::class, 'addGroupTrip'])->middleware(['auth:sanctum','admin']);
 Route::get('/all-trip', [TripController::class, 'getAllTrips'])->middleware(['auth:sanctum','admin']);
 Route::get('/trip/{id}', [TripController::class, 'getTripById'])->middleware(['auth:sanctum','admin']);
+Route::post('/update/trips/{id}', [TripController::class, 'updateTripById'])->middleware(['auth:sanctum','admin']);
+Route::post('/trips_option/{id}', [TripController::class, 'updateTripAndOptions'])->middleware(['auth:sanctum','admin']);
+
 
 // trip-participants
 Route::post('/trip-participants', [TripParticipantController::class, 'addParticipant'])->middleware('auth:sanctum');
@@ -158,4 +162,4 @@ Route::delete('/conference/{conferenceId}/trip/{tripId}', [ConferenceTripControl
 // additional-options
 Route::post('/additional-options', [AdditionalOptionsController::class, 'store'])->middleware(['auth:sanctum','admin']);
 Route::get('/additional-options/trip/{trip_id}', [AdditionalOptionsController::class, 'getAdditionalOptionsByTripId']);
-Route::put('/additional-options/update-selected-prices/{trip_id}', [AdditionalOptionsController::class, 'updateSelectedOptionsPrices']);
+Route::put('/additional-options/update-selected-prices/{trip_id}', [AdditionalOptionsController::class, 'updateSelectedOptionsPrices'])->middleware(['auth:sanctum','admin']);

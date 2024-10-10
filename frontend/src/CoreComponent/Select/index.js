@@ -38,8 +38,8 @@ const Select = ({
       setIsOpen(false);
       console.log(value);
 
-      const isValueFromTheOptions = options.find(
-        (item) => item.value === value.value && item.label === value.label
+      const isValueFromTheOptions = options?.find(
+        (item) => item?.value === value?.value && item?.label === value?.label
       );
     }
   };

@@ -140,6 +140,24 @@ class UserController extends Controller
         }
     }
     
-    
+    public function getAllUsers()
+{
+    try {
+        // استرجاع جميع المستخدمين من قاعدة البيانات
+        $users = User::all();
+
+        // إرجاع استجابة JSON
+        return response()->json([
+            'message' => 'Users retrieved successfully!',
+            'data' => $users,
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to retrieve users.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 }
 

@@ -18,6 +18,8 @@ import SelectConferences from "./pages/SelectConferences";
 import Reservation from "./components/Reservation";
 import CreateTrip from "./components/TripComponents/AddTrip";
 import ViewTrip from "./components/TripComponents/viewTrips";
+import EditTrip from "./components/EditTrip";
+import UsersList from "./components/UserList";
 
 const App = () => {
   const location = useLocation();
@@ -57,7 +59,9 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/registertype" element={<RegisterType />} />
         <Route path="/create/trip" element={<ViewTrip />} />
-        <Route path="/trip/:tripId" element={<h1>test</h1>} />
+        {/* <Route path="/trip/:tripId" element={<EditTrip/>} /> */}
+        <Route path="/user" element={<UsersList/>} />
+
       </Routes>
     </div>
   );

@@ -8,6 +8,7 @@ import AddOption from "../AddOptions";
 import ViewOneTrip from "../ViewOneTrip";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
+import EditTrip from "../../EditTrip";
 
 const headers = [
   { key: "id", label: "ID" },
@@ -34,7 +35,8 @@ const ViewTrip = () => {
   const [isAddPrice, setAddPrice] = useState(false);
   const [tripId, setTripId] = useState(false);
   const [viewOneTrip, setViewOneTrip] = useState(false);
-
+  const [openEditTrip, setOpenEditTrip] = useState(true);
+  const [open, setOpen] = useState(false);
   const fetchTrips = async () => {
     const params = {};
     if (tripType) {
@@ -76,15 +78,19 @@ const ViewTrip = () => {
                   setTripId(item?.id);
                 }}
               >
-               View 
+                View
               </button>
               <button
                 className="add-price-btn"
                 onClick={() => {
-                  navigate(`/trip/${item.id}`)
+                  setOpenEditTrip(true);
+                  setOpen(true);
+                  console.log({ open });
+
+                  setTripId(item?.id);
                 }}
               >
-               Edit 
+                Edit
               </button>
             </div>
           ),
@@ -123,6 +129,7 @@ const ViewTrip = () => {
           Add new Trip
         </button>
       </div>
+
       <CreateTrip isOpen={isAddTrip} setIsOpen={setAddTrip} />
       <AddOption isOpen={isAddPrice} setIsOpen={setAddPrice} tripId={tripId} />
       <ViewOneTrip
@@ -130,6 +137,8 @@ const ViewTrip = () => {
         setIsOpen={setViewOneTrip}
         tripId={tripId}
       />
+
+      <EditTrip isOpen={open} setIsOpen={setOpen} tripId={tripId} />
       <Table data={tripData} headers={headers} />
     </div>
   );

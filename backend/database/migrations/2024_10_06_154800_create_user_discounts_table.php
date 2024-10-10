@@ -19,6 +19,7 @@ class CreateUserDiscountsTable extends Migration
             $table->unsignedBigInteger('option_id'); 
             $table->decimal('discount_value', 10, 2); 
             $table->boolean('show_price')->default(false);
+            $table->foreignId('trip_id')->constrained('trips')->onDelete('cascade');
 
             // إضافة العلاقات
             $table->foreign('trip_participant_id')->references('id')->on('trip_participants')->onDelete('cascade');
