@@ -36,7 +36,7 @@ const Select = ({
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
-      console.log(value);
+
 
       const isValueFromTheOptions = options?.find(
         (item) => item?.value === value?.value && item?.label === value?.label
@@ -50,9 +50,7 @@ const Select = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
+
   return (
     <div className="dropdown-container" ref={dropdownRef}>
       {label && (

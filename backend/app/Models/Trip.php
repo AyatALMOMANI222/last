@@ -48,5 +48,9 @@ class Trip extends Model
     {
         return $this->hasMany(AdditionalOption::class);
     }
-    
+//     public function conferenceTrips()
+// {
+//     return $this->hasMany(ConferenceTrip::class);
+// }
+
 }

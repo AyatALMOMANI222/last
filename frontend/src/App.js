@@ -35,7 +35,8 @@ const App = () => {
     "/conferences",
     "/exhibitions",
     "/reservation/form",
-   "/create/trip"
+   "/create/trip",
+   "/user"
   ];
 
   return (

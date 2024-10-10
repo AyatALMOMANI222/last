@@ -39,20 +39,16 @@ const ConferencesPage = () => {
     axios
       .get(url)
       .then((response) => {
-        console.log("Conferences retrieved successfully:", response.data.data);
         setAllConference(response.data.data);
       })
       .catch((error) => {
-        console.error("Error retrieving conferences:", error);
       });
   };
 
   useEffect(() => {
     getConference();
   }, [conferenceName]);
-  useEffect(() => {
-    console.log({ selectedConference });
-  }, [selectedConference]);
+
   return (
     <div className="conferences-page">
       <div className="conferences-form-admin-header">

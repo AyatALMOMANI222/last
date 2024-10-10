@@ -72,7 +72,6 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
         }
       );
 
-      console.log("Trip added successfully", response.data);
     } catch (error) {
       console.error(
         "Error adding trip:",

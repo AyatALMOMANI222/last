@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ConferenceTrip;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException; 
 
@@ -120,4 +121,30 @@ class ConferenceTripController extends Controller
         }
     }
     
+    public function index()
+    {
+        try {
+            // جلب جميع السجلات من جدول conference_trip مع العلاقة مع جدول trips
+            $conferenceTrips = ConferenceTrip::with('trip')->get();
+
+            // إرجاع البيانات كاستجابة JSON
+            return response()->json([
+                'success' => true,
+                'data' => $conferenceTrips
+            ], 200);
+
+        } catch (Exception $e) {
+            // إرجاع رسالة خطأ عند حدوث استثناء
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ أثناء جلب البيانات.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+ 
 }
+
+

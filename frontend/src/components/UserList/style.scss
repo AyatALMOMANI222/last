@@ -1,0 +1,22 @@
+.all-users-table{
+    height: 100vh;
+    overflow-y: overlay;
+    padding: 20px;
+    &::-webkit-scrollbar {
+        width: 6px;
+      }
+    
+      &::-webkit-scrollbar-track {
+        background: var(--scrollbar-track-color);
+      }
+    
+      &::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb-color);
+        border-radius: 50px;
+      }
+    
+      &::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-thumb-hover-color);
+      }
+
+}

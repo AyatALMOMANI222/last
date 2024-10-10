@@ -24,7 +24,6 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
           },
         }
       );
-      console.log(response.data.trip.additional_options);
       setOptions(response.data.trip.additional_options);
       setData(response.data?.trip);
     } catch (err) {

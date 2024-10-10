@@ -37,7 +37,6 @@ const RoomForm = ({openRoom , setOpenRoom}) => {
       lateCheckOut,
       earlyCheckIn,
     };
-    console.log("Form data: ", formData);
   };
 
   return (

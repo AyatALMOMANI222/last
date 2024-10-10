@@ -22,9 +22,6 @@ class CreateDinnerDetailsTable extends Migration
             $table->time('dinner_time'); // ساعة العشاء
             $table->integer('duration'); // مدة العشاء بالدقائق
             $table->string('dress_code'); // نوع اللباس
-            $table->string('payment_method')->nullable(); // طريقة الدفع
-            $table->decimal('amount', 8, 2)->nullable(); // مبلغ الدفع
-            // $table->decimal('companion_fee', 8, 2); // سعر المرافق (ثابت لكل مؤتمر)
             $table->timestamps(); // Created and updated timestamps
         });
     }

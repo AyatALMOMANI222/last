@@ -23,7 +23,6 @@ const ReservationForm = ({ openReservation, setOpenReservation }) => {
       totalNights,
       roomCount,
     };
-    console.log("Form data: ", formData);
   };
 
   return (

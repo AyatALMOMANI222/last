@@ -36,12 +36,10 @@ const AddTripForm = ({ data, setOpen }) => {
       }
     })
     .then(response => {
-      console.log("Flight added successfully:", response.data);
       // يمكنك التعامل مع النجاح هنا مثل إغلاق النموذج أو عرض رسالة نجاح
       setOpen(false); // إغلاق النموذج بعد الإرسال
     })
     .catch(error => {
-      console.error("Error adding flight:", error.response?.data);
       // يمكنك التعامل مع الخطأ هنا مثل عرض رسالة خطأ
     });
   };

@@ -49,10 +49,7 @@ class Conference extends Model
         {
             return $this->hasMany(Paper::class);
         }
-        public function users()
-        {
-            return $this->belongsToMany(User::class);
-        }
+     
         public function exhibition()
         {
             return $this->hasOne(Exhibition::class, 'conference_id');
@@ -61,7 +58,11 @@ class Conference extends Model
         {
             return $this->belongsToMany(Trip::class, 'conference_trip');
         }
-
+        public function users()
+        {
+            return $this->belongsToMany(User::class, 'conference_user', 'conference_id', 'user_id');
+        }
+        
         public static function boot()
         {
             parent::boot();

@@ -15,6 +15,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvailableFlightController;
 use App\Http\Controllers\ConferenceImageController;
 use App\Http\Controllers\ConferenceTripController;
+use App\Http\Controllers\ConferenceUserController;
 use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\GroupTripParticipantController;
@@ -159,7 +160,15 @@ Route::post('/group-trip-participants', [GroupTripParticipantController::class, 
 Route::post('/conference-trips', [ConferenceTripController::class, 'store'])->middleware(['auth:sanctum','admin']);
 Route::get('conferences/{conferenceId}/trips/{tripType}', [ConferenceTripController::class, 'getTripsByConferenceId'])->middleware('auth:sanctum');
 Route::delete('/conference/{conferenceId}/trip/{tripId}', [ConferenceTripController::class, 'destroy']);
+Route::get('/conference-trips', [ConferenceTripController::class, 'index'])->middleware(['auth:sanctum','admin']);
+
+
 // additional-options
 Route::post('/additional-options', [AdditionalOptionsController::class, 'store'])->middleware(['auth:sanctum','admin']);
 Route::get('/additional-options/trip/{trip_id}', [AdditionalOptionsController::class, 'getAdditionalOptionsByTripId']);
 Route::put('/additional-options/update-selected-prices/{trip_id}', [AdditionalOptionsController::class, 'updateSelectedOptionsPrices'])->middleware(['auth:sanctum','admin']);
+
+
+// conference-user
+Route::post('/conference-user', [ConferenceUserController::class, 'store']);
+Route::get('/user/{id}/conferences', [ConferenceUserController::class, 'getConferencesByUser']);

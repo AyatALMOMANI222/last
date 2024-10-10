@@ -221,7 +221,6 @@ const ConferencesAdmin = ({ setIsOpen , getConference }) => {
         }
       );
 
-      console.log("Success:", response.data);
       setIsOpen(false);
       getConference()
     } catch (error) {
@@ -233,7 +232,6 @@ const ConferencesAdmin = ({ setIsOpen , getConference }) => {
     e.preventDefault();
 
     const prices = convertPriceToObject(entries);
-    console.log({ prices });
 
     const formData = new FormData();
 
@@ -264,12 +262,10 @@ const ConferencesAdmin = ({ setIsOpen , getConference }) => {
         },
       })
       .then((response) => {
-        console.log("Data submitted successfully: ", response.data);
         const id = response.data.id;
 
         addCommitteeMembers(id, committeeMembers);
 
-        console.log(token);
       })
       .catch((error) => {
         console.error("Error submitting data: ", error);

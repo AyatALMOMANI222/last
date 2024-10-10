@@ -16,7 +16,6 @@ import axios from "axios";
 const RegisterPage = () => {
   const navigate = useNavigate();
   const {type , id} =useParams()  
-  console.log({id});
   
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -65,7 +64,6 @@ const RegisterPage = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log({response});
       
       alert(response.data.message); // Handle success message
       // Optionally reset form fields here

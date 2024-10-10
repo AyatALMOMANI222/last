@@ -53,11 +53,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(Flight::class, 'user_id', 'id');
     }
+    // public function conferences()
+    // {
+    //     return $this->belongsToMany(Conference::class);
+    // }
     public function conferences()
-    {
-        return $this->belongsToMany(Conference::class);
-    }
-    
+{
+    return $this->belongsToMany(Conference::class, 'conference_user', 'user_id', 'conference_id');
+}
+
     protected $attributes = [
         'isAdmin' => false, 
     ];

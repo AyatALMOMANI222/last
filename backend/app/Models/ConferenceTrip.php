@@ -27,6 +27,6 @@ class ConferenceTrip extends Model
     // علاقة مع نموذج Trip
     public function trip()
     {
-        return $this->belongsTo(Trip::class);
+        return $this->belongsTo(Trip::class, 'trip_id');
     }
 }

@@ -157,13 +157,10 @@ const Exhibitions = () => {
     axios
       .get(url)
       .then((response) => {
-        console.log({ response });
 
-        console.log("Exhibitions retrieved successfully:", response.data);
         setAllExhibitions(response.data);
       })
       .catch((error) => {
-        console.error("Error retrieving exhibitions:", error);
       });
   };
 
@@ -171,9 +168,6 @@ const Exhibitions = () => {
     getExhibitions();
   }, [exhibitionName]);
 
-  useEffect(() => {
-    console.log({ selectedExhibition });
-  }, [selectedExhibition]);
 
   return (
     <div className="exhibitions-page">

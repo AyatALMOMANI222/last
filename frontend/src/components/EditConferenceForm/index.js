@@ -39,7 +39,6 @@ const EditConferenceForm = ({ conferenceData, setConferenceData }) => {
       topics,
     };
     setConferenceData(updatedData);
-    console.log("Updated Conference Data:", updatedData);
   };
 
   return (

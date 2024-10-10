@@ -59,7 +59,6 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
         toast.success(response?.data?.message);
         setOpenForm(false);
         getFlightData();
-        console.log("Flight created successfully:", response.data);
         // Handle success (like showing a success message, redirecting, etc.)
       })
       .catch((error) => {
@@ -263,7 +262,6 @@ const CompanionForm = ({ setOpenForm }) => {
     formData.append("ticket_count", 1); // Set ticket count to 1 for a companion
     formData.append("is_companion", 1); // Specify companion status
 
-    console.log(formData);
 
     axios
       .post("http://127.0.0.1:8000/api/flights", formData, {
@@ -273,7 +271,6 @@ const CompanionForm = ({ setOpenForm }) => {
         },
       })
       .then((response) => {
-        console.log("Flight created successfully:", response.data);
         // Handle success (like showing a success message, redirecting, etc.)
       })
       .catch((error) => {
@@ -438,11 +435,9 @@ const FlightForm = () => {
         },
       })
       .then((response) => {
-        console.log("Flight Data:", response.data[0]);
         setData(response.data[0]);
       })
       .catch((error) => {
-        console.error("Error fetching flight data:", error);
       });
   };
   useEffect(() => {

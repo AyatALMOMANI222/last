@@ -15,7 +15,6 @@ class CreateDinnerAttendeesTable extends Migration
             $table->text('notes')->nullable(); // أي ملاحظات إضافية
             $table->boolean('paid')->default(true); // تحديد ما إذا كانت تكلفة المرافق قد تم دفعها
             $table->boolean('is_companion_fee_applicable')->default(false); // هل سعر المرافق ينطبق 
-            $table->decimal('companion_fee', 8, 2)->nullable(); // سعر المرافق (ثابت لكل مؤتمر)
             $table->timestamps(); // Created and updated timestamps
         });
     }

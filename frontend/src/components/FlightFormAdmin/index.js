@@ -37,7 +37,6 @@ const FlightFormAdmin = () => {
       }
     })
     .then(response => {
-      console.log("Flight data fetched successfully:", response.data.data);
       setFlights(response.data.data)
   
       

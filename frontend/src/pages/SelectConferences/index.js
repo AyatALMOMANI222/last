@@ -16,11 +16,9 @@ const SelectConferences = () => {
     axios
       .get(url)
       .then((response) => {
-        console.log("Conferences retrieved successfully:", response.data.data);
         setAllConference(response.data.data);
       })
       .catch((error) => {
-        console.error("Error retrieving conferences:", error);
       });
   };
 

@@ -17,7 +17,6 @@ const NotificationDropdown = () => {
 
   const handleMarkAsRead = (id) => {
     // Handle marking the notification as read
-    console.log(`Marking notification ${id} as read`);
   };
 
   const handleClickOutside = (event) => {
@@ -35,7 +34,6 @@ const NotificationDropdown = () => {
       },
     })
     .then(response => {
-      console.log(response.data.data);
       setNotifications(response.data.data)
      
     })

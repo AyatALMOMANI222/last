@@ -48,7 +48,6 @@ const AddOption = ({ isOpen, setIsOpen, tripId }) => {
             },
           }
         );
-        console.log("Option added successfully", response.data);
       } catch (error) {
         console.error(
           "Error adding option:",

@@ -2,58 +2,44 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Table from "../../CoreComponent/Table"; // تأكد من تعديل المسار حسب هيكل المجلدات لديك
 import "./style.scss";
+import AddDiscountForm from "./discountForm";
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
+  const [openDiscountForm, setOpenDiscountForm] = useState(false);
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/users");
         setUsers(response.data.data);
-        console.log(response.data.data);
-        
-        setLoading(false);
-      } catch (error) {
-        setError("Error fetching user data");
-        setLoading(false);
-      }
+      } catch (error) {}
     };
 
     fetchUsers();
   }, []);
 
-  const handleAddTrip = (userId) => {
-    // هنا يمكنك تنفيذ منطق إضافة الرحلة للمستخدم
-    alert(`Add trip for user with ID: ${userId}`);
-  };
-
-  // إذا كان لديك بيانات المستخدمين في شكل كائنات، قم بتحديد تنسيقها
   const formattedData = users?.map((user) => ({
-    id: user.id, // تأكد من أن لديك id للمستخدم
+    id: user.id,
     name: user.name,
-  
-    action: (
-      <button onClick={() => handleAddTrip(user.id)}>Add Trip</button>
-    ),
+    email: user.email,
+
+    action: <button onClick={() => {setOpenDiscountForm(true)}}>Add Discount</button>,
   }));
 
   return (
-    <div>
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      {!loading && !error && (
+    <div className="all-users-table">
+      <div className="">
         <Table
           headers={[
             { key: "name", label: "Name" },
-        
+            { key: "email", label: "Email" },
             { key: "action", label: "Action" },
           ]}
           data={formattedData}
         />
-      )}
+      </div>
+
+      <AddDiscountForm isOpen={openDiscountForm} setIsOpen={setOpenDiscountForm}/>
     </div>
   );
 };

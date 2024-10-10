@@ -85,7 +85,6 @@ const ViewTrip = () => {
                 onClick={() => {
                   setOpenEditTrip(true);
                   setOpen(true);
-                  console.log({ open });
 
                   setTripId(item?.id);
                 }}
