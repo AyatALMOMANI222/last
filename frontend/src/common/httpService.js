@@ -1,17 +1,24 @@
 import axios from "axios";
-
+import { toast } from "react-toastify";
 const httpService = async ({
-  method = "GET", // Default method is GET
-  url, // API endpoint
-  headers = {}, // Custom headers
-  data = {}, // Data for POST/PUT requests
-  params = {}, // Query parameters for GET requests
-  onSuccess, // Success callback
-  onError, // Error callback
+  method = "GET",
+  url,
+  headers = {},
+  data = {},
+  params = {},
+  onSuccess,
+  onError,
+  showLoader = false,
+  withToast = false,
 }) => {
+  if (!url) {
+    throw new Error("URL is required");
+  }
+
   try {
-    const showLoaderEvent = new CustomEvent("showLoader");
-    window.dispatchEvent(showLoaderEvent);
+    if (showLoader) {
+      window.dispatchEvent(new CustomEvent("showLoader"));
+    }
 
     const response = await axios({
       method,
@@ -24,17 +31,22 @@ const httpService = async ({
     if (onSuccess) {
       onSuccess(response.data);
     }
-
+    if (withToast) {
+      toast.success(response?.data?.message);
+    }
     return response.data;
   } catch (error) {
     if (onError) {
       onError(error.message);
     }
-
+    if (withToast) {
+      toast.error(response?.data?.message);
+    }
     throw error;
   } finally {
-    const hideLoaderEvent = new CustomEvent("hideLoader");
-    window.dispatchEvent(hideLoaderEvent);
+    if (showLoader) {
+      window.dispatchEvent(new CustomEvent("hideLoader"));
+    }
   }
 };
 
