@@ -40,7 +40,7 @@ const httpService = async ({
       onError(error.message);
     }
     if (withToast) {
-      toast.error(response?.data?.message);
+      toast.error(error?.data?.message);
     }
     throw error;
   } finally {
