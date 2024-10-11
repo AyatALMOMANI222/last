@@ -16,6 +16,7 @@ use App\Http\Controllers\AvailableFlightController;
 use App\Http\Controllers\ConferenceImageController;
 use App\Http\Controllers\ConferenceTripController;
 use App\Http\Controllers\ConferenceUserController;
+use App\Http\Controllers\DinnerDetailController;
 use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\GroupTripParticipantController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\TripParticipantController;
 use App\Http\Controllers\VisaController;
 use App\Http\Controllers\WhatsAppController;
 use App\Models\AvailableFlight;
+use App\Models\DinnerDetail;
 use App\Models\Flight;
 use Illuminate\Support\Facades\Route;
 
@@ -170,5 +172,11 @@ Route::put('/additional-options/update-selected-prices/{trip_id}', [AdditionalOp
 
 
 // conference-user
-Route::post('/conference-user', [ConferenceUserController::class, 'store']);
-Route::get('/user/{id}/conferences', [ConferenceUserController::class, 'getConferencesByUser']);
+Route::post('/conference-user', [ConferenceUserController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/user/{id}/conferences', [ConferenceUserController::class, 'getConferencesByUser'])->middleware(['auth:sanctum','admin']);
+
+// DinnerDetail
+Route::post('/dinner-details', [DinnerDetailController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/dinners/conference/{conferenceId}', [DinnerDetailController::class, 'getDinnerByConferenceId'])->middleware(['auth:sanctum','admin']);
+Route::put('/dinners/{id}', [DinnerDetailController::class, 'update'])->middleware(['auth:sanctum','admin'])->middleware(['auth:sanctum','admin']);
+Route::delete('/dinner-details/{id}', [DinnerDetailController::class, 'destroy'])->middleware(['auth:sanctum','admin']);

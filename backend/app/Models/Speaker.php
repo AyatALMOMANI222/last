@@ -41,4 +41,9 @@ class Speaker extends Model
     {
         return $this->belongsTo(Conference::class);
     }
+
+    public function dinnerAttendees()
+    {
+        return $this->hasMany(DinnerAttendee::class);
+    }
 }

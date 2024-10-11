@@ -62,6 +62,11 @@ class Conference extends Model
         {
             return $this->belongsToMany(User::class, 'conference_user', 'conference_id', 'user_id');
         }
+        public function dinnerDetail()
+    {
+        return $this->hasOne(DinnerDetail::class);
+    }
+    
         
         public static function boot()
         {
