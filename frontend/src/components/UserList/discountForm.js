@@ -280,7 +280,7 @@ const AddDiscountForm = ({ isOpen, setIsOpen, userId }) => {
       });
     } catch (error) {
       console.error("Error submitting discount", error);
- 0
+ 
     }
   };
 
