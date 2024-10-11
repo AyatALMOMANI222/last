@@ -52,5 +52,11 @@ class Trip extends Model
 // {
 //     return $this->hasMany(ConferenceTrip::class);
 // }
+// علاقة مع جدول DiscountOption
+public function discountOptions()
+{
+    return $this->hasMany(DiscountOption::class);
+}
+
 
 }

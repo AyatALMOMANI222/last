@@ -61,6 +61,12 @@ class User extends Authenticatable
 {
     return $this->belongsToMany(Conference::class, 'conference_user', 'user_id', 'conference_id');
 }
+// علاقة مع جدول DiscountOption
+public function discountOptions()
+{
+    return $this->hasMany(DiscountOption::class);
+}
+
 
     protected $attributes = [
         'isAdmin' => false, 

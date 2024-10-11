@@ -7,6 +7,7 @@ import AddDiscountForm from "./discountForm";
 const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [openDiscountForm, setOpenDiscountForm] = useState(false);
+  const [userId, setUserId] = useState("");
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -23,7 +24,17 @@ const UsersList = () => {
     name: user.name,
     email: user.email,
 
-    action: <button onClick={() => {setOpenDiscountForm(true)}}>Add Discount</button>,
+    action: (
+      <button
+        onClick={() => {
+          setOpenDiscountForm(true);
+
+          setUserId(user?.id);
+        }}
+      >
+        Add Discount
+      </button>
+    ),
   }));
 
   return (
@@ -39,7 +50,11 @@ const UsersList = () => {
         />
       </div>
 
-      <AddDiscountForm isOpen={openDiscountForm} setIsOpen={setOpenDiscountForm}/>
+      <AddDiscountForm
+        isOpen={openDiscountForm}
+        setIsOpen={setOpenDiscountForm}
+        userId={userId}
+      />
     </div>
   );
 };

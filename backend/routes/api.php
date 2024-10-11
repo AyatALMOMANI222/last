@@ -17,6 +17,7 @@ use App\Http\Controllers\ConferenceImageController;
 use App\Http\Controllers\ConferenceTripController;
 use App\Http\Controllers\ConferenceUserController;
 use App\Http\Controllers\DinnerDetailController;
+use App\Http\Controllers\DiscountOptionController;
 use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\GroupTripParticipantController;
@@ -180,3 +181,5 @@ Route::post('/dinner-details', [DinnerDetailController::class, 'store'])->middle
 Route::get('/dinners/conference/{conferenceId}', [DinnerDetailController::class, 'getDinnerByConferenceId'])->middleware(['auth:sanctum','admin']);
 Route::put('/dinners/{id}', [DinnerDetailController::class, 'update'])->middleware(['auth:sanctum','admin'])->middleware(['auth:sanctum','admin']);
 Route::delete('/dinner-details/{id}', [DinnerDetailController::class, 'destroy'])->middleware(['auth:sanctum','admin']);
+// discounts
+Route::post('/discounts', [DiscountOptionController::class, 'store'])->middleware(['auth:sanctum','admin']);

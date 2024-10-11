@@ -26,4 +26,11 @@ class AdditionalOption extends Model
     {
         return $this->belongsTo(Trip::class);
     }
+
+    // علاقة مع جدول DiscountOption
+public function discountOptions()
+{
+    return $this->hasMany(DiscountOption::class, 'option_id');
+}
+
 }

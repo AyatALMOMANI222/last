@@ -41,4 +41,5 @@ class TripParticipant extends Model
     {
         return $this->belongsTo(Trip::class);
     }
+
 }
