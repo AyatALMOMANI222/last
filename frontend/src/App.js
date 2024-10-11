@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import eventEmitter from "./common/eventEmitter"; 
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
 import HomePage from "./pages/home";
@@ -26,6 +25,22 @@ const App = () => {
   const location = useLocation();
   const [showLoader, setShowLoader] = useState(false);
 
+  // Listen for showLoader and hideLoader events
+  useEffect(() => {
+    const handleShowLoader = () => setShowLoader(true);
+    const handleHideLoader = () => setShowLoader(false);
+
+    // Attach event listeners
+    window.addEventListener('showLoader', handleShowLoader);
+    window.addEventListener('hideLoader', handleHideLoader);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      window.removeEventListener('showLoader', handleShowLoader);
+      window.removeEventListener('hideLoader', handleHideLoader);
+    };
+  }, []);
+
   // Define the routes where the NavBar should be displayed
   const navBarRoutes = [
     "/favorite",
@@ -41,20 +56,6 @@ const App = () => {
     "/create/trip",
     "/user"
   ];
-
-  useEffect(() => {
-    const showLoaderListener = () => setShowLoader(true);
-    const hideLoaderListener = () => setShowLoader(false);
-
-    eventEmitter.on('showLoader', showLoaderListener);
-    eventEmitter.on('hideLoader', hideLoaderListener);
-
-
-    return () => {
-      eventEmitter.off('showLoader', showLoaderListener);
-      eventEmitter.off('hideLoader', hideLoaderListener);
-    };
-  }, []);
 
   return (
     <div id="main" className="main">
