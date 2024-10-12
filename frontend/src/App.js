@@ -20,6 +20,8 @@ import CreateTrip from "./components/TripComponents/AddTrip";
 import ViewTrip from "./components/TripComponents/viewTrips";
 import UsersList from "./components/UserList";
 import Loader from "./CoreComponent/Loader";
+import ViewUserTrips from "./components/TripComponents/TripsUser/ViewTrips";
+import ViewOneTripUser from "./components/TripComponents/TripsUser/ViewOneTripUser";
 
 const App = () => {
   const location = useLocation();
@@ -54,7 +56,9 @@ const App = () => {
     "/exhibitions",
     "/reservation/form",
     "/create/trip",
-    "/user"
+    "/user",
+    "/view-user-trips",
+    "/view/trip/:id"
   ];
 
   return (
@@ -78,6 +82,9 @@ const App = () => {
         <Route path="/registertype" element={<RegisterType />} />
         <Route path="/create/trip" element={<ViewTrip />} />
         <Route path="/user" element={<UsersList />} />
+        <Route path="/view-user-trips" element={<ViewUserTrips />} />  
+        {/* //this route for view one trip for user not admin  */}
+          <Route path="/view/trip/:id" element={<ViewOneTripUser />} />
       </Routes>
     </div>
   );

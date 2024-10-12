@@ -33,4 +33,8 @@ class DinnerDetail extends Model
     {
         return $this->hasMany(DinnerAttendee::class);
     }
+    public function companionFees()
+    {
+        return $this->hasMany(DinnerSpeakerCompanionFee::class, 'dinner_id');
+    }
 }

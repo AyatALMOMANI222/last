@@ -24,9 +24,9 @@ class CreateTripParticipantsTable extends Migration
             $table->string('whatsapp_number'); // رقم الواتساب
             $table->boolean('is_companion')->default(false); // تحديد ما إذا كان هو مرافق أم لا
             
-            $table->boolean('include_accommodation')->default(false); // هل تشمل الإقامة؟
-            $table->string('accommodation_type')->nullable(); // نوع الإقامة (فندق أو خيمة)
-            $table->string('tent_type')->nullable(); // إضافة حقل نوع الخيمة مع كونه nullable
+             $table->boolean('include_accommodation')->default(false); // هل تشمل الإقامة؟
+            // $table->string('accommodation_type')->nullable(); // نوع الإقامة (فندق أو خيمة)
+            // $table->string('tent_type')->nullable(); // إضافة حقل نوع الخيمة مع كونه nullable
             $table->integer('accommodation_stars')->nullable(); // عدد النجوم للفندق
             $table->integer('nights_count')->nullable(); // عدد الليالي
             $table->date('check_in_date')->nullable(); // تاريخ بدء الإقامة

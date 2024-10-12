@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss"; 
 
-const slides = [
-  <img src="slide1.jpg" alt="Slide 1" />,
-  <img src="slide2.jpg" alt="Slide 2" />,
-  <img src="slide3.jpg" alt="Slide 3" />,
-  <img src="slide1.jpg" alt="Slide 4" />,
-  <img src="slide2.jpg" alt="Slide 5" />,
-  <img src="slide3.jpg" alt="Slide 6" />,
-];
+// const slides = [
+//   <img src="slide1.jpg" alt="Slide 1" />,
+//   <img src="slide2.jpg" alt="Slide 2" />,
+//   <img src="slide3.jpg" alt="Slide 3" />,
+//   <img src="slide1.jpg" alt="Slide 4" />,
+//   <img src="slide2.jpg" alt="Slide 5" />,
+//   <img src="slide3.jpg" alt="Slide 6" />,
+// ];
 
-const Slider = () => {
+const Slider = ({slides}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [render, setRender] = useState(true);
 
@@ -26,7 +26,7 @@ const Slider = () => {
         }
         return prevIndex + 1;
       });
-    }, 1000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);

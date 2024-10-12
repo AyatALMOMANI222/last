@@ -16,6 +16,7 @@ use App\Http\Controllers\AvailableFlightController;
 use App\Http\Controllers\ConferenceImageController;
 use App\Http\Controllers\ConferenceTripController;
 use App\Http\Controllers\ConferenceUserController;
+use App\Http\Controllers\DinnerAttendeeController;
 use App\Http\Controllers\DinnerDetailController;
 use App\Http\Controllers\DiscountOptionController;
 use App\Http\Controllers\ExhibitionImagesController;
@@ -152,6 +153,7 @@ Route::get('/all-trip', [TripController::class, 'getAllTrips'])->middleware(['au
 Route::get('/trip/{id}', [TripController::class, 'getTripById'])->middleware(['auth:sanctum','admin']);
 Route::post('/update/trips/{id}', [TripController::class, 'updateTripById'])->middleware(['auth:sanctum','admin']);
 Route::post('/trips_option/{id}', [TripController::class, 'updateTripAndOptions'])->middleware(['auth:sanctum','admin']);
+Route::get('/trip_option/{id}', [TripController::class, 'getTripByIdWithOptions']);
 
 
 // trip-participants
@@ -181,5 +183,16 @@ Route::post('/dinner-details', [DinnerDetailController::class, 'store'])->middle
 Route::get('/dinners/conference/{conferenceId}', [DinnerDetailController::class, 'getDinnerByConferenceId'])->middleware(['auth:sanctum','admin']);
 Route::put('/dinners/{id}', [DinnerDetailController::class, 'update'])->middleware(['auth:sanctum','admin'])->middleware(['auth:sanctum','admin']);
 Route::delete('/dinner-details/{id}', [DinnerDetailController::class, 'destroy'])->middleware(['auth:sanctum','admin']);
+
+
+
+// dinner-attendees
+Route::post('/dinner-attendees', [DinnerAttendeeController::class, 'store'])->middleware('auth:sanctum');
+Route::delete('/dinner-attendees/{id}', [DinnerAttendeeController::class, 'destroy'])->middleware('auth:sanctum');
+Route::get('/dinner-attendees', [DinnerAttendeeController::class, 'getAllAttendees'])->middleware(['auth:sanctum','admin']);
+
+
+
 // discounts
 Route::post('/discounts', [DiscountOptionController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/discount-options/{tripId}', [DiscountOptionController::class, 'getDiscountOptions'])->middleware('auth:sanctum');

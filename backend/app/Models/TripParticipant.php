@@ -23,8 +23,7 @@ class TripParticipant extends Model
         'whatsapp_number',
         'is_companion',
         'include_accommodation',
-        'accommodation_type',
-        'tent_type',
+       
         'accommodation_stars',
         'nights_count',
         'check_in_date',
@@ -41,5 +40,8 @@ class TripParticipant extends Model
     {
         return $this->belongsTo(Trip::class);
     }
-
+    public function tripOptionsParticipants()
+    {
+        return $this->hasMany(TripOptionsParticipant::class);
+    }
 }

@@ -58,5 +58,9 @@ public function discountOptions()
     return $this->hasMany(DiscountOption::class);
 }
 
+public function tripOptionsParticipants()
+{
+    return $this->hasMany(TripOptionsParticipant::class);
+}
 
 }

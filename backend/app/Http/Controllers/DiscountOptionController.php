@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DiscountOption;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DiscountOptionController extends Controller
 {
@@ -33,4 +34,30 @@ class DiscountOptionController extends Controller
             'data' => $discountOption,
         ], 201);
     }
+
+    public function getDiscountOptions($tripId)
+    {
+        // الحصول على user_id من التوكن
+        $userId = Auth::id();
+    
+        // الحصول على خيارات الخصم بناءً على user_id و trip_id
+        $discountOptions = DiscountOption::where('user_id', $userId)
+                                          ->where('trip_id', $tripId)
+                                          ->get();
+    
+        // التحقق مما إذا كانت هناك خيارات خصم
+        if ($discountOptions->isEmpty()) {
+            return response()->json([
+                'message' => 'No discount options found for the provided user and trip.',
+            ], 404);
+        }
+    
+        // إرجاع الخيارات بنجاح
+        return response()->json([
+            'message' => 'Discount options retrieved successfully.',
+            'data' => $discountOptions,
+        ], 200);
+    }
+    
+
 }

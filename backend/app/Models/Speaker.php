@@ -46,4 +46,8 @@ class Speaker extends Model
     {
         return $this->hasMany(DinnerAttendee::class);
     }
+    public function companionFee()
+    {
+        return $this->hasOne(DinnerSpeakerCompanionFee::class, 'speaker_id');
+    }
 }

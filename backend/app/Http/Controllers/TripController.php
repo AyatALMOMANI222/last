@@ -304,4 +304,30 @@ public function updateTripAndOptions(Request $request, $id)
         return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
     }}
 
+    public function getTripByIdWithOptions($id)
+    {
+        try {
+            // جلب بيانات الرحلة بالإضافة إلى الخيارات المرتبطة بها باستخدام eager loading
+            $trip = Trip::with('additionalOptions') // Assuming you have a relationship set up
+                        ->where('id', $id)
+                        ->first();
+    
+            if (!$trip) {
+                return response()->json(['error' => 'Trip not found'], 404);
+            }
+    
+            return response()->json([
+                'message' => 'Trip and additional options retrieved successfully.',
+                'trip' => $trip,
+                // 'additional_options' => $trip->additionalOptions, // Grouping additional options under trip
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+
+
 }
