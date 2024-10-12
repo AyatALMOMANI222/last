@@ -4,6 +4,7 @@ import Slider from "../../../Slider";
 import httpService from "../../../../common/httpService";
 import { useParams } from "react-router-dom";
 import { backendUrlImages } from "../../../../constant/config";
+import TripRegisterForm from "../TripRegisterForm/index";
 // Example usage of the component
 const trip = {
   id: 12,
@@ -103,6 +104,7 @@ const ViewOneTripUser = () => {
             setOpenRegisterForm(true)
         }}>Register now</button>
       </div>
+      <TripRegisterForm isOpen={openRegisterForm} setIsOpen={setOpenRegisterForm} tripId={id} options={tripData?.additional_options}/>
     </div>
   );
 };

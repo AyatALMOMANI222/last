@@ -158,8 +158,8 @@ Route::get('/trip_option/{id}', [TripController::class, 'getTripByIdWithOptions'
 
 // trip-participants
 Route::post('/trip-participants', [TripParticipantController::class, 'addParticipant'])->middleware('auth:sanctum');
-// group-trip-participants
 Route::post('/group-trip-participants', [GroupTripParticipantController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/trip-participants_user_companion', [TripParticipantController::class, 'storeUserAndParticipant'])->middleware('auth:sanctum');
 
 // conference-trips
 Route::post('/conference-trips', [ConferenceTripController::class, 'store'])->middleware(['auth:sanctum','admin']);
