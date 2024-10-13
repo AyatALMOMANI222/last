@@ -22,6 +22,11 @@ import UsersList from "./components/UserList";
 import Loader from "./CoreComponent/Loader";
 import ViewUserTrips from "./components/TripComponents/TripsUser/ViewTrips";
 import ViewOneTripUser from "./components/TripComponents/TripsUser/ViewOneTripUser";
+import AirportTransfer from "./components/last_pages/AirportTransfer";
+import AirportTransferPrice from "./components/last_pages/AirportTransfer/AirpotPrice";
+import GalaDinner from "./components/last_pages/GalaDinner";
+import AddScientificPaper from "./components/SceintificPaper";
+import VisaPage from "./components/last_pages/Visa";
 
 const App = () => {
   const location = useLocation();
@@ -85,6 +90,14 @@ const App = () => {
         <Route path="/view-user-trips" element={<ViewUserTrips />} />  
         {/* //this route for view one trip for user not admin  */}
           <Route path="/view/trip/:id" element={<ViewOneTripUser />} />
+
+
+          <Route path="/airport/transfer" element={<AirportTransfer />} />
+          <Route path="/airport/transfer/price" element={<AirportTransferPrice />} />
+          <Route path="/GalaDinner" element={<GalaDinner />} />
+          <Route path="/paper" element={<AddScientificPaper/>} />
+          <Route path="/visa" element={< VisaPage/>} />
+
       </Routes>
     </div>
   );

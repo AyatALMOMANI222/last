@@ -23,7 +23,9 @@ return new class extends Migration
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending'); // حالة الفيزا
             $table->timestamp('visa_updated_at')->nullable(); // تاريخ آخر تحديث لحالة الفيزا
             $table->timestamps();
-        
+
+
+
             // إضافة فهرس لـ user_id
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

@@ -102,82 +102,61 @@ class ConferenceController extends Controller
     public function getAllConferences(Request $request)
     {
         try {
-            // Check if a search parameter is provided
+            // Check if a search parameter or status parameter is provided
             $search = $request->input('search');
-    
+            $status = $request->input('status');
+
+            // Set how many items per page you want to display
+            $perPage = 10; // You can adjust this number as needed
+
             // Retrieve all conferences, applying the search filter if provided
             $query = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices']);
-    
+
+            // Filter by search if provided
             if ($search) {
                 $query->where('title', 'like', '%' . $search . '%');
             }
-    
-            $conferences = $query->get();
-    
-            return response()->json([
-                'status' => 'success',
-                'data' => $conferences
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to retrieve conferences.',
-            ], 500);
-        }
-    }
-    
 
-    // public function getAllConferences(Request $request)
-    // {
-    //     try {
-    //         // Retrieve all conferences
-    //         $conferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])->get();
+            // Filter by status if provided
+            if ($status) {
+                // Create a DateTime object for the current date
+                $currentDate = new \DateTime();
 
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'data' => $conferences
-    //         ], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Failed to retrieve conferences.',
-    //         ], 500);
-    //     }
-    // }
-
-
-
-    public function getConferenceByStatus($status)
-    {
-        try {
-            $currentDate = Carbon::now();
-
-            if ($status === 'past') {
-                $conferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])
-                    ->where('end_date', '<', $currentDate)
-                    ->get();
-            } elseif ($status === 'upcoming') {
-                $conferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])
-                    ->where('start_date', '>', $currentDate)
-                    ->get();
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Invalid status parameter. Use "past" or "upcoming".'
-                ], 400);
+                if ($status === 'past') {
+                    // Get past conferences where the end_date is less than the current date
+                    $query->where('end_date', '<', $currentDate->format('Y-m-d H:i:s'));
+                } elseif ($status === 'upcoming') {
+                    // Get upcoming conferences where the end_date is greater than or equal to the current date
+                    $query->where('end_date', '>=', $currentDate->format('Y-m-d H:i:s'));
+                }
             }
 
+            // Apply pagination with paginate() method
+            $conferences = $query->paginate($perPage);
+
             return response()->json([
                 'status' => 'success',
-                'data' => $conferences
+                'data' => $conferences->items(),  // The paginated data (conferences)
+                'total' => $conferences->total(), // Total number of items
+                'per_page' => $conferences->perPage(), // Number of items per page
+                'current_page' => $conferences->currentPage(), // Current page number
+                'total_pages' => $conferences->lastPage(), // Total number of pages
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to retrieve conferences by status.',
+                'message' => 'Failed to retrieve conferences: ' . $e->getMessage(),
             ], 500);
         }
     }
+
+
+
+
+
+
+
+
 
     public function getConferenceById($id)
     {

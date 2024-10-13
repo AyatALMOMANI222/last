@@ -9,6 +9,8 @@ import axios from "axios";
 import { backendUrlImages } from "../../constant/config";
 import SVG from "react-inlinesvg";
 import downloadIcon from "../../icons/downloadIcon.svg";
+import Select from "../../CoreComponent/Select";
+import Pagination from "../../CoreComponent/Pagination";
 
 const ConferencesPage = () => {
   const [selectedConferenceId, setSelectedConferenceId] = useState(null);
@@ -19,6 +21,13 @@ const ConferencesPage = () => {
   const [openAddConference, setOpenAddConference] = useState(false);
   const [allConference, setAllConference] = useState([]);
   const [selectedConference, setSelectedConference] = useState({});
+  const [status, setStatus] = useState("upcoming");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   const handleViewClick = (conference) => {
     setSelectedConference(conference);
     setIsViewDrawerOpen(true);
@@ -35,29 +44,51 @@ const ConferencesPage = () => {
       ? `?search=${encodeURIComponent(conferenceName)}`
       : "";
     const url = `http://127.0.0.1:8000/api/con${searchQuery}`;
-
+  
     axios
-      .get(url)
+      .get(url, {
+        params: {
+          page: currentPage,
+          per_page: 10,
+          status: status?.value
+        },
+      })
       .then((response) => {
+        console.log(response);
+        setTotalPages(response.data.
+          total_pages)
         setAllConference(response.data.data);
       })
       .catch((error) => {
+        console.error(error);
       });
   };
+  
 
   useEffect(() => {
     getConference();
-  }, [conferenceName]);
+  }, [conferenceName , currentPage , status]);
 
   return (
     <div className="conferences-page">
       <div className="conferences-form-admin-header">
-        <div className="header-input">
+        <div className="inputs-container">
           <Input
             placeholder="Search"
             inputValue={conferenceName}
             setInputValue={setConferenceName}
             type="text"
+            label={"conference Name"}
+          />
+          <Select
+            options={[
+              { value: "upcoming", label: "Upcoming" },
+              { value: "past", label: "Past" },
+            ]}
+            value={status}
+            setValue={setStatus}
+            label="Status"
+            errorMsg={""}
           />
         </div>
         <button
@@ -104,6 +135,12 @@ const ConferencesPage = () => {
           );
         })}
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
       <MySideDrawer isOpen={openAddConference} setIsOpen={setOpenAddConference}>
         <ConferencesAdmin
           setIsOpen={setOpenAddConference}

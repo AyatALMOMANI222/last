@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AcceptedFlightController;
 use App\Http\Controllers\AdditionalOptionsController;
+use App\Http\Controllers\AirportTransferBookingController;
+use App\Http\Controllers\AirportTransferPriceController;
 use Laravel\Sanctum\Sanctum;
 
 use App\Http\Controllers\CommitteeMemberController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\ConferenceTripController;
 use App\Http\Controllers\ConferenceUserController;
 use App\Http\Controllers\DinnerAttendeeController;
 use App\Http\Controllers\DinnerDetailController;
+use App\Http\Controllers\DinnerSpeakerCompanionFeeController;
 use App\Http\Controllers\DiscountOptionController;
 use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
@@ -56,7 +59,7 @@ Route::post('/users/not/email/{id}', [AuthController::class, 'sendNotification']
 Route::post('users/whatsapp-not', [WhatsAppController::class, 'sendWhatsAppNotification']);
 // conference
 Route::post('/con', [ConferenceController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
-Route::get('/con/{status}', [ConferenceController::class, 'getConferenceByStatus']);
+Route::get('/con/status/{status}', [ConferenceController::class, 'getConferenceByStatus']);
 Route::get('/con', [ConferenceController::class, 'getAllConferences']);
 Route::get('/con/id/{id}', [ConferenceController::class, 'getConferenceById']);
 
@@ -196,3 +199,16 @@ Route::get('/dinner-attendees', [DinnerAttendeeController::class, 'getAllAttende
 // discounts
 Route::post('/discounts', [DiscountOptionController::class, 'store'])->middleware(['auth:sanctum','admin']);
 Route::get('/discount-options/{tripId}', [DiscountOptionController::class, 'getDiscountOptions'])->middleware('auth:sanctum');
+
+
+Route::post('/dinner-speaker-companion-fee', [DinnerSpeakerCompanionFeeController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/dinner-speaker-companion-fees/{dinnerId}', [DinnerSpeakerCompanionFeeController::class, 'getDinnerCompanionFees'])->middleware('auth:sanctum');
+// airport-transfer-bookings
+Route::post('/airport-transfer-bookings', [AirportTransferBookingController::class, 'store'])->middleware('auth:sanctum');
+Route::get('/user/airport-transfer-bookings', [AirportTransferBookingController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/admin/all_airport-transfer-bookings', [AirportTransferBookingController::class, 'getAllBooking'])->middleware('auth:sanctum');
+Route::put('/airport-transfer-bookings/{id}', [AirportTransferBookingController::class, 'update'])->middleware('auth:sanctum');
+
+// airport-transfer-prices
+Route::post('/airport-transfer-prices', [AirportTransferPriceController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/airport-transfer-prices/conference/{conferenceId}', [AirportTransferPriceController::class, 'getPricesByConferenceId'])->middleware('auth:sanctum');

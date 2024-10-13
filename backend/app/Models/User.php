@@ -66,7 +66,10 @@ public function discountOptions()
 {
     return $this->hasMany(DiscountOption::class);
 }
-
+public function airportTransferBooking()
+{
+    return $this->hasOne(AirportTransferBooking::class);
+}
 
     protected $attributes = [
         'isAdmin' => false, 

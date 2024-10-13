@@ -17,11 +17,11 @@ class DinnerSpeakerCompanionFee extends Model
         'companion_fee',
     ];
 
-    public function dinner()
-    {
-        return $this->belongsTo(DinnerDetail::class, 'dinner_id');
-    }
 
+    public function dinnerDetail()
+    {
+        return $this->belongsTo(DinnerDetail::class, 'dinner_id'); // تأكد من اسم العلاقة هنا
+    }
     public function speaker()
     {
         return $this->belongsTo(Speaker::class, 'speaker_id');

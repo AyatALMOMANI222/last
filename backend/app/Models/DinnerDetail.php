@@ -35,6 +35,6 @@ class DinnerDetail extends Model
     }
     public function companionFees()
     {
-        return $this->hasMany(DinnerSpeakerCompanionFee::class, 'dinner_id');
+        return $this->hasMany(DinnerSpeakerCompanionFee::class, 'dinner_id'); // تأكد من اسم العلاقة هنا
     }
 }

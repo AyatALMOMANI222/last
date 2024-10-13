@@ -66,8 +66,14 @@ class Conference extends Model
     {
         return $this->hasOne(DinnerDetail::class);
     }
-    
-        
+    public function airportTransferBookings()
+    {
+        return $this->hasMany(AirportTransferBooking::class);
+    }
+    public function airportTransferPrice()
+    {
+        return $this->hasOne(AirportTransferPrice::class);
+    }  
         public static function boot()
         {
             parent::boot();

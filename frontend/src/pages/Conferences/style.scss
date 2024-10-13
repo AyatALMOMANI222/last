@@ -5,7 +5,7 @@
 
   .conferences-form-admin-header {
     margin: 20px 0px;
-    height: 30px;
+    height: 40px;
     padding: 20px;
     display: flex;
     flex-direction: row;
@@ -13,8 +13,12 @@
     align-items: center;
     border-radius: 10px;
     border: 1px solid rgb(242, 239, 239);
-    background-color: #4f75ff;
-
+    // background-color: #4f75ff;
+    .inputs-container {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+    }
     .header-input {
       font-size: 19px;
       font-weight: 500;
