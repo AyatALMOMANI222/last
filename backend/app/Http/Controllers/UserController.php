@@ -74,8 +74,10 @@ class UserController extends Controller
                 Notification::create([
                     'user_id' => $admin->id, // المستخدم المستلم (المدير)
                     'register_id' => $user->id, // المستخدم المسجل (المتحدث الجديد)
+                    'conference_id' => $conference_id,
                     'message' => 'New speaker registration: ' . $user->name, // نص الإشعار
                     'is_read' => false, // الحالة الافتراضية للإشعار
+
                 ]);
             }
 

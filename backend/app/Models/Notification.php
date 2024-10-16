@@ -9,7 +9,7 @@ class Notification extends Model
     use HasFactory;
 
     // تحديد الحقول المسموح بملئها
-    protected $fillable = ['user_id', 'message', 'is_read','register_id'];
+    protected $fillable = ['user_id', 'message', 'is_read','register_id','conference_id'];
 
     // العلاقة مع المستخدم (User)
     public function user()

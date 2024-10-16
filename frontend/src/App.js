@@ -86,7 +86,8 @@ const App = () => {
     "/create/trip",
     "/user",
     "/view-user-trips",
-    "/view/trip/:id"
+    "/view/trip/:id",
+    "/edit/speaker/data/:conferenceId/:userId"
   ];
 
   return (
@@ -99,7 +100,7 @@ const App = () => {
       {/* <Navbar/> */}
       <Routes className="main">
       <Route path="/exhibitions" element={<Exhibitions />} />
-      <Route path="/edit/speaker/data" element={<EditSpeakerData />} />
+      <Route path="/edit/speaker/data/:conferenceId/:userId" element={<EditSpeakerData />} />
       <Route path="/reservation/form" element={<Reservation />} />
         <Route path="/conferences" element={<ConferencesAdmin />} />
         <Route path="/flights" element={<FlightFormAdmin />} />

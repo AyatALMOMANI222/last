@@ -22,12 +22,14 @@ class NotificationController extends Controller
             $validated = $request->validate([
                 'user_id' => 'required|exists:users,id', // تحقق من وجود المستخدم
                 'message' => 'required|string',
+                'conference_id' => 'nullable|integer',
             ]);
 
             // إدخال الإشعار مباشرة إلى قاعدة البيانات
             Notification::create([
                 'user_id' => $validated['user_id'],
                 'message' => $validated['message'],
+                'conference_id' => $validated['conference_id'],
                 'is_read' => false, // يمكن تحديد حالة القراءة إذا لزم الأمر
             ]);
 

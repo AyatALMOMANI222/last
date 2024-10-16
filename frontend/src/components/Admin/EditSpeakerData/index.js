@@ -1,37 +1,58 @@
 import React, { useState } from 'react';
-import Checkbox from "../../../CoreComponent/Checkbox"
-import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper"; // Ensure the correct path to your CustomFormWrapper
-import MySideDrawer from "../../../CoreComponent/SideDrawer";
+import Checkbox from "../../../CoreComponent/Checkbox";
+import { useParams } from 'react-router-dom';
+import httpService from "../../../../src/common/httpService"; 
+import { toast } from "react-toastify";
 
 const EditSpeakerData = () => {
-  // State variables for checkboxes
+  // جلب معرف المؤتمر من الـ Route
+  const {conferenceId ,userId} = useParams();
+
+  // متغيرات الحالة لـ Checkboxes
   const [specificFlightTime, setSpecificFlightTime] = useState(false);
-  const [isOnlineApproved, setIsOnlineApproved] = useState(true); // Assuming 1 means true
-  const [ticketStatus, setTicketStatus] = useState("1"); // Using string for ticket status
-  const [dinnerInvitation, setDinnerInvitation] = useState(true); // Assuming 1 means true
-  const [airportPickup, setAirportPickup] = useState(true); // Assuming 1 means true
-  const [freeTrip, setFreeTrip] = useState(true); // Assuming 1 means true
-  const [isCertificateActive, setIsCertificateActive] = useState(true); // Assuming 1 means true
+  const [isOnlineApproved, setIsOnlineApproved] = useState(true); 
+  const [ticketStatus, setTicketStatus] = useState("1"); 
+  const [dinnerInvitation, setDinnerInvitation] = useState(true); 
+  const [airportPickup, setAirportPickup] = useState(true); 
+  const [freeTrip, setFreeTrip] = useState(true); 
+  const [isCertificateActive, setIsCertificateActive] = useState(true);
 
-  const handleSubmit = (e) => {
+  // التعامل مع الفورم عند الإرسال
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Gather all form data
-    const formData = {
-      specificFlightTime,
-      isOnlineApproved,
-      ticketStatus,
-      dinnerInvitation,
-      airportPickup,
-      freeTrip,
-      isCertificateActive,
-    };
+    const getAuthToken = () => localStorage.getItem("token");
 
-    console.log('Form Data Submitted:', formData);
-    // Handle form submission (e.g., send to server)
+    try {
+      // إرسال البيانات مباشرة كـ داتا عادية
+      await httpService({
+        method: "POST",
+        url: `http://127.0.0.1:8000/api/admin/speakers/${userId}/${conferenceId}`,
+       
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+
+        showLoader: true,
+        data: {
+          is_online_approved: isOnlineApproved ? 1 : 0,
+          ticket_status: ticketStatus,
+          dinner_invitation: dinnerInvitation ? 1 : 0,
+          airport_pickup: airportPickup ? 1 : 0,
+          free_trip: freeTrip ? 1 : 0,
+          is_certificate_active: isCertificateActive ? 1 : 0
+        },
+        withToast: true, // لتفعيل الـ toast في حالة النجاح أو الخطأ
+        onSuccess: (data) => {
+          toast.success("Form submitted successfully!"); // رسالة نجاح
+        },
+        onError: (error) => {
+          toast.error("Failed to submit the form: " + error); // رسالة فشل
+        },
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
-  
     <form onSubmit={handleSubmit}>
       <Checkbox
         label="Do you have specific flight time?"
@@ -49,7 +70,7 @@ const EditSpeakerData = () => {
         errorMsg={""}
       />
 
-<Checkbox
+      <Checkbox
         label="Ticket Status (Active)"
         checkboxValue={ticketStatus}
         setCheckboxValue={setTicketStatus}
@@ -91,7 +112,6 @@ const EditSpeakerData = () => {
 
       <button type="submit">Submit</button>
     </form>
-
   );
 };
 
