@@ -1,0 +1,167 @@
+.tour-slider {
+    max-width: 1000px;
+    margin: auto;
+    // text-align: center;
+}
+.tour-slider  h1{
+    color: black;
+}
+.destination {
+    margin-bottom: 40px; // إضافة مسافة بين الوجهات
+    height: 400px; // تعيين ارتفاع موحد لكل وجهة (تأكد من أنه يتناسب مع السلايدر)
+}
+
+.slider-container {
+    display: flex; // استخدام Flexbox
+    align-items: center; // محاذاة العناصر عمودياً
+    justify-content: space-between; // توزيع العناصر بشكل متساوي
+    height: 100%; // جعل ارتفاع الحاوية 100% من .destination
+}
+
+.slider {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px; // لإعطاء زوايا دائرية
+    height: 100%; // جعل ارتفاع السلايدر يتناسب مع ارتفاع الوجهة
+    width: 60%; // تعيين عرض ثابت للسلايدر
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+}
+
+.slide {
+    min-width: 100%; // عرض كل شريحة
+    box-sizing: border-box; // للتأكد من عدم التأثير على عرض السلايدر
+}
+
+.slide img {
+    width: 100%; // يجعل الصورة تأخذ عرض الشريحة بالكامل
+    height: 100%; // يجعل الصورة تأخذ ارتفاع الشريحة بالكامل
+    object-fit: cover; // لضبط الصورة داخل الإطار بشكل جيد
+    border-radius: 10px; // إعطاء زوايا دائرية للصورة
+}
+
+.destination-info {
+    width: 35%; // عرض النص
+    padding: 20px; // إضافة مسافة حول النص
+    display: flex; // استخدام Flexbox في النص
+    flex-direction: column; // جعل النص عمودي
+    justify-content: center; // محاذاة النص عمودياً
+    text-align: left; // محاذاة النص إلى اليسار
+    transition: transform 0.3s ease; // إضافة تأثير على التحويل
+}
+
+.destination-info h1 {
+    font-size: 28px; // حجم خط أكبر للعناوين
+    color: #333;
+    transition: color 0.3s ease, transform 0.3s ease; // إضافة تأثيرات للتحويل واللون
+}
+
+.destination-info p {
+    color: #555;
+    font-size: 16px; // تقليل حجم الخط للنص
+    margin-left: 0; // إزالة المسافة الجانبية
+    transition: color 0.3s ease; // إضافة تأثير على اللون
+}
+
+// button {
+//     position: absolute;
+//     top: 50%;
+//     transform: translateY(-50%);
+//     background-color: rgba(255, 255, 255, 0.8);
+//     border: none;
+//     font-size: 20px; // تقليل حجم الخط للأزرار
+//     padding: 8px; // تقليل المسافة
+//     cursor: pointer;
+//     z-index: 1; // يجعله فوق الشرائح
+//     border-radius: 5px; // زوايا دائرية للأزرار
+// }
+
+.prev {
+    left: 10px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    font-size: 20px; // تقليل حجم الخط للأزرار
+    padding: 8px; // تقليل المسافة
+    cursor: pointer;
+    z-index: 1; // يجعله فوق الشرائح
+    border-radius: 5px; // زوايا دائرية للأزرار
+}
+
+.next {
+    right: 10px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    font-size: 20px; // تقليل حجم الخط للأزرار
+    padding: 8px; // تقليل المسافة
+    cursor: pointer;
+    z-index: 1; // يجعله فوق الشرائح
+    border-radius: 5px; // زوايا دائرية للأزرار
+}
+
+h2 {
+    margin-top: 20px;
+    font-size: 24px; // تقليل حجم الخط
+}
+
+p {
+    color: #555;
+    font-size: 16px; // تقليل حجم الخط للنص
+    margin-left: 20px; // إضافة مسافة للنص
+}
+
+// إضافة تأثير عند التمرير فوق النص
+.destination-info:hover {
+    transform: scale(1.05); // تكبير النص عند التمرير فوقه
+    background-color: rgba(255, 255, 255, 0.9); // تغيير لون الخلفية
+}
+
+.destination-info h1:hover {
+    color: #007BFF; // تغيير لون العنوان عند التمرير فوقه
+}
+
+.destination-info p:hover {
+    color: #555; // تغيير لون النص عند التمرير فوقه
+}
+.button-container3 {
+    display: flex; /* Use Flexbox to arrange buttons */
+    justify-content: space-between; /* Space between buttons */
+    margin-top: 10px; /* Margin above the buttons */
+    width: 100%; /* Full width of the container */
+}
+
+.get-package-button, .book-now-button{
+    background-color: black; /* Black background */
+    color: white; /* White text color */
+    border: none; /* No borders */
+    border-radius: 25px; /* Rounded corners */
+    padding: 10px 20px; /* Padding around the text */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: transform 0.3s ease; /* Transition effect */
+    margin: 0 5px; /* Small margin between buttons */
+    font-weight: 600; /* Bold text */
+    flex: 1; /* Allow buttons to grow and take equal space */
+    text-align: center; /* Center text inside buttons */
+}
+
+
+/* Optional: add this for a minimum width to buttons */
+.get-package-button, .book-now-button {
+    min-width: 120px; /* Minimum width for buttons */
+}
+.get-package-button:hover, .book-now-button:hover {
+    background-color: white; /* Change background color on hover */
+    color: black; /* Change text color on hover */
+    transform: scale(1.05); /* Slightly increase the size */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
+}

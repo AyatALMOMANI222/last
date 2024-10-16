@@ -5,21 +5,27 @@
   
     .exhibitions-form-admin-header {
       margin: 20px 0px;
-      height: 30px;
-      padding: 20px;
+      height:60px;
+      // padding: 20px;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
       border-radius: 10px;
       border: 1px solid rgb(242, 239, 239);
-      background-color: #4f75ff;
+      // background-color: #4f75ff;
   
       .header-input {
         font-size: 19px;
         font-weight: 500;
         color: #fff;
         width: 400px;
+      }
+      .section-input{
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        align-items: center;
       }
   
       .add-exhibitions-btn {

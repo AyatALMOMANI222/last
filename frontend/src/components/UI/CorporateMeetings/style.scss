@@ -1,0 +1,63 @@
+/* Container for the entire component */
+.corporate-meetings-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+    color: #333; /* Color for text */
+}
+
+/* Headline picture section */
+.headline-picture {
+    position: relative;
+    background-image: url('./CorporateMeetings.jpg'); /* استبدل برابط الصورة */
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 30px;
+}
+
+/* Title styling */
+.headline-title {
+    font-size: 48px;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.7); /* خلفية شبه شفافة */
+    padding: 20px 40px;
+    border-radius: 10px;
+    color: rgb(210, 198, 198); /* اللون الأحمر السكني */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* ظل للنص */
+}
+
+/* Content styling */
+.corporate-meetings-content {
+    background-color: #F2F2F2; /* خلفية رمادية */
+    padding: 30px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* ظلال احترافية */
+    border-radius: 10px;
+    color: #000; /* النص باللون الأسود */
+}
+
+/* Paragraph styling */
+.corporate-meetings-content p {
+    line-height: 1.8; /* زيادة المسافة بين الأسطر */
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .headline-title {
+        font-size: 36px;
+    }
+
+    .corporate-meetings-content {
+        padding: 20px;
+    }
+
+    .corporate-meetings-content p {
+        font-size: 16px;
+    }
+}

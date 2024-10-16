@@ -27,6 +27,29 @@ import AirportTransferPrice from "./components/last_pages/AirportTransfer/Airpot
 import GalaDinner from "./components/last_pages/GalaDinner";
 import AddScientificPaper from "./components/SceintificPaper";
 import VisaPage from "./components/last_pages/Visa";
+import HomeR from "./pages/HomeR";
+import AboutUsEvent from "./components/UI/AboutUs";
+import OurClients from "./components/UI/OurClients";
+import OurTeams from "./components/UI/OurTeam";
+import ManagementConsulting from "./components/UI/ManagementConsulting";
+import Planning from "./components/UI/EventPlanning";
+import SocialEvents from "./components/UI/SocialEvents";
+import MediaCampaign from "./components/UI/MediaCampaign";
+import LogisticSecretarial from "./components/UI/LogisticSecretarial";
+import TourSlider from "./components/UI/TourAndTourism";
+import Expositions from "./components/UI/Expositions";
+import Workshops from "./components/UI/Workshop";
+import Seminars from "./components/UI/Seminars";
+import CorporateMeetings from "./components/UI/CorporateMeetings";
+import ConceptCreation from "./components/UI/ConceptCreation";
+import Conference from "./components/UI/Conference/ConferenceData";
+import Navbar from "./components/UI/Navbar";
+import ContactUs from "./components/UI/ContactUs";
+import TopNavbar from "./components/UI/NavigationBar";
+import Audiovisuals from "./components/UI/Audiovisuals";
+import Conference3 from "./components/UI/conferece2";
+import EditSpeakerData from "./components/Admin/EditSpeakerData";
+
 
 const App = () => {
   const location = useLocation();
@@ -72,9 +95,12 @@ const App = () => {
       <Loader show={showLoader} />
       {/* Conditionally render the NavBar based on the current route */}
       {navBarRoutes.includes(location.pathname) && <NavBar />}
+      {/* <TopNavbar/> */}
+      {/* <Navbar/> */}
       <Routes className="main">
-        <Route path="/exhibitions" element={<Exhibitions />} />
-        <Route path="/reservation/form" element={<Reservation />} />
+      <Route path="/exhibitions" element={<Exhibitions />} />
+      <Route path="/edit/speaker/data" element={<EditSpeakerData />} />
+      <Route path="/reservation/form" element={<Reservation />} />
         <Route path="/conferences" element={<ConferencesAdmin />} />
         <Route path="/flights" element={<FlightFormAdmin />} />
         <Route path="/flight/form" element={<FlightForm />} />
@@ -97,6 +123,27 @@ const App = () => {
           <Route path="/GalaDinner" element={<GalaDinner />} />
           <Route path="/paper" element={<AddScientificPaper/>} />
           <Route path="/visa" element={< VisaPage/>} />
+          <Route path="/home" element={<HomeR/>} />
+          <Route path="/about_us" element={<AboutUsEvent/>} />
+          <Route path="/our_clients" element={<OurClients/>} />
+          <Route path="/our_team" element={<OurTeams/>} />
+          <Route path="/management_consulting" element={<ManagementConsulting/>} />
+          <Route path="/planning" element={<Planning/>} />
+          <Route path="/social_events" element={<SocialEvents/>} />
+          <Route path="/media_campaign" element={<MediaCampaign />} />
+          <Route path="/logistic_secretarial" element={<LogisticSecretarial/>} />
+          <Route path="/tour_slider" element={<TourSlider/>} />
+          <Route path="/expositions" element={<Expositions/>} />
+          <Route path="/workshops" element={<Workshops/>} />
+          <Route path="/seminars" element={<Seminars/>} />
+          <Route path="/corporate_meetings" element={<CorporateMeetings/>} />
+          <Route path="/concept_creation" element={< ConceptCreation/>} />
+          <Route path="/ser" element={< Conference/>} />
+          <Route path="/contact_us" element={< ContactUs/>} />
+          <Route path="/top_navbar" element={<TopNavbar/>} />
+          <Route path="/audiovisuals" element={<Audiovisuals/>} />
+
+          <Route path="/conf" element={<Conference3/>} />
 
       </Routes>
     </div>

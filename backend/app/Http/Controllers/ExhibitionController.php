@@ -55,6 +55,57 @@ class ExhibitionController extends Controller
 
     return response()->json($exhibitions);
 }
+public function getAllExhibitions(Request $request)
+{
+    try {
+        // Get search and status input from the request
+        $search = $request->input('search');
+        $status = $request->input('status');
+
+        // Set how many items per page you want to display
+        $perPage = 10; // Adjust as needed
+
+        // Retrieve all exhibitions
+        $query = Exhibition::query(); // Retrieve exhibitions without related models
+
+        // Filter by search if provided
+        if ($search) {
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        // Filter by status if provided
+        if ($status) {
+            $currentDate = new \DateTime();
+
+            if ($status === 'past') {
+                // Past exhibitions where the end date is before the current date
+                $query->where('end_date', '<', $currentDate->format('Y-m-d H:i:s'));
+            } elseif ($status === 'upcoming') {
+                // Upcoming exhibitions where the end date is on or after the current date
+                $query->where('end_date', '>=', $currentDate->format('Y-m-d H:i:s'));
+            }
+        }
+
+        // Apply pagination
+        $exhibitions = $query->paginate($perPage);
+
+        // Return response with paginated data
+        return response()->json([
+            'status' => 'success',
+            'data' => $exhibitions->items(),  // The paginated exhibitions data
+            'total' => $exhibitions->total(), // Total number of exhibitions
+            'per_page' => $exhibitions->perPage(), // Number of exhibitions per page
+            'current_page' => $exhibitions->currentPage(), // Current page number
+            'total_pages' => $exhibitions->lastPage(), // Total number of pages
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to retrieve exhibitions: ' . $e->getMessage(),
+        ], 500);
+    }
+}
 
 public function getExhibitionById($id)
 {

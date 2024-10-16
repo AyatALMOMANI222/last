@@ -1,0 +1,48 @@
+/* Title styling with fade-in and scaling effect */
+.headline-title {
+    font-size: 48px;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.6); /* خلفية شبه شفافة */
+    padding: 20px 40px;
+    border-radius: 10px;
+    color: white; /* العنوان باللون الأحمر */
+    
+    /* Initial state for the animation */
+    opacity: 0;
+    transform: scale(0.8); /* تصغير قليلاً قبل التحول */
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+/* When the image is fully loaded, make the title appear */
+.headline-picture:hover .headline-title,
+.headline-picture:focus-within .headline-title {
+    opacity: 1; /* إظهار العنوان */
+    transform: scale(1); /* تكبير بشكل طبيعي */
+}
+
+/* Add animation to load the title directly when the component renders */
+.headline-picture {
+    position: relative;
+    background-image: url('./workshops.jpg'); /* استبدال بالصورة */
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 30px;
+
+    /* Trigger animation on page load */
+    animation: fadeInBackground 1s ease-in-out forwards;
+}
+
+/* Keyframes for background fade-in */
+@keyframes fadeInBackground {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

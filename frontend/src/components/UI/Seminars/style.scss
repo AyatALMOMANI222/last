@@ -1,0 +1,74 @@
+/* Container for the entire component */
+.seminars-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+    color: #333; /* النص باللون الأسود */
+    padding: 20px;
+}
+
+/* Headline picture section */
+.headline-picture {
+    position: relative;
+    background-image: url('./Seminars.jpg'); /* Replace with your image */
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* ظلال خفيفة */
+}
+
+/* Title styling */
+.headline-title {
+    font-size: 48px;
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.5); /* خلفية شبه شفافة */
+    padding: 20px 40px;
+    border-radius: 10px;
+    color:rgb(199, 188, 188); /* لون العنوان بالأحمر الفاتح */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* ظل النص لجعل العنوان بارزًا */
+}
+
+/* Content section */
+.seminars-content {
+    background-color: #F2F2F2; /* خلفية سكني فاتح */
+    padding: 30px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* ظلال لعمق احترافي */
+    border-radius: 10px;
+    color: #000; /* النص باللون الأسود */
+}
+
+/* Paragraph styling */
+.seminars-content p {
+    line-height: 1.8;
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Intro text styling */
+.intro-text {
+    font-weight: bold;
+    color: #E74C3C; /* لون النص الأساسي بالأحمر */
+    font-size: 20px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .headline-title {
+        font-size: 36px;
+    }
+
+    .seminars-content {
+        padding: 20px;
+    }
+
+    .seminars-content p {
+        font-size: 16px;
+    }
+}

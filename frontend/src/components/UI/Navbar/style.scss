@@ -1,0 +1,121 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    padding: 15px 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 100;
+    // margin-top: 100px;
+  margin-top: 38px;
+  }
+  
+  .logo img {
+    width: 250px;
+    border-radius: 10px; /* تعديل لجعل الشعار أكثر احترافية */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* إضافة تأثير الظل للشعار */
+    height: 90px;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+  }
+  
+  nav ul li {
+    position: relative;
+  }
+  
+  nav ul li a {
+    color: white;
+    font-weight: 600;
+    padding: 10px 15px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  nav ul li:hover > a {
+    color: #ff4747; /* لون أحمر جذاب عند التمرير */
+  }
+  
+  .dropdown {
+    position: absolute;
+    padding: 15px 0px;
+    top: 150%; /* زيادة هذه القيمة لتحريك القائمة للأسفل */
+    left: 0;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* إضافة ظل ناعم */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    max-height: 360px;
+    overflow-y: auto;
+    overflow-x: hidden
+  }
+  
+  .dropdown::-webkit-scrollbar {
+    width: 3px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.dropdown::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+}
+  nav ul li:hover .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .dropdown li a {
+    color: #333;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s;
+  }
+  
+  .dropdown li:last-child a {
+    border-bottom: none;
+  
+  }
+  
+  .dropdown li a:hover {
+    background-color: #f7f7f7; /* تغيير لون الخلفية عند التمرير */
+  }
+  
+  .login a {
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: 2px solid white;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  
+  .login a:hover {
+    background-color: white;
+    color: black;
+    border-color: #ff4747; /* تأثير جذاب عند التمرير */
+  }
+  

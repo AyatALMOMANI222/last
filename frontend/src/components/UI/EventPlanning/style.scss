@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@400;500&display=swap');
+
+.planning {
+  font-family: 'Roboto', sans-serif;
+
+  .headline-section {
+    background: url('./event\ planning.webp') no-repeat center center;
+    background-size: cover;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .title {
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+        font-size: 48px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1.5px;
+        animation: fadeIn 1s ease-in-out;
+      }
+    }
+  }
+
+  .content-section {
+    padding: 20px;
+    background-color: #f3f3f3;
+
+    .subtitle {
+      font-family: 'Poppins', sans-serif;
+      font-size: 36px;
+      color: #d32f2f;
+      margin-bottom: 25px;
+      font-weight: 700;
+    }
+
+    .description {
+      color: #444;
+      font-size: 20px;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

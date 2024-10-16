@@ -1,24 +1,58 @@
 .slider-container {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .slides-container {
-    display: flex;
-  }
-  
-  .slides {
-    display: flex;
-  }
-  
-  .slide {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-  
-  img {
-    width: 100%;
-    height: auto;
-  }
-  
+  width: 100%;
+  // height: auto; /* لا تقيد الارتفاع بالحجم الكامل للشاشة */
+  max-height: 77.97vh; /* تحديد حد أقصى للارتفاع بحيث لا يأخذ مساحة كبيرة جداً */
+  min-height: 400px; /* تحديد حد أدنى للارتفاع */
+  overflow: hidden;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  position: relative;
+  // margin-top: 139px; /* تصحيح هذه القيمة لتشمل px */
+  top: 0px;
+}
+
+.slides-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%;
+}
+
+.slide {
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide img,
+.slide-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.5s ease;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+.slide-video {
+  border: 5px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}

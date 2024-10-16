@@ -13,62 +13,120 @@ class SpeakerController extends Controller
 
  
 {
-    public function store(Request $request)
+    public function store(Request $request, $user_id, $conference_id)
     {
         try {
-            $validatedData = $request->validate([
-                'conference_id' => 'required|exists:conferences,id',
-                'abstract' => 'nullable|file|mimes:pdf',
-                'topics' => 'nullable|string',
-                'presentation_file' => 'nullable|file|mimes:ppt,pptx',
-            ]);
-    
-            $conference = Conference::find($validatedData['conference_id']);
-            
-            $speaker = Speaker::create([
-                'user_id' => Auth::id(),
-                'conference_id' => $validatedData['conference_id'],
-                'abstract' => $request->file('abstract') ? $request->file('abstract')->store('abstracts') : null,
-                'topics' => $validatedData['topics'],
-                'presentation_file' => $request->file('presentation_file') ? $request->file('presentation_file')->store('presentations') : null,
-            ]);
-    
-            return response()->json(['message' => 'Speaker profile created successfully', 'speaker' => $speaker], 201);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['error' => $e->errors()], 422);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'An unexpected error occurred. Please try again.'], 500);
-        }
-    }
-
-
-
-    // هنا يعدل على user_id ,عملتله check admin خارجي
-
-    public function updateByAdmin(Request $request, $user_id)
-    {
-        try {
+            // Validate the incoming request data
             $validatedData = $request->validate([
                 'is_online_approved' => 'nullable|boolean',
-                'ticket_status' => 'nullable',
+                'ticket_status' => 'nullable|string',
                 'dinner_invitation' => 'nullable|boolean',
                 'airport_pickup' => 'nullable|boolean',
                 'free_trip' => 'nullable|boolean',
                 'is_certificate_active' => 'nullable|boolean',
             ]);
     
-            // البحث عن المتحدث بناءً على user_id
-            $speaker = Speaker::where('user_id', $user_id)->firstOrFail();
+            // Check if the speaker already exists for this user and conference
+            $existingSpeaker = Speaker::where('user_id', $user_id)
+                                       ->where('conference_id', $conference_id)
+                                       ->first();
     
-            $speaker->update($validatedData);
+            if ($existingSpeaker) {
+                return response()->json([
+                    'error' => 'Speaker already exists for this user and conference.'
+                ], 409); // Use 409 for conflict
+            }
     
-            return response()->json(['message' => 'Speaker details updated successfully by admin', 'speaker' => $speaker], 200);
+            // Create a new speaker entry
+            $speaker = Speaker::create(array_merge($validatedData, [
+                'user_id' => $user_id,
+                'conference_id' => $conference_id,
+            ]));
+    
+            // Return a success response
+            return response()->json([
+                'message' => 'Speaker created successfully',
+                'speaker' => $speaker
+            ], 201); // Use 201 for created resource
+    
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['error' => 'Validation error', 'details' => $e->errors()], 422);
+            // Handle validation errors
+            return response()->json([
+                'error' => 'Validation error',
+                'details' => $e->errors()
+            ], 422);
+    
         } catch (\Exception $e) {
-            return response()->json(['error' => 'An unexpected error occurred. Please try again.', 'details' => $e->getMessage()], 500);
+            // Handle general errors
+            return response()->json([
+                'error' => 'An unexpected error occurred. Please try again.',
+                'details' => $e->getMessage()
+            ], 500);
         }
     }
+    
+    
+
+
+    // هنا يعدل على user_id ,عملتله check admin خارجي
+    public function updateByUser(Request $request)
+    {
+        try {
+            // Validate the incoming request data
+            $validatedData = $request->validate([
+                'abstract' => 'nullable|string', // Validate the abstract
+                'topics' => 'nullable|string', // Validate the topics
+                'presentation_file' => 'nullable|file|mimes:ppt,pptx', // Validate the presentation file
+            ]);
+    
+            // Get the authenticated user's ID
+            $user_id = Auth::id();
+    
+            // Find the speaker associated with the authenticated user
+            $speaker = Speaker::where('user_id', $user_id)->firstOrFail();
+    
+            // Check if a presentation file is provided
+            if ($request->hasFile('presentation_file')) {
+                // Store the presentation file and get the path
+                $presentationFilePath = $request->file('presentation_file')->store('presentations', 'public');
+                // Update the speaker's presentation file path
+                $speaker->presentation_file = $presentationFilePath;
+            }
+    
+            // Update the speaker's other details
+            $speaker->update($validatedData);
+    
+            // Return a success response
+            return response()->json([
+                'message' => 'Speaker details updated successfully',
+                'speaker' => $speaker
+            ], 200);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            return response()->json([
+                'error' => 'Validation error',
+                'details' => $e->errors()
+            ], 422);
+    
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Handle case where the speaker is not found
+            return response()->json([
+                'error' => 'Speaker not found for the authenticated user',
+            ], 404);
+    
+        } catch (\Exception $e) {
+            // Handle general errors
+            return response()->json([
+                'error' => 'An unexpected error occurred. Please try again.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    
+    
+    
     
 // هنا ياخذ user_id من التوكن يعدل لنفسه 
 public function updateOnlineParticipation(Request $request)

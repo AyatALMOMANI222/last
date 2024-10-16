@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@400;500&display=swap');
+
+.media-campaign {
+  font-family: 'Roboto', sans-serif;
+  height: 100vh; /* جعل المكون يأخذ ارتفاع الشاشة بالكامل */
+
+  .headline-section {
+    background: url('./Media Campaign.webp') no-repeat center center; /* تعديل لتوسيع الصورة بشكل أفضل */
+    background-size: cover;
+    height: 50%; /* ارتفاع الرأس 50% من ارتفاع الصفحة */
+    display: flex;
+    justify-content: center; /* محاذاة العناصر في المنتصف عموديًا */
+    align-items: center;
+    position: relative;
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.6); /* تقليل شفافية التظليل */
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center; /* محاذاة العنوان في المنتصف أفقيًا */
+      align-items: center;
+
+      .title {
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+        font-size: 52px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 2px;
+        animation: fadeIn 1s ease-in-out;
+      }
+    }
+  }
+
+  .content-section {
+    padding: 20px 60px; /* تباعد داخلي للمحتوى */
+    background-color: #f3f3f3; /* لون أفتح للخلفية */
+    height:auto; /* ارتفاع المحتوى 50% من ارتفاع الصفحة */
+    display: flex;
+    flex-direction: column; /* تنظيم العناصر عموديًا */
+    justify-content: flex-start; /* محاذاة العناصر إلى الأعلى */
+    align-items: flex-start; /* محاذاة المحتوى إلى اليسار */
+
+    .subtitle {
+      font-family: 'Poppins', sans-serif;
+      font-size: 36px;
+      color: #d32f2f;
+      margin-bottom: 25px;
+      font-weight: 700;
+    }
+
+    .description {
+      color: #444;
+      font-size: 20px;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .principles-title {
+      font-family: 'Poppins', sans-serif;
+      color: #212121;
+      font-size: 28px;
+      font-weight: bold;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .principles-list {
+      list-style-type: none; /* إزالة النقاط */
+      padding-left: 20px;
+      color: #616161;
+      font-size: 20px;
+
+      li {
+        margin-bottom: 15px;
+        position: relative;
+        padding-left: 25px;
+
+        &::before {
+          content: '•'; /* إضافة نقطة مخصصة */
+          color: #d32f2f;
+          font-size: 30px;
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+      }
+    }
+  }
+
+  /* تأثيرات الحركة */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

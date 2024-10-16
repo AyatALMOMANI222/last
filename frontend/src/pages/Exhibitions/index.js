@@ -6,6 +6,9 @@ import ImageUpload from "../../CoreComponent/ImageUpload";
 import DateInput from "../../CoreComponent/Date";
 import axios from "axios";
 import "./style.scss";
+import Select from "../../CoreComponent/Select";
+import Pagination from "../../CoreComponent/Pagination";
+import ViewFormExhibitions from "./ViewForm";
 
 const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   const [title, setTitle] = useState("");
@@ -16,12 +19,39 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   const [status, setStatus] = useState("upcoming");
   const [exhibitionImages, setExhibitionImages] = useState(null);
   const [errorMsg, setErrorMsg] = useState(""); // Manage error messages
+  const [allConference, setAllConference] = useState([]);
+  const [conferenceId, setConferenceId] = useState([]);
+ 
 
+  const getConference = () => {
+    const url = `http://127.0.0.1:8000/api/con`;
+
+    axios
+      .get(url)
+      .then((response) => {
+        setAllConference(
+          response.data.data?.map((item) => {
+            return { label: item?.title, value: item?.id };
+          })
+        );
+        console.log(
+          response.data.data?.map((item) => {
+            return { label: item?.title, value: item?.id };
+          })
+        );
+        
+      })
+      .catch((error) => {});
+  };
+  useEffect(()=>{
+    getConference()
+  },[])
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission
     const token = localStorage.getItem("token");
 
     const formData = new FormData();
+    formData.append("conference_id", conferenceId?.value);
     formData.append("title", title);
     formData.append("description", description);
     formData.append("location", location);
@@ -59,8 +89,16 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
 
   return (
     <form className="exhibition-form-container" onSubmit={handleSubmit}>
-      <div className="header-exhibition-form">Add New Conference</div>
+    
+      <div className="header-exhibition-form">Add New Exhibition</div>
       <div className="form-section">
+      <Select
+          options={allConference}
+          value={conferenceId}
+          setValue={setConferenceId}
+          label="Conference Id"
+          errorMsg={""}
+        />
         <Input
           label="Exhibition Title"
           inputValue={title}
@@ -127,19 +165,164 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   );
 };
 
+// const Exhibitions = () => {
+//   const [selectedExhibitionId, setSelectedExhibitionId] = useState(null);
+//   const [isViewDrawerOpen, setIsViewDrawerOpen] = useState(false);
+//   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+//   const [exhibitionData, setExhibitionData] = useState();
+//   const [exhibitionName, setExhibitionName] = useState("");
+//   const [openAddExhibition, setOpenAddExhibition] = useState(false);
+//   const [allExhibitions, setAllExhibitions] = useState([]);
+//   const [selectedExhibition, setSelectedExhibition] = useState({});
+//   const [search, setSearch] = useState(""); // Default search term
+//   const [status, setStatus] = useState("");
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [totalPages, setTotalPages] = useState(0);
+//   const [openViewForm, setOpenViewForm] = useState(true);
+//   const handlePageChange = (pageNumber) => {
+//     setCurrentPage(pageNumber);
+//   };
+//   // const handleViewClick = (exhibition) => {
+//   //   setSelectedExhibition(exhibition);
+//   //   setIsViewDrawerOpen(true);
+//   // };
+
+//   const handleEditClick = (exhibitionId) => {
+//     setSelectedExhibitionId(exhibitionId);
+//     setIsEditDrawerOpen(true);
+//     setExhibitionData();
+//   };
+//   const getExhibitions = async () => {
+//     // setLoading(true); // Set loading to true before fetching
+//     try {
+//       const response = await axios.get(
+//         "http://127.0.0.1:8000/api/exhibitions",
+//         {
+//           params: {
+//             search: exhibitionName,
+//             status: status?.value,
+//             page: currentPage,
+//           },
+//         }
+//       );
+//       setTotalPages(response.data.total_pages);
+//       setAllExhibitions(response?.data?.data); // Adjust according to your API response structure
+//     } catch (err) {
+//     } finally {
+//     }
+//   };
+
+//   useEffect(() => {
+//     getExhibitions();
+//   }, [exhibitionName, status, currentPage]);
+
+//   return (
+//     <div className="exhibitions-page">
+       
+//       <div className="exhibitions-form-admin-header">
+//         <div className="section-input">
+//           <Input
+//             placeholder="Search"
+//             inputValue={exhibitionName}
+//             setInputValue={setExhibitionName}
+//             type="text"
+//             label={"Exhibition Name"}
+//           />
+//           <Select
+//             options={[
+//               { value: "upcoming", label: "Upcoming" },
+//               { value: "past", label: "Past" },
+//             ]}
+//             value={status}
+//             setValue={setStatus}
+//             label="Status"
+//             errorMsg={""}
+//           />
+//         </div>
+//         <button
+//           className="add-exhibitions-btn"
+//           onClick={() => setOpenAddExhibition(true)}
+//         >
+//           Add new Exhibitions
+//         </button>
+//       </div>
+//       <div className="exhibition-list">
+//         {allExhibitions?.map((exhibition) => {
+//           return (
+//             <Fragment key={exhibition.id}>
+//               <div className="exhibition-item">
+//                 <img
+//                   className="exhibition-image"
+//                   src={`${backendUrlImages}${exhibition.image}`}
+//                   alt={exhibition.title}
+//                 />
+
+//                 <div className="exhibition-info">
+//                   <div className="title">{exhibition.title}</div>
+//                   <div className="date">{exhibition.date}</div>
+//                   <div className="place">{exhibition.place}</div>
+//                   <div className="actions-btns">
+//                     <button
+//                       className="view"
+//                       onClick={() => {
+//                         // handleViewClick(exhibition);
+//                         setOpenViewForm(true)
+//                       }}
+//                     >
+//                       View
+//                     </button>
+//                     <button
+//                       className="edit"
+//                       onClick={() => handleEditClick(exhibition.id)}
+//                     >
+//                       Edit
+//                     </button>
+//                   </div>
+//                 </div>
+//               </div>
+//             </Fragment>
+//           );
+//         })}
+//       </div>
+//       <Pagination
+//         currentPage={currentPage}
+//         totalPages={totalPages}
+//         onPageChange={handlePageChange}
+//       />
+//         <ViewFormExhibitions isOpen={openViewForm} setIsOpen={setOpenViewForm}/>
+//       <MySideDrawer isOpen={openAddExhibition} setIsOpen={setOpenAddExhibition}>
+//         <ExhibitionForm
+//           setIsOpen={setOpenAddExhibition}
+//           getExhibitions={getExhibitions}
+//         />
+//       </MySideDrawer>
+    
+//     </div>
+//   );
+// };
+// import React, { useEffect, useState, Fragment } from 'react';
+// import axios from 'axios';
+// import Input from './Input'; // Assuming these are imported from your components
+// import Select from './Select'; // Adjust as necessary
+// import Pagination from './Pagination'; // Assuming these are imported from your components
+// import ViewFormExhibitions from './ViewFormExhibitions'; // Assuming these are imported from your components
+// import MySideDrawer from './MySideDrawer'; // Assuming these are imported from your components
+// import ExhibitionForm from './ExhibitionForm'; // Assuming these are imported from your components
+
 const Exhibitions = () => {
   const [selectedExhibitionId, setSelectedExhibitionId] = useState(null);
-  const [isViewDrawerOpen, setIsViewDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [exhibitionData, setExhibitionData] = useState();
   const [exhibitionName, setExhibitionName] = useState("");
   const [openAddExhibition, setOpenAddExhibition] = useState(false);
   const [allExhibitions, setAllExhibitions] = useState([]);
-  const [selectedExhibition, setSelectedExhibition] = useState({});
+  const [status, setStatus] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [openViewForm, setOpenViewForm] = useState(false);
 
-  const handleViewClick = (exhibition) => {
-    setSelectedExhibition(exhibition);
-    setIsViewDrawerOpen(true);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   const handleEditClick = (exhibitionId) => {
@@ -148,36 +331,46 @@ const Exhibitions = () => {
     setExhibitionData();
   };
 
-  const getExhibitions = () => {
-    const searchQuery = exhibitionName
-      ? `?search=${encodeURIComponent(exhibitionName)}`
-      : "";
-    const url = `http://127.0.0.1:8000/api/exhibitions/all`;
-
-    axios
-      .get(url)
-      .then((response) => {
-
-        setAllExhibitions(response.data);
-      })
-      .catch((error) => {
+  const getExhibitions = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/exhibitions", {
+        params: {
+          search: exhibitionName,
+          status: status?.value,
+          page: currentPage,
+        },
       });
+      setTotalPages(response.data.total_pages);
+      setAllExhibitions(response.data.data); // Adjust according to your API response structure
+    } catch (err) {
+      console.error("Error fetching exhibitions:", err);
+    }
   };
 
   useEffect(() => {
     getExhibitions();
-  }, [exhibitionName]);
-
+  }, [exhibitionName, status, currentPage]);
 
   return (
     <div className="exhibitions-page">
       <div className="exhibitions-form-admin-header">
-        <div className="header-input">
+        <div className="section-input">
           <Input
             placeholder="Search"
             inputValue={exhibitionName}
             setInputValue={setExhibitionName}
             type="text"
+            label={"Exhibition Name"}
+          />
+          <Select
+            options={[
+              { value: "upcoming", label: "Upcoming" },
+              { value: "past", label: "Past" },
+            ]}
+            value={status}
+            setValue={setStatus}
+            label="Status"
+            errorMsg={""}
           />
         </div>
         <button
@@ -188,42 +381,43 @@ const Exhibitions = () => {
         </button>
       </div>
       <div className="exhibition-list">
-        {allExhibitions?.map((exhibition) => {
-          return (
-            <Fragment key={exhibition.id}>
-              <div className="exhibition-item">
-                <img
-                  className="exhibition-image"
-                  src={`${backendUrlImages}${exhibition.image}`}
-                  alt={exhibition.title}
-                />
-
-                <div className="exhibition-info">
-                  <div className="title">{exhibition.title}</div>
-                  <div className="date">{exhibition.date}</div>
-                  <div className="place">{exhibition.place}</div>
-                  <div className="actions-btns">
-                    <button
-                      className="view"
-                      onClick={() => {
-                        handleViewClick(exhibition);
-                      }}
-                    >
-                      View
-                    </button>
-                    <button
-                      className="edit"
-                      onClick={() => handleEditClick(exhibition.id)}
-                    >
-                      Edit
-                    </button>
-                  </div>
+        {allExhibitions?.map((exhibition) => (
+          <Fragment key={exhibition.id}>
+            <div className="exhibition-item">
+              <img
+                className="exhibition-image"
+                src={`${backendUrlImages}${exhibition.image}`}
+                alt={exhibition.title}
+              />
+              <div className="exhibition-info">
+                <div className="title">{exhibition.title}</div>
+                <div className="date">{exhibition.date}</div>
+                <div className="place">{exhibition.place}</div>
+                <div className="actions-btns">
+                  <button
+                    className="view"
+                    onClick={() => setOpenViewForm(true)}
+                  >
+                    View
+                  </button>
+                  <button
+                    className="edit"
+                    onClick={() => handleEditClick(exhibition.id)}
+                  >
+                    Edit
+                  </button>
                 </div>
               </div>
-            </Fragment>
-          );
-        })}
+            </div>
+          </Fragment>
+        ))}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
+      <ViewFormExhibitions isOpen={openViewForm} setIsOpen={setOpenViewForm} />
       <MySideDrawer isOpen={openAddExhibition} setIsOpen={setOpenAddExhibition}>
         <ExhibitionForm
           setIsOpen={setOpenAddExhibition}
@@ -233,5 +427,6 @@ const Exhibitions = () => {
     </div>
   );
 };
+
 
 export default Exhibitions;

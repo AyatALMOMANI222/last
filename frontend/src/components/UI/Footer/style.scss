@@ -1,0 +1,89 @@
+.footer {
+    background-color: black; /* لون الخلفية */
+    color: white; /* لون النص */
+    padding: 20px 0; /* التباعد العلوي والسفلي */
+    display: flex;
+    justify-content: center; /* مركز المحتوى أفقيًا */
+    align-items: center; /* محاذاة العناصر عموديًا */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between; /* توزيع العناصر داخل التذييل */
+    align-items: center; /* محاذاة العناصر عموديًا */
+    width: 100%; /* عرض كامل */
+    max-width: 1200px; /* عرض أقصى للتذييل */
+    margin: 0 auto; /* توسيط التذييل */
+    padding: 0 20px; /* تباعد داخلي */
+}
+
+.logo-container2 {
+    flex: 0 0 auto; /* منع التمدد */
+    width: 300px; /* عرض ثابت للشعار يتناسب مع حجم الخريطة */
+    height: 200px; /* ارتفاع ثابت للشعار */
+    display: flex; /* استخدام flexbox لتوسيع محتوى الشعار */
+    justify-content: center; /* مركز الشعار أفقيًا */
+    align-items: center; /* مركز الشعار عموديًا */
+}
+
+.logo2 {
+    width: 100%; /* عرض الشعار بالكامل */
+    height: auto; /* الحفاظ على نسبة العرض إلى الارتفاع */
+    max-height: 100%; /* تحديد الحد الأقصى للارتفاع ليكون داخل الحاوية */
+     border-radius: 10px;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: row; /* ترتيب الروابط أفقيًا */
+    align-items: center; /* محاذاة العناصر في منتصف العرض */
+    gap: 10px; /* تباعد بين الروابط */
+    margin: 0 20px; /* تباعد أفقي */
+}
+.footer-links-icon{
+    display: flex;
+    flex-direction: column;
+}
+.social-icons{
+   
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around
+}
+.footer-links a {
+    color: white; /* لون الروابط */
+    text-decoration: none; /* إزالة التسطير */
+    font-size: 1rem; /* حجم الخط */
+    transition: color 0.3s; /* تأثير التحويل على تغيير اللون */
+}
+
+.footer-links a:hover {
+    color: #e63946; /* تغيير لون الروابط عند التمرير */
+}
+
+.map-container {
+    flex: 0 0 auto; /* منع التمدد */
+    width: 300px; /* عرض ثابت لخريطة جوجل */
+    height: 200px; /* ارتفاع ثابت لخريطة جوجل */
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column; /* تغيير الاتجاه إلى عمودي في الأجهزة الصغيرة */
+        align-items: center; /* توسيط العناصر */
+    }
+
+    .footer-links {
+        margin-bottom: 20px; /* إضافة تباعد سفلي */
+    }
+
+    .map-container {
+        width: 100%; /* عرض كامل في الأجهزة الصغيرة */
+        height: 200px; /* ارتفاع ثابت */
+    }
+
+    .logo2 {
+        width: 80px; /* تقليل عرض الشعار في الأجهزة الصغيرة */
+        border-radius: 10px;
+    }
+}

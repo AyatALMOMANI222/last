@@ -59,6 +59,7 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
         toast.success(response?.data?.message);
         setOpenForm(false);
         getFlightData();
+        console.log("Flight created successfully:", response.data);
         // Handle success (like showing a success message, redirecting, etc.)
       })
       .catch((error) => {

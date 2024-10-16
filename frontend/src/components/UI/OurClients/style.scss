@@ -1,0 +1,44 @@
+.clients-container {
+    text-align: center;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.clients-title {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #fff; /* اجعل لون النص أبيض */
+    background-color: #ff4d4d; /* لون خلفية أحمر */
+    padding: 10px; /* إضافة بعض الحشوة */
+    border-radius: 10px; /* زوايا دائرية للخلفية */
+}
+
+.clients-skew {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.clients-logo {
+    width: 300px; /* يمكنك تعديل العرض حسب الحاجة */
+    height: 300px; /* يمكنك تعديل الارتفاع حسب الحاجة */
+    background-color: #f0f0f0; /* لون الخلفية */
+    border-radius: 60px 0 60px 0; /* الزوايا الدائرية والحادة */
+    position: relative; /* تأكد من أن العنصر سيكون موضعه الصحيح */
+    margin: 9px;
+    border: 2px solid #ff4d4d; /* حد أحمر رفيع */
+}
+
+.client-logo {
+    width: 100%; /* اجعل الصورة تأخذ العرض الكامل */
+    height: 100%; /* اجعل الارتفاع يأخذ ارتفاع العنصر */
+    object-fit: contain; /* اجعل الصورة تظهر بالكامل مع الحفاظ على نسبة العرض إلى الارتفاع */
+    object-position: center; /* اجعل الصورة في وسط العنصر */
+    position: absolute;
+    top: 0;
+    left: 0;
+}

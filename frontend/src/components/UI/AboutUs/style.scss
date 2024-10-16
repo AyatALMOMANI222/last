@@ -1,0 +1,122 @@
+.about-us-container {
+    background-color: #f4f4f4;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.about-us-content {
+    background-color: #fff;
+    padding: 40px;
+    max-width: 900px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* زيادة التأثيرات الظلية */
+    border-radius: 20px; /* زيادة الزوايا المدورة بشكل أكبر */
+    text-align: left;
+    position: relative;
+    transition: transform 0.3s; /* إضافة تأثير التحويل */
+}
+
+.about-us-content:hover {
+    transform: scale(1.02); /* تأثير التكبير عند التمرير */
+}
+
+.about-us-title {
+    font-size: 2.8rem; /* زيادة حجم العنوان */
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+    border-bottom: 3px solid #e63946; /* زيادة سمك الحد السفلي */
+    padding-bottom: 15px; /* زيادة المسافة السفلى */
+    letter-spacing: 1px; /* زيادة تباعد الحروف */
+}
+
+.who-we-are h2 {
+    font-size: 1.8rem; /* زيادة حجم العنوان الفرعي */
+    color: #e63946; 
+    margin-bottom: 15px; /* زيادة المسافة السفلية */
+    text-align: left; 
+    text-transform: uppercase; /* جعل العنوان بأحرف كبيرة */
+}
+
+.who-we-are p, 
+.about-event-consultant p {
+    font-size: 1.15rem; /* زيادة حجم الخط */
+    line-height: 1.8; /* زيادة تباعد السطور */
+    color: #555;
+    margin-bottom: 15px; 
+}
+
+.about-event-consultant {
+    margin-top: 25px; /* زيادة المسافة العلوية */
+    padding: 10px 0; /* إضافة تباعد داخلي */
+    border-top: 1px solid #e63946; /* إضافة حد علوي */
+}
+
+strong {
+    font-weight: 600;
+}
+
+p {
+    margin: 0 0 15px;
+}
+
+/* تغيير لون الحرف E الأول في الكلمة Event */
+.E {
+    color: red; 
+}
+
+/* تصميم الأزرار */
+.button-container {
+    display: flex;
+    justify-content: center; 
+    margin-top: 30px; 
+}
+
+.custom-button {
+    background-color: black; 
+    color: white; 
+    padding: 12px 28px; /* تعديل التباعد الداخلي */
+    border: none; 
+    border-radius: 30px; /* زيادة الزوايا المدورة */
+    font-size: 1.15rem; /* زيادة حجم الخط */
+    font-weight: bold; 
+    cursor: pointer; 
+    margin: 0 15px; /* زيادة التباعد بين الأزرار */
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* إضافة ظل للأزرار */
+    text-decoration: none;
+
+}
+
+
+.custom-button:hover {
+    // background-color: #e63946; 
+    transform: translateY(-3px); 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+}
+
+.custom-button:active {
+    transform: translateY(0); 
+    box-shadow: none; 
+}
+
+@media (max-width: 768px) {
+    .about-us-content {
+        padding: 20px;
+    }
+
+    .about-us-title {
+        font-size: 2.5rem; /* حجم الخط المتناسب مع الأجهزة الصغيرة */
+    }
+
+    .who-we-are h2 {
+        font-size: 1.6rem; /* حجم الخط المتناسب مع الأجهزة الصغيرة */
+    }
+    
+    p {
+        font-size: 1rem;
+    }
+}

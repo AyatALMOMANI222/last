@@ -1,0 +1,88 @@
+$background-image: ("./image/teams.webp"); // مسار الصورة الخلفية
+$member-image-width: 250px; // عرض صور الأعضاء (تم تعديله لجعل الصور أصغر قليلاً)
+$member-image-height: 300px; // ارتفاع صور الأعضاء 
+$overlay-bg-color: #DC143C; // لون الخلفية للتراكب
+$text-shadow: 2px 2px 5px rgba(216, 180, 180, 0.5); // ظل النص
+$border-color: rgba(255, 255, 255, 0.8); // لون البرواز
+$border-width: 3px; // عرض البرواز
+$box-shadow-color: rgba(0, 0, 0, 0.2); // لون الظل
+
+.our-teams-container {
+  position: relative;
+  text-align: center;
+  margin: 20px;
+
+  .background-image {
+    background-image: url($background-image);
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    .team-title {
+      font-size: 2.5em;
+      color: white;
+      text-shadow: $text-shadow;
+    }
+  }
+
+  .team-members {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+
+    .team-member {
+      position: relative;
+      width: $member-image-width;
+      height: $member-image-height;
+      margin: 10px;
+      overflow: hidden;
+      border-radius: 10px; 
+      border: $border-width solid $border-color; // إضافة برواز
+      box-shadow: 0 4px 8px $box-shadow-color; // إضافة ظل خفيف
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05); // تكبير عند التمرير
+        box-shadow: 0 6px 12px $box-shadow-color; // تأثير الظل عند التحويم
+      }
+
+      .member-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+        transition: 0.3s ease; 
+      }
+
+      .info-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: $overlay-bg-color; 
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        transform: translateY(100%);
+        transition: transform 0.3s ease; 
+
+        .member-name {
+          margin: 0; 
+          color: white;
+        }
+
+        .member-role {
+          margin: 0; 
+          color: white;        }
+      }
+
+      &:hover .info-overlay {
+        transform: translateY(0);
+      }
+    }
+  }
+}

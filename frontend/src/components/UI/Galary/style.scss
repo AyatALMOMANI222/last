@@ -1,0 +1,24 @@
+.gallery {
+    margin: 2rem auto;
+    text-align: center;
+  
+    h2 {
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+    }
+  
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+  
+    .media-item {
+      img, video {
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+  

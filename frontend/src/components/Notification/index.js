@@ -3,11 +3,13 @@ import SVG from "react-inlinesvg";
 import notification from "../../icons/notification.svg";
 import "./style.scss";
 import axios from "axios";
-
+import httpService from "../../common/httpService";
+import { useNavigate } from "react-router-dom";
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications,setNotifications]=useState([])
+  const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
 
   const dropdownRef = useRef(null);
 
@@ -24,31 +26,26 @@ const NotificationDropdown = () => {
       setIsOpen(false);
     }
   };
-  const getAllNotification = () => {
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('user_id');
-  
-    axios.get(`http://127.0.0.1:8000/api/not/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`, 
-      },
-    })
-    .then(response => {
-      setNotifications(response.data.data)
-     
-    })
-    .catch(error => {
-      console.error("Error fetching notifications:", error);
-    });
+  const getAuthToken = () => localStorage.getItem("token");
+
+  const getAllNotifications = async () => {
+    try {
+      const response = await httpService({
+        method: "GET",
+        url: `http://127.0.0.1:8000/api/not`,
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      });
+
+      console.log(response.data);
+      setNotifications(response?.data);
+    } catch (error) {
+      console.error("Error fetching conferences", error);
+    }
   };
-  
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   getAllNotification()
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+
+  useEffect(() => {
+    getAllNotifications();
+  }, []);
 
   return (
     <div className="notification-container" ref={dropdownRef}>
@@ -68,7 +65,16 @@ const NotificationDropdown = () => {
               className={`notification-item ${
                 notification.read ? "read" : "unread"
               }`}
-              onClick={() => handleMarkAsRead(notification.id)}
+              onClick={() => {
+                // handleMarkAsRead(notification.id)
+                console.log({ notification });
+                if (
+                  notification?.message?.includes("New speaker registration")
+                ) {
+                  navigate("/edit/speaker/data");
+                  
+                }
+              }}
             >
               {!notification.read && <span className="notification-dot"></span>}
               <div className="notification-content">

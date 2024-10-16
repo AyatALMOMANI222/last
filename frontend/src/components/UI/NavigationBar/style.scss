@@ -1,0 +1,38 @@
+/* تنسيق الـ Top Navbar */
+.top-navbar {
+    background-color: white; /* خلفية سوداء */
+    padding: 5px 40px;
+    display: flex;
+    justify-content: flex-end; /* محاذاة الأيقونات إلى اليمين */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+  height: 28px;
+  
+  }
+  .social-icons{
+margin-right: 60px;
+display: flex;
+flex-direction: row;
+margin: auto 60px;
+
+  }
+  .social-icons .icon {
+    margin-left: 15px;
+color: rgb(0, 0, 0);
+}
+  
+  .social-icons .icon img {
+    width: 20px;
+    height: 20px;
+    filter: invert(1); /* تحويل الأيقونات إلى اللون الأبيض */
+    transition: transform 0.3s;
+
+  }
+  
+  .social-icons .icon img:hover {
+    transform: scale(1.1); /* تكبير بسيط عند التمرير */
+  }
+  

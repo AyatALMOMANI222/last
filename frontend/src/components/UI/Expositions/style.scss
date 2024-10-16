@@ -1,0 +1,88 @@
+/* Container for the entire component */
+.expositions-container {
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+    color: #333; /* Text color */
+}
+
+/* Headline picture section */
+.headline-picture {
+    position: relative;
+    background-image: url('./expositions.jpeg'); /* استبدل برابط الصورة */
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: white;
+    margin-bottom: 20px;
+}
+
+/* Title styling with more professional animation */
+.headline-title {
+    font-size: 48px;
+    font-weight: bold;
+    margin-left: 30px;
+    background-color: rgba(0, 0, 0, 0.6); /* خلفية شبه شفافة */
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    opacity: 0; /* Start hidden */
+    transform: translateX(-100%) scale(0.8); /* Start off-screen and scaled down */
+    animation: titleEntrance 2s cubic-bezier(0.65, 0, 0.35, 1) forwards; /* More sophisticated timing function */
+}
+
+/* Keyframes for the new animation */
+@keyframes titleEntrance {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%) scale(0.8); /* Start outside the screen and small */
+    }
+    // 60% {
+    //     opacity: 1;
+    //     transform: translateX(15%) scale(1.05); /* Move past the final position and slightly enlarged */
+    // }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1); /* Settle in final position */
+    }
+}
+
+/* Content section with border around the text */
+.expositions-content {
+    background-color: #F2F2F2;
+    padding: 40px;
+    margin-top: -20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    color: #000;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect on the content */
+.expositions-content:hover {
+    transform: scale(1.02);
+}
+
+/* Paragraph styling inside the content */
+.expositions-content p {
+    line-height: 1.8;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .headline-title {
+        font-size: 36px;
+    }
+
+    .expositions-content {
+        padding: 20px;
+    }
+
+    .expositions-content p {
+        font-size: 16px;
+    }
+}

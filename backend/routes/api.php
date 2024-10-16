@@ -81,7 +81,7 @@ Route::post('/con/scientific-papers/{conferenceId}', [ScientificPaperController:
 
 // exhibitions
 Route::post('/exhibitions', [ExhibitionController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
-Route::get('/exhibitions/{status}', [ExhibitionController::class, 'getExhibitionsByStatus']);
+Route::get('/exhibitions', [ExhibitionController::class, 'getAllExhibitions']);
 Route::get('/exhibitions/id/{id}', [ExhibitionController::class, 'getExhibitionById']);
 Route::delete('/exhibitions/{id}', [ExhibitionController::class, 'deleteExhibitionById'])->middleware(['auth:sanctum', 'admin']);
 Route::post('/exhibition-images', [ExhibitionImagesController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
@@ -99,8 +99,8 @@ Route::get('/papers/con/{conference_id}', [PaperController::class, 'getPapersByC
 Route::get('/papers/{paper_id}', [PaperController::class, 'getPaperById']);
 
 // speakers
-Route::post('/speakers', [SpeakerController::class, 'store'])->middleware('auth:sanctum');
-Route::put('/speakers/admin/{user_id}', [SpeakerController::class, 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
+Route::post('/admin/speakers/{user_id}/{conference_id}', [SpeakerController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
+Route::put('/speakers/user/update', [SpeakerController::class, 'updateByUser'])->middleware('auth:sanctum');
 Route::put('/speakers/user', [SpeakerController::class, 'updateOnlineParticipation'])->middleware('auth:sanctum');
 Route::post('/speakers/certi/{user_id}', [SpeakerController::class, 'updateCertificateFile'])->middleware(['auth:sanctum', 'admin']);
 
@@ -108,7 +108,7 @@ Route::post('/speakers/certi/{user_id}', [SpeakerController::class, 'updateCerti
 
 // sendNotification for user and admin  and store it in database
 Route::post('/not', [NotificationController::class, 'sendNotification']);
-Route::get('/not/{userId}', [NotificationController::class, 'getAllNotificationsByUserId'])->middleware('auth:sanctum');
+Route::get('/not', [NotificationController::class, 'getAllNotificationsByUserId'])->middleware('auth:sanctum');
 
 // visa
 Route::post('/visa', [VisaController::class, 'postVisaByUser'])->middleware('auth:sanctum');
