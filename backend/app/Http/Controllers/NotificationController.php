@@ -15,7 +15,7 @@ class NotificationController extends Controller
 
 
 
-    public function sendNotification(Request $request)
+   public function sendNotification(Request $request)
     {
         try {
             // التحقق من البيانات
@@ -23,7 +23,7 @@ class NotificationController extends Controller
                 'user_id' => 'required|exists:users,id', // تحقق من وجود المستخدم
                 'message' => 'required|string',
                 'conference_id' => 'nullable|integer',
-            ]);
+            ]); 
 
             // إدخال الإشعار مباشرة إلى قاعدة البيانات
             Notification::create([

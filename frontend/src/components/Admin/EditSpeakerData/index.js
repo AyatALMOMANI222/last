@@ -3,12 +3,9 @@ import Checkbox from "../../../CoreComponent/Checkbox";
 import { useParams } from 'react-router-dom';
 import httpService from "../../../../src/common/httpService"; 
 import { toast } from "react-toastify";
-
+import "./style.scss"
 const EditSpeakerData = () => {
-  // جلب معرف المؤتمر من الـ Route
-  const {conferenceId ,userId} = useParams();
-
-  // متغيرات الحالة لـ Checkboxes
+  const { conferenceId, userId } = useParams();
   const [specificFlightTime, setSpecificFlightTime] = useState(false);
   const [isOnlineApproved, setIsOnlineApproved] = useState(true); 
   const [ticketStatus, setTicketStatus] = useState("1"); 
@@ -17,19 +14,15 @@ const EditSpeakerData = () => {
   const [freeTrip, setFreeTrip] = useState(true); 
   const [isCertificateActive, setIsCertificateActive] = useState(true);
 
-  // التعامل مع الفورم عند الإرسال
   const handleSubmit = async (e) => {
     e.preventDefault();
     const getAuthToken = () => localStorage.getItem("token");
 
     try {
-      // إرسال البيانات مباشرة كـ داتا عادية
       await httpService({
         method: "POST",
         url: `http://127.0.0.1:8000/api/admin/speakers/${userId}/${conferenceId}`,
-       
         headers: { Authorization: `Bearer ${getAuthToken()}` },
-
         showLoader: true,
         data: {
           is_online_approved: isOnlineApproved ? 1 : 0,
@@ -39,12 +32,12 @@ const EditSpeakerData = () => {
           free_trip: freeTrip ? 1 : 0,
           is_certificate_active: isCertificateActive ? 1 : 0
         },
-        withToast: true, // لتفعيل الـ toast في حالة النجاح أو الخطأ
+        withToast: true,
         onSuccess: (data) => {
-          toast.success("Form submitted successfully!"); // رسالة نجاح
+          toast.success("Form submitted successfully!");
         },
         onError: (error) => {
-          toast.error("Failed to submit the form: " + error); // رسالة فشل
+          toast.error("Failed to submit the form: " + error);
         },
       });
     } catch (error) {
@@ -53,13 +46,14 @@ const EditSpeakerData = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="edit-speaker-form">
       <Checkbox
         label="Do you have specific flight time?"
         checkboxValue={specificFlightTime}
         setCheckboxValue={setSpecificFlightTime}
         icon={""}
         errorMsg={""}
+        className="form-checkbox"
       />
 
       <Checkbox
@@ -68,6 +62,7 @@ const EditSpeakerData = () => {
         setCheckboxValue={setIsOnlineApproved}
         icon={""}
         errorMsg={""}
+        className="form-checkbox"
       />
 
       <Checkbox
@@ -76,6 +71,7 @@ const EditSpeakerData = () => {
         setCheckboxValue={setTicketStatus}
         icon={""}
         errorMsg={""}
+        className="form-checkbox"
       />
 
       <Checkbox
@@ -84,6 +80,7 @@ const EditSpeakerData = () => {
         setCheckboxValue={setDinnerInvitation}
         icon={""}
         errorMsg={""}
+        className="form-checkbox"
       />
 
       <Checkbox
@@ -92,6 +89,7 @@ const EditSpeakerData = () => {
         setCheckboxValue={setAirportPickup}
         icon={""}
         errorMsg={""}
+        className="form-checkbox"
       />
 
       <Checkbox
@@ -100,6 +98,7 @@ const EditSpeakerData = () => {
         setCheckboxValue={setFreeTrip}
         icon={""}
         errorMsg={""}
+        className="form-checkbox"
       />
 
       <Checkbox
@@ -108,9 +107,10 @@ const EditSpeakerData = () => {
         setCheckboxValue={setIsCertificateActive}
         icon={""}
         errorMsg={""}
+        className="form-checkbox"
       />
 
-      <button type="submit">Submit</button>
+      <button type="submit" className="submit-btn">Submit</button>
     </form>
   );
 };
