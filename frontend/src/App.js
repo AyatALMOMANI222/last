@@ -82,21 +82,20 @@ const App = () => {
   const noNavRoute = [
     "/registertype",
     "/register/speaker",
-   "/registerPage",
+    "/registerPage",
     "/login",
   ];
-  useEffect(()=>{
+  useEffect(() => {
     console.log(location.pathname);
-    
-  })
+  });
   return (
     <div id="main" className="main">
       <ToastContainer />
       <Loader show={showLoader} />
-      {!noNavRoute.includes(location.pathname)
-      || location.pathname.includes( "/registerPage")
-      && <NavBar />}
-
+      {!noNavRoute.includes(location.pathname) ||
+        (location.pathname.includes("/registerPage") && <NavBar />)}
+  
+      <NavBar />
       <Routes className="main">
         <Route path="/exhibitions" element={<Exhibitions />} />
         <Route

@@ -28,12 +28,11 @@ const LoginPage = () => {
 
     try {
       const response = await axiosInstance.post(url, userData);
-      toast.success(response?.data?.message);
       const token = response.data.token;
       const user = response.data.user;
       localStorage.setItem("token", token);
-      localStorage.setItem('user_id', user.id); // تخزين user_id
-
+      localStorage.setItem("user_id", user.id); // تخزين user_id
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error);
       toast.error(error.response.data.message);
@@ -110,15 +109,6 @@ const LoginPage = () => {
             errorMsg={error.password}
             type="password"
           />
-          {/* <Input
-            label={"Confirm Password"}
-            placeholder={"Your password"}
-            inputValue={confirmPassword}
-            setInputValue={setConfirmPassword}
-            required={true}
-            errorMsg={error.confirmPassword}
-            type="password"
-          /> */}
         </div>
         <div className="login-btn-container">
           <button className="login-btn" type="submit">

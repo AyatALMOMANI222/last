@@ -15,8 +15,8 @@ import axios from "axios";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const {type , id} =useParams()  
-  
+  const { type, id } = useParams();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,34 +41,34 @@ const RegisterPage = () => {
     resume: "",
   });
 
-
-
   const handleSubmit = async () => {
-
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('email', email);
-    formData.append('password', password);
-    formData.append('image', image);
-    formData.append('biography', resumeText);
-    formData.append('registration_type', type);
-    formData.append('phone_number', phone);
-    formData.append('whatsapp_number', whatsApp);
-    formData.append('specialization', specialization);
-    formData.append('nationality', selectedNationality.value);
-    formData.append('country_of_residence', country.value);
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("image", image);
+    formData.append("biography", resumeText);
+    formData.append("registration_type", type);
+    formData.append("phone_number", phone);
+    formData.append("whatsapp_number", whatsApp);
+    formData.append("specialization", specialization);
+    formData.append("nationality", selectedNationality.value);
+    formData.append("country_of_residence", country.value);
 
     try {
-      const response = await axios.post(`http://127.0.0.1:8000/api/users/${id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
-      alert(response.data.message); // Handle success message
-      // Optionally reset form fields here
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/users/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("User created successfully!");
     } catch (error) {
       if (error.response) {
+        toast.error(error.response.data.error);
       } else {
       }
     }
@@ -297,14 +297,13 @@ const RegisterPage = () => {
         </div>
 
         <div className="register-btn-container">
-          <button className="register-btn" type="submit" >
+          <button className="register-btn" type="submit">
             Register
           </button>
         </div>
       </form>
-    
-        <SVG className="register-img" src={registerImg} />
-      
+
+      <SVG className="register-img" src={registerImg} />
     </div>
   );
 };

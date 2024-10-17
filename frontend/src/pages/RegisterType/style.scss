@@ -1,7 +1,7 @@
 .register-type-page {
   display: grid;
   grid-template-columns: 25% 75%;
-height: 100vh;
+  height: calc(100vh - 102px);
 overflow: hidden;
   .about-container {
     width: 100%;

@@ -228,33 +228,37 @@ class SpeakerController extends Controller
         }
     }
     public function getSpeakerInfoByToken()
-{
-    try {
-        // استخراج user_id من التوكن
-        $user_id = Auth::id(); // يحصل على user_id من التوكن
-
-        // العثور على المتحدث بناءً على user_id
-        $speaker = Speaker::where('user_id', $user_id)->firstOrFail();
-
-        // إعادة بيانات المتحدث
-        return response()->json([
-            'message' => 'Speaker found successfully',
-            'speaker' => $speaker
-        ], 200);
-
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        // إذا لم يتم العثور على المتحدث
-        return response()->json([
-            'error' => 'Speaker not found'
-        ], 404);
-
-    } catch (\Exception $e) {
-        // التعامل مع أي أخطاء غير متوقعة
-        return response()->json([
-            'error' => 'An unexpected error occurred. Please try again.',
-            'details' => $e->getMessage()
-        ], 500);
+    {
+        try {
+            // استخراج user_id من التوكن
+            $user_id = Auth::id(); // يحصل على user_id من التوكن
+    
+            // العثور على المتحدث مع معلومات المستخدم بناءً على user_id
+            $speaker = Speaker::where('user_id', $user_id)
+                ->join('users', 'users.id', '=', 'speakers.user_id') // إجراء join مع جدول users
+                ->select('speakers.*', 'users.*') // تحديد الأعمدة المراد جلبها
+                ->firstOrFail();
+    
+            // إعادة بيانات المتحدث مع بيانات المستخدم
+            return response()->json([
+                'message' => 'Speaker found successfully',
+                'speaker' => $speaker
+            ], 200);
+    
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // إذا لم يتم العثور على المتحدث
+            return response()->json([
+                'error' => 'Speaker not found'
+            ], 404);
+    
+        } catch (\Exception $e) {
+            // التعامل مع أي أخطاء غير متوقعة
+            return response()->json([
+                'error' => 'An unexpected error occurred. Please try again.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
-}
+    
 
 }

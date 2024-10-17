@@ -2,7 +2,24 @@
   padding: 0px 20px;
   height: calc(100vh - 102px);
   overflow: overlay;
+  .view-con-container {
+    &::-webkit-scrollbar {
+      width: 3px;
+    }
 
+    &::-webkit-scrollbar-track {
+      background: var(--scrollbar-track-color);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb-color);
+      border-radius: 50px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover-color);
+    }
+  }
   .conferences-form-admin-header {
     margin: 20px 0px;
     height: 40px;
@@ -135,7 +152,11 @@
       font-family: Arial, Helvetica, sans-serif;
       font-weight: 500;
     }
-
+    .view-con-container {
+      height: calc(100vh - 57px);
+      overflow: overlay;
+      overflow-x: hidden;
+    }
     .new-section {
       border-bottom: 1px solid rgb(244, 244, 244);
       padding: 10px 20px;
@@ -149,6 +170,7 @@
       grid-template-columns: 1fr 1fr;
       padding: 20px 20px;
       border-bottom: 1px solid rgb(244, 244, 244);
+      grid-row-gap: 20px;
     }
     .conference-details-container {
       width: 100%;
@@ -182,6 +204,18 @@
         font-size: 12px;
         font-weight: 500;
         color: #989898;
+      }
+    }
+
+    .downloads-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+      .simple-label-value-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
       }
     }
   }

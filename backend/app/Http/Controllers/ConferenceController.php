@@ -99,6 +99,98 @@ class ConferenceController extends Controller
             return response()->json(['message' => 'Failed to create conference.', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function update(Request $request, $id)
+{
+    // Find the conference by ID
+    $conference = Conference::findOrFail($id);
+
+    // Validate request
+    $request->validate([
+        'title' => 'nullable|string|max:255',
+        'description' => 'nullable|string',
+        'start_date' => 'nullable|date',
+        'end_date' => 'nullable|date',
+        'location' => 'nullable|string|max:255',
+        'status' => 'nullable|in:upcoming,past',
+        'image' => 'nullable|image',
+        'first_announcement_pdf' => 'nullable|file|mimes:pdf',
+        'second_announcement_pdf' => 'nullable|file|mimes:pdf',
+        'conference_brochure_pdf' => 'nullable|file|mimes:pdf',
+        'conference_scientific_program_pdf' => 'nullable|file|mimes:pdf',
+        'scientific_topics' => 'nullable|string',
+        'prices' => 'nullable|array', // Change to 'array' type
+        'prices.*.price_type' => 'required_with:prices|string|max:255',
+        'prices.*.price' => 'required_with:prices|numeric',
+        'prices.*.price_description' => 'nullable|string|max:255',
+    ]);
+
+    try {
+        // Update conference fields only if present in the request
+        $conference->title = $request->input('title', $conference->title);
+        $conference->description = $request->input('description', $conference->description);
+        $conference->start_date = $request->input('start_date', $conference->start_date);
+        $conference->end_date = $request->input('end_date', $conference->end_date);
+        $conference->location = $request->input('location', $conference->location);
+        $conference->status = $request->input('status', $conference->status);
+
+        // Handle file uploads (only update if a new file is provided)
+        if ($request->hasFile('image')) {
+            $conference->image = $request->file('image')->store('conference_images', 'public');
+        }
+        if ($request->hasFile('first_announcement_pdf')) {
+            $conference->first_announcement_pdf = $request->file('first_announcement_pdf')->store('conference_announcements', 'public');
+        }
+        if ($request->hasFile('second_announcement_pdf')) {
+            $conference->second_announcement_pdf = $request->file('second_announcement_pdf')->store('conference_announcements', 'public');
+        }
+        if ($request->hasFile('conference_brochure_pdf')) {
+            $conference->conference_brochure_pdf = $request->file('conference_brochure_pdf')->store('conference_brochures', 'public');
+        }
+        if ($request->hasFile('conference_scientific_program_pdf')) {
+            $conference->conference_scientific_program_pdf = $request->file('conference_scientific_program_pdf')->store('conference_programs', 'public');
+        }
+
+        $conference->save();
+
+        // Handle scientific topics (update or create)
+        if ($request->filled('scientific_topics')) {
+            $conference->scientificTopics()->delete(); // Clear existing topics
+            $topics = explode(',', $request->input('scientific_topics'));
+            foreach ($topics as $topic) {
+                $topic = trim($topic);
+                if (!empty($topic)) {
+                    ScientificTopic::create([
+                        'conference_id' => $conference->id,
+                        'title' => $topic
+                    ]);
+                }
+            }
+        }
+
+        // Handle prices (update or create)
+        if ($request->filled('prices')) {
+            // Clear existing prices
+            ConferencePrice::where('conference_id', $conference->id)->delete(); 
+
+            $prices = $request->input('prices'); // Directly retrieve the prices array
+
+            foreach ($prices as $priceData) {
+                ConferencePrice::create([
+                    'conference_id' => $conference->id,
+                    'price_type' => $priceData['price_type'],
+                    'price' => $priceData['price'],
+                    'description' => $priceData['price_description'] ?? null,
+                ]);
+            }
+        }
+
+        return response()->json(['message' => 'Conference updated successfully!', "id" => $conference->id], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Failed to update conference.', 'error' => $e->getMessage()], 500);
+    }
+}
+
     public function getAllConferences(Request $request)
     {
         try {

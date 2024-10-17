@@ -23,9 +23,10 @@ const NotificationDropdown = () => {
 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsOpen(false);
+      setIsOpen(false); // إغلاق الـ dropdown عند النقر خارجها
     }
   };
+
   const getAuthToken = () => localStorage.getItem("token");
 
   const getAllNotifications = async () => {
@@ -47,6 +48,21 @@ const NotificationDropdown = () => {
     getAllNotifications();
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      // إضافة مستمع للنقر عندما تكون القائمة مفتوحة
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      // إزالة المستمع عندما تكون القائمة مغلقة
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    // إزالة المستمع عند إزالة المكون (لتجنب تسريب الذاكرة)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
     <div className="notification-container" ref={dropdownRef}>
       <div className="notification-icon" onClick={toggleDropdown}>
@@ -66,7 +82,6 @@ const NotificationDropdown = () => {
                 notification.read ? "read" : "unread"
               }`}
               onClick={() => {
-                // handleMarkAsRead(notification.id)
                 console.log({ notification });
                 if (
                   notification?.message?.includes("New speaker registration")
@@ -80,7 +95,6 @@ const NotificationDropdown = () => {
               {!notification.read && <span className="notification-dot"></span>}
               <div className="notification-content">
                 <div className="notification-title">{notification.message}</div>
-                {/* <p>{notification.description}</p> */}
                 <small>{notification.read ? "Read" : "Unread"}</small>
               </div>
             </div>

@@ -147,7 +147,7 @@ const PriceForm = ({ entries, setEntries }) => {
   );
 };
 
-const ConferencesAdmin = ({ setIsOpen, getConference }) => {
+const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
   const [committeeMembers, setCommitteeMembers] = useState([
     { id: Date.now(), name: "", image: null },
   ]);
@@ -254,7 +254,7 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
     formData.append("timestamps", new Date().toISOString());
     const token = localStorage.getItem("token");
     axios
-      .post("http://127.0.0.1:8000/api/con", formData, {
+      .post("http://127.0.0.1:8000/api/conferences/87", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -263,6 +263,8 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
         const id = response.data.id;
         toast.success("Conference created successfully!");
         addCommitteeMembers(id, committeeMembers);
+        console.log();
+        
       })
       .catch((error) => {
         console.error("Error submitting data: ", error);
@@ -271,7 +273,7 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
 
   return (
     <div className="conference-form-admin">
-      <div className="header-conference-form">Add New Conference</div>
+      <div className="header-conference-form">Edit New Conference</div>
       <div className="form-section">
         <Input
           label="Title"
@@ -414,4 +416,4 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
   );
 };
 
-export default ConferencesAdmin;
+export default EditConferencesAdmin;

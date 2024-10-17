@@ -54,13 +54,7 @@ const NavBar = () => {
           url: "#",
           subMenu: "previous",
           subLinks: [{ label: "Gallery", url: "#" }],
-        },
-        {
-          label: "Previous Events",
-          url: "#",
-          subMenu: "previous",
-          subLinks: [{ label: "Gallery", url: "#" }],
-        },
+        }
       ],
     },
     {
