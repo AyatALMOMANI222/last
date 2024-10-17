@@ -82,17 +82,18 @@ class SpeakerController extends Controller
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
-                'abstract' => 'nullable|string', // Validate the abstract
-                'topics' => 'nullable|string', // Validate the topics
-                'presentation_file' => 'nullable|file|mimes:ppt,pptx', // Validate the presentation file
+                'abstract' => 'nullable|file|mimes:txt,pdf,doc,docx', // قبول abstract كملف
+                'topics' => 'nullable|string', // التحقق من topics كقيمة نصية
+                'presentation_file' => 'nullable|file|mimes:ppt,pptx', // التحقق من presentation_file كملف
+                'online_participation' => 'nullable|boolean', // إضافة خيار الحضور عبر الإنترنت
             ]);
-
+    
             // Get the authenticated user's ID
             $user_id = Auth::id();
-
+    
             // Find the speaker associated with the authenticated user
             $speaker = Speaker::where('user_id', $user_id)->firstOrFail();
-
+    
             // Check if a presentation file is provided
             if ($request->hasFile('presentation_file')) {
                 // Store the presentation file and get the path
@@ -100,10 +101,21 @@ class SpeakerController extends Controller
                 // Update the speaker's presentation file path
                 $speaker->presentation_file = $presentationFilePath;
             }
-
-            // Update the speaker's other details
-            $speaker->update($validatedData);
-
+    
+            // Check if an abstract file is provided
+            if ($request->hasFile('abstract')) {
+                // Store the abstract file and get the path
+                $abstractFilePath = $request->file('abstract')->store('abstracts', 'public');
+                // Update the speaker's abstract file path
+                $speaker->abstract = $abstractFilePath;
+            }
+    
+            // Update the speaker's other details using validated data
+            $speaker->topics = $validatedData['topics'] ?? $speaker->topics; // تحديث المواضيع إذا كانت موجودة
+            $speaker->online_participation = $validatedData['online_participation'] ?? $speaker->online_participation; // تحديث خيار الحضور عبر الإنترنت إذا كان موجودًا
+    
+            $speaker->save(); // احفظ التغييرات في قاعدة البيانات
+    
             // Return a success response
             return response()->json([
                 'message' => 'Speaker details updated successfully',
@@ -128,7 +140,8 @@ class SpeakerController extends Controller
             ], 500);
         }
     }
-
+    
+    
 
 
 
@@ -214,4 +227,34 @@ class SpeakerController extends Controller
             return response()->json(['error' => 'An unexpected error occurred. Please try again.'], 500);
         }
     }
+    public function getSpeakerInfoByToken()
+{
+    try {
+        // استخراج user_id من التوكن
+        $user_id = Auth::id(); // يحصل على user_id من التوكن
+
+        // العثور على المتحدث بناءً على user_id
+        $speaker = Speaker::where('user_id', $user_id)->firstOrFail();
+
+        // إعادة بيانات المتحدث
+        return response()->json([
+            'message' => 'Speaker found successfully',
+            'speaker' => $speaker
+        ], 200);
+
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        // إذا لم يتم العثور على المتحدث
+        return response()->json([
+            'error' => 'Speaker not found'
+        ], 404);
+
+    } catch (\Exception $e) {
+        // التعامل مع أي أخطاء غير متوقعة
+        return response()->json([
+            'error' => 'An unexpected error occurred. Please try again.',
+            'details' => $e->getMessage()
+        ], 500);
+    }
+}
+
 }

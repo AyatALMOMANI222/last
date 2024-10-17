@@ -109,5 +109,29 @@ const destinations = [
         require("./image/Hammamat Ma’in5.jpg")
       ]
     }
+    ,
+    {
+      title: "Madaba",
+      description: "Madaba is a combination of rural home life and a hot spot for religious tourism. Known as the “City of Mosaics” Madaba is the cultural epicenter for Byzantine and Umayyad mosaics. Just a short distance from the capitol visitors are just a stone's throw away from the holy monuments of religious iconography.",
+      images: [
+        require("./image/Madaba1.jpg"),
+        require("./image/Madaba2.jpg"),
+        require("./image/Madaba3.jpg"),
+        require("./image/Madaba4.jpg"),
+        require("./image/Madaba5.jpg")
+      ]
+    },
+    {
+      title: "Um Qais",
+      description: "Site of the famous miracle of the Gadarene swine, Gadara was renowned in its time as a cultural centre. It was the home of several classical poets and philosophers, including Theodorus, founder of a rhetorical school in Rome, and was once called “a new Athens” by a poet. Perched on a splendid hilltop overlooking the Jordan Valley and the Sea of Galilee, Gadara is known today as Umm Qais, and boasts an impressive colonnaded street, a vaulted terrace, and the ruins of two theatres.",
+      images: [
+        require("./image/Um Qais1.jpg"),
+        require("./image/Um Qais2.jpg"),
+        require("./image/Um Qais3.jpg"),
+        require("./image/Um Qais4.jpg"),
+        require("./image/Um Qais5.jpg"),
+
+      ]
+    }
   ];
   export default destinations

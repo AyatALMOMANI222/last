@@ -100,9 +100,10 @@ Route::get('/papers/{paper_id}', [PaperController::class, 'getPaperById']);
 
 // speakers
 Route::post('/admin/speakers/{user_id}/{conference_id}', [SpeakerController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
-Route::put('/speakers/user/update', [SpeakerController::class, 'updateByUser'])->middleware('auth:sanctum');
+Route::post('/speakers/user/update', [SpeakerController::class, 'updateByUser'])->middleware('auth:sanctum');
 Route::put('/speakers/user', [SpeakerController::class, 'updateOnlineParticipation'])->middleware('auth:sanctum');
 Route::post('/speakers/certi/{user_id}', [SpeakerController::class, 'updateCertificateFile'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/speakers/info', [SpeakerController::class, 'getSpeakerInfoByToken'])->middleware('auth:sanctum');
 
 
 

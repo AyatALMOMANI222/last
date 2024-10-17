@@ -12,6 +12,87 @@ use function Laravel\Prompts\error;
 class UserController extends Controller
 {
 
+    // public function store(Request $request, $conference_id) // استلام conference_id كمعامل
+    // {
+    //     try {
+    //         // تحقق من صحة البيانات
+    //         $validatedData = $request->validate([
+    //             'name' => 'nullable|string|max:255',
+    //             'email' => 'required|email|unique:users,email',
+    //             'password' => 'required|string|min:8',
+    //             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    //             'biography' => 'nullable|string',
+    //             'registration_type' => 'nullable|in:speaker,attendance,sponsor,group_registration',
+    //             'phone_number' => 'nullable|string|max:255',
+    //             'whatsapp_number' => 'nullable|string|max:255',
+    //             'specialization' => 'nullable|string|max:255',
+    //             'nationality' => 'nullable|string|max:255',
+    //             'country_of_residence' => 'nullable|string|max:255',
+    //             'isAdmin' => 'sometimes|in:true,false',
+    //             'passenger_name' => 'nullable|string|max:255',
+    //         ]);
+
+    //         // تحقق من وجود conference_id في قاعدة البيانات
+    //         $conferenceExists = Conference::find($conference_id);
+    //         if (!$conferenceExists) {
+    //             return response()->json(['message' => 'Conference not found.'], 404);
+    //         }
+
+    //         // رفع الصورة إذا كانت موجودة
+    //         if ($request->hasFile('image')) {
+    //             $path = $request->file('image')->store('images', 'public');
+    //             $validatedData['image'] = $path;
+    //         } else {
+    //             $validatedData['image'] = null;
+    //         }
+
+    //         // التأكد من أن isAdmin عبارة عن قيمة منطقية
+    //         $validatedData['isAdmin'] = filter_var($request->input('isAdmin', false), FILTER_VALIDATE_BOOLEAN);
+
+    //         // إنشاء المستخدم الجديد
+    //         $user = User::create([
+    //             'name' => $validatedData['name'],
+    //             'email' => $validatedData['email'],
+    //             'password' => bcrypt($validatedData['password']),
+    //             'image' => $validatedData['image'],
+    //             'biography' => $validatedData['biography'],
+    //             'registration_type' => $validatedData['registration_type'],
+    //             'phone_number' => $validatedData['phone_number'],
+    //             'whatsapp_number' => $validatedData['whatsapp_number'],
+    //             'specialization' => $validatedData['specialization'],
+    //             'nationality' => $validatedData['nationality'],
+    //             'country_of_residence' => $validatedData['country_of_residence'],
+    //             'isAdmin' => $validatedData['isAdmin'],
+    //         ]);
+
+    //         // إضافة المستخدم إلى جدول conference_user
+    //         $user->conferences()->attach($conference_id); // إضافة العلاقة
+
+    //         // إرسال الإشعار لجميع المدراء (isAdmin = true)
+    //         $admins = User::where('isAdmin', true)->get(); // الحصول على جميع المدراء
+    //         foreach ($admins as $admin) {
+    //             Notification::create([
+    //                 'user_id' => $admin->id, // المستخدم المستلم (المدير)
+    //                 'register_id' => $user->id, // المستخدم المسجل (المتحدث الجديد)
+    //                 'conference_id' => $conference_id,
+    //                 'message' => 'New speaker registration: ' . $user->name, // نص الإشعار
+    //                 'is_read' => false, // الحالة الافتراضية للإشعار
+
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'message' => 'User created, added to conference, and notifications sent successfully!',
+    //             "id" => $conference_id
+    //         ], 201);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Failed to create user.',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
     public function store(Request $request, $conference_id) // استلام conference_id كمعامل
     {
         try {
@@ -31,13 +112,13 @@ class UserController extends Controller
                 'isAdmin' => 'sometimes|in:true,false',
                 'passenger_name' => 'nullable|string|max:255',
             ]);
-
+    
             // تحقق من وجود conference_id في قاعدة البيانات
             $conferenceExists = Conference::find($conference_id);
             if (!$conferenceExists) {
                 return response()->json(['message' => 'Conference not found.'], 404);
             }
-
+    
             // رفع الصورة إذا كانت موجودة
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('images', 'public');
@@ -45,10 +126,10 @@ class UserController extends Controller
             } else {
                 $validatedData['image'] = null;
             }
-
+    
             // التأكد من أن isAdmin عبارة عن قيمة منطقية
             $validatedData['isAdmin'] = filter_var($request->input('isAdmin', false), FILTER_VALIDATE_BOOLEAN);
-
+    
             // إنشاء المستخدم الجديد
             $user = User::create([
                 'name' => $validatedData['name'],
@@ -64,10 +145,10 @@ class UserController extends Controller
                 'country_of_residence' => $validatedData['country_of_residence'],
                 'isAdmin' => $validatedData['isAdmin'],
             ]);
-
+    
             // إضافة المستخدم إلى جدول conference_user
             $user->conferences()->attach($conference_id); // إضافة العلاقة
-
+    
             // إرسال الإشعار لجميع المدراء (isAdmin = true)
             $admins = User::where('isAdmin', true)->get(); // الحصول على جميع المدراء
             foreach ($admins as $admin) {
@@ -77,10 +158,18 @@ class UserController extends Controller
                     'conference_id' => $conference_id,
                     'message' => 'New speaker registration: ' . $user->name, // نص الإشعار
                     'is_read' => false, // الحالة الافتراضية للإشعار
-
                 ]);
             }
-
+    
+            // إرسال الإشعار لليوزر الذي تم إنشاؤه
+            Notification::create([
+                'user_id' => $user->id, // المستخدم نفسه
+                'register_id' => $user->id, // المستخدم نفسه
+                'conference_id' => $conference_id,
+                'message' => 'When the admin approves your addition as a speaker for this conference, you will be notified via email and an activation code will be sent for your profile on the website.', // نص الإشعار
+                'is_read' => false, // الحالة الافتراضية للإشعار
+            ]);
+    
             return response()->json([
                 'message' => 'User created, added to conference, and notifications sent successfully!',
                 "id" => $conference_id
@@ -92,8 +181,7 @@ class UserController extends Controller
             ], 500);
         }
     }
-
-
+    
 
     public function updateStatus(Request $request, $id)
     {

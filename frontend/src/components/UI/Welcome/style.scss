@@ -1,0 +1,82 @@
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px; // تقليل padding
+    background-color: #e9ecef; // خلفية فاتحة
+    color: #333; // نص داكن للقراءة
+
+    .welcome-header {
+        text-align: center;
+        margin-bottom: 20px; // تقليل الهامش
+
+        h1 {
+            font-size: 2.5rem; // تقليل حجم العنوان
+            font-weight: bold; // إبقاءه عريضًا
+            color: #d9534f;
+        }
+
+        h2 {
+            font-size: 1.3rem; // تقليل حجم النص الفرعي
+            font-weight: normal;
+            color: #555; // لون أفتح للنص الفرعي
+        }
+    }
+
+    .welcome-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 1200px;
+
+        .welcome-image {
+            background-size: cover;
+            background-position: center;
+            width: 35%; // تقليل العرض للصور
+            height: 250px; // تقليل الارتفاع
+            border-radius: 10px;
+            margin-right: 15px; // تقليل المسافة بين الصورة والنص
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // ظل للصورة
+        }
+
+        .welcome-description {
+            width: 55%; // زيادة عرض الوصف قليلاً
+            padding: 15px; // تقليل padding
+
+            p {
+                margin-bottom: 10px; // تقليل الهامش
+                line-height: 1.4; // تقليل تباعد الأسطر
+                font-size: 1rem; // تقليل حجم الخط
+            }
+        }
+    }
+
+    .topics-section {
+        margin-top: 30px; // تقليل الهامش العلوي
+        text-align: center;
+
+        h3 {
+            font-size: 2rem; // تقليل حجم عنوان المواضيع
+            margin-bottom: 10px; // تقليل الهامش
+            color: #d9534f; // لون أحمر جميل
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+
+            li {
+                font-size: 1.2rem; // تقليل حجم النص في قائمة المواضيع
+                margin: 5px 0; // تقليل الهامش
+                color: #333; // نص داكن للقراءة
+                transition: color 0.3s; // تأثير الانتقال عند التمرير
+
+                &:hover {
+                    color: #d9534f; // تغيير اللون إلى الأحمر عند التمرير
+                }
+            }
+        }
+    }
+}

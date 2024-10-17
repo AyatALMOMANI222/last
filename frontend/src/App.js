@@ -49,6 +49,13 @@ import TopNavbar from "./components/UI/NavigationBar";
 import Audiovisuals from "./components/UI/Audiovisuals";
 import Conference3 from "./components/UI/conferece2";
 import EditSpeakerData from "./components/Admin/EditSpeakerData";
+import Packages from "./components/UI/Packages";
+import Welcome from "./components/UI/Welcome";
+import AdventureSection from "./components/UI/individuals";
+import TicketBooking from "./components/UI/TicketBooking";
+import HotelBooking from "./components/UI/HotelBooking";
+import Transportation from "./components/UI/Transportation";
+import SpeakerProfileForm from "./components/SpeakerProfileEditForm";
 
 
 const App = () => {
@@ -87,7 +94,8 @@ const App = () => {
     "/user",
     "/view-user-trips",
     "/view/trip/:id",
-    "/edit/speaker/data/:conferenceId/:userId"
+    "/edit/speaker/data/:conferenceId/:userId",
+    "/speaker/profile"
   ];
 
   return (
@@ -97,7 +105,7 @@ const App = () => {
       {/* Conditionally render the NavBar based on the current route */}
       {navBarRoutes.includes(location.pathname) && <NavBar />}
       {/* <TopNavbar/> */}
-      {/* <Navbar/> */}
+      <Navbar/>
       <Routes className="main">
       <Route path="/exhibitions" element={<Exhibitions />} />
       <Route path="/edit/speaker/data/:conferenceId/:userId" element={<EditSpeakerData />} />
@@ -108,7 +116,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register/:type/:id" element={<RegisterPage />} />
         <Route path="/register/:type" element={<SelectConferences />} />
-        <Route path="/" element={<HomePage />} />
+        <Route path="/conferences/page" element={<HomePage />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/registertype" element={<RegisterType />} />
@@ -145,6 +153,14 @@ const App = () => {
           <Route path="/audiovisuals" element={<Audiovisuals/>} />
 
           <Route path="/conf" element={<Conference3/>} />
+          <Route path="/packages" element={<Packages/>} />
+          <Route path="/welcome" element={<Welcome/>} />
+          <Route path="/adventureSection" element={<AdventureSection/>} />
+          <Route path="/ticket/booking" element={<TicketBooking/>} />
+          <Route path="/hotel/booking" element={<HotelBooking/>} />
+
+          <Route path="/transportation" element={<Transportation/>} />
+          <Route path="/speaker/profile" element={<SpeakerProfileForm/>} />
 
       </Routes>
     </div>
