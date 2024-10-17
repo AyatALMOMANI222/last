@@ -3,8 +3,8 @@
     height:auto; /* ارتفاع الشاشة بالكامل */
     display: flex;
     flex-direction: column;
-}
 
+    
 .headline-section {
     background: url('./Logistic Secretarial.webp') no-repeat center center; /* تعديل لتوسيع الصورة بشكل أفضل */
     background-size: cover;
@@ -91,4 +91,6 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
 }

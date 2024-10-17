@@ -11,13 +11,13 @@ import "./style.scss";
 const RegisterType = () => {
   const navigate = useNavigate();
   const handleNavigate = (type) => {
-    navigate(`/register/${type}`);
+    navigate(`/registerPage/${type}`);
   };
   return (
     <div className="register-type-page">
       <div className="about-container">
         <SVG src={conferencesImg} />
-        <div className="about-us-container">
+        <div className="new-about-us-container">
           <div className="title">About Us</div>
           <div className="description">
             Our event brings together a diverse group of professionals,
@@ -61,6 +61,12 @@ const RegisterType = () => {
           >
             <SVG src={group} height={150} width={150} />
             <span className="title">Login As Group Registration</span>
+          </div>
+          <div className="type"
+          onClick={()=> handleNavigate("group")}
+          >
+            <SVG src={group} height={150} width={150} />
+            <span className="title">Other</span>
           </div>
         </div>
       </div>

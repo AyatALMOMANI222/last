@@ -82,14 +82,20 @@ const App = () => {
   const noNavRoute = [
     "/registertype",
     "/register/speaker",
-   "/register",
+   "/registerPage",
     "/login",
   ];
+  useEffect(()=>{
+    console.log(location.pathname);
+    
+  })
   return (
     <div id="main" className="main">
       <ToastContainer />
       <Loader show={showLoader} />
-      {!noNavRoute.includes(location.pathname) && <NavBar />}
+      {!noNavRoute.includes(location.pathname)
+      || location.pathname.includes( "/registerPage")
+      && <NavBar />}
 
       <Routes className="main">
         <Route path="/exhibitions" element={<Exhibitions />} />
@@ -102,8 +108,8 @@ const App = () => {
         <Route path="/flights" element={<FlightFormAdmin />} />
         <Route path="/flight/form" element={<FlightForm />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register/:type/:id" element={<RegisterPage />} />
-        <Route path="/register/:type" element={<SelectConferences />} />
+        <Route path="/registerPage/:type/:id" element={<RegisterPage />} />
+        <Route path="/registerPage/:type" element={<SelectConferences />} />
         <Route path="/conferences/page" element={<HomePage />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/dashboard" element={<Dashboard />} />
