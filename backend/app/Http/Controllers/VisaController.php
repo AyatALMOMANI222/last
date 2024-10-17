@@ -68,6 +68,27 @@ public function updateVisaByAdmin(Request $request, $userId)
 
     return response()->json(['success' => 'Visa updated successfully', 'visa' => $visa]);
 }
+public function getVisaByAuthUser()
+{
+    try {
+        $userId = Auth::id();
+
+        if (!$userId) {
+            return response()->json(['error' => 'User is not authenticated'], 401);
+        }
+
+        $visa = Visa::where('user_id', $userId)->first();
+
+        if (!$visa) {
+            return response()->json(['error' => 'Visa not found for this user'], 404);
+        }
+
+        return response()->json(['visa' => $visa]);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'An error occurred while retrieving visa details', 'message' => $e->getMessage()], 500);
+    }
+}
 
 
 }

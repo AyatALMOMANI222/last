@@ -15,7 +15,7 @@ const Navbar = () => {
   return (
     <header className="navbar">
       <div className="logo">
-        <img src="/image/logo3.jpg" alt="Logo" />
+        <img className='logo-img' src="/image/logo3.jpg" alt="Logo" />
       </div>
       <nav>
         <ul>

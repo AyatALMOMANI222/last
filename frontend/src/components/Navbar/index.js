@@ -6,93 +6,145 @@ import ListOption from "../../CoreComponent/ListOptions";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const options = [
+
+  const menuItems = [
     {
-      name: "Flights Section",
-      icon: "",
-      onClick: () => {
-        navigate("/flights");
-      },
+      title: "Home",
+      links: [
+        { label: "Our Story", url: "/about_us" },
+        { label: "Team", url: "/our_team" },
+        { label: "Clients", url: "/our_clients" },
+        { label: "Gallery", url: "#" },
+        { label: "Careers", url: "#" },
+        { label: "FAQs", url: "#" },
+      ],
     },
     {
-      name: "Conferences",
-      icon: "",
-      onClick: () => {
-        navigate("/conferences");
-      },
+      title: "Services",
+      links: [
+        { label: "Conferences", url: "/conf" },
+        { label: "Exposition", url: "/expositions" },
+        { label: "Workshops", url: "/workshops" },
+        { label: "Seminars", url: "/seminars" },
+        { label: "Corporate Meetings", url: "/corporate_meetings" },
+        { label: "Event Planning", url: "/planning" },
+        { label: "Media Campaigns", url: "/media_campaign" },
+        { label: "Logistics", url: "/logistic_secretarial" },
+        { label: "Social Events", url: "/social_events" },
+        { label: "Concept Creation", url: "/concept_creation" },
+        { label: "Management Consulting", url: "/management_consulting" },
+      ],
+    },
+    {
+      title: "Events",
+      links: [
+        {
+          label: "Upcoming Events",
+          url: "#",
+          subMenu: "upcoming",
+          subLinks: [
+            {
+              label: "Event",
+              url: "#",
+            },
+          ],
+        },
+        {
+          label: "Previous Events",
+          url: "#",
+          subMenu: "previous",
+          subLinks: [{ label: "Gallery", url: "#" }],
+        },
+        {
+          label: "Previous Events",
+          url: "#",
+          subMenu: "previous",
+          subLinks: [{ label: "Gallery", url: "#" }],
+        },
+      ],
+    },
+    {
+      title: "Travel & Tourism",
+      links: [
+        { label: "Sights", url: "/tour_slider" },
+        { label: "Packages", url: "/packages" },
+        {
+          label: "Tailor Made",
+          url: "#",
+          subMenu: "tailorMade",
+          subLinks: [
+            { label: "Individuals (Form)", url: "#" },
+            { label: "Groups (Form)", url: "#" },
+          ],
+        },
+        { label: "Ticket Booking", url: "/ticket/booking" },
+        { label: "Hotel Booking", url: "/hotel/booking" },
+        { label: "Transportation", url: "/transportation" },
+      ],
+    },
+    {
+      title: "Flight",
+      links: [
+        { label: "Flight", url: "/flight/form" },
+        { label: "Flight Admin", url: "/flights " },
+        { label: "Users Admin", url: "/user " },
+      ],
+    },
+    {
+      title: "Service",
+      links: [
+        { label: "Conferences", url: "/conferences/page" },
+        { label: "Exhibitions ", url: "/exhibitions " },
+        { label: "Reservation", url: "/reservation/form" },
+        { label: "Trips", url: "/create/trip" },
+      ],
+    },
+    {
+      title: "Contact Us",
+      links: [{ label: "Contact Us", url: "/contact_us" }],
     },
   ];
-  return (
-    <nav className="navbar-section">
-      <div className="navbar-logo">
-        <div className="logo">Events Consultant</div>
+
+  const renderMenu = () => {
+    return menuItems.map((menuItem, index) => (
+      <div key={index} className="menu-section">
+        <div className="menu-title">{menuItem.title}</div>
+        <div className="menu-links">
+          {menuItem.links.map((link, linkIndex) => (
+            <div key={linkIndex} className="menu-item">
+              {link.subLinks ? (
+                <div className="has-submenu">
+                  {link.label}
+                  <div className="submenu">
+                    {link.subLinks.map((subLink, subIndex) => (
+                      <div
+                        key={subIndex}
+                        className="submenu-item"
+                        onClick={() => navigate(subLink.url)}
+                      >
+                        {subLink.label}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="option-btn" onClick={() => navigate(link.url)}>
+                  {link.label}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-      <ul className="navbar-links">
-        <div
-          className="option-btn"
-          onClick={() => {
-            navigate("/");
-          }}
-        >
-          Home
-        </div>
-        <div
-          className="option-btn"
-          onClick={() => {
-            navigate("/flight/form");
-          }}
-        >
-          Flight Page
-        </div>
-        <div
-          className="option-btn"
-          onClick={() => {
-            navigate("/reservation/form");
-          }}
-        >
-          Reservation Page
-        </div>
-        <div
-          className="option-btn"
-          onClick={() => {
-            navigate("/about");
-          }}
-        >
-          About Us
-        </div> 
-        <div
-          className="option-btn"
-          onClick={() => {
-            navigate('create/trip');
-          }}
-        >
-          Admin Trip
-        </div>   
-        <div
-          className="option-btn"
-          onClick={() => {
-            navigate('user');
-          }}
-        >
-          users
-        </div>
-            <div
-          className="option-btn"
-          onClick={() => {
-            navigate("/exhibitions");
-          }}
-        >
-          Exhibitions
-        </div>
-     
-        <ListOption title="Admin" options={options} />
-        <a
-          className="option-btn"
-          href="mailto:ayatalmomani665@gmail.com?subject=Contact&body=Hello, I would like to get in touch regarding..."
-        >
-          Contact
-        </a>
-      </ul>
+    ));
+  };
+
+  return (
+    <nav className="new-navbar">
+      <div className="navbar-logo">
+        <img className="new-logo" src="/image/newLogo.png" alt="Logo" />
+      </div>
+      <ul className="navbar-links">{renderMenu()}</ul>
       <div className="navbar-auth">
         <NotificationDropdown />
         <div

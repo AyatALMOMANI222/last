@@ -1,95 +1,179 @@
-.navbar-section {
+.new-navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
-  // background-color: #1f1f1f;
-  // color: #fff;
-  border-bottom: 1px solid rgb(240, 237, 237);
-  height: 70px;
+  padding: 0px 20px;
+  background-color: #2b2d42;
+  color: #edf2f4;
+  font-family: "Arial", sans-serif;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  .new-logo {
+    height: 50px;
+  }
   .navbar-logo {
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+
     .logo {
-      font-size: 1.7rem;
-      color: #4f75ff;
-      font-family: "Poppins", sans-serif;
+      color: #ef233c;
     }
   }
 
   .navbar-links {
     display: flex;
-    gap: 1.5rem;
-    .option-btn {
-      text-decoration: none;
-      color: rgb(0, 68, 255);
-      font-size: 1rem;
-      transition: color 0.3s ease;
-      cursor: pointer;
+    align-items: center;
+    list-style: none;
+    gap: 15px;
 
-      &:hover {
-        color: #3da9af;
+    .menu-section {
+      position: relative;
+
+      .menu-title {
+        font-size: 16px;
+        font-weight: 500;
+        padding: 8px 12px;
+        cursor: pointer;
+        color: #edf2f4;
+        &:hover {
+          color: #ef233c;
+        }
+      }
+
+      .menu-links {
+        max-height: 0; // Initially closed
+        overflow: hidden; // Ensures content is hidden when closed
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%; // Aligns the submenu directly under the main title
+        left: 0;
+        background-color: #2b2d42;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        padding: 0; // Remove padding to prevent issues when closed
+        z-index: 1000;
+        transition: max-height 0.5s ease-in-out; // Smooth transition for opening
+        width: 210px; // Set width for the dropdown
+
+        overflow: overlay;
+        &::-webkit-scrollbar {
+          width: 3px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: var(--scrollbar-track-color);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: var(--scrollbar-thumb-color);
+          border-radius: 50px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+          background: var(--scrollbar-thumb-hover-color);
+        }
+      }
+
+      // Show submenu on hover with smooth transition
+      &:hover .menu-links {
+        max-height: 400px; // Adjust to the maximum height for the open state
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      .menu-item {
+        padding: 5px 10px;
+        cursor: pointer;
+        color: #edf2f4;
+
+        .option-btn {
+          text-decoration: none;
+          padding: 8px 12px;
+          display: block;
+          &:hover {
+            background-color: #ef233c;
+            color: #fff;
+          }
+        }
+
+        .has-submenu {
+          &:hover .submenu {
+            max-height: 300px; // Set height for submenu
+          }
+        }
+
+        .submenu {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.5s ease-in-out;
+          background-color: #2b2d42;
+          list-style: none;
+          padding: 0;
+          position: relative;
+          margin-top: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          .submenu-item {
+            padding: 5px 10px;
+            cursor: pointer;
+
+            &:hover {
+              background-color: #ef233c;
+              color: #fff;
+            }
+          }
+        }
       }
     }
   }
 
   .navbar-auth {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 15px;
+
+    svg {
+      fill: #fff;
+    }
 
     .auth-btn {
-      text-decoration: none;
-      background-color: #e701cc;
+      background-color: #ef233c;
       color: #fff;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      transition: background-color 0.3s ease;
+      padding: 8px 12px;
+      border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #cd00b5;
+        background-color: #d90429;
       }
     }
 
     .register-btn {
-      background-color: #4f75ff;
+      background-color: transparent;
+      color: #ef233c;
+      border: 1px solid #ef233c;
 
       &:hover {
-        background-color: #0834d1;
+        background-color: #ef233c;
+        color: #fff;
       }
     }
   }
-}
 
-@media (max-width: 768px) {
-  .navbar {
+  @media (max-width: 768px) {
     flex-direction: column;
-    padding: 1rem;
-    align-items: start;
-    .navbar-links {
-      padding: 0;
-    }
 
     .navbar-links {
-      margin-top: 1rem;
       flex-direction: column;
-      gap: 1rem;
-    }
-    .navbar-auth .auth-btn {
-      text-decoration: none;
-      background-color: unset;
-      color: #fff;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      transition: background-color 0.3s ease;
-      cursor: pointer;
-      padding: 0;
-      &:hover {
-        background-color: #3da9af;
+      gap: 10px;
+
+      .menu-section {
+        .menu-title {
+          padding: 12px 0;
+        }
       }
-    }
-    .navbar-auth {
-      margin-top: 1rem;
-      flex-direction: column;
-      gap: 0.5rem;
     }
   }
 }
