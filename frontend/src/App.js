@@ -58,7 +58,7 @@ import Transportation from "./components/UI/Transportation";
 import SpeakerProfileForm from "./components/SpeakerProfileEditForm";
 import RegisterAttendancePage from "./components/attendance";
 import RegisterGroupPage from "./components/Group-Registeration";
-import RegisterSponsorPage from "./components/Sponsor";
+import RegisterSponsorPage from "./components/Registeration/Sponsor";
 
 const App = () => {
   const location = useLocation();
