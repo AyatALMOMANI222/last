@@ -12,11 +12,11 @@ import downloadIcon from "../../icons/downloadIcon.svg";
 import Select from "../../CoreComponent/Select";
 import Pagination from "../../CoreComponent/Pagination";
 import EditConferencesAdmin from "../../components/ConferencesAdmin/editForm";
-
+import httpService from "../../common/httpService";
 const ConferencesPage = () => {
   const [selectedConferenceId, setSelectedConferenceId] = useState(null);
   const [isViewDrawerOpen, setIsViewDrawerOpen] = useState(false);
-  const [conferenceData, setConferenceData] = useState();
+  const [conferenceData, setConferenceData] = useState({});
   const [conferenceName, setConferenceName] = useState("");
   const [openAddConference, setOpenAddConference] = useState(false);
   const [openEditConference, setOpenEditConference] = useState(false);
@@ -34,10 +34,13 @@ const ConferencesPage = () => {
     setIsViewDrawerOpen(true);
   };
 
-  const handleEditClick = (conferenceId) => {
+  const handleEditClick = (conferenceId, conference) => {
     setSelectedConferenceId(conferenceId);
-    setOpenEditConference(true)
-    setConferenceData();
+    setConferenceData(conference);
+
+    setTimeout(() => {
+      setOpenEditConference(true);
+    }, [300]);
   };
 
   const getConference = () => {
@@ -46,29 +49,30 @@ const ConferencesPage = () => {
       : "";
     const url = `http://127.0.0.1:8000/api/con${searchQuery}`;
 
-    axios
-      .get(url, {
-        params: {
-          page: currentPage,
-          per_page: 12,
-          status: status?.value,
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setTotalPages(response.data.total_pages);
-        setAllConference(response.data.data);
-      })
-      .catch((error) => {
+    httpService({
+      method: "GET",
+      url,
+      params: {
+        page: currentPage,
+        per_page: 12,
+        status: status?.value,
+      },
+      onSuccess: (data) => {
+        console.log(data);
+        setTotalPages(data.total_pages);
+        setAllConference(data.data);
+      },
+      onError: (error) => {
         console.error(error);
-      });
+      },
+      showLoader: true,
+      withToast: true,
+    });
   };
 
   useEffect(() => {
-    console.log(selectedConference?.scientific_topics);
-
     getConference();
-  }, [conferenceName, currentPage, status, selectedConference]);
+  }, [conferenceName, currentPage, status]);
 
   return (
     <div className="conferences-page">
@@ -125,7 +129,7 @@ const ConferencesPage = () => {
                     </button>
                     <button
                       className="edit"
-                      onClick={() => handleEditClick(conference.id)}
+                      onClick={() => handleEditClick(conference.id, conference)}
                     >
                       Edit
                     </button>
@@ -155,6 +159,9 @@ const ConferencesPage = () => {
         <EditConferencesAdmin
           setIsOpen={setOpenEditConference}
           getConference={getConference}
+          conferenceId={selectedConferenceId}
+          setConference={setSelectedConferenceId}
+          conferenceData={conferenceData}
         />
       </MySideDrawer>
       <MySideDrawer isOpen={isViewDrawerOpen} setIsOpen={setIsViewDrawerOpen}>
@@ -296,8 +303,6 @@ const ConferencesPage = () => {
           </div>
         </div>
       </MySideDrawer>
-
-
     </div>
   );
 };

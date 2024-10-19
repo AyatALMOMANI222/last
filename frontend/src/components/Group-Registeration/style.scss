@@ -1,44 +1,40 @@
 @use "../../Global/style.scss";
 
-.login-page-container {
+.group-registration-page-container {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   height: 100vh;
   overflow: hidden;
   background-color: #d3d3d31d;
-
-  .login-img {
+  .register-img {
     position: relative;
-    top: -32px;
+    top: -72px;
   }
-  .login-form {
+  .register-form {
     width: 100%;
-    margin-top: 4%;
-    border-radius: 10px;
-    padding: 30px 0px;
-    height: auto;
-    display: flex;
-    flex-direction: column;
+    margin-top: 2%;
 
     .title {
-      font-size: 30px;
+      font-size: 22px;
       font-weight: 700;
-      line-height: 50px;
+      line-height: 22px;
       text-align: left;
       padding: 0px 30px;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       color: #ef233c;
-      margin-bottom: 25px;
-      .sub-title {
+      margin-bottom: 15px;
+      margin-top: 15px;
+       .sub-title {
         font-size: 14px;
         font-weight: 500;
-        line-height: 50px;
+        line-height: 22px;
         text-align: left;
         padding: 0px 20px;
         cursor: pointer;
         text-decoration: underline;
+        
       }
     }
 
@@ -50,25 +46,31 @@
       text-align: left;
     }
     .fields-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      padding: 15px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 20px;
       padding: 0px 30px;
+
+      
+      .image-container{
+        height: 80px;
+      }
     }
   }
 
-  .input-container {
-    height: 70px;
-    width: 70%;
+  .input-container ,.phone-input-container ,.dropdown-container {
+    height: 84px !important;
   }
+.textarea-container{
+  height: 120px ;
+}
 
-  .login-btn-container {
+  .register-btn-container {
     display: flex;
     flex-direction: row;
     padding-left: 30px;
 
-    .login-btn {
+    .register-btn {
       cursor: pointer;
       width: 200px;
       display: inline-block;
@@ -82,25 +84,24 @@
       text-decoration: none;
       text-align: center;
       transition: background-color 0.3s, color 0.3s;
-      margin-top: 30px;
+      margin-top: 10px;
     }
 
-    .login-btn:hover {
-      background-color: #fe4c60;
+    .register-btn:hover {
+      background-color: #407cffbd;
       color: #ffffff;
     }
-    .login-btn:active {
-      background-color: #ce0018;
+    .register-btn:active {
+      background-color: #104bcd;
       color: #ffffff;
     }
   }
 }
-
 @media only screen and (max-width: 768px) {
-  .login-page-container {
+  .register-page-container {
     align-items: start;
 
-    .login-form {
+    .register-form {
       margin-top: 40%;
       box-shadow: none;
     }

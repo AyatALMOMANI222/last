@@ -9,7 +9,9 @@ import "./style.scss";
 import Select from "../../CoreComponent/Select";
 import Pagination from "../../CoreComponent/Pagination";
 import ViewFormExhibitions from "./ViewForm";
-
+import EditExhibitionForm from "./EditForm";
+import httpService from "../../common/httpService"
+// this form for create ExhibitionForm
 const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -21,7 +23,6 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   const [errorMsg, setErrorMsg] = useState(""); // Manage error messages
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState([]);
- 
 
   const getConference = () => {
     const url = `http://127.0.0.1:8000/api/con`;
@@ -39,13 +40,12 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
             return { label: item?.title, value: item?.id };
           })
         );
-        
       })
       .catch((error) => {});
   };
-  useEffect(()=>{
-    getConference()
-  },[])
+  useEffect(() => {
+    getConference();
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission
     const token = localStorage.getItem("token");
@@ -89,10 +89,9 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
 
   return (
     <form className="exhibition-form-container" onSubmit={handleSubmit}>
-    
       <div className="header-exhibition-form">Add New Exhibition</div>
       <div className="form-section">
-      <Select
+        <Select
           options={allConference}
           value={conferenceId}
           setValue={setConferenceId}
@@ -165,154 +164,9 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   );
 };
 
-// const Exhibitions = () => {
-//   const [selectedExhibitionId, setSelectedExhibitionId] = useState(null);
-//   const [isViewDrawerOpen, setIsViewDrawerOpen] = useState(false);
-//   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
-//   const [exhibitionData, setExhibitionData] = useState();
-//   const [exhibitionName, setExhibitionName] = useState("");
-//   const [openAddExhibition, setOpenAddExhibition] = useState(false);
-//   const [allExhibitions, setAllExhibitions] = useState([]);
-//   const [selectedExhibition, setSelectedExhibition] = useState({});
-//   const [search, setSearch] = useState(""); // Default search term
-//   const [status, setStatus] = useState("");
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [totalPages, setTotalPages] = useState(0);
-//   const [openViewForm, setOpenViewForm] = useState(true);
-//   const handlePageChange = (pageNumber) => {
-//     setCurrentPage(pageNumber);
-//   };
-//   // const handleViewClick = (exhibition) => {
-//   //   setSelectedExhibition(exhibition);
-//   //   setIsViewDrawerOpen(true);
-//   // };
-
-//   const handleEditClick = (exhibitionId) => {
-//     setSelectedExhibitionId(exhibitionId);
-//     setIsEditDrawerOpen(true);
-//     setExhibitionData();
-//   };
-//   const getExhibitions = async () => {
-//     // setLoading(true); // Set loading to true before fetching
-//     try {
-//       const response = await axios.get(
-//         "http://127.0.0.1:8000/api/exhibitions",
-//         {
-//           params: {
-//             search: exhibitionName,
-//             status: status?.value,
-//             page: currentPage,
-//           },
-//         }
-//       );
-//       setTotalPages(response.data.total_pages);
-//       setAllExhibitions(response?.data?.data); // Adjust according to your API response structure
-//     } catch (err) {
-//     } finally {
-//     }
-//   };
-
-//   useEffect(() => {
-//     getExhibitions();
-//   }, [exhibitionName, status, currentPage]);
-
-//   return (
-//     <div className="exhibitions-page">
-       
-//       <div className="exhibitions-form-admin-header">
-//         <div className="section-input">
-//           <Input
-//             placeholder="Search"
-//             inputValue={exhibitionName}
-//             setInputValue={setExhibitionName}
-//             type="text"
-//             label={"Exhibition Name"}
-//           />
-//           <Select
-//             options={[
-//               { value: "upcoming", label: "Upcoming" },
-//               { value: "past", label: "Past" },
-//             ]}
-//             value={status}
-//             setValue={setStatus}
-//             label="Status"
-//             errorMsg={""}
-//           />
-//         </div>
-//         <button
-//           className="add-exhibitions-btn"
-//           onClick={() => setOpenAddExhibition(true)}
-//         >
-//           Add new Exhibitions
-//         </button>
-//       </div>
-//       <div className="exhibition-list">
-//         {allExhibitions?.map((exhibition) => {
-//           return (
-//             <Fragment key={exhibition.id}>
-//               <div className="exhibition-item">
-//                 <img
-//                   className="exhibition-image"
-//                   src={`${backendUrlImages}${exhibition.image}`}
-//                   alt={exhibition.title}
-//                 />
-
-//                 <div className="exhibition-info">
-//                   <div className="title">{exhibition.title}</div>
-//                   <div className="date">{exhibition.date}</div>
-//                   <div className="place">{exhibition.place}</div>
-//                   <div className="actions-btns">
-//                     <button
-//                       className="view"
-//                       onClick={() => {
-//                         // handleViewClick(exhibition);
-//                         setOpenViewForm(true)
-//                       }}
-//                     >
-//                       View
-//                     </button>
-//                     <button
-//                       className="edit"
-//                       onClick={() => handleEditClick(exhibition.id)}
-//                     >
-//                       Edit
-//                     </button>
-//                   </div>
-//                 </div>
-//               </div>
-//             </Fragment>
-//           );
-//         })}
-//       </div>
-//       <Pagination
-//         currentPage={currentPage}
-//         totalPages={totalPages}
-//         onPageChange={handlePageChange}
-//       />
-//         <ViewFormExhibitions isOpen={openViewForm} setIsOpen={setOpenViewForm}/>
-//       <MySideDrawer isOpen={openAddExhibition} setIsOpen={setOpenAddExhibition}>
-//         <ExhibitionForm
-//           setIsOpen={setOpenAddExhibition}
-//           getExhibitions={getExhibitions}
-//         />
-//       </MySideDrawer>
-    
-//     </div>
-//   );
-// };
-// import React, { useEffect, useState, Fragment } from 'react';
-// import axios from 'axios';
-// import Input from './Input'; // Assuming these are imported from your components
-// import Select from './Select'; // Adjust as necessary
-// import Pagination from './Pagination'; // Assuming these are imported from your components
-// import ViewFormExhibitions from './ViewFormExhibitions'; // Assuming these are imported from your components
-// import MySideDrawer from './MySideDrawer'; // Assuming these are imported from your components
-// import ExhibitionForm from './ExhibitionForm'; // Assuming these are imported from your components
-
 const Exhibitions = () => {
-  const [selectedExhibitionId, setSelectedExhibitionId] = useState(null);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
-  const [exhibitionData, setExhibitionData] = useState();
+  const [exhibitionData, setExhibitionData] = useState({});
   const [exhibitionName, setExhibitionName] = useState("");
   const [openAddExhibition, setOpenAddExhibition] = useState(false);
   const [allExhibitions, setAllExhibitions] = useState([]);
@@ -325,25 +179,51 @@ const Exhibitions = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleEditClick = (exhibitionId) => {
-    setSelectedExhibitionId(exhibitionId);
+  const handleEditClick = (exhibition) => {
     setIsEditDrawerOpen(true);
-    setExhibitionData();
+    setExhibitionData(exhibition);
   };
 
+  const getExhibitions2 = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/exhibitions",
+        {
+          params: {
+            search: exhibitionName,
+            status: status?.value,
+            page: currentPage,
+          },
+        }
+      );
+      setTotalPages(response.data.total_pages);
+      setAllExhibitions(response.data.data); // Adjust according to your API response structure
+    } catch (err) {
+      console.error("Error fetching exhibitions:", err);
+    }
+  };
   const getExhibitions = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/exhibitions", {
+      await httpService({
+        method: "GET",
+        url: "http://127.0.0.1:8000/api/exhibitions",
         params: {
           search: exhibitionName,
           status: status?.value,
           page: currentPage,
         },
+        onSuccess: (data) => {
+          setTotalPages(data.total_pages);
+          setAllExhibitions(data.data); // Adjust according to your API response structure
+        },
+        onError: (error) => {
+          console.error("Error fetching exhibitions:", error);
+        },
+        showLoader: true,
+        withToast: true,
       });
-      setTotalPages(response.data.total_pages);
-      setAllExhibitions(response.data.data); // Adjust according to your API response structure
     } catch (err) {
-      console.error("Error fetching exhibitions:", err);
+      console.error("Error in getExhibitions:", err);
     }
   };
 
@@ -396,13 +276,20 @@ const Exhibitions = () => {
                 <div className="actions-btns">
                   <button
                     className="view"
-                    onClick={() => setOpenViewForm(true)}
+                    onClick={() => {
+                      console.log("yes");
+
+                      setOpenViewForm(true);
+                      setExhibitionData(exhibition);
+                    }}
                   >
                     View
                   </button>
                   <button
                     className="edit"
-                    onClick={() => handleEditClick(exhibition.id)}
+                    onClick={() => {
+                      handleEditClick(exhibition);
+                    }}
                   >
                     Edit
                   </button>
@@ -417,16 +304,28 @@ const Exhibitions = () => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
-      <ViewFormExhibitions isOpen={openViewForm} setIsOpen={setOpenViewForm} />
+
+      <ViewFormExhibitions
+        isOpen={openViewForm}
+        setIsOpen={setOpenViewForm}
+        exhibitionData={exhibitionData}
+      />
+
       <MySideDrawer isOpen={openAddExhibition} setIsOpen={setOpenAddExhibition}>
         <ExhibitionForm
           setIsOpen={setOpenAddExhibition}
           getExhibitions={getExhibitions}
         />
       </MySideDrawer>
+      <MySideDrawer isOpen={isEditDrawerOpen} setIsOpen={setIsEditDrawerOpen}>
+        <EditExhibitionForm
+          setIsOpen={setIsEditDrawerOpen}
+          getExhibitions={getExhibitions}
+          exhibitionData={exhibitionData}
+        />
+      </MySideDrawer>
     </div>
   );
 };
-
 
 export default Exhibitions;

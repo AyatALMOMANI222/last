@@ -147,7 +147,13 @@ const PriceForm = ({ entries, setEntries }) => {
   );
 };
 
-const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
+const EditConferencesAdmin = ({
+  setIsOpen,
+  getConference,
+  conferenceId,
+  setConference,
+  conferenceData,
+}) => {
   const [committeeMembers, setCommitteeMembers] = useState([
     { id: Date.now(), name: "", image: null },
   ]);
@@ -162,6 +168,8 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
   const [secondAnnouncement, setSecondAnnouncement] = useState(null);
   const [brochure, setBrochure] = useState(null);
   const [scientificProgram, setScientificProgram] = useState(null);
+  const [errors, setErrors] = useState({});
+
   const [entries, setEntries] = useState([
     { id: Date.now(), price_type: "", price: "", description: "" },
   ]);
@@ -178,6 +186,57 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
 
     return result;
   }
+  useEffect(() => {
+    console.log({ conferenceData });
+
+    return () => {
+      setConference(null);
+    };
+  }, []);
+  useEffect(() => {
+    if (conferenceData) {
+      console.log({ conferenceData });
+
+      // تحديث الحقول الرئيسية
+      setTitle(conferenceData.title || "");
+      setDescription(conferenceData.description || "");
+      setStartDate(conferenceData.start_date || "");
+      setEndDate(conferenceData.end_date || "");
+      setLocation(conferenceData.location || "");
+      setStatus(conferenceData.status || "upcoming");
+
+      // تحديث أعضاء اللجنة
+      const committee = conferenceData.committee_members.map((member) => ({
+        id: member.id,
+        name: member.name,
+        image: member.committee_image,
+      }));
+      setCommitteeMembers(
+        committee.length > 0
+          ? committee
+          : [{ id: Date.now(), name: "", image: null }]
+      );
+
+      // تحديث المواضيع
+      const topicsData = conferenceData.scientific_topics.map(
+        (topic) => topic.title
+      );
+      setTopics(topicsData.length > 0 ? topicsData : [""]);
+
+      // تحديث الأسعار
+      const entriesData = conferenceData.prices.map((price) => ({
+        id: Date.now(), // قم بتغييره ليعكس `id` المناسب إذا كانت موجودة
+        price_type: price.price_type || "",
+        price: price.price || "",
+        description: price.description || "",
+      }));
+      setEntries(
+        entriesData.length > 0
+          ? entriesData
+          : [{ id: Date.now(), price_type: "", price: "", description: "" }]
+      );
+    }
+  }, [conferenceData]);
 
   // Handler to update topics array
   const handleTopicChange = (index, newValue) => {
@@ -228,49 +287,79 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (validateForm()) {
+      const prices = convertPriceToObject(entries);
 
-    const prices = convertPriceToObject(entries);
+      const formData = new FormData();
+      const allEmpty = Object.values(prices).every((value) => value === "");
 
-    const formData = new FormData();
-
-    for (const key in prices) {
-      if (prices.hasOwnProperty(key)) {
-        formData.append(key, prices[key]);
+      if (!allEmpty) {
+        for (const key in prices) {
+          if (prices.hasOwnProperty(key)) {
+            formData.append(key, prices[key]);
+          }
+        }
       }
+
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("start_date", startDate);
+      formData.append("end_date", endDate);
+      formData.append("location", location);
+      formData.append(
+        "status",
+        typeof status == "string" ? status : status.value
+      );
+      formData.append("image", image);
+      formData.append("first_announcement_pdf", firstAnnouncement);
+      formData.append("second_announcement_pdf", secondAnnouncement);
+      formData.append("conference_brochure_pdf", brochure);
+      formData.append("conference_scientific_program_pdf", scientificProgram);
+      formData.append("scientific_topics", topics);
+      formData.append("timestamps", new Date().toISOString());
+      const token = localStorage.getItem("token");
+      axios
+        .post(
+          `http://127.0.0.1:8000/api/conferences/${conferenceData?.id}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          const id = response.data.id;
+          toast.success("Conference Edited successfully!");
+          setIsOpen(false);
+          addCommitteeMembers(id, committeeMembers);
+        })
+        .catch((error) => {
+          console.error("Error submitting data: ", error);
+        });
     }
-
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("start_date", startDate);
-    formData.append("end_date", endDate);
-    formData.append("location", location);
-    formData.append("status", status.value);
-    formData.append("image", image);
-    formData.append("first_announcement_pdf", firstAnnouncement);
-    formData.append("second_announcement_pdf", secondAnnouncement);
-    formData.append("conference_brochure_pdf", brochure);
-    formData.append("conference_scientific_program_pdf", scientificProgram);
-    formData.append("scientific_topics", topics);
-    formData.append("timestamps", new Date().toISOString());
-    const token = localStorage.getItem("token");
-    axios
-      .post("http://127.0.0.1:8000/api/conferences/87", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        const id = response.data.id;
-        toast.success("Conference created successfully!");
-        addCommitteeMembers(id, committeeMembers);
-        console.log();
-        
-      })
-      .catch((error) => {
-        console.error("Error submitting data: ", error);
-      });
   };
+  const validateForm = () => {
+    let validationErrors = {};
 
+    if (!title) validationErrors.title = "Title is required";
+    if (!description) validationErrors.description = "Description is required";
+    if (!startDate) validationErrors.startDate = "Start date is required";
+    if (!endDate) validationErrors.endDate = "End date is required";
+    if (!location) validationErrors.location = "Location is required";
+    if (!status) validationErrors.status = "Status is required";
+    if (!image) validationErrors.image = "Image is required";
+    if (!firstAnnouncement)
+      validationErrors.firstAnnouncement = "First announcement PDF is required";
+    if (!secondAnnouncement)
+      validationErrors.secondAnnouncement =
+        "Second announcement PDF is required";
+    if (!brochure) validationErrors.brochure = "Brochure PDF is required";
+    if (!scientificProgram)
+      validationErrors.scientificProgram = "Scientific program PDF is required";
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0;
+  };
   return (
     <div className="conference-form-admin">
       <div className="header-conference-form">Edit New Conference</div>
@@ -282,6 +371,7 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           setInputValue={setTitle}
           type="text"
           required
+          errorMsg={errors.title}
         />
         <TextArea
           label="Description"
@@ -290,6 +380,7 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           setValue={setDescription}
           type="text"
           required
+          errorMsg={errors.description}
         />
         <DateInput
           label="Start Date"
@@ -297,6 +388,7 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           inputValue={startDate}
           setInputValue={setStartDate}
           required
+          errorMsg={errors.startDate}
         />
         <DateInput
           label="End Date"
@@ -304,6 +396,7 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           inputValue={endDate}
           setInputValue={setEndDate}
           required
+          errorMsg={errors.endDate}
         />
         <Input
           label="Location"
@@ -312,16 +405,20 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           setInputValue={setLocation}
           type="text"
           required
+          errorMsg={errors.location}
         />
         <Select
           options={[
-            { value: "upcoming", label: "Upcoming" },
-            { value: "past", label: "Past" },
+            { value: "upcoming", label: "upcoming" },
+            { value: "past", label: "past" },
           ]}
-          value={status}
+          value={[
+            { value: "upcoming", label: "upcoming" },
+            { value: "past", label: "past" },
+          ].find((item) => item.value === status)}
           setValue={setStatus}
           label="Status"
-          errorMsg={""}
+          errorMsg={errors.status}
         />
 
         <ImageUpload
@@ -329,6 +426,7 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           inputValue={image}
           setInputValue={setImage}
           allowedExtensions={["jpg", "jpeg", "png"]}
+          errorMsg={errors.image}
         />
 
         <ImageUpload
@@ -336,6 +434,7 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           inputValue={firstAnnouncement}
           setInputValue={setFirstAnnouncement}
           allowedExtensions={["pdf"]}
+          errorMsg={errors.firstAnnouncement}
         />
 
         <ImageUpload
@@ -343,6 +442,7 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           inputValue={secondAnnouncement}
           setInputValue={setSecondAnnouncement}
           allowedExtensions={["pdf"]}
+          errorMsg={errors.secondAnnouncement}
         />
 
         <ImageUpload
@@ -350,6 +450,7 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           inputValue={brochure}
           setInputValue={setBrochure}
           allowedExtensions={["pdf"]}
+          errorMsg={errors.brochure}
         />
 
         <ImageUpload
@@ -357,7 +458,9 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           inputValue={scientificProgram}
           setInputValue={setScientificProgram}
           allowedExtensions={["pdf"]}
+          errorMsg={errors.scientificProgram}
         />
+
         <div className="topics-container">
           <div className="topic-title">
             Topics
@@ -409,7 +512,7 @@ const EditConferencesAdmin = ({ setIsOpen, getConference }) => {
           Cancel
         </button>
         <button className="submit-btn" onClick={handleSubmit}>
-          Submit
+          Edit
         </button>
       </div>
     </div>

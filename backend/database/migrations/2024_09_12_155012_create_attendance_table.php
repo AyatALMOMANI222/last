@@ -12,6 +12,8 @@ class CreateAttendanceTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // ربط المسجل بجدول المستخدمين
             $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade'); // ربط المؤتمر
+                     
+
             $table->decimal('registration_fee', 8, 2)->nullable(); // سعر التسجيل - nullable
             $table->boolean('includes_conference_bag')->nullable()->default(true); // حقيبة المؤتمر - nullable
             $table->boolean('includes_conference_badge')->nullable()->default(true); // باجة المؤتمر - nullable

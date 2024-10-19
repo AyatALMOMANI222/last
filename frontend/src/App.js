@@ -56,6 +56,9 @@ import TicketBooking from "./components/UI/TicketBooking";
 import HotelBooking from "./components/UI/HotelBooking";
 import Transportation from "./components/UI/Transportation";
 import SpeakerProfileForm from "./components/SpeakerProfileEditForm";
+import RegisterAttendancePage from "./components/attendance";
+import RegisterGroupPage from "./components/Group-Registeration";
+import RegisterSponsorPage from "./components/Sponsor";
 
 const App = () => {
   const location = useLocation();
@@ -87,15 +90,15 @@ const App = () => {
   ];
   useEffect(() => {
     console.log(location.pathname);
+    console.log("/registerPage/speaker/1".includes("registerPage"));
   });
   return (
     <div id="main" className="main">
       <ToastContainer />
       <Loader show={showLoader} />
-      {!noNavRoute.includes(location.pathname) ||
-        (location.pathname.includes("/registerPage") && <NavBar />)}
-  
-      <NavBar />
+      {!noNavRoute.includes(location.pathname) &&
+        (!location.pathname.includes("/registerPage") && <NavBar />)}
+
       <Routes className="main">
         <Route path="/exhibitions" element={<Exhibitions />} />
         <Route
@@ -113,6 +116,10 @@ const App = () => {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/registertype" element={<RegisterType />} />
+        {/* <Route path="register/attendance" element={<RegisterAttendancePage />} /> */}
+        <Route path="register/group" element={<RegisterGroupPage />} />
+        <Route path="register/sponsor" element={<RegisterSponsorPage />} />
+
         <Route path="/create/trip" element={<ViewTrip />} />
         <Route path="/user" element={<UsersList />} />
         <Route path="/view-user-trips" element={<ViewUserTrips />} />

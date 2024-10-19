@@ -15,6 +15,7 @@ export { default as deleteIcon } from './deleteIcon.svg'
 export { default as viewIcon } from './viewIcon.svg'
 export { default as correctSign } from './correctSign.svg'
 export { default as close } from './close.svg'
+export { default as pdfIcon } from './pdfIcon.svg'
 
 
 

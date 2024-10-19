@@ -1,199 +1,106 @@
 .speaker-profile-container {
-    max-width: 900px;
-    margin: 50px auto;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    
-    .accept-reject-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-  
-      .accept-btn,
-      .reject-btn {
-        width: 48%;
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-  
-      .accept-btn {
-        background-color: #28a745;
-        color: white;
-        border: none;
-  
-        &:hover {
-          background-color: #218838;
-        }
-      }
-  
-      .reject-btn {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-  
-        &:hover {
-          background-color: #c82333;
-        }
-      }
-    }
-  
-    .speaker-profile-form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-  
-      .image-upload {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-  
-        img {
-          max-width: 150px;
-          border-radius: 50%;
-          margin-bottom: 15px;
-          border: 3px solid #007bff;
-        }
-      }
-  
-      .topics-container {
-        margin-top: 20px;
-  
-        .topic-title {
-          font-size: 18px;
-          font-weight: bold;
-          margin-bottom: 10px;
-          position: relative;
-          
-          .star {
-            color: red;
-            position: absolute;
-            top: -5px;
-            left: -10px;
-          }
-        }
-  
-        .topics-container-inputs {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-  
-          .topic-input-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-  
-            input {
-              width: 85%;
-              padding: 10px;
-              border: 1px solid #ddd;
-              border-radius: 5px;
-              transition: border-color 0.3s ease;
-  
-              &:focus {
-                border-color: #007bff;
-              }
-            }
-  
-            .delete-icon {
-              cursor: pointer;
-              width: 25px;
-              height: 25px;
-              transition: all 0.3s ease;
-  
-              &:hover {
-                transform: scale(1.2);
-              }
-            }
-          }
-  
-          .add-topic-btn-container {
-            margin-top: 10px;
-  
-            .add-topic-btn {
-              background-color: #007bff;
-              color: white;
-              padding: 10px 15px;
-              font-size: 14px;
-              border: none;
-              border-radius: 5px;
-              cursor: pointer;
-              transition: all 0.3s ease;
-  width: 40%;
-              &:hover {
-                background-color: #0056b3;
-              }
-            }
-          }
-        }
-      }
-  
-      .attendance-option {
-        margin-top: 20px;
-        padding: 15px;
-        border: 1px solid #007bff;
-        border-radius: 10px;
-        background-color: #f8f9fa;
-  
-        h3 {
-          font-size: 18px;
-          color: #007bff;
-          margin-bottom: 10px;
-        }
-  
-        .attendance-checkboxes {
-          display: flex;
-          justify-content: space-between;
-        }
-  
-        .notice {
-          margin-top: 15px;
-          font-size: 14px;
-          color: #555;
-        }
-      }
-  
-      .register-btn-container {
-        margin-top: 30px;
-  
-        .register-btn {
-          width: 40%;
-          background-color: #007bff;
-          color: white;
-          padding: 12px;
-          border: none;
-          border-radius: 5px;
-          font-size: 16px;
-          cursor: pointer;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); // إضافة ظل خفيف
-          transition: background-color 0.3s ease;
-          font-weight: bold; // جعل النص أكثر سمكًا
-          letter-spacing: 1px; // زيادة المسافة بين الحروف قليلاً
-  
-          &:hover {
-            background-color: #0056b3;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); // إضافة ظل أكبر عند المرور
-          }
-        
-      
-          // New styles for active state
-          &:active {
-            background-color: #004494; // Even darker shade on active
-            transform: translateY(0); // Reset lift effect
-          }
-      
-          // New styles for focus state
-          &:focus {
-            outline: none; // Remove default focus outline
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); // Add a soft blue shadow
-          }
-        }
-      }
+  .profile-container-img {
+    display: flex;
+    flex-direction: row;
+    // justify-content: center;
+    align-items: center;
+    padding-left: 40px;
+  }
+  .profile-section {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    justify-content: center;
+    align-items: start;
+    margin-top: 30px;
+  }
+
+  .profile-name {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    margin-top: 30px;
+  }
+  .profile-bio {
+    color: #6c757d;
+    line-break: anywhere;
+    width: 300px;
+  }
+  .profile-image {
+    width: 220px; /* Adjust the size as needed */
+    height: 220px; /* Same as width to make it a perfect circle */
+    border-radius: 50%; /* Makes the element circular */
+    overflow: hidden; /* Ensures the content inside does not overflow the border */
+    object-fit: cover; /* Ensures the image fits inside the circle */
+    border: 2px solid #ccc; /* Optional: Adds a border */
+  }
+  .profile-files {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    padding: 20px;
+    grid-column-gap: 30px;
+    grid-row-gap: 20px;
+    width: 60%;
+  }
+  .topic-section {
+    padding-top: 13px;
+    position: relative;
+  }
+
+  .topics-container-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .topic-input-container {
+    display: grid;
+    grid-template-columns: 1fr 15px;
+    grid-column-gap: 20px;
+    grid-row-gap: 15px;
+  }
+  .add-topic-btn {
+    border: none;
+    background-color: rgba(255, 251, 251, 0.4862745098);
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    cursor: pointer;
+    color: #b10000;
+    width: 100px;
+    position: absolute;
+    top: 0px;
+    right: -10px;
+  }
+  .topic-title {
+    padding-bottom: 5px;
+  }
+  .delete-icon {
+    padding-top: 6px;
+  }
+
+  .attendance-title {
+    font-size: 14px;
+    color: rgb(159, 0, 0);
+  }
+  .notice {
+    font-style: normal;
+    color: rgb(159, 0, 0);
+  }
+  .register-btn-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    button {
+      width: 150px;
+      background-color: #ef233c;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-right: 30px;
+      margin-bottom: 30px;
     }
   }
-  
+}

@@ -4,6 +4,7 @@ use App\Http\Controllers\AcceptedFlightController;
 use App\Http\Controllers\AdditionalOptionsController;
 use App\Http\Controllers\AirportTransferBookingController;
 use App\Http\Controllers\AirportTransferPriceController;
+use App\Http\Controllers\AttendanceController;
 use Laravel\Sanctum\Sanctum;
 
 use App\Http\Controllers\CommitteeMemberController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\PaperController;
 use App\Http\Controllers\ReservationsController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SpeakerController;
+use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\TouristSiteController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\TripParticipantController;
@@ -38,6 +40,7 @@ use App\Http\Controllers\WhatsAppController;
 use App\Models\AvailableFlight;
 use App\Models\DinnerDetail;
 use App\Models\Flight;
+use App\Models\Sponsor;
 use Illuminate\Support\Facades\Route;
 
 // Sanctum::routes();
@@ -88,6 +91,7 @@ Route::delete('/exhibitions/{id}', [ExhibitionController::class, 'deleteExhibiti
 Route::post('/exhibition-images', [ExhibitionImagesController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
 Route::get('exhibition-images/{exhibitionId}', [ExhibitionImagesController::class, 'getImagesByExhibitionId']);
 Route::delete('exhibition-images/{exhibitionId}/{imageId}', [ExhibitionImagesController::class, 'deleteImageByExhibitionIdAndImageId'])->middleware(['auth:sanctum', 'admin']);
+Route::post('/exhibitions/update/{id}', [ExhibitionController::class, 'update'])->middleware(['auth:sanctum', 'admin']);
 
 // tourist-sites
 Route::post('/tourist-sites', [TouristSiteController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
@@ -214,3 +218,9 @@ Route::put('/airport-transfer-bookings/{id}', [AirportTransferBookingController:
 // airport-transfer-prices
 Route::post('/airport-transfer-prices', [AirportTransferPriceController::class, 'store'])->middleware(['auth:sanctum','admin']);
 Route::get('/airport-transfer-prices/conference/{conferenceId}', [AirportTransferPriceController::class, 'getPricesByConferenceId'])->middleware('auth:sanctum');
+// Sponsor
+Route::post('/sponsor', [SponsorController::class, 'store']);
+
+
+// attendance
+Route::post('/attendances', [AttendanceController::class, 'store']);

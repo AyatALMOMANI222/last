@@ -45,6 +45,77 @@ class ExhibitionController extends Controller
     }
 
 
+    public function update(Request $request, $id)
+    {
+        // التحقق من صحة البيانات المدخلة
+        $validatedData = $request->validate([
+            'title' => 'nullable|string|max:255', // جعل الحقل اختياريًا
+            'description' => 'nullable|string',
+            'location' => 'nullable|string|max:255',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+            'status' => 'nullable|in:upcoming,past',
+            'conference_id' => 'nullable|exists:conferences,id',
+        ]);
+    
+        // العثور على المعرض بناءً على الـ ID المُرسل
+        $exhibition = Exhibition::findOrFail($id);
+    
+        // تحديث بيانات المعرض فقط إذا كانت موجودة في الطلب
+        if (isset($validatedData['title'])) {
+            $exhibition->title = $validatedData['title'];
+        }
+        if (isset($validatedData['description'])) {
+            $exhibition->description = $validatedData['description'];
+        }
+        if (isset($validatedData['location'])) {
+            $exhibition->location = $validatedData['location'];
+        }
+        if (isset($validatedData['start_date'])) {
+            $exhibition->start_date = $validatedData['start_date'];
+        }
+        if (isset($validatedData['end_date'])) {
+            $exhibition->end_date = $validatedData['end_date'];
+        }
+        if (isset($validatedData['status'])) {
+            $exhibition->status = $validatedData['status'];
+        }
+        if (isset($validatedData['conference_id'])) {
+            $exhibition->conference_id = $validatedData['conference_id'];
+        }
+    
+        // إذا كانت الصورة مرفوعة، يتم تحديثها
+        if ($request->hasFile('image')) {
+            // حذف الصورة القديمة إذا كانت موجودة
+            if ($exhibition->image && file_exists(public_path('storage/' . $exhibition->image))) {
+                unlink(public_path('storage/' . $exhibition->image)); // حذف الصورة القديمة
+            }
+    
+            // حفظ الصورة الجديدة
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('storage/exhibition_images'), $imageName);
+            $exhibition->image = 'exhibition_images/' . $imageName;
+        }
+    
+        // حفظ التحديثات في قاعدة البيانات
+        $exhibition->save();
+    
+        // الاستجابة مع الرسالة والبيانات المحدثة
+        return response()->json([
+            'message' => 'Exhibition updated successfully!',
+            'data' => $exhibition
+        ], 200);
+    }
+    
+
+
+
+
+
+
+
     public function getExhibitionsByStatus($status)
 {
     if (!$status || $status === 'all') {

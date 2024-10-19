@@ -70,6 +70,14 @@ public function airportTransferBooking()
 {
     return $this->hasOne(AirportTransferBooking::class);
 }
+public function sponsors()
+{
+    return $this->hasMany(Sponsor::class);
+}
+public function attendances()
+{
+    return $this->hasMany(Attendance::class);
+}
 
     protected $attributes = [
         'isAdmin' => false, 
