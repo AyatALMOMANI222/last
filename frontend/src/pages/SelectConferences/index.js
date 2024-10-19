@@ -28,7 +28,15 @@ const SelectConferences = () => {
 
   const handleTitleClick = (conferenceId) => {
     const currentPath = location.pathname;
-    navigate(`${currentPath}/${conferenceId}`);
+    console.log({currentPath});
+    if(currentPath ==="/registerPage/attendance"){
+      console.log("hedaya");
+      
+      navigate(`/register/attendance/${conferenceId}`);
+    }else if(currentPath ==="/registerPage/speaker"){
+      navigate(`/register/speaker/${conferenceId}`);
+    }
+    // navigate(`${currentPath}/${conferenceId}`);
   };
 
   return (

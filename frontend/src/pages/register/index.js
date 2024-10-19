@@ -15,7 +15,7 @@ import axios from "axios";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { type, id } = useParams();
+  const {  id } = useParams();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -48,7 +48,7 @@ const RegisterPage = () => {
     formData.append("password", password);
     formData.append("image", image);
     formData.append("biography", resumeText);
-    formData.append("registration_type", type);
+    formData.append("registration_type", "speaker");
     formData.append("phone_number", phone);
     formData.append("whatsapp_number", whatsApp);
     formData.append("specialization", specialization);

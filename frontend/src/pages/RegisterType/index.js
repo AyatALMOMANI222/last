@@ -39,31 +39,32 @@ const RegisterType = () => {
           or part of a group, we have tailored options to fit your needs.
         </div>
         <div className="register-types">
-          <div className="type" onClick={()=> handleNavigate("speaker")}
-            >
+          <div className="type" onClick={() => handleNavigate("speaker")}>
             <SVG src={speaker} height={150} width={150} />
             <span className="title">Login As Speaker</span>
           </div>{" "}
-          <div className="type"
-          onClick={()=> handleNavigate("attendance")}
-          >
+          <div className="type" onClick={() => handleNavigate("attendance")}>
             <SVG src={attendance} height={150} width={150} />
             <span className="title">Login As Attendance</span>
           </div>{" "}
-          <div className="type"
-          onClick={()=> handleNavigate("sponsor")}
+          <div
+            className="type"
+            onClick={() => {
+              navigate("/register/sponsor");
+            }}
           >
             <SVG src={sponsor} height={150} width={150} />
             <span className="title">Login As Sponsor/Exhibitor</span>
           </div>
-          <div className="type"
-          onClick={()=> handleNavigate("group")}
-          >
+          <div className="type" onClick={() => handleNavigate("group")}>
             <SVG src={group} height={150} width={150} />
             <span className="title">Login As Group Registration</span>
           </div>
-          <div className="type"
-          onClick={()=> handleNavigate("group")}
+          <div
+            className="type"
+            onClick={() => {
+              navigate("/register/other");
+            }}
           >
             <SVG src={group} height={150} width={150} />
             <span className="title">Other</span>

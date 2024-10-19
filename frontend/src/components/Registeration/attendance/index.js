@@ -13,7 +13,7 @@ import "./style.scss";
 
 const RegisterAttendancePage = () => {
   const navigate = useNavigate();
-  const { type, id } = useParams(); // هنا تحتاج conference_id أيضًا
+  const {  conferenceId } = useParams(); // هنا تحتاج conference_id أيضًا
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,14 +35,12 @@ const RegisterAttendancePage = () => {
     country: "",
   });
 
-  useEffect(() => {
-    console.log(type);
-  }, []);
+ 
 
   const handleAttendanceSubmission = async (userId) => {
     const attendanceData = {
       user_id: userId, // المستخدم الذي تم إنشاؤه
-      conference_id: id, // conference_id من params
+      conference_id: conferenceId, // conference_id من params
     };
 
     try {
@@ -63,7 +61,7 @@ const RegisterAttendancePage = () => {
     formData.append("name", name);
     formData.append("email", email);
     formData.append("password", password);
-    formData.append("registration_type", type);
+    formData.append("registration_type", "attendance");
     formData.append("phone_number", phone);
     formData.append("whatsapp_number", whatsApp);
     formData.append("specialization", specialization);
@@ -72,7 +70,7 @@ const RegisterAttendancePage = () => {
 
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/users/${id}`,
+        `http://127.0.0.1:8000/api/users/${conferenceId}`,
         formData,
         {
           headers: {

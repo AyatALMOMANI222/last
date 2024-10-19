@@ -110,16 +110,16 @@ const App = () => {
         <Route path="/flights" element={<FlightFormAdmin />} />
         <Route path="/flight/form" element={<FlightForm />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/registerPage/:type/:id" element={<RegisterPage />} />
+        <Route path="/register/speaker/:id" element={<RegisterPage />} />
         <Route path="/registerPage/:type" element={<SelectConferences />} />
         <Route path="/conferences/page" element={<HomePage />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/registertype" element={<RegisterType />} />
-        {/* <Route path="register/attendance" element={<RegisterAttendancePage />} /> */}
-        <Route path="register/group" element={<RegisterGroupPage />} />
-        <Route path="register/sponsor" element={<RegisterSponsorPage />} />
-
+        <Route path="register/attendance/:conferenceId" element={<RegisterAttendancePage />} />
+        {/* <Route path="register/group" element={<RegisterGroupPage />} />
+         */}
+<Route path="register/sponsor" element={<RegisterSponsorPage />} />
         <Route path="/create/trip" element={<ViewTrip />} />
         <Route path="/user" element={<UsersList />} />
         <Route path="/view-user-trips" element={<ViewUserTrips />} />
