@@ -62,12 +62,16 @@ public function updateVisaByAdmin(Request $request, $userId)
 
     // تحديث تاريخ آخر تعديل لحالة الفيزا
     $visa->visa_updated_at = now();
+    
+    // تعيين updated_at_by_admin إلى الآن
+    $visa->updated_at_by_admin = now();
 
     // حفظ التعديلات
     $visa->save();
 
     return response()->json(['success' => 'Visa updated successfully', 'visa' => $visa]);
 }
+
 public function getVisaByAuthUser()
 {
     try {

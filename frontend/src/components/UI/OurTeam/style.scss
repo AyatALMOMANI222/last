@@ -1,7 +1,7 @@
-$background-image: ("./image/teams.webp"); // مسار الصورة الخلفية
-$member-image-width: 250px; // عرض صور الأعضاء (تم تعديله لجعل الصور أصغر قليلاً)
+$background-image: "./image/teams.webp"; // مسار الصورة الخلفية
+$member-image-width: 250px; // عرض صور الأعضاء
 $member-image-height: 300px; // ارتفاع صور الأعضاء 
-$overlay-bg-color: #DC143C; // لون الخلفية للتراكب
+$overlay-bg-color: rgba(220, 20, 60, 0.6); // لون الخلفية للتراكب مع الشفافية
 $text-shadow: 2px 2px 5px rgba(216, 180, 180, 0.5); // ظل النص
 $border-color: rgba(255, 255, 255, 0.8); // لون البرواز
 $border-width: 3px; // عرض البرواز
@@ -22,10 +22,24 @@ $box-shadow-color: rgba(0, 0, 0, 0.2); // لون الظل
     align-items: center;
     position: relative;
 
+    // طبقة العتمة
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(46, 44, 44, 0.5); // عتمة مظلمة فوق الصورة
+      z-index: 1; // يجعلها فوق الصورة
+    }
+
     .team-title {
       font-size: 2.5em;
       color: white;
       text-shadow: $text-shadow;
+      position: relative; // لجعل النص يظهر فوق العتمة
+      z-index: 2; // يجعل النص فوق طبقة العتمة
     }
   }
 
@@ -77,11 +91,46 @@ $box-shadow-color: rgba(0, 0, 0, 0.2); // لون الظل
 
         .member-role {
           margin: 0; 
-          color: white;        }
+          color: white;        
+        }
       }
 
       &:hover .info-overlay {
         transform: translateY(0);
+      }
+    }
+  }
+
+  // استعلامات الوسائط لجعل التصميم مستجيبًا
+  @media (max-width: 768px) {
+    .team-members {
+      .team-member {
+        width: 100%; // عرض كامل على الشاشات الصغيرة
+        height: auto; // ارتفاع تلقائي
+      }
+    }
+
+    .background-image {
+      height: 200px; // تقليل ارتفاع الخلفية
+      
+      .team-title {
+        font-size: 2em; // تقليل حجم الخط
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .team-members {
+      .team-member {
+        width: 90%; // عرض قليل على الشاشات الصغيرة جداً
+      }
+    }
+
+    .background-image {
+      height: 150px; // تقليل ارتفاع الخلفية أكثر
+      
+      .team-title {
+        font-size: 1.5em; // تقليل حجم الخط أكثر
       }
     }
   }

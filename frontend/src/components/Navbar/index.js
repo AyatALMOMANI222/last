@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
 import NotificationDropdown from "../Notification";
@@ -16,7 +16,7 @@ const NavBar = () => {
         { label: "Clients", url: "/our_clients" },
         { label: "Gallery", url: "#" },
         { label: "Careers", url: "#" },
-        { label: "FAQs", url: "#" },
+        { label: "FAQs", url: "/faq" },
       ],
     },
     {
@@ -54,7 +54,7 @@ const NavBar = () => {
           url: "#",
           subMenu: "previous",
           subLinks: [{ label: "Gallery", url: "#" }],
-        }
+        },
       ],
     },
     {
@@ -141,22 +141,36 @@ const NavBar = () => {
       <ul className="navbar-links">{renderMenu()}</ul>
       <div className="navbar-auth">
         <NotificationDropdown />
-        <div
-          className="auth-btn"
-          onClick={() => {
-            navigate("/login");
-          }}
-        >
-          Login
-        </div>
-        <div
-          className="auth-btn register-btn"
-          onClick={() => {
-            navigate("/registertype");
-          }}
-        >
-          Register
-        </div>
+        {!localStorage.getItem("token") ? (
+          <Fragment>
+            <div
+              className="auth-btn"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Login
+            </div>
+            <div
+              className="auth-btn register-btn"
+              onClick={() => {
+                navigate("/registertype");
+              }}
+            >
+              Register
+            </div>
+          </Fragment>
+        ) : (
+          <div
+            className="auth-btn register-btn"
+            onClick={() => {
+              localStorage.removeItem("token");
+              navigate("login")
+            }}
+          >
+            Logout
+          </div>
+        )}
       </div>
     </nav>
   );

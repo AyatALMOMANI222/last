@@ -1,0 +1,89 @@
+.visa-page-container {
+    text-align: center;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+
+    .question-container {
+        margin: 20px 0;
+
+        h2 {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+
+            .yes-btn, .no-btn {
+                padding: 12px 30px;
+                font-size: 18px;
+                font-weight: bold;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.2s;
+
+                &:hover {
+                    transform: translateY(-3px);
+                }
+            }
+
+            .yes-btn {
+                background-color: #000; /* اللون الأسود */
+                color: white;
+
+                &:hover {
+                    background-color: #333; /* درجة أفتح من الأسود */
+                }
+            }
+
+            .no-btn {
+                background-color: #dc3545;
+                color: white;
+
+                &:hover {
+                    background-color: #c82333;
+                }
+            }
+        }
+    }
+
+    .visa-form {
+        margin-top: 20px;
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        .fields-container {
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: #0056b3;
+            }
+        }
+
+        .error-msg {
+            color: red;
+            font-weight: bold;
+        }
+    }
+}

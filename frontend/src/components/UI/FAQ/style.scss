@@ -1,0 +1,92 @@
+$max-width: 800px; // عرض أقصى للعنصر
+$background-color: #f9f9f9; // لون الخلفية
+$text-color: #333; // لون النص
+$subheading-color: #ef233c; // لون العنوان الفرعي
+$hover-color: #555; // لون عند التمرير
+$padding: 20px; // حشوة
+$margin: 15px; // هامش بين العناصر
+$border-radius: 10px; // نصف قطر الحدود
+
+.faq-container {
+  max-width: $max-width; 
+  margin: 20px auto; // إضافة هامش أعلى وأسفل 
+  padding: $padding; 
+  font-family: Arial, sans-serif; 
+  background-color: $background-color; 
+  border-radius: $border-radius; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); // تحسين ظل الصندوق
+
+  h1 {
+    text-align: center; 
+    color: $text-color; 
+    margin-bottom: $margin; // استخدام متغير الهامش
+  }
+
+  h2 {
+    color: $subheading-color; 
+    margin-top: $margin; 
+  }
+
+  h3 {
+    color: $hover-color; 
+    margin: $margin 0 5px; // استخدام متغير الهامش
+    cursor: pointer; // تغيير شكل المؤشر عند التمرير
+
+    &:hover {
+      text-decoration: underline; // خط تحت العنوان عند التمرير
+    }
+  }
+
+  p,
+  ul,
+  ol {
+    line-height: 1.6; 
+    margin: $margin 0; // استخدام متغير الهامش
+  }
+
+  ul,
+  ol {
+    padding-left: 20px; 
+  }
+
+  li {
+    margin-bottom: 5px; 
+  }
+
+  // استعلامات الوسائط لجعل التصميم ريسبونسف
+  @media (max-width: 768px) {
+    padding: 15px; // تقليل الحشوة في الشاشات الصغيرة
+
+    h1 {
+      font-size: 1.5em; // حجم خط أصغر
+    }
+
+    h2 {
+      font-size: 1.2em; // حجم خط أصغر
+    }
+
+    h3 {
+      font-size: 1em; // حجم خط أصغر
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px; // تقليل الحشوة أكثر للشاشات الأصغر
+
+    h1 {
+      font-size: 1.2em; // حجم خط أصغر
+    }
+
+    h2 {
+      font-size: 1.1em; // حجم خط أصغر
+    }
+
+    h3 {
+      font-size: 0.9em; // حجم خط أصغر
+    }
+
+    p {
+      font-size: 0.9em; // حجم خط أصغر
+    }
+  }
+}

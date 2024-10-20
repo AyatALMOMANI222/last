@@ -3,9 +3,9 @@ import './style.scss'; // لاستيراد التصميم
 
 const Conference3 = () => {
     return (
-        <div className="conference-container">
+        <div className="conference-container44">
             {/* Headline picture with title */}
-            <div className="headline-picture">
+            <div className="headline-picture55">
                 <h1 className="headline-title">Conferences & Events</h1>
             </div>
             

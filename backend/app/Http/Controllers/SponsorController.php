@@ -18,33 +18,53 @@ use Illuminate\Validation\ValidationException;
             try {
                 // التحقق من صحة البيانات المرسلة
                 $validatedData = $request->validate([
-                    'user_id' => 'required|exists:users,id', // التأكد من وجود user_id
+                    'phone_number' => 'nullable|string|max:255',
+                    'whatsapp_number' => 'nullable|string|max:255',
+                    'email' => 'required|email|unique:users,email', // تأكد من أن البريد الإلكتروني فريد
+                    // 'conference_id' => 'required|exists:conferences,id',
                     'company_name' => 'required|string|max:255',
                     'contact_person' => 'required|string|max:255',
                     'company_address' => 'required|string|max:255',
                 ]);
         
-                // العثور على المستخدم باستخدام الـ user_id
-                $user = User::findOrFail($validatedData['user_id']);
+                // إنشاء مستخدم جديد
+                $user = User::create([
+                    'phone_number' => $validatedData['phone_number'],
+                    'whatsapp_number' => $validatedData['whatsapp_number'],
+                    'email' => $validatedData['email'],
+                    // 'conference_id' => $validatedData['conference_id'],
+                ]);
         
-                // إنشاء Sponsor جديد وربطه بالمستخدم
+                // إنشاء Sponsor وربطه بالمستخدم
                 $sponsor = new Sponsor([
                     'company_name' => $validatedData['company_name'],
                     'contact_person' => $validatedData['contact_person'],
                     'company_address' => $validatedData['company_address'],
                 ]);
         
-                // ربط sponsor بالمستخدم وحفظ البيانات
+                // ربط Sponsor بالمستخدم وحفظ البيانات
                 $user->sponsors()->save($sponsor);
         
                 // إرسال إشعار إلى المستخدم
                 Notification::create([
-                    'user_id' => $validatedData['user_id'],
-                    'message' => 'You will be notified via email after your request is accepted to download the registered names. These names must be in English and in an Excel file format.',
-                    'is_read' => false, // يمكنك تعيين القيمة حسب الحاجة
+                    'user_id' => $user->id,
+                    'message' => 'You will be contacted directly by the organizing company via email.',
+                    'is_read' => false,
                 ]);
         
-                return response()->json(['message' => 'Sponsor created successfully!', 'sponsor' => $sponsor], 201);
+                // **إضافة إشعار لجميع المدراء**
+                $admins = User::where('isAdmin', true)->get();
+                foreach ($admins as $admin) {
+                    Notification::create([
+                        'user_id' => $admin->id,
+                        'register_id' => $user->id,
+                        // 'conference_id' => $validatedData['conference_id'],
+                        'message' => 'New sponsor registration: ' . $user->email, // يمكنك تعديل هذه الرسالة حسب الحاجة
+                        'is_read' => false,
+                    ]);
+                }
+        
+                return response()->json(['message' => 'User and Sponsor created successfully!', 'sponsor' => $sponsor], 201);
             } catch (ValidationException $e) {
                 // رسالة الخطأ الخاصة بالتحقق
                 return response()->json(['message' => 'Validation Error', 'errors' => $e->validator->errors()], 422);
@@ -53,5 +73,7 @@ use Illuminate\Validation\ValidationException;
                 return response()->json(['message' => 'Something went wrong: ' . $e->getMessage()], 500);
             }
         }
+        
+        
     }
     

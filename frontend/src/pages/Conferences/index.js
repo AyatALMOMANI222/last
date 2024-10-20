@@ -112,6 +112,10 @@ const ConferencesPage = () => {
                   className="conference-image"
                   src={`${backendUrlImages}${conference.image}`}
                   alt={conference.title}
+                  onError={(e) => {
+                  
+                    e.target.src =require( "./image.jpg");
+                  }}
                 />
 
                 <div className="conference-info">

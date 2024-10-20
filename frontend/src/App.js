@@ -56,9 +56,12 @@ import TicketBooking from "./components/UI/TicketBooking";
 import HotelBooking from "./components/UI/HotelBooking";
 import Transportation from "./components/UI/Transportation";
 import SpeakerProfileForm from "./components/SpeakerProfileEditForm";
-import RegisterAttendancePage from "./components/attendance";
-import RegisterGroupPage from "./components/Group-Registeration";
+
+import RegisterGroupPage from "./components/Registeration/Group-Registeration";
 import RegisterSponsorPage from "./components/Registeration/Sponsor";
+import RegisterAttendancePage from "./components/Registeration/attendance";
+import AdminVisa from "./components/AdminVisa";
+import FAQ from "./components/UI/FAQ";
 
 const App = () => {
   const location = useLocation();
@@ -166,6 +169,9 @@ const App = () => {
 
         <Route path="/transportation" element={<Transportation />} />
         <Route path="/speaker/profile" element={<SpeakerProfileForm />} />
+        <Route path="/admin/visa" element={<AdminVisa />} />
+        <Route path="/faq" element={<FAQ />} />
+
       </Routes>
     </div>
   );

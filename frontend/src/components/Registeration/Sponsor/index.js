@@ -9,7 +9,7 @@ import httpService from "../../../common/httpService";
 
 const RegisterSponsorPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  // const { id } = useParams();
 
   const [companyName, setCompanyName] = useState("");
   const [contactPerson, setContactPerson] = useState("");
@@ -28,34 +28,17 @@ const RegisterSponsorPage = () => {
   });
 
   const handleSubmit = async () => {
-    const userData = {
-    //   company_name: companyName,
-    //   contact_person: contactPerson,
+    const sponsorData = {
+      company_name: companyName,
+      contact_person: contactPerson,
       phone_number: phone,
       whatsapp_number: whatsApp,
       email: email,
-      conference_id: id
+      company_address: companyAddress,
     };
 
     try {
-      // استدعاء HTTP لإنشاء المستخدم في جدول users
-      const userResponse = await httpService({
-        method: "POST",
-        url: `http://127.0.0.1:8000/api/users/${id}`,
-        data: userData,
-        withToast: true,
-      });
-
-      const userId = userResponse.id; // الحصول على user_id من استجابة المستخدم
-
-      const sponsorData = {
-        user_id: userId, // تمرير user_id هنا
-        company_name: companyName,
-        contact_person: contactPerson,
-        company_address: companyAddress,
-      };
-
-      // استدعاء HTTP لتسجيل البيانات في جدول sponsors باستخدام user_id
+      // استدعاء HTTP لإنشاء الراعي
       await httpService({
         method: "POST",
         url: `http://127.0.0.1:8000/api/sponsor`,
@@ -64,6 +47,8 @@ const RegisterSponsorPage = () => {
       });
 
       toast.success("Company and sponsor registered successfully!");
+      // يمكنك توجيه المستخدم إلى صفحة أخرى هنا إذا لزم الأمر
+      // navigate('/next-page'); // Uncomment and change to the desired route
     } catch (error) {
       toast.error("Something went wrong, please try again.");
     }

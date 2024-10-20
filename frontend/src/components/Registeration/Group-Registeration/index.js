@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Input from "../../CoreComponent/Input";
-import PhoneNumberInput from "../../CoreComponent/PhoneNumber";
+import Input from "../../../CoreComponent/Input";
+import PhoneNumberInput from "../../../CoreComponent/PhoneNumber";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./style.scss";

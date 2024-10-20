@@ -1,48 +1,118 @@
-/* Title styling with fade-in and scaling effect */
-.headline-title {
-    font-size: 48px;
-    font-weight: bold;
-    background-color: rgba(0, 0, 0, 0.6); /* خلفية شبه شفافة */
-    padding: 20px 40px;
-    border-radius: 10px;
-    color: white; /* العنوان باللون الأحمر */
-    
-    /* Initial state for the animation */
-    opacity: 0;
-    transform: scale(0.8); /* تصغير قليلاً قبل التحول */
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-/* When the image is fully loaded, make the title appear */
-.headline-picture:hover .headline-title,
-.headline-picture:focus-within .headline-title {
-    opacity: 1; /* إظهار العنوان */
-    transform: scale(1); /* تكبير بشكل طبيعي */
-}
-
-/* Add animation to load the title directly when the component renders */
-.headline-picture {
-    position: relative;
-    background-image: url('./workshops.jpg'); /* استبدال بالصورة */
-    background-size: cover;
-    background-position: center;
-    height: 300px;
+.workshops-container {
+    font-family: 'Roboto', sans-serif;
+    height: auto; /* ارتفاع الشاشة بالكامل */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    margin-bottom: 30px;
+    flex-direction: column;
 
-    /* Trigger animation on page load */
-    animation: fadeInBackground 1s ease-in-out forwards;
-}
+    /* Headline section */
+    .headline-section {
+        background: url('./workshops.jpg') no-repeat center center; /* استبدال بالصورة المناسبة */
+        background-size: cover;
+        height: 40vh; /* ارتفاع الرأس 40% من ارتفاع الصفحة */
+        display: flex;
+        justify-content: center; /* محاذاة العناصر في المنتصف عموديًا */
+        align-items: center;
+        position: relative;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); /* ظل الصورة */
 
-/* Keyframes for background fade-in */
-@keyframes fadeInBackground {
-    0% {
-        opacity: 0;
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.4); /* تقليل الشفافية لجعل الصورة أقل سوادًا */
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center; /* محاذاة العنوان في المنتصف أفقيًا */
+            align-items: center;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* ظل للنص */
+
+            .title {
+                color: #fff; /* لون النص */
+                font-size: 4vw; /* حجم النص بالوحدات النسبية */
+                font-weight: 700;
+                text-align: center;
+                letter-spacing: 1px; /* تقليل تباعد الأحرف */
+                animation: fadeIn 0.8s ease-in-out; /* تأثير التحريك */
+            }
+        }
     }
-    100% {
-        opacity: 1;
+
+    /* Content section */
+    .content-section {
+        padding: 20px 5%; /* تباعد داخلي للمحتوى */
+        background-color: #f9f9f9; /* لون أفتح للخلفية */
+        display: flex;
+        flex-direction: column; /* تنظيم العناصر عموديًا */
+        justify-content: flex-start; /* محاذاة العناصر إلى الأعلى */
+        align-items: flex-start; /* محاذاة المحتوى إلى اليسار */
+        border-top: 5px solid #d32f2f; /* إضافة حدود في الأعلى */
+
+        .subtitle {
+            color: #d32f2f; /* اللون الأحمر السكني */
+            font-size: 3vw; /* حجم النص بالوحدات النسبية */
+            margin-bottom: 15px; /* تقليل المسافة */
+            font-weight: 600; /* تقليل الوزن قليلاً */
+            text-align: center; /* محاذاة للنص في المنتصف */
+        }
+
+        .description {
+            color: #444; /* لون النص */
+            font-size: 2vw; /* حجم النص بالوحدات النسبية */
+            line-height: 1.6; /* تحسين تباعد الأسطر */
+            margin-top: 15px; /* مسافة أعلى */
+        }
+    }
+
+    /* تأثيرات الحركة */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* استعلامات الوسائط */
+    @media (max-width: 768px) {
+        .headline-section {
+            height: 30vh; /* تقليل ارتفاع الرأس للشاشات الصغيرة */
+            .title {
+                font-size: 6vw; /* تغيير حجم النص للشاشات الصغيرة */
+            }
+        }
+
+        .content-section {
+            padding: 20px 10%; /* تباعد داخلي أكبر للشاشات الصغيرة */
+        }
+
+        .subtitle {
+            font-size: 4vw; /* حجم النص للشاشات الصغيرة */
+        }
+
+        .description {
+            font-size: 2.5vw; /* حجم النص للشاشات الصغيرة */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .headline-section {
+            height: 25vh; /* تقليل ارتفاع الرأس أكثر للشاشات الأصغر */
+            .title {
+                font-size: 8vw; /* تغيير حجم النص للشاشات الأصغر */
+            }
+        }
+
+        .content-section {
+            padding: 20px 5%; /* تباعد داخلي أكبر للشاشات الأصغر */
+        }
+
+        .subtitle {
+            font-size: 5vw; /* حجم النص للشاشات الأصغر */
+        }
+
+        .description {
+            font-size: 3vw; /* حجم النص للشاشات الأصغر */
+        }
     }
 }

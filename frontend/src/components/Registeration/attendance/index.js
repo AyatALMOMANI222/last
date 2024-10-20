@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import Input from "../../CoreComponent/Input";
-import Select from "../../CoreComponent/Select";
-import axiosInstance from "../../common/http";
+import Input from "../../../CoreComponent/Input";
+import Select from "../../../CoreComponent/Select";
+import axiosInstance from "../../../common/http";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import PhoneNumberInput from "../../CoreComponent/PhoneNumber";
-import { countriesOptions, nationalitiesOptions } from "../../constant";
+import PhoneNumberInput from "../../../CoreComponent/PhoneNumber";
+import { countriesOptions, nationalitiesOptions } from "../../../constant";
 import SVG from "react-inlinesvg";
-import registerImg from "../../icons/registerImg.svg";
+import registerImg from "../../../icons/registerImg.svg";
 import axios from "axios";
 import "./style.scss";
 
 const RegisterAttendancePage = () => {
   const navigate = useNavigate();
-  const {  conferenceId } = useParams(); // هنا تحتاج conference_id أيضًا
+  const { conferenceId } = useParams(); // هنا نستخدم معرف المؤتمر من المعاملات
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,27 +35,6 @@ const RegisterAttendancePage = () => {
     country: "",
   });
 
- 
-
-  const handleAttendanceSubmission = async (userId) => {
-    const attendanceData = {
-      user_id: userId, // المستخدم الذي تم إنشاؤه
-      conference_id: conferenceId, // conference_id من params
-    };
-
-    try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/api/attendances`,
-        attendanceData
-      );
-      toast.success("Attendance recorded successfully!"); // رسالة النجاح
-    } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.error); // رسالة الخطأ
-      }
-    }
-  };
-
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("name", name);
@@ -67,10 +46,11 @@ const RegisterAttendancePage = () => {
     formData.append("specialization", specialization);
     formData.append("nationality", selectedNationality.value);
     formData.append("country_of_residence", country.value);
+    formData.append("conference_id", conferenceId); // تم التعديل هنا
 
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/users/${conferenceId}`,
+        `http://127.0.0.1:8000/api/attendances`,
         formData,
         {
           headers: {
@@ -79,9 +59,8 @@ const RegisterAttendancePage = () => {
         }
       );
       toast.success("User created successfully!");
-
-      // استدعاء دالة تسجيل الحضور بعد إنشاء المستخدم
-      handleAttendanceSubmission(response.data.id); // استخدام id الذي تم إرجاعه من استجابة إنشاء المستخدم
+      console.log(response);
+      
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.error);

@@ -119,6 +119,8 @@ Route::get('/not', [NotificationController::class, 'getAllNotificationsByUserId'
 // visa
 Route::post('/visa', [VisaController::class, 'postVisaByUser'])->middleware('auth:sanctum');
 Route::post('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin'])->name('admin.updateVisa');
+Route::get('/visa', [VisaController::class, 'getVisaByAuthUser'])->middleware('auth:sanctum');
+Route::put('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin']);
 
 
 // Flight
@@ -223,4 +225,4 @@ Route::post('/sponsor', [SponsorController::class, 'store']);
 
 
 // attendance
-Route::post('/attendances', [AttendanceController::class, 'store']);
+Route::post('/attendances', [AttendanceController::class, 'storeAttendance']);

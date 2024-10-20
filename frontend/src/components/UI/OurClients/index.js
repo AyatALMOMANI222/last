@@ -18,12 +18,12 @@ const OurClients = () => {
         </div>
 
         <div className="clients-logo">
-          <img src={require("./logo/unicef.png")} alt="Client Logo" className="client-logo" />
+          {/* <img src={require("./logo/منظمة2.jfif")} alt="Client Logo" className="client-logo" /> */}
        
         </div>
 
         <div className="clients-logo">
-        <img src={require("./logo/USAID.png")} alt="Client Logo" className="client-logo" />
+        <img src={require("./logo/logo3.png")} alt="Client Logo" className="client-logo" />
        
         </div>
 

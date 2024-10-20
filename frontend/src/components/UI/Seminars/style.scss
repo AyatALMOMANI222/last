@@ -1,74 +1,151 @@
-/* Container for the entire component */
 .seminars-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: 'Arial', sans-serif;
-    color: #333; /* النص باللون الأسود */
-    padding: 20px;
-}
-
-/* Headline picture section */
-.headline-picture {
-    position: relative;
-    background-image: url('./Seminars.jpg'); /* Replace with your image */
-    background-size: cover;
-    background-position: center;
-    height: 300px;
+    font-family: 'Roboto', sans-serif; /* استخدام خط Roboto */
+    height: auto; /* ارتفاع الشاشة بالكامل */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    margin-bottom: 30px;
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* ظلال خفيفة */
-}
+    flex-direction: column; /* تنظيم العناصر عموديًا */
 
-/* Title styling */
-.headline-title {
-    font-size: 48px;
-    font-weight: bold;
-    background-color: rgba(0, 0, 0, 0.5); /* خلفية شبه شفافة */
-    padding: 20px 40px;
-    border-radius: 10px;
-    color:rgb(199, 188, 188); /* لون العنوان بالأحمر الفاتح */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* ظل النص لجعل العنوان بارزًا */
-}
+    .headline-section {
+        background: url('./Seminars.jpg') no-repeat center center; /* الصورة الخلفية */
+        background-size: cover; /* جعل الصورة تغطي المساحة بالكامل */
+        height: 40vh; /* ارتفاع الرأس 40% من ارتفاع الصفحة */
+        display: flex;
+        justify-content: center; /* محاذاة العناصر في المنتصف عموديًا */
+        align-items: center; /* محاذاة العناصر في المنتصف أفقيًا */
+        position: relative; /* وضع نسبي للعناصر */
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); /* ظل للصورة */
 
-/* Content section */
-.seminars-content {
-    background-color: #F2F2F2; /* خلفية سكني فاتح */
-    padding: 30px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* ظلال لعمق احترافي */
-    border-radius: 10px;
-    color: #000; /* النص باللون الأسود */
-}
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.4); /* تقليل الشفافية لجعل الصورة أقل سوادًا */
+            width: 100%; /* عرض كامل */
+            height: 100%; /* ارتفاع كامل */
+            display: flex;
+            justify-content: center; /* محاذاة العنوان في المنتصف أفقيًا */
+            align-items: center; /* محاذاة العنوان في المنتصف عموديًا */
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* ظل للنص */
 
-/* Paragraph styling */
-.seminars-content p {
-    line-height: 1.8;
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-/* Intro text styling */
-.intro-text {
-    font-weight: bold;
-    color: #E74C3C; /* لون النص الأساسي بالأحمر */
-    font-size: 20px;
-}
-
-/* Responsive design for smaller screens */
-@media (max-width: 768px) {
-    .headline-title {
-        font-size: 36px;
+            .title {
+                color: #fff; /* لون النص */
+                font-size: 4vw; /* حجم النص بالوحدات النسبية */
+                font-weight: 700; /* سمك النص */
+                text-align: center; /* محاذاة للنص في المنتصف */
+                letter-spacing: 1px; /* تباعد الأحرف */
+                animation: slideIn 0.8s ease-in-out; /* تأثير التحريك الجديد */
+            }
+        }
     }
 
-    .seminars-content {
-        padding: 20px;
+    /* إضافة أنيميشن جديد */
+    @keyframes slideIn {
+        0% {
+            opacity: 0; /* الشفافية 0 */
+            transform: translateY(-20px); /* التحريك لأعلى */
+        }
+        50% {
+            opacity: 0.5; /* الشفافية نصف */
+            transform: translateY(10px); /* التحريك لأسفل قليلاً */
+        }
+        100% {
+            opacity: 1; /* الشفافية 1 */
+            transform: translateY(0); /* التحريك إلى الوضع الأصلي */
+        }
     }
 
-    .seminars-content p {
-        font-size: 16px;
+    .content-section {
+        padding: 20px 5%; /* تباعد داخلي للمحتوى */
+        background-color: #f9f9f9; /* لون أفتح للخلفية */
+        display: flex;
+        flex-direction: column; /* تنظيم العناصر عموديًا */
+        justify-content: flex-start; /* محاذاة العناصر إلى الأعلى */
+        align-items: flex-start; /* محاذاة المحتوى إلى اليسار */
+        border-top: 5px solid #d32f2f; /* إضافة حدود في الأعلى */
+
+        .subtitle {
+            color: #d32f2f; /* اللون الأحمر السكني */
+            font-size: 3vw; /* حجم النص بالوحدات النسبية */
+            margin-bottom: 15px; /* تقليل المسافة */
+            font-weight: 600; /* تقليل الوزن قليلاً */
+            text-align: center; /* محاذاة للنص في المنتصف */
+        }
+
+        .services-list {
+            list-style-type: none; /* إزالة النقاط */
+            padding-left: 0; /* إزالة التباعد */
+            color: #212121; /* لون النص */
+            font-size: 2vw; /* حجم النص بالوحدات النسبية */
+            margin-bottom: 30px;
+
+            li {
+                margin-bottom: 10px; /* زيادة المسافة بين العناصر */
+                position: relative; /* لمزيد من التحكم */
+                padding-left: 20px; /* تباعد داخلي على اليسار */
+                transition: all 0.3s; /* تأثير التحريك */
+
+                &:hover {
+                    color: #d32f2f; /* تغيير لون النص عند التمرير */
+                    transform: scale(1.05); /* تكبير عند التمرير */
+                    cursor: pointer; /* تغيير شكل المؤشر */
+                }
+            }
+        }
+
+        .description {
+            color: #444; /* لون النص */
+            font-size: 2vw; /* حجم النص بالوحدات النسبية */
+            line-height: 1.6; /* تحسين تباعد الأسطر */
+            margin-top: 15px; /* مسافة أعلى */
+        }
+    }
+
+    /* استعلامات الوسائط */
+    @media (max-width: 768px) {
+        .headline-section {
+            height: 30vh; /* تقليل ارتفاع الرأس للشاشات الصغيرة */
+            
+            .title {
+                font-size: 6vw; /* تغيير حجم النص للشاشات الصغيرة */
+            }
+        }
+
+        .content-section {
+            padding: 20px 10%; /* تباعد داخلي أكبر للشاشات الصغيرة */
+        }
+
+        .subtitle {
+            font-size: 4vw; /* حجم النص للشاشات الصغيرة */
+        }
+
+        .services-list {
+            font-size: 2.5vw; /* حجم النص للشاشات الصغيرة */
+        }
+
+        .description {
+            font-size: 2.5vw; /* حجم النص للشاشات الصغيرة */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .headline-section {
+            height: 25vh; /* تقليل ارتفاع الرأس أكثر للشاشات الأصغر */
+            
+            .title {
+                font-size: 8vw; /* تغيير حجم النص للشاشات الأصغر */
+            }
+        }
+
+        .content-section {
+            padding: 20px 5%; /* تباعد داخلي أكبر للشاشات الأصغر */
+        }
+
+        .subtitle {
+            font-size: 5vw; /* حجم النص للشاشات الأصغر */
+        }
+
+        .services-list {
+            font-size: 3vw; /* حجم النص للشاشات الأصغر */
+        }
+
+        .description {
+            font-size: 3vw; /* حجم النص للشاشات الأصغر */
+        }
     }
 }
