@@ -56,16 +56,16 @@ class AttendanceController extends Controller
             ]);
     
             // // إرسال الإشعار إلى جميع المدراء
-            // $admins = User::where('isAdmin', true)->get();
-            // foreach ($admins as $admin) {
-            //     Notification::create([
-            //         'user_id' => $admin->id,
-            //         'register_id' => $user->id, // تسجيل ID المستخدم الجديد
-            //         'conference_id' => $validatedData['conference_id'], // تسجيل conference_id
-            //         'message' => 'New Attendance registration: ' . $user->name, // الرسالة الموجهة للمدراء
-            //         'is_read' => false,
-            //     ]);
-            // }
+            $admins = User::where('isAdmin', true)->get();
+            foreach ($admins as $admin) {
+                Notification::create([
+                    'user_id' => $admin->id,
+                    'register_id' => $user->id, // تسجيل ID المستخدم الجديد
+                    'conference_id' => $validatedData['conference_id'], // تسجيل conference_id
+                    'message' => 'New Attendance registration: ' . $user->name, // الرسالة الموجهة للمدراء
+                    'is_read' => false,
+                ]);
+            }
     
             return response()->json([
                 'message' => 'User created, attendance recorded, and notifications sent to user and admins successfully!',

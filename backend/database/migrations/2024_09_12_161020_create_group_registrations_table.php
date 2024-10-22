@@ -16,13 +16,14 @@ class CreateGroupRegistrationsTable extends Migration
             // $table->string('contact_email')->nullable(); // بريد إلكتروني للتواصل
             // $table->string('contact_phone')->nullable(); // رقم هاتف للتواصل
             $table->integer('number_of_doctors')->nullable(); // عدد الأطباء المسجلين
-         
 
 
             
-            $table->string('excel_file')->nullable(); // ملف إكسل للأسماء المسجلة
             $table->boolean('is_active')->default(false); // حالة التسجيل
             $table->timestamp('update_deadline')->nullable(); // تاريخ انتهاء تحديث القائمة
+       
+            $table->string('excel_file')->nullable(); // ملف إكسل للأسماء المسجلة
+
             $table->timestamps();
         });
     }

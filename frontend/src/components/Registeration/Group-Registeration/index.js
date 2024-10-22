@@ -8,21 +8,21 @@ import axios from "axios";
 
 const RegisterGroupPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { type,id } = useParams();
 
   const [organizationName, setOrganizationName] = useState(""); // اسم الجمعية أو وزارة الصحة أو الشركة
   const [contactPerson, setContactPerson] = useState("");
   const [phone, setPhone] = useState("");
-  const [whatsApp, setWhatsApp] = useState("");
+  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [companyAddress, setCompanyAddress] = useState("");
   const [doctorsRegistered, setDoctorsRegistered] = useState(""); // عدد الأطباء المسجلين
 
   const [error, setError] = useState({
     organizationName: "",
     contactPerson: "",
     phone: "",
-    whatsApp: "",
+    password: "",
+   
     email: "",
     companyAddress: "",
     doctorsRegistered: "", // خطأ محتمل في عدد الأطباء
@@ -30,17 +30,18 @@ const RegisterGroupPage = () => {
 
   const handleSubmit = async () => {
     const formData = new FormData();
-    formData.append("organization_name", organizationName); // تعديل اسم الحقل
+    formData.append("name", organizationName); // تعديل اسم الحقل
     formData.append("contact_person", contactPerson);
-    formData.append("phone_number", phone);
-    formData.append("whatsapp_number", whatsApp);
+    formData.append("phone", phone);
     formData.append("email", email);
-    formData.append("company_address", companyAddress);
-    formData.append("doctors_registered", doctorsRegistered); // إضافة عدد الأطباء
+    formData.append("password", password);
+
+    formData.append("number_of_doctors", doctorsRegistered); // إضافة عدد الأطباء
+
 
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/companies/${id}`,
+        `http://127.0.0.1:8000/api/register/group`,
         formData,
         {
           headers: {
@@ -63,9 +64,8 @@ const RegisterGroupPage = () => {
     let errorOrganizationName = "";
     let errorContactPerson = "";
     let errorPhone = "";
-    let errorWhatsApp = "";
+    let errorPassword = "";
     let errorEmail = "";
-    let errorCompanyAddress = "";
     let errorDoctorsRegistered = "";
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -86,8 +86,8 @@ const RegisterGroupPage = () => {
     }
 
     // WhatsApp validation
-    if (!whatsApp) {
-      errorWhatsApp = "Please enter the WhatsApp number.";
+    if (!password) {
+      errorPassword = "Please enter the password.";
     }
 
     // Email validation
@@ -97,11 +97,7 @@ const RegisterGroupPage = () => {
       errorEmail = "Please enter a valid email.";
     }
 
-    // Company address validation
-    if (!companyAddress) {
-      errorCompanyAddress = "Please enter the company address.";
-    }
-
+   
     // Doctors registered validation
     if (!doctorsRegistered) {
       errorDoctorsRegistered = "Please enter the number of registered doctors.";
@@ -112,9 +108,7 @@ const RegisterGroupPage = () => {
       organizationName: errorOrganizationName,
       contactPerson: errorContactPerson,
       phone: errorPhone,
-      whatsApp: errorWhatsApp,
       email: errorEmail,
-      companyAddress: errorCompanyAddress,
       doctorsRegistered: errorDoctorsRegistered,
     });
 
@@ -123,18 +117,16 @@ const RegisterGroupPage = () => {
       organizationName &&
       contactPerson &&
       phone &&
-      whatsApp &&
+      password &&
       emailRegex.test(email) &&
-      companyAddress &&
       doctorsRegistered
     ) {
       setError({
         organizationName: "",
         contactPerson: "",
         phone: "",
-        whatsApp: "",
+        password: "",
         email: "",
-        companyAddress: "",
         doctorsRegistered: "",
       });
       handleSubmit();
@@ -172,13 +164,7 @@ const RegisterGroupPage = () => {
             required={true}
             errorMsg={error.phone}
           />
-          <PhoneNumberInput
-            label={"WhatsApp Number"}
-            phone={whatsApp}
-            setPhone={setWhatsApp}
-            required={true}
-            errorMsg={error.whatsApp}
-          />
+ 
           <Input
             label={"Email"}
             placeholder={"e.g. example@example.com"}
@@ -188,13 +174,15 @@ const RegisterGroupPage = () => {
             errorMsg={error.email}
           />
           <Input
-            label={"Company Address"}
-            placeholder={"e.g. 1234 Elm St, City, Country"}
-            inputValue={companyAddress}
-            setInputValue={setCompanyAddress}
+            label={"Password"}
+            placeholder={"Your password"}
+            inputValue={password}
+            setInputValue={setPassword}
             required={true}
-            errorMsg={error.companyAddress}
+            errorMsg={error.password}
+            type="password"
           />
+
           <Input
             label={"Number of Registered Doctors"}
             placeholder={"e.g. 50"}

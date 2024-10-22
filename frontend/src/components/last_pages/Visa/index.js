@@ -16,6 +16,8 @@ const VisaPage = () => {
   const [departureDate, setDepartureDate] = useState("");
   const [error, setError] = useState("");
   const [visaData, setVisaData] = useState(null); // Changed initial state to null to check for data
+  const [visaPrice, setVisaPrice] = useState(null); // Changed initial state to null to check for data
+
   const userId = localStorage.getItem("user_id");
 
   const handleUserChoice = (choice) => {
@@ -92,6 +94,38 @@ const VisaPage = () => {
       setError("Error fetching visa data.");
     }
   };
+
+
+//   const fetchVisaPrice = async () => {
+//     const token = localStorage.getItem("token"); // Retrieve the token
+
+//     try {
+//       const data = await httpService({
+//         method: "GET",
+//         url: `http://127.0.0.1:8000/api/con/id/95`,
+//         headers: {
+//           Authorization: `Bearer ${token}`, // Pass the token
+//         },
+//         onSuccess: (response) => setVisaData(response),
+//         onError: (err) => setError(err),
+//         withToast: true, // Show toast
+//       });
+//       setVisaPrice(data.VisaPrice);
+// console.log(data.VisaPrice);
+// console.log(visaPrice);
+
+//       // Set fields based on the data
+//       if (data.visa) {
+//         setArrivalDate(data.arrival_date);
+//         setDepartureDate(data.departure_date);
+//         setShowVisaForm(false); // Hide the form if there is data
+//       } else {
+//         setShowVisaForm(false); // Hide the form if there is no data
+//       }
+//     } catch (error) {
+//       setError("Error fetching visa data.");
+//     }
+//   };
 
   // Call the function to fetch visa data on component mount
   useEffect(() => {

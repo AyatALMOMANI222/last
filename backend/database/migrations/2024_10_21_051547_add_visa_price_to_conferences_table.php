@@ -9,11 +9,11 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('airport_transfer_bookings', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // إضافة Foreign key يشير إلى users
-
+        Schema::table('conferences', function (Blueprint $table) {
+            // إضافة عمود VisaPrice من النوع decimal مع 8 أرقام و2 بعد الفاصلة
+            $table->decimal('VisaPrice', 8, 2)->nullable(); 
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('airport_transfer_bookings', function (Blueprint $table) {
+        Schema::table('conferences', function (Blueprint $table) {
             //
         });
     }

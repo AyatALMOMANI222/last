@@ -17,6 +17,8 @@ return new class extends Migration
             // اغيرها string واحطها المستقبل اما كلمة admin or user_id 
             $table->string('message')->nullable();
             $table->boolean('is_read')->default(false); 
+            $table->string('message')->default('No message')->change();
+
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

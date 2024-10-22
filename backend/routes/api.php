@@ -25,6 +25,7 @@ use App\Http\Controllers\DinnerSpeakerCompanionFeeController;
 use App\Http\Controllers\DiscountOptionController;
 use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
+use App\Http\Controllers\GroupRegistrationController;
 use App\Http\Controllers\GroupTripParticipantController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaperController;
@@ -61,7 +62,7 @@ Route::post('/users/not/email/{id}', [AuthController::class, 'sendNotification']
 // whatsApp
 Route::post('users/whatsapp-not', [WhatsAppController::class, 'sendWhatsAppNotification']);
 // conference
-Route::post('/con', [ConferenceController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
+Route::post('/con', [ConferenceController::class, 'store']);
 Route::get('/con/status/{status}', [ConferenceController::class, 'getConferenceByStatus']);
 Route::get('/con', [ConferenceController::class, 'getAllConferences']);
 Route::get('/con/id/{id}', [ConferenceController::class, 'getConferenceById']);
@@ -226,3 +227,7 @@ Route::post('/sponsor', [SponsorController::class, 'store']);
 
 // attendance
 Route::post('/attendances', [AttendanceController::class, 'storeAttendance']);
+// group
+Route::post('/register/group', [GroupRegistrationController::class, 'store']);
+Route::put('/update/Admin/group', [GroupRegistrationController::class, 'updateGroupByAdminByUserId'])->middleware(['auth:sanctum','admin']);
+Route::post('/update/user/{user_id}', [GroupRegistrationController::class, 'updateByUser'])->middleware('auth:sanctum');

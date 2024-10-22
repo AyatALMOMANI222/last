@@ -18,7 +18,12 @@ class CreateAirportTransferBookingsTable extends Migration
             $table->string('companion_name')->nullable(); // اسم المرافق
             // $table->string('driver_name')->nullable(); // اسم السائق
             // $table->string('driver_phone')->nullable(); // رقم هاتف السائق
-            $table->foreign('conference_id')->references('id')->on('conferences')->onDelete('cascade');
+            $table->unsignedBigInteger('conference_id')->nullable(); // إذا كان قد يكون فارغًا
+
+            // تعيين قيد المفتاح الخارجي
+            $table->foreign('conference_id')
+                  ->references('id')->on('conferences')
+                  ->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // إضافة Foreign key يشير إلى users
             $table->timestamps(); // بيانات تاريخ الإنشاء والتحديث
 
