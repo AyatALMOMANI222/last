@@ -119,7 +119,7 @@ const ConferencesPage = () => {
                 />
 
                 <div className="conference-info">
-                  <div className="title">{conference.title}</div>
+                  <div className="titlee">{conference.title}</div>
                   <div className="date">{conference.date}</div>
                   <div className="place">{conference.place}</div>
                   <div className="actions-btns">

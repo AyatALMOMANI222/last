@@ -9,6 +9,7 @@ import ViewOneTrip from "../ViewOneTrip";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import EditTrip from "../EditTrip";
+import httpService from "../../../common/httpService";
 
 const headers = [
   { key: "id", label: "ID" },
@@ -37,7 +38,74 @@ const ViewTrip = () => {
   const [viewOneTrip, setViewOneTrip] = useState(false);
   const [openEditTrip, setOpenEditTrip] = useState(true);
   const [open, setOpen] = useState(false);
+  // const fetchTrips = async () => {
+  //   const token = localStorage.getItem("token");
+
+  //   const params = {};
+  //   if (tripType) {
+  //     params.trip_type = tripType;
+  //   }
+  //   if (tripName) {
+  //     params.name = tripName;
+  //   }
+
+  //   try {
+  //     const response = await axios.get("http://127.0.0.1:8000/api/all-trip", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         Accept: "application/json",
+  //       },
+  //       params: params,
+  //     });
+
+  //     //   setTripData(response?.data?.trips);
+  //     const newData = response?.data?.trips?.map((item) => {
+  //       return {
+  //         ...item,
+  //         actions: (
+  //           <div>
+  //             <button
+  //               className="add-price-btn price2"
+  //               onClick={() => {
+  //                 setAddPrice(true);
+  //                 setTripId(item?.id);
+  //               }}
+  //             >
+  //               Add Prices
+  //             </button>
+  //             <button
+  //               className="add-price-btn view2"
+  //               onClick={() => {
+  //                 setViewOneTrip(true);
+  //                 setTripId(item?.id);
+  //               }}
+  //             >
+  //               View
+  //             </button>
+  //             <button
+  //               className="add-price-btn edit2"
+  //               onClick={() => {
+  //                 setOpenEditTrip(true);
+  //                 setOpen(true);
+
+  //                 setTripId(item?.id);
+  //               }}
+  //             >
+  //               Edit
+  //             </button>
+  //           </div>
+  //         ),
+  //       };
+  //     });
+  //     setTripData(newData);
+  //   } catch (error) {
+  //     console.error("Error fetching trips:", error);
+  //   }
+  // };
+
   const fetchTrips = async () => {
+    const token = localStorage.getItem("token");
+  
     const params = {};
     if (tripType) {
       params.trip_type = tripType;
@@ -45,62 +113,69 @@ const ViewTrip = () => {
     if (tripName) {
       params.name = tripName;
     }
-
+  
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+    };
+  
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/all-trip", {
-        headers: {
-          Authorization:
-            "Bearer 89|qY9SDEGFapyEzrh8nMcBgCRwW5m021rMcBvbsZ6K60a16cbf",
-          Accept: "application/json",
+      const response = await httpService({
+        method: "GET",
+        url: "http://127.0.0.1:8000/api/all-trip",
+        headers,
+        params,
+        onSuccess: (data) => {
+          const newData = data?.trips?.map((item) => ({
+            ...item,
+            actions: (
+              <div>
+                <button
+                  className="add-price-btn price2"
+                  onClick={() => {
+                    setAddPrice(true);
+                    setTripId(item?.id);
+                  }}
+                >
+                  Add Prices
+                </button>
+                <button
+                  className="add-price-btn view2"
+                  onClick={() => {
+                    setViewOneTrip(true);
+                    setTripId(item?.id);
+                  }}
+                >
+                  View
+                </button>
+                <button
+                  className="add-price-btn edit2"
+                  onClick={() => {
+                    setOpenEditTrip(true);
+                    setOpen(true);
+                    setTripId(item?.id);
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
+            ),
+          }));
+          setTripData(newData);
         },
-        params: params,
+        onError: (error) => {
+          console.error("Error fetching trips:", error);
+        },
+        withLoadder:true,
+        withToast: true, // Show toast notifications
       });
-
-      //   setTripData(response?.data?.trips);
-      const newData = response?.data?.trips?.map((item) => {
-        return {
-          ...item,
-          actions: (
-            <div>
-              <button
-                className="add-price-btn"
-                onClick={() => {
-                  setAddPrice(true);
-                  setTripId(item?.id);
-                }}
-              >
-                Add Prices
-              </button>
-              <button
-                className="add-price-btn"
-                onClick={() => {
-                  setViewOneTrip(true);
-                  setTripId(item?.id);
-                }}
-              >
-                View
-              </button>
-              <button
-                className="add-price-btn"
-                onClick={() => {
-                  setOpenEditTrip(true);
-                  setOpen(true);
-
-                  setTripId(item?.id);
-                }}
-              >
-                Edit
-              </button>
-            </div>
-          ),
-        };
-      });
-      setTripData(newData);
     } catch (error) {
       console.error("Error fetching trips:", error);
     }
   };
-
+  
+  
+  
   useEffect(() => {
     fetchTrips();
   }, [tripType, tripName]);

@@ -30,8 +30,11 @@ const LoginPage = () => {
       const response = await axiosInstance.post(url, userData);
       const token = response.data.token;
       const user = response.data.user;
+
       localStorage.setItem("token", token);
       localStorage.setItem("user_id", user.id); // تخزين user_id
+      console.log(token);
+      // console.log(user_id);
       navigate("/");
     } catch (error) {
       console.error("Login error:", error);

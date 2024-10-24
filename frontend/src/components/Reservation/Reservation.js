@@ -4,6 +4,7 @@ import Checkbox from "../../CoreComponent/Checkbox/index";
 import DateInput from "../../CoreComponent/Date";
 import MySideDrawer from "../../CoreComponent/SideDrawer";
 import CustomFormWrapper from "../../CoreComponent/CustomFormWrapper";
+import { toast } from "react-toastify";
 
 const ReservationForm = ({ openReservation, setOpenReservation }) => {
   const [checkInDate, setCheckInDate] = useState("");
@@ -14,6 +15,8 @@ const ReservationForm = ({ openReservation, setOpenReservation }) => {
   const [roomCount, setRoomCount] = useState(1);
 
   const handleSubmit = (e) => {
+    toast.success("The data was updated successfully!");
+
     e.preventDefault();
     const formData = {
       checkInDate,

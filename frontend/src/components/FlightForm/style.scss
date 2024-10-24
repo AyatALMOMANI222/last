@@ -246,4 +246,100 @@
     font-weight: 500;
     color: #ef233c;
   }
+
+
+
+
+  $btn-padding: 1rem 2rem;
+$btn-font-size: 1rem;
+$btn-border-radius: 2rem;
+$btn-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+$hover-transform: translateY(-3px);
+$hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+
+$cancel-color: #f0ad4e;
+$cancel-hover: #ec971f;
+
+$emergency-color: #d9534f;
+$emergency-hover: #c9302c;
+
+$update-color: #5cb85c;
+$update-hover: #4cae4c;
+
+.button-section {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 2rem;
+
+  .custom-btn {
+    padding: $btn-padding;
+    font-size: $btn-font-size;
+    font-weight: bold;
+    border-radius: $btn-border-radius;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: $btn-shadow;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 15vw; // الحجم النسبي لعرض الأزرار
+    min-width: 120px; // عرض الأدنى للأزرار
+
+    &:hover {
+      transform: $hover-transform;
+      box-shadow: $hover-shadow;
+    }
+
+    &.cancel-btn {
+      background-color: $cancel-color;
+      color: white;
+
+      &:hover {
+        background-color: $cancel-hover;
+      }
+    }
+
+    &.emergency-btn {
+      background-color: $emergency-color;
+      color: white;
+
+      &:hover {
+        background-color: $emergency-hover;
+      }
+    }
+
+    &.update-btn {
+      background-color: $update-color;
+      color: white;
+
+      &:hover {
+        background-color: $update-hover;
+      }
+    }
+  }
+}
+
+// استجابة الشاشات الصغيرة
+@media (max-width: 768px) {
+  .button-section {
+    flex-direction: column;
+    align-items: center;
+
+    .custom-btn {
+      width: 60vw;
+      font-size: 0.9rem;
+      padding: 0.8rem 1.5rem;
+    }
+  }
+}
+
+// استجابة الشاشات الكبيرة
+@media (min-width: 1200px) {
+  .custom-btn {
+    width: 10vw;
+    font-size: 1.1rem;
+  }
+}
+
 }

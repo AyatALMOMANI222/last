@@ -92,9 +92,9 @@ const AddOption = ({ isOpen, setIsOpen, tripId }) => {
                   placeholder="Enter price"
                   type="number"
                 />
-                <button type="button" onClick={() => deleteOption(index)} className="delete-option-btn">
+                {/* <button className="" type="button" onClick={() => deleteOption(index)} className="delete-option-btn">
                   Delete Option
-                </button>
+                </button> */}
               </div>
             ))}
       

@@ -44,7 +44,7 @@ class ConferenceController extends Controller
             $conference->start_date = $request->input('start_date');
             $conference->end_date = $request->input('end_date');
             $conference->location = $request->input('location');
-            $conference->status = $request->input('status');
+            $conference->status= $request->input('status');
 
             // Handle file uploads
             if ($request->hasFile('image')) {

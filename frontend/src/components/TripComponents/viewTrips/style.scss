@@ -66,6 +66,16 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 15px;
-    color: #ef233c;
+    color: rgb(223, 0, 227);
+
+    &.price2 {
+      color: #e701cc;
+    }
+
+    &.edit2 {
+      color: rgb(255, 123, 0);
+    }  &.view2 {
+      color: rgb(0, 96, 6);
+    }
   }
 }

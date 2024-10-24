@@ -1,0 +1,29 @@
+.dashboard {
+  padding: 20px;
+  .container-charts {
+    display: grid;
+    grid-template-columns: 49% 49%;
+    grid-column-gap: 30px;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20px;
+
+    .BarChart-container {
+      //   width: 70%;
+      padding: 16px;
+      //   border: 1px solid rgb(196, 196, 196);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+      border-radius: 5px;
+    }
+
+    .PieChart-container {
+      padding: 16px;
+      //   border: 1px solid rgb(196, 196, 196);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      color: rgb(177, 0, 0);
+      border-radius: 5px;
+    }
+  }
+
+}

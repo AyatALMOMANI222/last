@@ -36,12 +36,15 @@ const SelectConferences = () => {
     }else if(currentPath ==="/registerPage/speaker"){
       navigate(`/register/speaker/${conferenceId}`);
     }
+    else if(currentPath ==="/registerPage/group"){
+      navigate(`/register/group/${conferenceId}`);
+    }
     // navigate(`${currentPath}/${conferenceId}`);
   };
 
   return (
     <div className="conferences">
-      <h1 className="title">Available Conferences</h1>
+      <h1 className="titlee">Available Conferences</h1>
       <ul className="conference-list">
         {allConference.map((conference) => (
           <li

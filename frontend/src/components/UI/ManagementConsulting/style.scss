@@ -1,105 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@400;500&display=swap');
+// .management-consulting {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   // background-color: #f7f9fc; /* Light background color */
+//   color: #333; /* Dark text color */
+//   // padding: 50px 20px;
+//   font-family: 'Arial', sans-serif; /* Clean, modern font */
+// }
 
-.media-campaign {
-  font-family: 'Roboto', sans-serif;
-  height: 100vh; /* جعل المكون يأخذ ارتفاع الشاشة بالكامل */
+// .headline-section {
+//   position: relative;
+//   width: 100%;
+//   height: 200px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   background: url('https://source.unsplash.com/1600x900/?business,consulting') no-repeat center center;
+//   background-size: cover;
+// }
 
-  .headline-section {
-    background: url('./ManagementConsulting.webp') no-repeat center center; /* تعديل لتوسيع الصورة بشكل أفضل */
-    background-size: cover;
-    height: 50%; /* ارتفاع الرأس 50% من ارتفاع الصفحة */
-    display: flex;
-    justify-content: center; /* محاذاة العناصر في المنتصف عموديًا */
-    align-items: center;
-    position: relative;
+// .overlay {
+//   // background-color: rgba(255, 255, 255, 0.7); /* Light semi-transparent overlay */
+//   padding: 20px;
+//   border-radius: 8px;
+//   // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+// }
 
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.6); /* تقليل شفافية التظليل */
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center; /* محاذاة العنوان في المنتصف أفقيًا */
-      align-items: center;
+// .title {
+//   font-size: 3rem;
+//   font-weight: bold;
+//   text-transform: uppercase;
+//   text-align: center;
+//   animation: fadeIn 1.5s ease-in-out, slideUp 1s ease forwards;
+//   opacity: 0;
+// }
+//   @keyframes fadeIn {
+//     0% {
+//       opacity: 0;
+//     }
+//     100% {
+//       opacity: 1;
+//     }
+//   }
 
-      .title {
-        font-family: 'Poppins', sans-serif;
-        color: #fff;
-        font-size: 52px;
-        font-weight: 700;
-        text-align: center;
-        letter-spacing: 2px;
-        animation: fadeIn 1s ease-in-out;
-      }
-    }
-  }
+//   @keyframes slideUp {
+//     0% {
+//       transform: translateY(20px);
+//     }
+//     100% {
+//       transform: translateY(0);
+//     }
+// }
 
-  .content-section {
-    padding: 50px 60px; /* تباعد داخلي للمحتوى */
-    background-color: #f3f3f3; /* لون أفتح للخلفية */
-    height: 50%; /* ارتفاع المحتوى 50% من ارتفاع الصفحة */
-    display: flex;
-    flex-direction: column; /* تنظيم العناصر عموديًا */
-    justify-content: flex-start; /* محاذاة العناصر إلى الأعلى */
-    align-items: flex-start; /* محاذاة المحتوى إلى اليسار */
-    overflow-y: auto; /* إضافة شريط تمرير إذا كان المحتوى أكبر من القسم */
+// .content-section {
+//   background-color: #ffffff; /* White background for content */
+//   border-radius: 8px;
+//   padding: 30px;
+//   max-width: 800px;
+//   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+//   animation: fadeInContent 0.8s ease-in-out forwards;
+//   opacity: 0;
 
-    .subtitle {
-      font-family: 'Poppins', sans-serif;
-      font-size: 36px;
-      color: #d32f2f;
-      margin-bottom: 25px;
-      font-weight: 700;
-    }
+//   @keyframes fadeInContent {
+//     0% {
+//       opacity: 0;
+//       transform: translateY(20px);
+//     }
+//     100% {
+//       opacity: 1;
+//       transform: translateY(0);
+//     }
+// }
 
-    .description {
-      color: #444;
-      font-size: 20px;
-      line-height: 1.8;
-      margin-bottom: 30px;
-    }
+// .subtitle {
+//   font-size: 2rem;
+//   margin-bottom: 15px;
+//   color: #007bff; /* Primary color for subtitle */
+// }
 
-    .principles-title {
-      font-family: 'Poppins', sans-serif;
-      color: #212121;
-      font-size: 28px;
-      font-weight: bold;
-      margin-top: 40px;
-      margin-bottom: 15px;
-      position: relative;
-    }
+// .description {
+//   font-size: 1.1rem;
+//   line-height: 1.6;
+//   margin-bottom: 15px;
+// }
 
-    .principles-list {
-      list-style-type: none; /* إزالة النقاط */
-      padding-left: 20px;
-      color: #616161;
-      font-size: 20px;
+// .principles-title {
+//   font-size: 1.5rem;
+//   margin: 20px 0 10px;
+// }
 
-      li {
-        margin-bottom: 15px;
-        position: relative;
-        padding-left: 25px;
+// .principles-list {
+//   list-style: none;
+//   padding-left: 0;
+//   font-size: 1.1rem;
 
-        &::before {
-          content: '•'; /* إضافة نقطة مخصصة */
-          color: #d32f2f;
-          font-size: 30px;
-          position: absolute;
-          left: 0;
-          top: 0;
-        }
-      }
-    }
-  }
-
-  /* تأثيرات الحركة */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-}
+//   li {
+//     margin: 5px 0;
+//     background: #f1f1f1; /* Light grey for list items */
+//     padding: 10px;
+//     border-radius: 4px;
+//   }
+// }
+// }

@@ -44,6 +44,7 @@ class Flight extends Model
         'valid_from',
         'valid_until',
         'download_url',
+       ' base_ticket_price'
     ];
     
 
@@ -67,6 +68,12 @@ class Flight extends Model
     {
         return $this->belongsTo(Flight::class, 'main_user_id', 'flight_id');
     }
+
+    public function companions()
+{
+    return $this->hasMany(Flight::class, 'main_user_id', 'flight_id');
+}
+
     protected $casts = [
         'main_user_id' => 'integer',
     ];

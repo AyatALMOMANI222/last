@@ -8,7 +8,7 @@
   align-items: center;
   border-radius: 10px;
   border: 1px solid rgb(242, 239, 239);
-  background-color: #4f75ff;
+  // background-color: #901d00;
   .reservation-actions {
     display: flex;
     flex-direction: row;
@@ -30,7 +30,7 @@
         color: #fff;
       }
       &:active {
-        background-color: #4f75ff;
+        background-color: #800000;
         color: #fff;
       }
       font-size: 15px;
@@ -39,7 +39,7 @@
   .title-container {
     font-size: 19px;
     font-weight: 500;
-    color: #fff;
+    // color: #fff;
   }
 }
 

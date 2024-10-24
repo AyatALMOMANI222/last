@@ -36,9 +36,25 @@ class FlightController extends Controller
             $this->setAdditionalFields($request, $flight);
     
             // Save the flight data in the database
-            $flight->created_at = Carbon::now('Asia/Baghdad'); // Specify the timezone
+            $flight->created_at = Carbon::now('Asia/Amman'); // Specify the timezone
             $flight->save();
-    
+            $message = 'The ticket will be available shortly, and you will be notified on the website once it becomes available.';
+            Notification::create([
+                'user_id' => $user->id, // المتحدث نفسه
+                'message' => $message,
+                'is_read' => false,
+                'register_id' => null, // بقاء register_id فارغة
+            ]);
+            $admins = User::where('isAdmin', true)->get();
+            foreach ($admins as $admin) {
+                Notification::create([
+                    'user_id' => $admin->id,
+                    'message' => 'New flight registered by ' . $user->name . '. Log in to adjust the price.',
+                    'is_read' => false,
+                    'register_id' => $user->id, // استخدام user_id كمفتاح تسجيل
+                ]);
+            }
+  
             return response()->json(['message' => 'Flight created successfully'], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while creating the flight. Please try again later.'], 500);
@@ -115,64 +131,51 @@ class FlightController extends Controller
 
 
 
+
+
     public function updateByAdmin(Request $request, $flight_id)
     {
         try {
             $user = Auth::user();
-
+    
             // العثور على الرحلة بناءً على ID
             $flight = Flight::find($flight_id);
-
+    
             if (!$flight) {
                 return response()->json(['message' => 'Flight not found'], 404);
             }
-
-            // التحقق من صحة البيانات المدخلة فقط إذا كانت موجودة في الطلب
+    
+            // التحقق من صحة الحقول المطلوبة فقط
             $validatedData = $request->validate([
-                'user_id' => 'sometimes|exists:users,id',
-                'departure_airport' => 'sometimes|string|max:100',
-                'arrival_airport' => 'sometimes|string|max:100',
-                'departure_date' => 'sometimes|date',
-                'arrival_date' => 'sometimes|date',
-                'ticket_count' => 'sometimes|integer',
-
                 'business_class_upgrade_cost' => 'nullable|numeric|min:0',
                 'reserved_seat_cost' => 'nullable|numeric|min:0',
                 'additional_baggage_cost' => 'nullable|numeric|min:0',
                 'other_additional_costs' => 'nullable|numeric|min:0',
                 'admin_update_deadline' => 'nullable|date_format:Y-m-d H:i:s',
                 'is_free' => 'sometimes|boolean',
-
-
-
-                'ticket_number' => 'nullable|string',
-
-
                 'is_available_for_download' => 'sometimes|boolean',
-
-                'valid_from' => 'nullable|date',
-                'valid_until' => 'nullable|date',
-                'download_url' => 'nullable|string',
-
-
-                'is_deleted' => 'sometimes|boolean',
-
+                'base_ticket_price' => 'nullable|numeric|min:0', // تم إضافة هذا الحقل
             ]);
-
-            // تحديث الخصائص بناءً على القيم المدخلة
-            $flight->fill(array_filter($validatedData));
-
+    
+            // تحديث الحقول بناءً على القيم المدخلة فقط
+            foreach ($validatedData as $key => $value) {
+                if ($request->has($key)) {
+                    $flight->{$key} = $value;
+                }
+            }
+    
             // تحديث توقيت آخر تعديل من قبل المسؤول
             $flight->last_admin_update_at = now()->setTimezone('Asia/Amman');
-
+    
             // حفظ التغييرات
             $flight->save();
+    
             return response()->json(['message' => 'Flight updated successfully', 'flight' => $flight], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while updating the flight.'], 500);
         }
     }
-
+    
 
 
 
@@ -198,37 +201,41 @@ class FlightController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function getFlightByUserIdForCompanion(Request $request)
+    public function getFlightByUserIdForCompanion($userId) // Now accepts userId as a parameter
     {
         try {
-            // احصل على المستخدم الحالي
-            $user = Auth::user();
-
+            // تحقق من أن user_id موجود
+            if (!$userId) {
+                return response()->json(['message' => 'User ID is required.'], 400);
+            }
+    
             // ابحث عن الرحلة الأولى التي تخص المستخدم
-            $existingFlight = Flight::where('user_id', $user->id)->first();
-
+            $existingFlight = Flight::where('user_id', $userId)->first();
+    
             // تحقق من وجود الرحلة
             if (!$existingFlight) {
                 return response()->json(['message' => 'No flights found for this user.'], 404);
             }
-
+    
             // الحصول على flight_id
             $flightId = $existingFlight->flight_id; // استخدم id للرحلة الأولى
-
+    
             // ابحث عن جميع الرحلات حيث يكون main_user_id مساويًا لـ flight_id
             $flights = Flight::where('main_user_id', $flightId)->get();
-
+    
             // تحقق إذا كانت هناك رحلات
             if ($flights->isEmpty()) {
                 return response()->json(['message' => 'No flights found with the given main_user_id.'], 404);
             }
-
+    
             // إرجاع الرحلات
             return response()->json($flights, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
+    
 
     public function getAllFlightsPaginationAndFilter(Request $request)
     {
@@ -351,7 +358,7 @@ class FlightController extends Controller
             foreach ($admins as $admin) {
                 Notification::create([
                     'user_id' => $admin->id,
-                    'message' => 'تم تعديل الرحلة رقم ' . $flight->flight_id . ' من قبل المستخدم ' . $user->name,
+'message' => 'Flight number ' . $flight->flight_id . ' has been modified by user ' . $user->name,
                 ]);
             }
     

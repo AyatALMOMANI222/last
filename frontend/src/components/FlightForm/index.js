@@ -9,6 +9,7 @@ import "./style.scss";
 import { toast } from "react-toastify";
 
 import ImageUpload from "../../CoreComponent/ImageUpload";
+import WhatsAppButton from "../WhatsAppButton";
 
 const MainFlightForm = ({ setOpenForm, getFlightData }) => {
   const [arrivalDate, setArrivalDate] = useState("");
@@ -39,10 +40,10 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
     formData.append("passport_image", passportImage); // Uncomment if needed
     formData.append("departure_airport", departureAirport);
     formData.append("arrival_airport", returnAirport);
-    formData.append("specific_flight_time", flightTime); // Adjusted to match the key in your original object
-    formData.append("flight_number", flightNumber);
-    formData.append("additional_requests", otherRequests);
-    formData.append("seat_preference", seatNumber);
+    formData.append("specific_flight_time", flightTime ); // Adjusted to match the key in your original object
+    formData.append("flight_number", flightNumber ? flightNumber : 0);
+    formData.append("additional_requests", otherRequests ?  otherRequests : "none");
+    formData.append("seat_preference", seatNumber ? seatNumber:0 );
     formData.append("upgrade_class", upgradeClass ? 1 : 0);
     formData.append("ticket_count", ticketCount);
     formData.append("is_companion", 0); // Set is_companion to false
@@ -255,10 +256,11 @@ const CompanionForm = ({ setOpenForm }) => {
     formData.append("passport_image", currentCompanion.passportImage); // Uncomment if needed
     formData.append("departure_airport", currentCompanion.departureAirport);
     formData.append("arrival_airport", currentCompanion.returnAirport);
-    formData.append("specific_flight_time", currentCompanion.flightTime);
-    formData.append("flight_number", currentCompanion.flightNumber);
-    formData.append("additional_requests", currentCompanion.otherRequests);
-    formData.append("seat_preference", currentCompanion.seatNumber);
+
+    formData.append("specific_flight_time", currentCompanion.flightTime ? currentCompanion.flightTime : "00:00");
+    formData.append("flight_number", currentCompanion.flightNumber ? currentCompanion.flightNumber : 0 );
+    formData.append("additional_requests", currentCompanion.otherRequests ? currentCompanion.otherRequests :"none");
+    formData.append("seat_preference", currentCompanion.seatNumber ? currentCompanion.seatNumber : 0 );
     formData.append("upgrade_class", currentCompanion.upgradeClass ? 1 : 0);
     formData.append("ticket_count", 1); // Set ticket count to 1 for a companion
     formData.append("is_companion", 1); // Specify companion status
@@ -272,11 +274,17 @@ const CompanionForm = ({ setOpenForm }) => {
         },
       })
       .then((response) => {
+        setOpenForm(false);
+
+        toast.success(response?.data?.message);
+
         // Handle success (like showing a success message, redirecting, etc.)
       })
       .catch((error) => {
+        toast.error("Something went wrong, please try again.");
         console.error(
           "There was an error creating the flight:",
+          
           error.response.data
         );
         // Handle error (like showing an error message)
@@ -315,7 +323,7 @@ const CompanionForm = ({ setOpenForm }) => {
         <ImageUpload
           errorMsg={""}
           required={true}
-          label="Profile Picture"
+          label="passport Image"
           allowedExtensions={["jpg", "jpeg", "png", "gif"]}
           inputValue={currentCompanion.passportImage}
           setInputValue={(value) =>
@@ -516,6 +524,23 @@ const FlightForm = () => {
           No Data Available , Please Enter Flight Information
         </div>
       )}
+
+<div className="button-section">
+      <WhatsAppButton
+        phoneNumber="+962787002103" // Replace with the desired phone number
+        message="I would like to formally request the cancellation of my trip." // Customize the message for the Cancel button
+        buttonText="Cancel"
+      />
+      <WhatsAppButton 
+        phoneNumber="+962787002103" // Replace with the desired phone number
+        message="I have an emergency situation." // Customize the message for the Emergency button
+        buttonText="Emergency"
+      />
+      <button type="button" className="btn btn-success" onClick={() => { /* وظيفة زر التحديث */ }}>
+        Update
+      </button>
+    </div>
+
 
       <MySideDrawer isOpen={openCompanion} setIsOpen={setOpenCompanion}>
         <MainFlightForm

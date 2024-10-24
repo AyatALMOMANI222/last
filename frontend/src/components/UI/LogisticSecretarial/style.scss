@@ -1,145 +1,150 @@
 .logistic-secretarial {
-    font-family: 'Roboto', sans-serif;
-    height: auto; /* ارتفاع الشاشة بالكامل */
+  font-family: "Roboto", sans-serif;
+  height: auto; /* ارتفاع الشاشة بالكامل */
+  display: flex;
+  flex-direction: column;
+
+  .headline-section {
+    background: url("./Logistic Secretarial.webp") no-repeat center center;
+    background-size: cover;
+    height: 40vh; /* ارتفاع الرأس 40% من ارتفاع الصفحة */
     display: flex;
-    flex-direction: column;
+    justify-content: center; /* محاذاة العناصر في المنتصف عموديًا */
+    align-items: center;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); /* ظل الصورة */
+    height: 200px;
+    .overlay {
+      background-color: rgba(
+        0,
+        0,
+        0,
+        0.4
+      ); /* تقليل الشفافية لجعل الصورة أقل سوادًا */
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center; /* محاذاة العنوان في المنتصف أفقيًا */
+      align-items: center;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* ظل للنص */
 
-    .headline-section {
-        background: url('./Logistic Secretarial.webp') no-repeat center center;
-        background-size: cover;
-        height: 40vh; /* ارتفاع الرأس 40% من ارتفاع الصفحة */
-        display: flex;
-        justify-content: center; /* محاذاة العناصر في المنتصف عموديًا */
-        align-items: center;
-        position: relative;
-        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); /* ظل الصورة */
+      .title {
+        color: #fff; /* لون النص */
+        font-size: 4vw; /* حجم النص بالوحدات النسبية */
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 1px; /* تقليل تباعد الأحرف */
+        animation: fadeIn 0.8s ease-in-out; /* تأثير التحريك */
+      }
+    }
+  }
 
-        .overlay {
-            background-color: rgba(0, 0, 0, 0.4); /* تقليل الشفافية لجعل الصورة أقل سوادًا */
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center; /* محاذاة العنوان في المنتصف أفقيًا */
-            align-items: center;
-            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* ظل للنص */
+  .content-section {
+    padding: 20px 5%; /* تباعد داخلي للمحتوى */
+    background-color: #f9f9f9; /* لون أفتح للخلفية */
+    display: flex;
+    flex-direction: column; /* تنظيم العناصر عموديًا */
+    justify-content: flex-start; /* محاذاة العناصر إلى الأعلى */
+    align-items: flex-start; /* محاذاة المحتوى إلى اليسار */
+    border-top: 5px solid #d32f2f; /* إضافة حدود في الأعلى */
 
-            .title {
-                color: #fff; /* لون النص */
-                font-size: 4vw; /* حجم النص بالوحدات النسبية */
-                font-weight: 700;
-                text-align: center;
-                letter-spacing: 1px; /* تقليل تباعد الأحرف */
-                animation: fadeIn 0.8s ease-in-out; /* تأثير التحريك */
-            }
+    .subtitle {
+      color: #d32f2f; /* اللون الأحمر السكني */
+      font-size: 3vw; /* حجم النص بالوحدات النسبية */
+      margin-bottom: 15px; /* تقليل المسافة */
+      font-weight: 600; /* تقليل الوزن قليلاً */
+      text-align: center; /* محاذاة للنص في المنتصف */
+    }
+
+    .services-list {
+      list-style-type: none; /* إزالة النقاط */
+      padding-left: 0; /* إزالة التباعد */
+      color: #212121; /* لون النص */
+      font-size: 2vw; /* حجم النص بالوحدات النسبية */
+      margin-bottom: 30px;
+
+      li {
+        margin-bottom: 10px; /* زيادة المسافة بين العناصر */
+        position: relative; /* لمزيد من التحكم */
+        padding-left: 20px; /* تباعد داخلي على اليسار */
+        transition: all 0.3s; /* تأثير التحريك */
+
+        &:hover {
+          color: #d32f2f; /* تغيير لون النص عند التمرير */
+          transform: scale(1.05); /* تكبير عند التمرير */
+          cursor: pointer; /* تغيير شكل المؤشر */
         }
+      }
+    }
+
+    .description {
+      color: #444; /* لون النص */
+      font-size: 2vw; /* حجم النص بالوحدات النسبية */
+      line-height: 1.6; /* تحسين تباعد الأسطر */
+      margin-top: 15px; /* مسافة أعلى */
+    }
+  }
+
+  /* تأثيرات الحركة */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* استعلامات الوسائط */
+  @media (max-width: 768px) {
+    .headline-section {
+      height: 30vh; /* تقليل ارتفاع الرأس للشاشات الصغيرة */
+      .title {
+        font-size: 6vw; /* تغيير حجم النص للشاشات الصغيرة */
+      }
     }
 
     .content-section {
-        padding: 20px 5%; /* تباعد داخلي للمحتوى */
-        background-color: #f9f9f9; /* لون أفتح للخلفية */
-        display: flex;
-        flex-direction: column; /* تنظيم العناصر عموديًا */
-        justify-content: flex-start; /* محاذاة العناصر إلى الأعلى */
-        align-items: flex-start; /* محاذاة المحتوى إلى اليسار */
-        border-top: 5px solid #d32f2f; /* إضافة حدود في الأعلى */
-
-        .subtitle {
-            color: #d32f2f; /* اللون الأحمر السكني */
-            font-size: 3vw; /* حجم النص بالوحدات النسبية */
-            margin-bottom: 15px; /* تقليل المسافة */
-            font-weight: 600; /* تقليل الوزن قليلاً */
-            text-align: center; /* محاذاة للنص في المنتصف */
-        }
-
-        .services-list {
-            list-style-type: none; /* إزالة النقاط */
-            padding-left: 0; /* إزالة التباعد */
-            color: #212121; /* لون النص */
-            font-size: 2vw; /* حجم النص بالوحدات النسبية */
-            margin-bottom: 30px;
-
-            li {
-                margin-bottom: 10px; /* زيادة المسافة بين العناصر */
-                position: relative; /* لمزيد من التحكم */
-                padding-left: 20px; /* تباعد داخلي على اليسار */
-                transition: all 0.3s; /* تأثير التحريك */
-
-                &:hover {
-                    color: #d32f2f; /* تغيير لون النص عند التمرير */
-                    transform: scale(1.05); /* تكبير عند التمرير */
-                    cursor: pointer; /* تغيير شكل المؤشر */
-                }
-            }
-        }
-
-        .description {
-            color: #444; /* لون النص */
-            font-size: 2vw; /* حجم النص بالوحدات النسبية */
-            line-height: 1.6; /* تحسين تباعد الأسطر */
-            margin-top: 15px; /* مسافة أعلى */
-        }
+      padding: 20px 10%; /* تباعد داخلي أكبر للشاشات الصغيرة */
     }
 
-    /* تأثيرات الحركة */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .subtitle {
+      font-size: 4vw; /* حجم النص للشاشات الصغيرة */
     }
 
-    /* استعلامات الوسائط */
-    @media (max-width: 768px) {
-        .headline-section {
-            height: 30vh; /* تقليل ارتفاع الرأس للشاشات الصغيرة */
-            .title {
-                font-size: 6vw; /* تغيير حجم النص للشاشات الصغيرة */
-            }
-        }
-
-        .content-section {
-            padding: 20px 10%; /* تباعد داخلي أكبر للشاشات الصغيرة */
-        }
-
-        .subtitle {
-            font-size: 4vw; /* حجم النص للشاشات الصغيرة */
-        }
-
-        .services-list {
-            font-size: 2.5vw; /* حجم النص للشاشات الصغيرة */
-        }
-
-        .description {
-            font-size: 2.5vw; /* حجم النص للشاشات الصغيرة */
-        }
+    .services-list {
+      font-size: 2.5vw; /* حجم النص للشاشات الصغيرة */
     }
 
-    @media (max-width: 480px) {
-        .headline-section {
-            height: 25vh; /* تقليل ارتفاع الرأس أكثر للشاشات الأصغر */
-            .title {
-                font-size: 8vw; /* تغيير حجم النص للشاشات الأصغر */
-            }
-        }
-
-        .content-section {
-            padding: 20px 5%; /* تباعد داخلي أكبر للشاشات الأصغر */
-        }
-
-        .subtitle {
-            font-size: 5vw; /* حجم النص للشاشات الأصغر */
-        }
-
-        .services-list {
-            font-size: 3vw; /* حجم النص للشاشات الأصغر */
-        }
-
-        .description {
-            font-size: 3vw; /* حجم النص للشاشات الأصغر */
-        }
+    .description {
+      font-size: 2.5vw; /* حجم النص للشاشات الصغيرة */
     }
+  }
+
+  @media (max-width: 480px) {
+    .headline-section {
+      height: 25vh; /* تقليل ارتفاع الرأس أكثر للشاشات الأصغر */
+      .title {
+        font-size: 8vw; /* تغيير حجم النص للشاشات الأصغر */
+      }
+    }
+
+    .content-section {
+      padding: 20px 5%; /* تباعد داخلي أكبر للشاشات الأصغر */
+    }
+
+    .subtitle {
+      font-size: 5vw; /* حجم النص للشاشات الأصغر */
+    }
+
+    .services-list {
+      font-size: 3vw; /* حجم النص للشاشات الأصغر */
+    }
+
+    .description {
+      font-size: 3vw; /* حجم النص للشاشات الأصغر */
+    }
+  }
 }

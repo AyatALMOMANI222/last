@@ -85,7 +85,7 @@ const NavBar = () => {
       ],
     },
     {
-      title: "Service",
+      title: "Admin",
       links: [
         { label: "Conferences", url: "/conferences/page" },
         { label: "Exhibitions ", url: "/exhibitions " },
@@ -96,6 +96,10 @@ const NavBar = () => {
     {
       title: "Contact Us",
       links: [{ label: "Contact Us", url: "/contact_us" }],
+    },
+    {
+      title: "Profile",
+      links: [{ label: "Profile", url: "/speaker/profile" }],
     },
   ];
 

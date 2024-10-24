@@ -6,8 +6,8 @@ import axios from "axios";
 import "./style.scss";
 
 const AddTripForm = ({ data, setOpen }) => {
-  const [availableId, setAvailableId] = useState("");
-  const [flightId, setFlightId] = useState("");
+  // const [availableId, setAvailableId] = useState("");
+  // const [flightId, setFlightId] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [departureTime, setDepartureTime] = useState("");
   const [price, setPrice] = useState("");
@@ -15,19 +15,17 @@ const AddTripForm = ({ data, setOpen }) => {
 
 
 
-
   const handleSubmit = () => {
     const token = localStorage.getItem('token'); 
   
     const formData = {
-      available_id: availableId,
       flight_id: data.flight_id, // استخدام flight_id من props
       departure_date: departureDate,
       departure_time: departureTime,
       price: price,
       is_free: isFree,
     };
-  
+
     // إرسال البيانات باستخدام axios
     axios.post("http://127.0.0.1:8000/api/available-flights", formData, {
       headers: {
@@ -46,7 +44,7 @@ const AddTripForm = ({ data, setOpen }) => {
   
   return (
     <div className="add-trip-admin">
-      <div className="header">{data.passenger_name}</div>
+      {/* <div className="header">{data.passenger_name}</div> */}
       <div className="form-section">
         {/* <Input
           label="Available ID"

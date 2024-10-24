@@ -18,7 +18,7 @@ const RegisterType = () => {
       <div className="about-container">
         <SVG src={conferencesImg} />
         <div className="new-about-us-container">
-          <div className="title">About Us</div>
+          <div className="titlee">About Us</div>
           <div className="description">
             Our event brings together a diverse group of professionals,
             innovators, and thought leaders from various industries. Whether
@@ -31,7 +31,7 @@ const RegisterType = () => {
         </div>
       </div>
       <div className="register-type-section">
-        <div className="welcome-title">Welcome to the Registration Page</div>
+        <div className="welcome-titlee">Welcome to the Registration Page</div>
 
         <div className="register-note">
           Please select the appropriate option below to proceed with your
@@ -41,11 +41,11 @@ const RegisterType = () => {
         <div className="register-types">
           <div className="type" onClick={() => handleNavigate("speaker")}>
             <SVG src={speaker} height={150} width={150} />
-            <span className="title">Login As Speaker</span>
+            <span className="titlee">Login As Speaker</span>
           </div>{" "}
           <div className="type" onClick={() => handleNavigate("attendance")}>
             <SVG src={attendance} height={150} width={150} />
-            <span className="title">Login As Attendance</span>
+            <span className="titlee">Login As Attendance</span>
           </div>{" "}
           <div
             className="type"
@@ -54,11 +54,11 @@ const RegisterType = () => {
             }}
           >
             <SVG src={sponsor} height={150} width={150} />
-            <span className="title">Login As Sponsor/Exhibitor</span>
+            <span className="titlee">Login As Sponsor/Exhibitor</span>
           </div>
           <div className="type" onClick={() => handleNavigate("group")}>
             <SVG src={group} height={150} width={150} />
-            <span className="title">Login As Group Registration</span>
+            <span className="titlee">Login As Group Registration</span>
           </div>
           <div
             className="type"
@@ -67,7 +67,7 @@ const RegisterType = () => {
             }}
           >
             <SVG src={group} height={150} width={150} />
-            <span className="title">Other</span>
+            <span className="titlee">Other</span>
           </div>
         </div>
       </div>

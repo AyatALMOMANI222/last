@@ -15,42 +15,45 @@ class GroupRegistrationController extends Controller
     public function store(Request $request)
     {
         try {
-            // التحقق من البيانات المدخلة
+            // Validate the input data
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'phone' => 'nullable|string|max:15',
                 'contact_person' => 'nullable|string|max:255',
                 'number_of_doctors' => 'nullable|integer|min:0',
-                'conference_id' => 'required|exists:conferences,id', // إضافة conference_id
-                'password' => 'required|string|min:8', // تحقق من كلمة المرور
+                'conference_id' => 'required|exists:conferences,id', // Adding conference_id
+                'password' => 'required|string|min:8', // Validate password
             ]);
     
-            // إنشاء المستخدم الجديد
+            // Create the new user
             $user = User::create([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
                 'phone' => $validatedData['phone'],
-                'password' => bcrypt($validatedData['password']), // استخدام كلمة المرور المدخلة
+                'password' => bcrypt($validatedData['password']), // Hash the password
             ]);
     
-            // تخزين معلومات التسجيل في جدول group_registrations مع conference_id
+            // Create a token for the newly registered user (Auto-login)
+            $token = $user->createToken('laravel')->plainTextToken;
+    
+            // Save group registration data with conference_id
             $groupRegistration = GroupRegistration::create([
                 'user_id' => $user->id,
                 'contact_person' => $validatedData['contact_person'],
                 'number_of_doctors' => $validatedData['number_of_doctors'],
-                'conference_id' => $validatedData['conference_id'], // إضافة conference_id
+                'conference_id' => $validatedData['conference_id'], // Add conference_id
             ]);
     
-            // إنشاء إشعار للمستخدم
+            // Send notification to the user
             Notification::create([
                 'user_id' => $user->id,
                 'message' => 'You will be notified via email after your request is accepted to download the registered names. These names must be in English and in an Excel file format.',
-                'conference_id' => $validatedData['conference_id'], // استخدام conference_id للإشعار
+                'conference_id' => $validatedData['conference_id'],
                 'is_read' => false,
             ]);
     
-            // إرسال إشعار لجميع المدراء
+            // Send notifications to all admins
             $admins = User::where('isAdmin', true)->get();
             foreach ($admins as $admin) {
                 Notification::create([
@@ -61,7 +64,17 @@ class GroupRegistrationController extends Controller
                 ]);
             }
     
-            return response()->json(['message' => 'User and registration created successfully.'], 201);
+            // Return the response with user details and token
+            return response()->json([
+                'message' => 'User and registration created successfully.',
+                'token' => $token,  // Return the token
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'isAdmin' => $user->isAdmin, // Include isAdmin
+                ]
+            ], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
@@ -112,7 +125,8 @@ class GroupRegistrationController extends Controller
     }
 
 
-    public function updateByUser(Request $request, $userId)
+
+    public function updateByUser(Request $request)
     {
         // تحقق من صحة المدخلات
         $request->validate([
@@ -120,6 +134,9 @@ class GroupRegistrationController extends Controller
         ]);
     
         try {
+            // الحصول على معرف المستخدم من التوكن
+            $userId = Auth::id(); // أو يمكن استخدام Auth::user()->id
+    
             // ابحث عن تسجيل المجموعة الخاص بالمستخدم
             $groupRegistration = GroupRegistration::where('user_id', $userId)
                 // تأكد من وجود علاقة مع جدول ملفات إكسل
@@ -133,7 +150,6 @@ class GroupRegistrationController extends Controller
             }
     
             // تخزين ملف الإكسل
-            // استخدم public لتخزين الملفات
             $path = $request->file('excel_file')->store('excel_files', 'public');
     
             // تحديث ملف الإكسل في جدول تسجيل المجموعة
@@ -152,6 +168,7 @@ class GroupRegistrationController extends Controller
             ], 500);
         }
     }
+    
     
     
 

@@ -8,7 +8,7 @@ import axios from "axios";
 
 const RegisterGroupPage = () => {
   const navigate = useNavigate();
-  const { type,id } = useParams();
+  const { conferenceId } = useParams();
 
   const [organizationName, setOrganizationName] = useState(""); // اسم الجمعية أو وزارة الصحة أو الشركة
   const [contactPerson, setContactPerson] = useState("");
@@ -22,7 +22,7 @@ const RegisterGroupPage = () => {
     contactPerson: "",
     phone: "",
     password: "",
-   
+
     email: "",
     companyAddress: "",
     doctorsRegistered: "", // خطأ محتمل في عدد الأطباء
@@ -37,7 +37,7 @@ const RegisterGroupPage = () => {
     formData.append("password", password);
 
     formData.append("number_of_doctors", doctorsRegistered); // إضافة عدد الأطباء
-
+    formData.append("conference_id",conferenceId); // إضافة conference_id إلى البيانات
 
     try {
       const response = await axios.post(
@@ -97,7 +97,6 @@ const RegisterGroupPage = () => {
       errorEmail = "Please enter a valid email.";
     }
 
-   
     // Doctors registered validation
     if (!doctorsRegistered) {
       errorDoctorsRegistered = "Please enter the number of registered doctors.";
@@ -142,7 +141,7 @@ const RegisterGroupPage = () => {
 
         <div className="fields-container">
           <Input
-            label={"Organization Name (Company/Health Ministry)"}
+            label={"Organization Name"}
             placeholder={"e.g. ABC Corp or Ministry of Health"}
             inputValue={organizationName}
             setInputValue={setOrganizationName}
@@ -164,7 +163,7 @@ const RegisterGroupPage = () => {
             required={true}
             errorMsg={error.phone}
           />
- 
+
           <Input
             label={"Email"}
             placeholder={"e.g. example@example.com"}

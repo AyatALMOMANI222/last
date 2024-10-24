@@ -12,7 +12,8 @@
     justify-content: center; /* محاذاة العناصر في المنتصف عموديًا */
     align-items: center;
     position: relative;
-
+    border-bottom: 6px solid red;
+height: 200px;
     .overlay {
       background-color: rgba(0, 0, 0, 0.6); /* تقليل شفافية التظليل */
       width: 100%;

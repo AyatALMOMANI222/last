@@ -270,7 +270,7 @@ const Exhibitions = () => {
                 alt={exhibition.title}
               />
               <div className="exhibition-info">
-                <div className="title">{exhibition.title}</div>
+                <div className="titlee">{exhibition.title}</div>
                 <div className="date">{exhibition.date}</div>
                 <div className="place">{exhibition.place}</div>
                 <div className="actions-btns">

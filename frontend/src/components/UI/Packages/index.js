@@ -9,7 +9,7 @@ const PackagesCard = ({ title, description, buttonLink, imageUrl }) => {
         <h2 className="card-title">{title}</h2>
         <p className="card-description">{description}</p>
         <a href={buttonLink} className="read-more-button">
-          Read more →
+          Get Package →
         </a>
       </div>
     </div>

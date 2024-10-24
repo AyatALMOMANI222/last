@@ -127,7 +127,7 @@ Route::put('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByA
 // Flight
 Route::post('/flights', [FlightController::class, 'createFlight'])->middleware('auth:sanctum');
 Route::get('/flight', [FlightController ::class , 'getFlightByUserId'])->middleware('auth:sanctum');
-Route::get('/companion-flight', [FlightController ::class , 'getFlightByUserIdForCompanion'])->middleware('auth:sanctum');
+Route::get('/companion-flight/{user_id}', [FlightController ::class , 'getFlightByUserIdForCompanion'])->middleware('auth:sanctum');
 Route::get('/user/pag/filter', [FlightController ::class , 'getAllFlightsPaginationAndFilter'])->middleware(['auth:sanctum', 'admin']);
 
 Route::post('/user/update-flight/{flight_id}', [FlightController ::class , 'updateFlightByUser'])->middleware('auth:sanctum');
@@ -230,4 +230,4 @@ Route::post('/attendances', [AttendanceController::class, 'storeAttendance']);
 // group
 Route::post('/register/group', [GroupRegistrationController::class, 'store']);
 Route::put('/update/Admin/group', [GroupRegistrationController::class, 'updateGroupByAdminByUserId'])->middleware(['auth:sanctum','admin']);
-Route::post('/update/user/{user_id}', [GroupRegistrationController::class, 'updateByUser'])->middleware('auth:sanctum');
+Route::post('/update/user', [GroupRegistrationController::class, 'updateByUser'])->middleware('auth:sanctum');

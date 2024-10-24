@@ -7,7 +7,6 @@ import HomePage from "./pages/home";
 import "./style.scss";
 import NavBar from "./components/Navbar";
 import AboutUs from "./pages/aboutUs";
-import Dashboard from "./pages/Dashboard";
 import ConferencesPage from "./pages/Conferences";
 import RegisterType from "./pages/RegisterType";
 import FlightForm from "./components/FlightForm";
@@ -55,14 +54,16 @@ import AdventureSection from "./components/UI/individuals";
 import TicketBooking from "./components/UI/TicketBooking";
 import HotelBooking from "./components/UI/HotelBooking";
 import Transportation from "./components/UI/Transportation";
-import SpeakerProfileForm from "./components/SpeakerProfileEditForm";
-
-import RegisterGroupPage from "./components/Registeration/Group-Registeration";
+import SpeakerProfileForm from "./components/SpeakerProfileEditForm"
 import RegisterSponsorPage from "./components/Registeration/Sponsor";
 import RegisterAttendancePage from "./components/Registeration/attendance";
 import AdminVisa from "./components/AdminVisa";
 import FAQ from "./components/UI/FAQ";
-
+import Dashboard from "./components/dashboard";
+import Footer from "./components/UI/Footer";
+import ExcelUpload from "./components/Registeration/Group-Registeration/AddExelFile";
+import AdminGroupComponent from "./components/Registeration/Group-Registeration/AdminUpdate";
+import RegisterGroupPage from "./components/Registeration/Group-Registeration";
 const App = () => {
   const location = useLocation();
   const [showLoader, setShowLoader] = useState(false);
@@ -103,25 +104,28 @@ const App = () => {
         (!location.pathname.includes("/registerPage") && <NavBar />)}
 
       <Routes className="main">
-        <Route path="/exhibitions" element={<Exhibitions />} />
-        <Route
+      <Route path="/exhibitions" element={<Exhibitions />} />
+      <Route path="/" element={<Dashboard />} />
+      <Route
           path="/edit/speaker/data/:conferenceId/:userId"
           element={<EditSpeakerData />}
         />
         <Route path="/reservation/form" element={<Reservation />} />
         <Route path="/conferences" element={<ConferencesAdmin />} />
+
         <Route path="/flights" element={<FlightFormAdmin />} />
         <Route path="/flight/form" element={<FlightForm />} />
+
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register/speaker/:id" element={<RegisterPage />} />
         <Route path="/registerPage/:type" element={<SelectConferences />} />
         <Route path="/conferences/page" element={<HomePage />} />
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/registertype" element={<RegisterType />} />
         <Route path="register/attendance/:conferenceId" element={<RegisterAttendancePage />} />
-       <Route path="register/group" element={<RegisterGroupPage />} />
-         
+       <Route path="/register/group/:conferenceId" element={<RegisterGroupPage />} />
+        
 <Route path="register/sponsor" element={<RegisterSponsorPage />} />
         <Route path="/create/trip" element={<ViewTrip />} />
         <Route path="/user" element={<UsersList />} />
@@ -170,9 +174,13 @@ const App = () => {
         <Route path="/transportation" element={<Transportation />} />
         <Route path="/speaker/profile" element={<SpeakerProfileForm />} />
         <Route path="/admin/visa" element={<AdminVisa />} />
+        <Route path="/add/excel" element={<ExcelUpload />} />
+        <Route path="/group/update/admin" element={<AdminGroupComponent />} />
+
         <Route path="/faq" element={<FAQ />} />
 
       </Routes>
+      {/* <Footer/> */}
     </div>
   );
 };

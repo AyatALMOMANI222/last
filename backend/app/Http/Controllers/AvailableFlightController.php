@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AvailableFlight;
 use App\Models\Flight;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 
 class AvailableFlightController extends Controller
@@ -23,20 +24,41 @@ class AvailableFlightController extends Controller
     
             // إعداد المنطقة الزمنية إلى آسيا/عمان
             date_default_timezone_set('Asia/Amman');
-            
-            $availableFlight = AvailableFlight::create([
-                'flight_id' => $validatedData['flight_id'],
-                'departure_date' => $validatedData['departure_date'],
-                'departure_time' => $validatedData['departure_time'],
-                'price' => $validatedData['price'],
-                'is_free' => $validatedData['is_free'] ?? false,  
-                'created_at' => now(), // إضافة حقل created_at مع الوقت الحالي
-            ]);
     
-            return response()->json([
-                'message' => 'Available flight created successfully',
-                'available_flight' => $availableFlight,
-            ], 201);
+            // استرجاع الرحلة المرتبطة بـ flight_id من جدول flights
+            $flight = Flight::where('flight_id', $validatedData['flight_id'])->first();
+    
+            // التحقق إذا كان هناك user_id في هذه الرحلة
+            if ($flight) {
+                // إنشاء رحلة متاحة
+                $availableFlight = AvailableFlight::create([
+                    'flight_id' => $validatedData['flight_id'],
+                    'departure_date' => $validatedData['departure_date'],
+                    'departure_time' => $validatedData['departure_time'],
+                    'price' => $validatedData['price'],
+                    'is_free' => $validatedData['is_free'] ?? false,
+                    'created_at' => now(), // إضافة حقل created_at مع الوقت الحالي
+                ]);
+    
+                // إرسال الإشعار إذا كان user_id موجود
+                // $message = 'You can now visit the website to check the available flight options within the requested dates. Please visit the site as soon as possible and select the appropriate flight to proceed with the necessary arrangements.';
+                // Notification::create([
+                //     'user_id' => $flight->user_id,  // إرسال الإشعار إلى user_id
+                //     'message' => $message,
+                //     'is_read' => false,
+                //     'register_id' => $flight->user_id,  // تعيين register_id كـ user_id
+                // ]);
+    
+                return response()->json([
+                    'message' => 'Available flight created successfully',
+                    'available_flight' => $availableFlight,
+                ], 201);
+            } else {
+                // إذا كان user_id غير موجود، لا يتم إرسال الإشعار
+                return response()->json([
+                    'message' => 'Available flight created successfully, but no notification sent as the user is not assigned.',
+                ], 201);
+            }
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -51,6 +73,7 @@ class AvailableFlightController extends Controller
             ], 500);
         }
     }
+    
     
     public function getAvailableFlightByFlightId($flight_id)
     {
