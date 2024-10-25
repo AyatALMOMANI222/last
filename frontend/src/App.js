@@ -68,6 +68,7 @@ import MainFlightFormUpdate from "./components/FlightForm/updateMainFlightForm";
 import GetCompanion from "./components/FlightForm/GetCompanion";
 import Stepper from "./CoreComponent/stepper";
 import ParentComponent from "./components/stepperPage";
+import RoomPriceForm from "./components/RoomPrice";
 const App = () => {
   const location = useLocation();
   const [showLoader, setShowLoader] = useState(false);
@@ -183,6 +184,7 @@ const App = () => {
         <Route path="/group/update/admin" element={<AdminGroupComponent />} />
         <Route path="/user/flight/update/:id" element={<MainFlightFormUpdate />} />
         <Route path="/companion" element={<GetCompanion />} />
+        <Route path="/room/price" element={<RoomPriceForm />} />
 
         <Route path="/faq" element={<FAQ />} />
 

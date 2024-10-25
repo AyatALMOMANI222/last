@@ -28,6 +28,8 @@ class Speaker extends Model
         'free_trip',
         'certificate_file',
         'is_certificate_active',
+        'room_type',
+        'nights_covered'
     ];
 
     // العلاقة مع نموذج User (متحدث ينتمي إلى مستخدم واحد)

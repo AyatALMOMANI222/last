@@ -25,6 +25,8 @@ class SpeakerController extends Controller
                 'airport_pickup' => 'nullable|boolean',
                 'free_trip' => 'nullable|boolean',
                 'is_certificate_active' => 'nullable|boolean',
+                'room_type' => 'nullable|string|in:single,double,triple',
+                'nights_covered' => 'nullable|integer|min:0', 
             ]);
     
             // Check if the speaker already exists for this user and conference

@@ -31,6 +31,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\ReservationsController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\RoomPriceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\TouristSiteController;
@@ -155,7 +156,7 @@ Route::put('/reservations/{id}/update-deadline', [ReservationsController::class,
 Route::post('/room', [RoomController::class, 'store'])->middleware('auth:sanctum');
 Route::post('/update_admin/room/{id}', [RoomController::class, 'updateByAdmin'])->middleware(['auth:sanctum','admin']);
 Route::put('/update_user/room/{id}', [RoomController::class, 'updateByUser'])->middleware('auth:sanctum');
-
+Route::post('/room-prices', [RoomPriceController::class, 'store'])->middleware(['auth:sanctum','admin']);
 
 
 // trips

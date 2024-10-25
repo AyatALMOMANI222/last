@@ -78,6 +78,10 @@ class Conference extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+    public function roomPrices()
+    {
+        return $this->hasMany(RoomPrice::class); // علاقة واحد إلى كثير
+    }
         public static function boot()
         {
             parent::boot();
