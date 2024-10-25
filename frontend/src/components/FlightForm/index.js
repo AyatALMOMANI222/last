@@ -4,12 +4,15 @@ import Checkbox from "../../CoreComponent/Checkbox/index";
 import DateInput from "../../CoreComponent/Date/index";
 import MySideDrawer from "../../CoreComponent/SideDrawer";
 import SimpleLabelValue from "../../components/SimpleLabelValue";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import "./style.scss";
 import { toast } from "react-toastify";
 
 import ImageUpload from "../../CoreComponent/ImageUpload";
 import WhatsAppButton from "../WhatsAppButton";
+import MainFlightFormUpdate from "./updateMainFlightForm";
 
 const MainFlightForm = ({ setOpenForm, getFlightData }) => {
   const [arrivalDate, setArrivalDate] = useState("");
@@ -432,6 +435,12 @@ const CompanionForm = ({ setOpenForm }) => {
 const FlightForm = () => {
   const [data, setData] = useState({});
   const [openFlight, setOpenFlight] = useState(false);
+  const [openFlightUpdate,setOpenFlightUpdate] = useState(false);
+  const [availableFlights, setAvailableFlights] = useState([]);
+  const [openIsAvailableFlights,setOpenIsAvailableFlights]=useState(false)
+
+  const navigate=useNavigate()
+
   const [openCompanion, setOpenCompanion] = useState(false);
   const getFlightData = () => {
     const token = localStorage.getItem("token");
@@ -450,8 +459,33 @@ const FlightForm = () => {
       });
   };
   useEffect(() => {
-    getFlightData();
-  }, []);
+    getFlightData(data.flight_id);
+  }, [data.flight_id]);
+  const handleAvailableFlight =(id)=>{
+    const token=localStorage.getItem("token")
+
+  
+      axios.get(`http://127.0.0.1:8000/api/available-flights/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}` // تمرير التوكن باستخدام Bearer
+          }
+        })
+        .then(response => {
+       console.log(response.data.available_flights);
+       setAvailableFlights(response.data.available_flights)
+        })
+        .catch(error => {
+       
+          console.error("Error fetching flight data:", error.response);
+        });
+        
+    
+  
+  
+  }
+  // useEffect(()=>{
+  // handleAvailableFlight();
+  // })
   return (
     <div className="flight-form-page-container">
       <div className="flight-form-header-container">
@@ -518,6 +552,23 @@ const FlightForm = () => {
             label="Other Requests"
             value={data.additional_requests}
           />
+  <SimpleLabelValue
+  label="Ticket"
+  value={
+    data.download_url ? (
+      <a href={data.download_url} download>
+        {data.download_url}
+      </a>
+    ) : (
+      'Not available'
+    )
+  }
+/>
+
+<button onClick={()=>{handleAvailableFlight(data.flight_id);
+  setOpenIsAvailableFlights(true)
+}}>Get Available Flight</button>
+
         </div>
       ) : (
         <div className="no-data">
@@ -536,7 +587,9 @@ const FlightForm = () => {
         message="I have an emergency situation." // Customize the message for the Emergency button
         buttonText="Emergency"
       />
-      <button type="button" className="btn btn-success" onClick={() => { /* وظيفة زر التحديث */ }}>
+      <button type="button" className="btn btn-success" onClick={() => {
+        navigate(`/user/flight/update/${data.flight_id}`)
+      }}>
         Update
       </button>
     </div>
@@ -551,6 +604,34 @@ const FlightForm = () => {
 
       <MySideDrawer isOpen={openFlight} setIsOpen={setOpenFlight}>
         <CompanionForm setOpenForm={setOpenFlight} />
+      </MySideDrawer>
+{/* 
+      <MySideDrawer isOpen={openFlightUpdate} setIsOpen={setOpenFlightUpdate}>
+        <MainFlightFormUpdate setOpenForm={setOpenFlightUpdate} />
+      </MySideDrawer> */}
+        <MySideDrawer
+        isOpen={openIsAvailableFlights}
+        setIsOpen={setOpenIsAvailableFlights}
+      >
+        {availableFlights.length > 0 ? (
+          <div>
+            {availableFlights.map((flight) => (
+              <div key={flight.id} className="flight-item">
+                <p>Flight Number: {flight.flight_number}</p>
+                <p>Departure Time: {flight.departure_time}</p>
+                <p>Arrival Time: {flight.arrival_time}</p>
+                <button onClick={() => console.log("Selected", flight.id)}>
+                  Select Flight
+                </button>
+                <button onClick={() => console.log("Cancelled", flight.id)}>
+                  Cancel Flight
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No available flights</p>
+        )}
       </MySideDrawer>
     </div>
   );

@@ -133,51 +133,114 @@ class FlightController extends Controller
 
 
 
+    // public function updateByAdmin(Request $request, $flight_id)
+    // {
+    //     try {
+    //         $user = Auth::user();
+    
+    //         // العثور على الرحلة بناءً على ID
+    //         $flight = Flight::find($flight_id);
+    
+    //         if (!$flight) {
+    //             return response()->json(['message' => 'Flight not found'], 404);
+    //         }
+    
+    //         // التحقق من صحة الحقول المطلوبة فقط
+    //         $validatedData = $request->validate([
+    //             'business_class_upgrade_cost' => 'nullable|numeric|min:0',
+    //             'reserved_seat_cost' => 'nullable|numeric|min:0',
+    //             'additional_baggage_cost' => 'nullable|numeric|min:0',
+    //             'other_additional_costs' => 'nullable|numeric|min:0',
+    //             'admin_update_deadline' => 'nullable|date',
+    //             'is_free' => 'sometimes|boolean',
+    //             'is_available_for_download' => 'sometimes|boolean',
+    //             'download_url',
+    //             'base_ticket_price' => 'nullable|numeric|min:0', // تم إضافة هذا الحقل
+    //         ]);
+    
+    //         // تحديث الحقول بناءً على القيم المدخلة فقط
+    //         foreach ($validatedData as $key => $value) {
+    //             if ($request->has($key)) {
+    //                 $flight->{$key} = $value;
+    //             }
+    //         }
+    
+    //         // تحديث توقيت آخر تعديل من قبل المسؤول
+    //         $flight->last_admin_update_at = now()->setTimezone('Asia/Amman');
+    
+    //         // حفظ التغييرات
+    //         $flight->save();
+    
+    //         return response()->json(['message' => 'Flight updated successfully', 'flight' => $flight], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['message' => 'An error occurred while updating the flight.', 'error' => $e->getMessage()], 500);
+    //     }
+    // }
+    
+
     public function updateByAdmin(Request $request, $flight_id)
     {
         try {
             $user = Auth::user();
-    
+            
             // العثور على الرحلة بناءً على ID
             $flight = Flight::find($flight_id);
-    
+            
             if (!$flight) {
                 return response()->json(['message' => 'Flight not found'], 404);
             }
-    
+            
             // التحقق من صحة الحقول المطلوبة فقط
             $validatedData = $request->validate([
                 'business_class_upgrade_cost' => 'nullable|numeric|min:0',
                 'reserved_seat_cost' => 'nullable|numeric|min:0',
                 'additional_baggage_cost' => 'nullable|numeric|min:0',
                 'other_additional_costs' => 'nullable|numeric|min:0',
-                'admin_update_deadline' => 'nullable|date_format:Y-m-d H:i:s',
+                'admin_update_deadline' => 'nullable|date',
                 'is_free' => 'sometimes|boolean',
                 'is_available_for_download' => 'sometimes|boolean',
+                'download_url' => 'nullable|url', // تأكد من إضافة التحقق من صحة رابط التحميل
                 'base_ticket_price' => 'nullable|numeric|min:0', // تم إضافة هذا الحقل
             ]);
-    
+            
             // تحديث الحقول بناءً على القيم المدخلة فقط
             foreach ($validatedData as $key => $value) {
                 if ($request->has($key)) {
                     $flight->{$key} = $value;
                 }
             }
-    
+            
             // تحديث توقيت آخر تعديل من قبل المسؤول
             $flight->last_admin_update_at = now()->setTimezone('Asia/Amman');
-    
+            
             // حفظ التغييرات
             $flight->save();
     
+            // إرسال إشعار إذا تم إدخال قيمة لـ download_url
+            if (isset($validatedData['download_url'])) {
+                // الحصول على user_id مباشرة
+                $userId = $flight->user_id; // استخدام user_id مباشرة
+                
+                if ($userId) {
+                    // إرسال الإشعار للمستخدم
+                    $message = "You can visit your profile; the requested ticket is now available on the website.";
+                    
+                    // إرسال الإشعار إلى المستخدم
+                    Notification::create([
+                        'user_id' => $userId, // المستخدم الذي سيتم الإشعار له
+                        'message' => $message,
+                        'is_read' => false,
+                        'register_id' => null, // بقاء register_id فارغة
+                    ]);
+                }
+            }
+    
             return response()->json(['message' => 'Flight updated successfully', 'flight' => $flight], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occurred while updating the flight.'], 500);
+            return response()->json(['message' => 'An error occurred while updating the flight.', 'error' => $e->getMessage()], 500);
         }
     }
     
-
-
 
 
 
@@ -201,6 +264,7 @@ class FlightController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
     public function getFlightByUserIdForCompanion($userId) // Now accepts userId as a parameter
     {
         try {

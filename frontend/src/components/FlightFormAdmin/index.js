@@ -8,6 +8,8 @@ import CompanionModal from "./CompanionModal "; // تأكد من عدم وجود
 import Input from "../../CoreComponent/Input";
 import "./style.scss";
 import axios from "axios";
+import UpdateDeadline from "./SetUpdateDeadline";
+import UpdateTicket from "./SetTicket";
 
 const FlightFormAdmin = () => {
   const [flights, setFlights] = useState([]);
@@ -27,34 +29,44 @@ const FlightFormAdmin = () => {
   const [openCompanionModal, setOpenCompanionModal] = useState(false); // حالة لفتح المودال
   const [selectedItem, setSelectedItem] = useState({});
   const [travelerName, setTravelerName] = useState("");
+  const [openUpdateForm, setOpenUpdateForm] = useState(false);
+  const [openTicketForm, setOpenTicketForm] = useState(false);
 
   const getFlight = () => {
-    const token = localStorage.getItem('token');
-    axios.get("http://127.0.0.1:8000/api/user/pag/filter", {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(response => {
-      setFlights(response.data.data);
-    })
-    .catch(error => {
-      console.error("Error fetching flight data:", error.response ? error.response.data : error.message);
-    });
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://127.0.0.1:8000/api/user/pag/filter", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setFlights(response.data.data);
+      })
+      .catch((error) => {
+        console.error(
+          "Error fetching flight data:",
+          error.response ? error.response.data : error.message
+        );
+      });
   };
 
   const getCompanionFlights = (userId) => {
-    const token = localStorage.getItem('token');
-    axios.get(`http://127.0.0.1:8000/api/companion-flight/${userId}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(response => {
-      setCompanions(response.data);
-      console.log(response.data);
-      
-      setOpenCompanionModal(true); // فتح المودال بعد جلب البيانات
-    })
-    .catch(error => {
-      console.error("Error fetching companion flight data:", error.response ? error.response.data : error.message);
-    });
+    const token = localStorage.getItem("token");
+    axios
+      .get(`http://127.0.0.1:8000/api/companion-flight/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setCompanions(response.data);
+        console.log(response.data);
+
+        setOpenCompanionModal(true); // فتح المودال بعد جلب البيانات
+      })
+      .catch((error) => {
+        console.error(
+          "Error fetching companion flight data:",
+          error.response ? error.response.data : error.message
+        );
+      });
   };
 
   useEffect(() => {
@@ -67,20 +79,56 @@ const FlightFormAdmin = () => {
         ...item,
         actions: (
           <div className="table-actions-container">
-            <button className="trip-btn" onClick={() => {
-              setOpenTripForm(true);
-              setSelectedItem(item);
-            }}>Add Trip</button>
-            <button className="price-btn" onClick={() => {
-              setOpenPriceForm(true);
-              setSelectedItem(item);
-            }}>Add Price</button>
-            <button onClick={() => {
-              setOpenView(true);
-              setSelectedItem(item);
-            }}>View</button>
-            <button className="get-companion-btn" onClick={() => getCompanionFlights(item.user_id)}>
+            <button
+              className="trip-btn"
+              onClick={() => {
+                setOpenTripForm(true);
+                setSelectedItem(item);
+              }}
+            >
+              Add Trip
+            </button>
+            <button
+              className="price-btn"
+              onClick={() => {
+                setOpenPriceForm(true);
+                setSelectedItem(item);
+              }}
+            >
+              Add Price
+            </button>
+            <button
+              onClick={() => {
+                setOpenView(true);
+                setSelectedItem(item);
+              }}
+            >
+              View
+            </button>
+            <button
+              className="get-companion-btn"
+              onClick={() => getCompanionFlights(item.user_id)}
+            >
               Get Companion
+            </button>
+            <button
+              onClick={() => {
+                setOpenUpdateForm(true);
+                setSelectedItem(item);
+              }}
+            >
+              {" "}
+              Set Update Deadline
+            </button>
+
+            <button
+              onClick={() => {
+                setOpenTicketForm(true);
+                setSelectedItem(item);
+              }}
+            >
+              {" "}
+              Set Ticket
             </button>
           </div>
         ),
@@ -92,7 +140,6 @@ const FlightFormAdmin = () => {
     <div className="flight-form">
       <div className="flight-form-admin-header">
         <div className="header">
-
           <Input
             placeholder="Search"
             inputValue={travelerName}
@@ -101,7 +148,7 @@ const FlightFormAdmin = () => {
           />
         </div>
       </div>
-      
+
       <div className="flight-table-container">
         <Table headers={headers} data={handleTableData()} />
       </div>
@@ -121,6 +168,13 @@ const FlightFormAdmin = () => {
       </MySideDrawer>
       <MySideDrawer isOpen={openPriceForm} setIsOpen={setOpenPriceForm}>
         <SeatCostForm data={selectedItem} setOpen={setOpenPriceForm} />
+      </MySideDrawer>
+
+      <MySideDrawer isOpen={openUpdateForm} setIsOpen={setOpenUpdateForm}>
+        <UpdateDeadline data={selectedItem} setOpen={setOpenUpdateForm} />
+      </MySideDrawer>
+      <MySideDrawer isOpen={openTicketForm} setIsOpen={setOpenTicketForm}>
+        <UpdateTicket data={selectedItem} setOpen={setOpenTicketForm} />
       </MySideDrawer>
     </div>
   );

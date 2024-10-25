@@ -12,6 +12,7 @@ const FlightDetails = ({ data }) => {
           label="Departure Airport"
           value={data.departure_airport}
         />
+
         <SimpleLabelValue
           label="Arrival Airport"
           value={data.arrival_airport}

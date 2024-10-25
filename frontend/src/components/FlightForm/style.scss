@@ -187,6 +187,7 @@
 }
 
 .flight-form-page-container {
+  
   .flight-form-header-container {
     margin: 20px;
     height: 30px;
@@ -332,6 +333,157 @@ $update-hover: #4cae4c;
       padding: 0.8rem 1.5rem;
     }
   }
+  .my-side-drawer {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    border-radius: 8px;
+    
+    // التخطيط الرئيسي
+    .flight-item {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      
+      p {
+        margin: 5px 0;
+        font-size: 16px;
+        color: #333;
+      }
+      
+      // أزرار
+      button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 4px;
+        
+        &:hover {
+          background-color: #45a049;
+        }
+      }
+  
+      .cancel-button {
+        background-color: #f44336;
+        
+        &:hover {
+          background-color: #d32f2f;
+        }
+      }
+    }
+  
+    // لا توجد رحلات متاحة
+    p {
+      text-align: center;
+      color: #999;
+    }
+  }
+  
+  // لجعل المكون متجاوب
+  @media (max-width: 768px) {
+    .my-side-drawer {
+      max-width: 100%;
+      padding: 10px;
+    }
+    
+    .flight-item {
+      p {
+        font-size: 14px;
+      }
+  
+      button {
+        font-size: 14px;
+        padding: 8px 12px;
+      }
+    }
+  }
+  .my-side-drawer {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    border-radius: 8px;
+    
+    // التخطيط الرئيسي
+    .flight-item {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      
+      p {
+        margin: 5px 0;
+        font-size: 16px;
+        color: #333;
+      }
+      
+      // أزرار
+      button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 4px;
+        
+        &:hover {
+          background-color: #45a049;
+        }
+      }
+  
+      .cancel-button {
+        background-color: #f44336;
+        
+        &:hover {
+          background-color: #d32f2f;
+        }
+      }
+    }
+  
+    // لا توجد رحلات متاحة
+    p {
+      text-align: center;
+      color: #999;
+    }
+  }
+  
+  // لجعل المكون متجاوب
+  @media (max-width: 768px) {
+    .my-side-drawer {
+      max-width: 100%;
+      padding: 10px;
+    }
+    
+    .flight-item {
+      p {
+        font-size: 14px;
+      }
+  
+      button {
+        font-size: 14px;
+        padding: 8px 12px;
+      }
+    }
+  }
+    
 }
 
 // استجابة الشاشات الكبيرة
@@ -341,5 +493,6 @@ $update-hover: #4cae4c;
     font-size: 1.1rem;
   }
 }
+
 
 }

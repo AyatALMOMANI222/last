@@ -64,6 +64,10 @@ import Footer from "./components/UI/Footer";
 import ExcelUpload from "./components/Registeration/Group-Registeration/AddExelFile";
 import AdminGroupComponent from "./components/Registeration/Group-Registeration/AdminUpdate";
 import RegisterGroupPage from "./components/Registeration/Group-Registeration";
+import MainFlightFormUpdate from "./components/FlightForm/updateMainFlightForm";
+import GetCompanion from "./components/FlightForm/GetCompanion";
+import Stepper from "./CoreComponent/stepper";
+import ParentComponent from "./components/stepperPage";
 const App = () => {
   const location = useLocation();
   const [showLoader, setShowLoader] = useState(false);
@@ -125,7 +129,8 @@ const App = () => {
         <Route path="/registertype" element={<RegisterType />} />
         <Route path="register/attendance/:conferenceId" element={<RegisterAttendancePage />} />
        <Route path="/register/group/:conferenceId" element={<RegisterGroupPage />} />
-        
+                <Route path="/stepper" element={< ParentComponent />} />
+
 <Route path="register/sponsor" element={<RegisterSponsorPage />} />
         <Route path="/create/trip" element={<ViewTrip />} />
         <Route path="/user" element={<UsersList />} />
@@ -176,6 +181,8 @@ const App = () => {
         <Route path="/admin/visa" element={<AdminVisa />} />
         <Route path="/add/excel" element={<ExcelUpload />} />
         <Route path="/group/update/admin" element={<AdminGroupComponent />} />
+        <Route path="/user/flight/update/:id" element={<MainFlightFormUpdate />} />
+        <Route path="/companion" element={<GetCompanion />} />
 
         <Route path="/faq" element={<FAQ />} />
 
