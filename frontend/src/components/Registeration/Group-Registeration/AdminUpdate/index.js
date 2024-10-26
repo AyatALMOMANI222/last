@@ -41,7 +41,7 @@ const AdminGroupComponent = () => {
   };
 
   return (
-    <div className="container">
+    <div className="admin-update-container">
       <h2>هل تقبل إضافة المجموعة؟</h2>
       <button onClick={() => handleYesNoClick('yes')}>YES</button>
       <button onClick={() => handleYesNoClick('no')}>NO</button>

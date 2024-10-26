@@ -54,7 +54,7 @@ import AdventureSection from "./components/UI/individuals";
 import TicketBooking from "./components/UI/TicketBooking";
 import HotelBooking from "./components/UI/HotelBooking";
 import Transportation from "./components/UI/Transportation";
-import SpeakerProfileForm from "./components/SpeakerProfileEditForm"
+import SpeakerProfileForm from "./components/SpeakerProfileEditForm";
 import RegisterSponsorPage from "./components/Registeration/Sponsor";
 import RegisterAttendancePage from "./components/Registeration/attendance";
 import AdminVisa from "./components/AdminVisa";
@@ -67,8 +67,9 @@ import RegisterGroupPage from "./components/Registeration/Group-Registeration";
 import MainFlightFormUpdate from "./components/FlightForm/updateMainFlightForm";
 import GetCompanion from "./components/FlightForm/GetCompanion";
 import Stepper from "./CoreComponent/stepper";
-import ParentComponent from "./components/stepperPage";
-import RoomPriceForm from "./components/RoomPrice";
+import ParentComponent from "./components/ReservationstepperPage";
+import TripsStepperPage from "./components/TripsStepperPage/index";
+import Lastt from "./components/ReservationstepperPage/last";
 const App = () => {
   const location = useLocation();
   const [showLoader, setShowLoader] = useState(false);
@@ -106,12 +107,13 @@ const App = () => {
       <ToastContainer />
       <Loader show={showLoader} />
       {!noNavRoute.includes(location.pathname) &&
-        (!location.pathname.includes("/registerPage") && <NavBar />)}
+        !location.pathname.includes("/registerPage") && <NavBar />}
 
       <Routes className="main">
       <Route path="/exhibitions" element={<Exhibitions />} />
+      <Route path="/trip/user/:tripId" element={<TripsStepperPage />} />
       <Route path="/" element={<Dashboard />} />
-      <Route
+        <Route
           path="/edit/speaker/data/:conferenceId/:userId"
           element={<EditSpeakerData />}
         />
@@ -121,18 +123,23 @@ const App = () => {
         <Route path="/flights" element={<FlightFormAdmin />} />
         <Route path="/flight/form" element={<FlightForm />} />
 
-
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register/speaker/:id" element={<RegisterPage />} />
         <Route path="/registerPage/:type" element={<SelectConferences />} />
         <Route path="/conferences/page" element={<HomePage />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/registertype" element={<RegisterType />} />
-        <Route path="register/attendance/:conferenceId" element={<RegisterAttendancePage />} />
-       <Route path="/register/group/:conferenceId" element={<RegisterGroupPage />} />
-                <Route path="/stepper" element={< ParentComponent />} />
+        <Route
+          path="register/attendance/:conferenceId"
+          element={<RegisterAttendancePage />}
+        />
+        <Route
+          path="/register/group/:conferenceId"
+          element={<RegisterGroupPage />}
+        />
+        <Route path="/stepper" element={<ParentComponent />} />
 
-<Route path="register/sponsor" element={<RegisterSponsorPage />} />
+        <Route path="register/sponsor" element={<RegisterSponsorPage />} />
         <Route path="/create/trip" element={<ViewTrip />} />
         <Route path="/user" element={<UsersList />} />
         <Route path="/view-user-trips" element={<ViewUserTrips />} />
@@ -182,11 +189,14 @@ const App = () => {
         <Route path="/admin/visa" element={<AdminVisa />} />
         <Route path="/add/excel" element={<ExcelUpload />} />
         <Route path="/group/update/admin" element={<AdminGroupComponent />} />
-        <Route path="/user/flight/update/:id" element={<MainFlightFormUpdate />} />
+        <Route
+          path="/user/flight/update/:id"
+          element={<MainFlightFormUpdate />}
+        />
         <Route path="/companion" element={<GetCompanion />} />
-        <Route path="/room/price" element={<RoomPriceForm />} />
 
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/f" element={<Lastt />} />
 
       </Routes>
       {/* <Footer/> */}

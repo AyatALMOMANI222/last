@@ -94,7 +94,6 @@ const RoomForm = ({ openRoom, setOpenRoom }) => {
             options={options}
             value={roomType}
             setValue={setRoomType}
-            errorMsg={errorMsg}
             label="Room Type"
             required={true}
           />

@@ -1,25 +1,24 @@
 .admin-visa-container {
-    max-width: 600px; /* تحديد أقصى عرض للحاوية */
-    margin: 20px auto; /* مسافة علوية وسفلية للعنصر */
-    padding: 30px; /* مساحة داخلية */
-    border-radius: 8px; /* زوايا مدورة */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* ظل خفيف للحاوية */
-    background-color: #ffffff; /* لون خلفية أبيض */
-    font-family: 'Arial', sans-serif; /* نوع الخط */
-  }
-  
+  max-width: 600px; /* تحديد أقصى عرض للحاوية */
+  margin: 20px auto; /* مسافة علوية وسفلية للعنصر */
+  padding: 30px; /* مساحة داخلية */
+  border-radius: 8px; /* زوايا مدورة */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* ظل خفيف للحاوية */
+  background-color: #ffffff; /* لون خلفية أبيض */
+  font-family: "Arial", sans-serif; /* نوع الخط */
+
   .visa-form {
     display: flex; /* استخدام Flexbox */
     flex-direction: column; /* تنظيم العناصر عمودياً */
   }
-  
+
   .form-title {
     font-size: 28px; /* حجم الخط */
     margin-bottom: 20px; /* مسافة تحت العنوان */
     text-align: center; /* محاذاة النص إلى المركز */
     color: #2c3e50; /* لون النص */
   }
-  
+
   .submit-btn {
     // margin-top: 20px; /* مسافة فوق الزر */
     padding: 12px; /* مساحة داخلية */
@@ -30,20 +29,20 @@
     font-size: 16px; /* حجم الخط */
     cursor: pointer; /* تغيير شكل المؤشر عند التحويم */
     transition: background-color 0.3s; /* تأثير انتقالي عند تغيير اللون */
-  
+
     &:hover {
       background-color: #2980b9; /* لون الزر عند التحويم */
     }
-  
+
     &:disabled {
       background-color: #95a5a6; /* لون الزر عند تعطيله */
       cursor: not-allowed; /* شكل المؤشر عند عدم السماح */
     }
   }
-  
+
   .error-msg {
     color: #e74c3c; /* لون النص للرسائل الخطأ */
     margin-top: 10px; /* مسافة علوية */
     font-size: 14px; /* حجم الخط */
   }
-  
+}

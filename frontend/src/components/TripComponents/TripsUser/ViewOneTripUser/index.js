@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./style.scss";
 import Slider from "../../../Slider";
 import httpService from "../../../../common/httpService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { backendUrlImages } from "../../../../constant/config";
 import TripRegisterForm from "../TripRegisterForm/index";
 // Example usage of the component
@@ -34,7 +34,7 @@ const ViewOneTripUser = () => {
   const [tripData, setTripData] = useState({});
   const [openRegisterForm, setOpenRegisterForm] = useState(false);
   const getAuthToken = () => localStorage.getItem("token");
-
+  const navigate = useNavigate();
   const getTripById = async () => {
     try {
       const response = await httpService({
@@ -47,6 +47,7 @@ const ViewOneTripUser = () => {
 
       console.log(response?.trip);
       setTripData(response?.trip);
+      
     } catch (error) {
       console.error("Error submitting discount", error);
     }
@@ -99,12 +100,18 @@ const ViewOneTripUser = () => {
             </div>
           );
         })}
-        <button className="register-trip-btn"
-        onClick={()=>{
-            setOpenRegisterForm(true)
-        }}>Register now</button>
+        <button
+          className="register-trip-btn"
+          onClick={() => {
+            navigate(`/trip/user/${id}`)
+            // setOpenRegisterForm(true)
+          }}
+        >
+          Register now
+        </button>
       </div>
-      <TripRegisterForm isOpen={openRegisterForm} setIsOpen={setOpenRegisterForm} tripId={id} options={tripData?.additional_options}/>
+
+      {/* <TripRegisterForm isOpen={openRegisterForm} setIsOpen={setOpenRegisterForm} tripId={id} options={tripData?.additional_options}/> */}
     </div>
   );
 };

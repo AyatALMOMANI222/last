@@ -4,46 +4,150 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use App\Models\Reservation;
+use App\Models\Room;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationsController extends Controller
 {
+    // public function createReservation(Request $request)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'room_count' => 'required|integer|min:1',
+    //             'companions_count' => 'required|integer|min:0',
+    //             'companions_names' => 'nullable|string'
+    //         ]);
+    
+    //         // الحصول على معرف المستخدم من التوكن
+    //         $user_id = Auth::id();
+    
+    //         // إنشاء الحجز
+    //         $reservation = Reservation::create([
+    //             'user_id' => $user_id,
+    //             'room_count' => $request->input('room_count'),
+    //             'companions_count' => $request->input('companions_count'),
+    //             'companions_names' => $request->input('companions_names')
+    //         ]);
+    
+    //         return response()->json([
+    //             'message' => 'Reservation created successfully!',
+    //             'reservation' => $reservation
+    //         ], 201);
+
+    //     } catch (Exception $e) {
+    //         return response()->json([
+    //             'error' => 'An error occurred while creating the reservation.',
+    //             'message' => $e->getMessage()
+    //         ], 400); 
+    //     }
+    // }
     public function createReservation(Request $request)
     {
         try {
-            $request->validate([
-                'room_count' => 'required|integer|min:1',
-                'companions_count' => 'required|integer|min:0',
-                'companions_names' => 'nullable|string'
+            // تحقق من صحة البيانات
+            $validatedData = $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'room_count' => 'required|integer|min:1', // عدد الغرف
+                'companions_count' => 'nullable|integer|min:0',
+                'companions_names' => 'nullable|string',
+                'update_deadline' => 'nullable|date',
+                'rooms' => 'required|array', // التأكد من وجود مصفوفة الغرف
+                'rooms.*.room_type' => 'required|string', // نوع الغرفة
+                'rooms.*.occupant_name' => 'required|string', // اسم الشاغل
+                'rooms.*.check_in_date' => 'required|date', // تاريخ الدخول
+                'rooms.*.check_out_date' => 'required|date|after:rooms.*.check_in_date', // تاريخ الخروج
+                'rooms.*.total_nights' => 'required|integer|min:1', // عدد الليالي
+                'rooms.*.cost' => 'required|numeric|min:0', // التكلفة
+                'rooms.*.additional_cost' => 'nullable|numeric|min:0', // تكلفة إضافية
             ]);
-    
-            // الحصول على معرف المستخدم من التوكن
-            $user_id = Auth::id();
     
             // إنشاء الحجز
             $reservation = Reservation::create([
-                'user_id' => $user_id,
-                'room_count' => $request->input('room_count'),
-                'companions_count' => $request->input('companions_count'),
-                'companions_names' => $request->input('companions_names')
+                'user_id' => $validatedData['user_id'],
+                'room_count' => $validatedData['room_count'],
+                'companions_count' => $validatedData['companions_count'] ?? 0,
+                'companions_names' => $validatedData['companions_names'] ?? null,
+                'update_deadline' => $validatedData['update_deadline'] ?? Carbon::now()->addDays(30),
             ]);
     
+            // إعداد بيانات الغرف المرتبطة بالحجز
+            $roomsData = [];
+            for ($i = 0; $i < $validatedData['room_count']; $i++) {
+                $roomsData[] = [
+                    'reservation_id' => $reservation->id, // تمرير ID الحجز
+                    'room_type' => $validatedData['rooms'][$i]['room_type'],
+                    'occupant_name' => $validatedData['rooms'][$i]['occupant_name'],
+                    'special_requests' => $request->input("rooms.$i.special_requests", null),
+                    'check_in_date' => $validatedData['rooms'][$i]['check_in_date'],
+                    'check_out_date' => $validatedData['rooms'][$i]['check_out_date'],
+                    'total_nights' => $validatedData['rooms'][$i]['total_nights'],
+                    'cost' => $validatedData['rooms'][$i]['cost'],
+                    'additional_cost' => $validatedData['rooms'][$i]['additional_cost'] ?? 0.00,
+                    'update_deadline' => $request->input("rooms.$i.update_deadline", Carbon::now()->addDays(30)),
+                    'created_at' => now(), // استخدم now() بدلاً من Carbon::now()
+                    'updated_at' => now(),
+                ];
+            }
+    
+            // إدخال بيانات الغرف في قاعدة البيانات دفعة واحدة
+            Room::insert($roomsData);
+    
+            // استجابة النجاح
             return response()->json([
-                'message' => 'Reservation created successfully!',
-                'reservation' => $reservation
+                'message' => 'Reservation and rooms created successfully.',
+                'reservation_id' => $reservation->id, // إرجاع ID الحجز
+                'rooms' => $roomsData,
             ], 201);
-
-        } catch (Exception $e) {
+    
+        } catch (\Exception $e) {
+            // استجابة عند حدوث خطأ
             return response()->json([
-                'error' => 'An error occurred while creating the reservation.',
-                'message' => $e->getMessage()
-            ], 400); 
+                'message' => 'Failed to create reservation. ' . $e->getMessage(),
+            ], 400);
         }
     }
+    
+    
+    
+    
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     // public function deleteReservation($id)
     // {
     //     try {

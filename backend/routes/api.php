@@ -157,6 +157,7 @@ Route::post('/room', [RoomController::class, 'store'])->middleware('auth:sanctum
 Route::post('/update_admin/room/{id}', [RoomController::class, 'updateByAdmin'])->middleware(['auth:sanctum','admin']);
 Route::put('/update_user/room/{id}', [RoomController::class, 'updateByUser'])->middleware('auth:sanctum');
 Route::post('/room-prices', [RoomPriceController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/room-prices/{conferenceId}', [RoomPriceController::class, 'getPricesByConferenceId'])->middleware('auth:sanctum');
 
 
 // trips

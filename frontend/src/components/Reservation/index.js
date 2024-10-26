@@ -3,10 +3,12 @@ import ReservationForm from "./Reservation";
 import SimpleLabelValue from "../../components/SimpleLabelValue";
 import RoomForm from "./Room";
 import "./style.scss";
+import { useNavigate } from "react-router-dom";
 
 const Reservation = () => {
   const [openReservation, setOpenReservation] = useState(false);
   const [openRoom, setOpenRoom] = useState(false);
+  const navigate = useNavigate()
   const data = {
     checkInDate: "2024-10-10",
     checkOutDate: "2024-10-15",
@@ -21,7 +23,7 @@ const Reservation = () => {
       <div className="reservation-form-header-container">
         <div className="title-container">Reservation Information Page</div>
         <div className="reservation-actions">
-          <button
+          {/* <button
             type="button"
             onClick={() => {
               setOpenRoom(true);
@@ -29,11 +31,12 @@ const Reservation = () => {
             className={`add-companion-btn`}
           >
             Add Room
-          </button>
+          </button> */}
           <button
             type="button"
             onClick={() => {
-              setOpenReservation(true);
+              // setOpenReservation(true);
+              navigate("/stepper")
             }}
           >
             Add Reservation Information
