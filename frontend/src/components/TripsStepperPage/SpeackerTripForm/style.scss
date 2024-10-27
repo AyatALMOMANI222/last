@@ -1,12 +1,27 @@
+.additional-options-stepper-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 20px;
+  grid-column-gap: 30px;
+  width: 260px;
+}
 
-
-.accommodation-form-steeper{
-
+.accommodation-form-steeper {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-row-gap: 20px;
   grid-column-gap: 30px;
   .check-in-input-container {
-      margin-top: 25px;
-    }
+    margin-top: 25px;
+  }
+}
+.cost-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-row-gap: 20px;
+  grid-column-gap: 30px;
+  padding: 20px;
+  border: 1px solid #d8dae5;
+  border-radius: 5px;
+  margin-top: 20px;
 }

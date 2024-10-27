@@ -14,30 +14,32 @@ const SpeackerTripForm = () => {
   const { currentStep, completeStep } = useTripsStepper();
   const [includeAccommodation, setIncludeAccommodation] = useState();
   const [accommodationStars, setAccommodationStars] = useState();
-  const [nightsCount, setNightsCount] = useState(3);
+  const [nightsCount, setNightsCount] = useState();
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
 
   const handleSubmit = (e) => {
     toast.success("The data was updated successfully!");
+
     const formData = {
-      includeAccommodation,
-      accommodationStars,
-      nightsCount,
-      checkInDate,
-      checkOutDate,
+      include_accommodation: includeAccommodation,
+      accommodation_stars: accommodationStars,
+      nights_count: nightsCount ,
+      check_in_date: checkInDate,
+      check_out_date: checkOutDate,
+      is_companion: false,
     };
     completeStep(currentStep);
     saveToLocalStorage("AccommodationData", formData);
   };
   useEffect(() => {
-    const data = getFromLocalStorage("mainRoom");
+    const data = getFromLocalStorage("AccommodationData");
     if (data) {
-      setIncludeAccommodation(data?.includeAccommodation);
-      setAccommodationStars(data?.accommodationStars);
-      setNightsCount(data?.nightsCount);
-      setCheckInDate(data?.checkInDate);
-      setCheckOutDate(data?.checkOutDate);
+      setIncludeAccommodation(data?.include_accommodation);
+      setAccommodationStars(data?.accommodation_stars);
+      setNightsCount(data?.nights_count);
+      setCheckInDate(data?.check_in_date);
+      setCheckOutDate(data?.check_out_date);
     }
   }, []);
   return (

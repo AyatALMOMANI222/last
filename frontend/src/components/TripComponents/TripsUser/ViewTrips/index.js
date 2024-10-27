@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import httpService from "../../../../common/httpService";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
+import { backendUrlImages } from "../../../../constant/config";
 
 const ViewUserTrips = () => {
   const navigate = useNavigate()
@@ -14,6 +15,8 @@ const ViewUserTrips = () => {
         method: "GET",
         url: `http://127.0.0.1:8000/api/all-trip`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
+        withLoadder:true,
+        withToast: false,
       });
 
       console.log( response?.trips
@@ -39,7 +42,8 @@ const ViewUserTrips = () => {
       <div className="trip-cards">
         {allTrips?.map((trip) => (
           <div className="trip-card" key={trip.id}>
-            <img src={trip.image_1} alt={trip.name} className="trip-image" />
+            <img src={`${backendUrlImages}${trip.image_1}`} className="trip-image" />
+
             <div className="trip-info">
               <div className="main-info">
                 <div className="name">{trip.name}</div>

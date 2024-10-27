@@ -55,6 +55,7 @@ Route::post('/users/{conference_id}', [UserController::class, 'store']);
 // فقط الادمن يعدل على ال status   للمتحدث id 
 Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/users', [UserController::class, 'getAllUsers']);
+Route::get('/users/id', [UserController::class, 'getUserById']);
 
 // notification
 

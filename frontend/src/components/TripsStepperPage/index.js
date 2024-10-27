@@ -6,6 +6,7 @@ import SpeackerTripForm from "./SpeackerTripForm/index";
 import ParticipantTripForm from "./ParticipantTripForm";
 import AdditionalOptionsForm from "./AdditionalOptionsForm";
 import { removeFromLocalStorage } from "../../common/localStorage";
+import InvoiceTripForm from "./InvoiceTripForm";
 
 const TripsStepperPageContent = () => {
   const { currentStep, completedSteps, setCurrentStep, completeStep } =
@@ -22,17 +23,17 @@ const TripsStepperPageContent = () => {
     <SpeackerTripForm />,
     <ParticipantTripForm />,
     <AdditionalOptionsForm />,
-    <h1>step4</h1>,
+    <InvoiceTripForm />,
   ];
 
-  useEffect(()=>{
-return ()=>{
-  removeFromLocalStorage("additionalOptions")
-  removeFromLocalStorage("AdditionalOptionsData")
-  removeFromLocalStorage("participants")
-  removeFromLocalStorage("AccommodationData")
-}
-  }, [])
+  useEffect(() => {
+    return () => {
+      // removeFromLocalStorage("additionalOptions");
+      // removeFromLocalStorage("AdditionalOptionsData");
+      // removeFromLocalStorage("participants");
+      // removeFromLocalStorage("AccommodationData");
+    };
+  }, []);
   return (
     <div className="stepper-page-container">
       <div className="stepper-section">

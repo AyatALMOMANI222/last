@@ -2,165 +2,340 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdditionalOption;
 use App\Models\TripOptionsParticipant;
 use App\Models\TripParticipant;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TripParticipantController extends Controller
 {
+
+    // public function addParticipant(Request $request)
+    // {
+    //     $userId = Auth::id();
+    
+    //     if (!$userId) {
+    //         return response()->json(['error' => 'Unauthorized'], 401);
+    //     }
+    
+    //     try {
+    //         // Validate input
+    //         $validatedData = $request->validate([
+    //             'trip_id' => 'required|exists:trips,id',
+    //             'participants' => 'required|array',
+    //             'participants.*.is_companion' => 'required|boolean',
+    //             'participants.*.include_accommodation' => 'boolean',
+    //             'participants.*.accommodation_stars' => 'nullable|integer|min:1|max:5',
+    //             'participants.*.nights_count' => 'nullable|integer|min:1',
+    //             'participants.*.check_in_date' => 'nullable|date',
+    //             'participants.*.check_out_date' => 'nullable|date|after_or_equal:participants.*.check_in_date',
+    //             'participants.*.name' => 'nullable|string',
+    //             'participants.*.nationality' => 'nullable|string',
+    //             'participants.*.phone_number' => 'nullable|string',
+    //             'participants.*.whatsapp_number' => 'nullable|string',
+    //         ]);
+    
+    //         // Get user data from the database
+    //         $user = User::findOrFail($userId); // Use findOrFail to ensure the user exists
+    
+    //         // Initialize participants array
+    //         $participants = [];
+    
+    //         // Add normal user
+    //         $normalUser = [
+    //             'user_id' => $userId,
+    //             'main_user_id' => null,
+    //             'trip_id' => $validatedData['trip_id'],
+    //             'name' => $user->name,  // from User table
+    //             'nationality' => $user->nationality,  // from User table
+    //             'phone_number' => $user->phone_number,  // from User table
+    //             'whatsapp_number' => $user->whatsapp_number,  // from User table
+    //             'is_companion' => false,
+    //             // Take these values directly from the first participant's data
+    //             'include_accommodation' => $validatedData['participants'][0]['include_accommodation'],
+    //             'accommodation_stars' => $validatedData['participants'][0]['accommodation_stars'] ?? null,
+    //             'nights_count' => $validatedData['participants'][0]['nights_count'],
+    //             'check_in_date' => $validatedData['participants'][0]['check_in_date'],
+    //             'check_out_date' => $validatedData['participants'][0]['check_out_date'],
+    //         ];
+    
+    //         // Add normal user to participants
+    //         $participants[] = $normalUser;
+    
+    //         // Initialize array for companions
+    //         $companions = [];
+    
+    //         // Process companions
+    //         foreach ($validatedData['participants'] as $participantData) {
+    //             if ($participantData['is_companion'] === true) {
+    //                 // Store companion details from the request
+    //                 $companions[] = [
+    //                     'user_id' => null,
+    //                     'main_user_id' => $userId,
+    //                     'trip_id' => $validatedData['trip_id'],
+    //                     'name' => $participantData['name'] ?? $user->name,
+    //                     'nationality' => $participantData['nationality'] ?? $user->nationality,
+    //                     'phone_number' => $participantData['phone_number'] ?? $user->phone_number,
+    //                     'whatsapp_number' => $participantData['whatsapp_number'] ?? $user->whatsapp_number,
+    //                     'is_companion' => true,
+    //                     'include_accommodation' => $participantData['include_accommodation'],
+    //                     'accommodation_stars' => $participantData['accommodation_stars'],
+    //                     'nights_count' => $participantData['nights_count'],
+    //                     'check_in_date' => $participantData['check_in_date'],
+    //                     'check_out_date' => $participantData['check_out_date'],
+    //                 ];
+    //             }
+    //         }
+    
+    //         // Add companions to participants
+    //         $participants = array_merge($participants, $companions);
+    
+    //         // Insert participants
+    //         TripParticipant::insert($participants); // Use insert to add participants in bulk
+    
+    //         return response()->json([
+    //             'message' => 'Participants added successfully',
+    //             'participants' => $participants
+    //         ], 201);
+    
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         return response()->json(['error' => $e->validator->errors()], 422); // Return all validation errors
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+    //     }
+    // } 
     public function addParticipant(Request $request)
     {
         $userId = Auth::id();
-
+    
         if (!$userId) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
+    
         try {
-            // التحقق من صحة المدخلات
+            // Validate input
             $validatedData = $request->validate([
                 'trip_id' => 'required|exists:trips,id',
-                'name' => 'required|string|max:255',
-                'nationality' => 'required|string|max:255',
-                'phone_number' => 'required|string|max:20',
-                'whatsapp_number' => 'required|string|max:20',
-                'is_companion' => 'required|boolean',
-                'include_accommodation' => 'boolean',
-                // 'accommodation_type' => 'nullable|string',
-                // 'tent_type' => 'nullable|string',
-                'accommodation_stars' => 'nullable|integer|min:1|max:5',
-                'nights_count' => 'nullable|integer|min:1',
-                'check_in_date' => 'nullable|date',
-                'check_out_date' => 'nullable|date|after_or_equal:check_in_date',
+                'options' => 'required|array',
+                'participants' => 'required|array',
+                'participants.*.is_companion' => 'required|boolean',
+                'participants.*.include_accommodation' => 'boolean',
+                'participants.*.accommodation_stars' => 'nullable|integer|min:1|max:5',
+                'participants.*.nights_count' => 'nullable|integer|min:1',
+                'participants.*.check_in_date' => 'nullable|date',
+                'participants.*.check_out_date' => 'nullable|date|after_or_equal:participants.*.check_in_date',
+                'participants.*.name' => 'nullable|string',
+                'participants.*.nationality' => 'nullable|string',
+                'participants.*.phone_number' => 'nullable|string',
+                'participants.*.whatsapp_number' => 'nullable|string',
+                'participants.*.id' => 'nullable|integer'
             ]);
-
-            // تحديد main_user_id و user_id بناءً على is_companion
-            if ($validatedData['is_companion']) {
-                $participantData = [
-                    'user_id' => null, // user_id فارغ
-                    'main_user_id' => $userId, // main_user_id يساوي user_id
-                ];
-            } else {
-                $participantData = [
-                    'user_id' => $userId, // user_id يساوي قيمة التوكن
-                    'main_user_id' => null, // main_user_id فارغ
-                ];
-            }
-
-            // دمج باقي بيانات المشارك
-            $participantData = array_merge($participantData, [
+    
+            // Get user data from the database
+            $user = User::findOrFail($userId);
+    
+            // Initialize participants array
+            $participants = [];
+    
+            // Add normal user
+            $normalUser = [
+                'user_id' => $userId,
+                'main_user_id' => null,
                 'trip_id' => $validatedData['trip_id'],
-                'name' => $validatedData['name'],
-                'nationality' => $validatedData['nationality'],
-                'phone_number' => $validatedData['phone_number'],
-                'whatsapp_number' => $validatedData['whatsapp_number'],
-                'is_companion' => $validatedData['is_companion'],
-                'include_accommodation' => $validatedData['include_accommodation'] ?? false,
-                // 'accommodation_type' => $validatedData['accommodation_type'],
-                // 'tent_type' => $validatedData['tent_type'],
-                'accommodation_stars' => $validatedData['accommodation_stars'],
-                'nights_count' => $validatedData['nights_count'],
-                'check_in_date' => $validatedData['check_in_date'],
-                'check_out_date' => $validatedData['check_out_date'],
-            ]);
-
-            // إنشاء المشارك
-            $participant = TripParticipant::create($participantData);
-
-            return response()->json(['message' => 'Participant added successfully', 'participant' => $participant], 201);
-
+                'name' => $user->name,
+                'nationality' => $user->nationality,
+                'phone_number' => $user->phone_number,
+                'whatsapp_number' => $user->whatsapp_number,
+                'is_companion' => false,
+                'include_accommodation' => $validatedData['participants'][0]['include_accommodation'],
+                'accommodation_stars' => $validatedData['participants'][0]['accommodation_stars'] ?? null,
+                'nights_count' => $validatedData['participants'][0]['nights_count'],
+                'check_in_date' => $validatedData['participants'][0]['check_in_date'],
+                'check_out_date' => $validatedData['participants'][0]['check_out_date'],
+            ];
+    
+            // Insert normal user and get the inserted participant ID
+            $normalParticipant = TripParticipant::create($normalUser);
+            $participants[] = $normalParticipant;
+    
+            // Initialize array for companions
+            $companions = [];
+    
+            // Process companions
+            foreach ($validatedData['participants'] as $participantData) {
+                if ($participantData['is_companion'] === true) {
+                    // Store companion details from the request
+                    $companions[] = [
+                        'user_id' => null,
+                        'main_user_id' => $userId,
+                        'trip_id' => $validatedData['trip_id'],
+                        'name' => $participantData['name'] ?? $user->name,
+                        'nationality' => $participantData['nationality'] ?? $user->nationality,
+                        'phone_number' => $participantData['phone_number'] ?? $user->phone_number,
+                        'whatsapp_number' => $participantData['whatsapp_number'] ?? $user->whatsapp_number,
+                        'is_companion' => true,
+                        'include_accommodation' => $participantData['include_accommodation'],
+                        'accommodation_stars' => $participantData['accommodation_stars'],
+                        'nights_count' => $participantData['nights_count'],
+                        'check_in_date' => $participantData['check_in_date'],
+                        'check_out_date' => $participantData['check_out_date'],
+                    ];
+                }
+            }
+    
+            // Insert companions and collect their IDs
+            foreach ($companions as $companion) {
+                $insertedCompanion = TripParticipant::create($companion);
+                $participants[] = $insertedCompanion;
+            }
+    
+            // Get valid option IDs from the additional_options table
+            $validOptionIds = AdditionalOption::whereIn('id', $validatedData['options'])->pluck('id')->toArray();
+    
+            // Store options for each participant
+            foreach ($validOptionIds as $optionId) {
+                foreach ($participants as $participant) {
+                    TripOptionsParticipant::create([
+                        'trip_id' => $validatedData['trip_id'],
+                        'option_id' => $optionId,
+                        'participant_id' => $participant->id // Use the actual participant ID
+                    ]);
+                }
+            }
+    
+            return response()->json([
+                'message' => 'Participants added successfully',
+                'participants' => $participants
+            ], 201);
+    
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['error' => $e->validator->errors()->first()], 422);
+            return response()->json(['error' => $e->validator->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-
-
-
-    // public function storeUserAndParticipant(Request $request)
+    
+    
+    
+    // public function addParticipant(Request $request)
     // {
-    //     if (!Auth::id()) {
-    //         return response()->json(['success' => false, 'message' => 'يجب تسجيل الدخول.'], 401);
-    //     }
     //     $userId = Auth::id();
     
-    //     $validatedData = $request->validate([
-    //         'trip_id' => 'required|exists:trips,id', // تأكد من وجود الرحلة
-    //         'name' => 'nullable|string', // اسم المشارك الرئيسي، يمكن أن يكون فارغًا إذا لم يكن مرافقًا
-    //         'nationality' => 'nullable|string', // جنسية المشارك الرئيسي
-    //         'phone_number' => 'nullable|string', // رقم الهاتف
-    //         'whatsapp_number' => 'nullable|string', // رقم الواتساب
-    //         'is_companion' => 'boolean', // هل هو مرافق أم لا
-    //         'include_accommodation' => 'boolean', // هل تشمل الإقامة؟
-    //         'accommodation_stars' => 'nullable|integer', // عدد النجوم للإقامة
-    //         'nights_count' => 'nullable|integer', // عدد الليالي
-    //         'check_in_date' => 'nullable|date', // تاريخ تسجيل الدخول للإقامة
-    //         'check_out_date' => 'nullable|date', // تاريخ تسجيل الخروج للإقامة
-    //         'companions' => 'array', // مصفوفة المرافقين
-    //         'companions.*.name' => 'required|string', // اسم المرافق
-    //         'companions.*.nationality' => 'required|string', // جنسية المرافق
-    //         'companions.*.phone_number' => 'required|string', // رقم هاتف المرافق
-    //         'companions.*.whatsapp_number' => 'required|string', // رقم الواتساب للمرافق
-    //         'companions.*.is_companion' => 'boolean', // هل هو مرافق
-    //         'companions.*.include_accommodation' => 'boolean', // هل تشمل الإقامة؟
-    //         'companions.*.accommodation_stars' => 'nullable|integer', // عدد النجوم للإقامة
-    //         'companions.*.nights_count' => 'nullable|integer', // عدد الليالي للإقامة
-    //     ]);
+    //     if (!$userId) {
+    //         return response()->json(['error' => 'Unauthorized'], 401);
+    //     }
     
     //     try {
-    //         // إعداد بيانات المشارك الرئيسي
-    //         $mainParticipantData = [
-    //             'user_id' => $userId, // استخدام user_id من التوكن
+    //         // Validate input
+    //         $validatedData = $request->validate([
+    //             'trip_id' => 'required|exists:trips,id',
+    //             'options' => 'required|array',
+    //             'participants' => 'required|array',
+    //             'participants.*.is_companion' => 'required|boolean',
+    //             'participants.*.include_accommodation' => 'boolean',
+    //             'participants.*.accommodation_stars' => 'nullable|integer|min:1|max:5',
+    //             'participants.*.nights_count' => 'nullable|integer|min:1',
+    //             'participants.*.check_in_date' => 'nullable|date',
+    //             'participants.*.check_out_date' => 'nullable|date|after_or_equal:participants.*.check_in_date',
+    //             'participants.*.name' => 'nullable|string',
+    //             'participants.*.nationality' => 'nullable|string',
+    //             'participants.*.phone_number' => 'nullable|string',
+    //             'participants.*.whatsapp_number' => 'nullable|string',
+    //             'participants.*.id' => 'nullable|integer'
+    //         ]);
+    
+    //         // Get user data from the database
+    //         $user = User::findOrFail($userId);
+    
+    //         // Initialize participants array
+    //         $participants = [];
+    
+    //         // Add normal user
+    //         $normalUser = [
+    //             'user_id' => $userId,
+    //             'main_user_id' => null,
     //             'trip_id' => $validatedData['trip_id'],
-    //             'main_user_id' => $validatedData['is_companion'] ? $userId : null, // المشارك الرئيسي إذا كان مرافقًا نعين user_id
-    //             'is_companion' => $validatedData['is_companion'] ?? false, // افتراضيًا هو ليس مرافقًا
-    //             'include_accommodation' => $validatedData['include_accommodation'],
-    //             'accommodation_stars' => $validatedData['accommodation_stars'],
-    //             'nights_count' => $validatedData['nights_count'],
-    //             'check_in_date' => $validatedData['check_in_date'],
-    //             'check_out_date' => $validatedData['check_out_date'],
+    //             'name' => $user->name,
+    //             'nationality' => $user->nationality,
+    //             'phone_number' => $user->phone_number,
+    //             'whatsapp_number' => $user->whatsapp_number,
+    //             'is_companion' => false,
+    //             'include_accommodation' => $validatedData['participants'][0]['include_accommodation'],
+    //             'accommodation_stars' => $validatedData['participants'][0]['accommodation_stars'] ?? null,
+    //             'nights_count' => $validatedData['participants'][0]['nights_count'],
+    //             'check_in_date' => $validatedData['participants'][0]['check_in_date'],
+    //             'check_out_date' => $validatedData['participants'][0]['check_out_date'],
     //         ];
     
-    //         // إذا كان المستخدم مرافقًا (is_companion == true)، نضيف الحقول التالية
-    //         if ($validatedData['is_companion']) {
-    //             $mainParticipantData['name'] = $validatedData['name'];
-    //             $mainParticipantData['nationality'] = $validatedData['nationality'];
-    //             $mainParticipantData['phone_number'] = $validatedData['phone_number'];
-    //             $mainParticipantData['whatsapp_number'] = $validatedData['whatsapp_number'];
+    //         // Insert normal user and get the inserted participant ID
+    //         $normalParticipant = TripParticipant::create($normalUser);
+    //         $participants[] = $normalParticipant;
+    
+    //         // Initialize array for companions
+    //         $companions = [];
+    
+    //         // Process companions
+    //         foreach ($validatedData['participants'] as $participantData) {
+    //             if ($participantData['is_companion'] === true) {
+    //                 // Store companion details from the request
+    //                 $companions[] = [
+    //                     'user_id' => null,
+    //                     'main_user_id' => $userId,
+    //                     'trip_id' => $validatedData['trip_id'],
+    //                     'name' => $participantData['name'] ?? $user->name,
+    //                     'nationality' => $participantData['nationality'] ?? $user->nationality,
+    //                     'phone_number' => $participantData['phone_number'] ?? $user->phone_number,
+    //                     'whatsapp_number' => $participantData['whatsapp_number'] ?? $user->whatsapp_number,
+    //                     'is_companion' => true,
+    //                     'include_accommodation' => $participantData['include_accommodation'],
+    //                     'accommodation_stars' => $participantData['accommodation_stars'],
+    //                     'nights_count' => $participantData['nights_count'],
+    //                     'check_in_date' => $participantData['check_in_date'],
+    //                     'check_out_date' => $participantData['check_out_date'],
+    //                 ];
+    //             }
     //         }
     
-    //         // إضافة المشارك الرئيسي في جدول trip_participants
-    //         $mainParticipant = TripParticipant::create($mainParticipantData);
-    
-    //         // إضافة المرافقين (companions) في جدول trip_participants
-    //         foreach ($validatedData['companions'] as $companion) {
-    //             TripParticipant::create([
-    //                 'user_id' => null, // المرافق لا يحتاج إلى user_id
-    //                 'trip_id' => $validatedData['trip_id'],
-    //                 'main_user_id' => $validatedData['is_companion'] ? $userId : $mainParticipant->id, // ربط المرافق بالمشارك الرئيسي
-    //                 'name' => $companion['name'],
-    //                 'nationality' => $companion['nationality'],
-    //                 'phone_number' => $companion['phone_number'],
-    //                 'whatsapp_number' => $companion['whatsapp_number'],
-    //                 'is_companion' => true, // هو مرافق
-    //                 'include_accommodation' => $companion['include_accommodation'],
-    //                 'accommodation_stars' => $companion['accommodation_stars'],
-    //                 'nights_count' => $companion['nights_count'],
-    //                 'check_in_date' => null, // يمكن تعديلها حسب الحاجة
-    //                 'check_out_date' => null, // يمكن تعديلها حسب الحاجة
-    //             ]);
+    //         // Insert companions and collect their IDs
+    //         foreach ($companions as $companion) {
+    //             $insertedCompanion = TripParticipant::create($companion);
+    //             $participants[] = $insertedCompanion;
     //         }
     
-    //         // استجابة عند النجاح
-    //         return response()->json(['success' => true, 'message' => 'تم إضافة المشارك والمرافقين بنجاح.'], 201);
+    //         // Get valid option IDs from the additional_options table
+    //         $validOptionIds = AdditionalOption::whereIn('id', $validatedData['options'])->pluck('id')->toArray();
+    
+    //         // Store options for each participant if the option_id is valid
+    //         foreach ($validOptionIds as $optionId) {
+    //             foreach ($participants as $participant) {
+    //                 TripOptionsParticipant::create([
+    //                     'trip_id' => $validatedData['trip_id'],
+    //                     'option_id' => $optionId, // Use the validated option ID
+    //                     'participant_id' => $participant->id // Use the actual participant ID
+    //                 ]);
+    //             }
+    //         }
+    
+    //         return response()->json([
+    //             'message' => 'Participants added successfully',
+    //             'participants' => $participants
+    //         ], 201);
+    
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         return response()->json(['error' => $e->validator->errors()], 422);
     //     } catch (\Exception $e) {
-    //         // استجابة عند حدوث خطأ
-    //         return response()->json(['success' => false, 'message' => 'حدث خطأ أثناء إضافة البيانات: ' . $e->getMessage()], 500);
+    //         return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
     //     }
     // }
- 
+    
+
+    
+    
+
+
+
     public function storeUserAndParticipant(Request $request)
     {
         if (!Auth::id()) {

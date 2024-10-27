@@ -196,7 +196,6 @@ const App = () => {
         <Route path="/companion" element={<GetCompanion />} />
 
         <Route path="/faq" element={<FAQ />} />
-        <Route path="/f" element={<Lastt />} />
 
       </Routes>
       {/* <Footer/> */}

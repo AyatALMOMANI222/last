@@ -12,6 +12,7 @@ import {
 } from "../../../common/localStorage";
 import { useTripsStepper } from "../StepperContext";
 import "./style.scss";
+import DateInput from "../../../CoreComponent/Date";
 
 const ParticipantTripForm = () => {
   const intialValue = {
@@ -138,7 +139,22 @@ const ParticipantTripForm = () => {
                 }
                 label="Include Accommodation"
               />
-
+              <DateInput
+                label="Check-In Date"
+                inputValue={participant.check_in_date}
+                setInputValue={(value) =>
+                  handleInputChange(participant.id, "check_in_date", value)
+                }
+                required={true}
+              />
+              <DateInput
+                label="Check-Out Date"
+                inputValue={participant.check_out_date}
+                setInputValue={(value) =>
+                  handleInputChange(participant.id, "check_out_date", value)
+                }
+                required={true}
+              />
               <Input
                 label="Accommodation Stars"
                 placeholder="Enter accommodation stars"

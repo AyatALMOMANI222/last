@@ -6,6 +6,7 @@ use App\Models\Conference;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use function Laravel\Prompts\error;
 
@@ -101,7 +102,37 @@ class UserController extends Controller
     }
     
     
-
+    public function getUserById()
+    {
+        try {
+            // الحصول على user_id من التوكن
+            $user_id = Auth::id();
+    
+            // التحقق من وجود user_id
+            if (!$user_id) {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+    
+            // جلب المستخدم مع المؤتمرات المرتبطة به
+            $user = User::with('conferences')->find($user_id);
+    
+            // التحقق من وجود المستخدم
+            if (!$user) {
+                return response()->json(['message' => 'User not found.'], 404);
+            }
+    
+            return response()->json([
+                'user' => $user,
+                'conferences' => $user->conferences,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve user.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
     public function updateStatus(Request $request, $id)
     {
         try {

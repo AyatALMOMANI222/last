@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Input from "../../../CoreComponent/Input";
-import DateInput from "../../../CoreComponent/Date";
 import Checkbox from "../../../CoreComponent/Checkbox";
 import { toast } from "react-toastify";
 import "./style.scss";
@@ -14,34 +12,62 @@ const AdditionalOptionsForm = () => {
   const { currentStep, completeStep } = useTripsStepper();
   const [selectedOptions, setSelectedOptions] = useState([]);
   const options = getFromLocalStorage("additionalOptions") || [];
-  const handleCheckboxChange = (id) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+
+  const handleCheckboxChange = (option) => {
+    setSelectedOptions((prev) => {
+      const optionExists = prev?.find(
+        (item) => item.option_name === option.option_name
+      );
+      if (optionExists) {
+        // Remove if already selected
+        return prev.filter((item) => item.option_name !== option.option_name);
+      } else {
+        // Add new option
+        return [
+          ...prev,
+          {
+            id: option.id,
+            option_name: option.option_name,
+            price: option.price,
+            value: true,
+          },
+        ];
+      }
+    });
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
     toast.success("The data was updated successfully!");
-    const formData = selectedOptions;
     completeStep(currentStep);
-    saveToLocalStorage("AdditionalOptionsData", formData);
+    saveToLocalStorage("AdditionalOptionsData", selectedOptions);
   };
+
   useEffect(() => {
     const data = getFromLocalStorage("AdditionalOptionsData");
-    if (data) {
+    if (Array.isArray(data)) {
       setSelectedOptions(data);
+    } else {
+      setSelectedOptions([]); // Ensure selectedOptions is always an array
     }
   }, []);
+
   return (
     <div>
-      <form className="additional-options-stepper-container">
+      <form
+        className="additional-options-stepper-container"
+        onSubmit={handleSubmit}
+      >
         {options?.map((option) => (
           <Checkbox
             key={option.id}
-            label={`${option.option_name} - ${option.option_description} ($${option.price})`}
-            checkboxValue={!!selectedOptions[option?.id]}
-            setCheckboxValue={() => handleCheckboxChange(option.id)}
+            label={`${option.option_name} ($${option.price})`}
+            checkboxValue={
+              !!selectedOptions?.find(
+                (item) => item.option_name === option.option_name
+              )
+            }
+            setCheckboxValue={() => handleCheckboxChange(option)}
             required={false}
             icon={null}
           />
@@ -56,4 +82,5 @@ const AdditionalOptionsForm = () => {
     </div>
   );
 };
+
 export default AdditionalOptionsForm;

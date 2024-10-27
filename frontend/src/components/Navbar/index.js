@@ -92,6 +92,7 @@ const NavBar = () => {
         { label: "Reservation", url: "/reservation/form" },
         { label: "Trips", url: "/create/trip" },
         { label: "Trips User", url: "/trip/user" },
+        { label: "All Trips", url: "/view-user-trips" },
       ],
     },
     {
