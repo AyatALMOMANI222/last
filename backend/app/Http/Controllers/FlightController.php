@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Flight;
 use App\Models\Notification;
 use App\Models\User;
@@ -465,6 +466,8 @@ class FlightController extends Controller
                 $notification->user_id = $admin->id; // Save the admin user_id
                 $notification->message = "Flight {$flight->flight_id} has been marked as deleted by user {$user->id}.";
                 $notification->save();
+                broadcast(new NotificationSent($notification))->toOthers();
+
             }
 
             return response()->json(['message' => 'Flight and companions marked as deleted successfully'], 200);

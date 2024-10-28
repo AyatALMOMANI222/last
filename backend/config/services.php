@@ -34,6 +34,17 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'pusher' => [
+    'driver' => 'pusher',
+    'key' => '743171d2766ff157a71a',
+    'secret' => 'b8c7d169bfb95a4713e1',
+    'app_id' => '1886913',
+    'options' => [
+        'cluster' => 'ap2',
+        'useTLS' => true,
+    ],
+],
+
 
 
 ];

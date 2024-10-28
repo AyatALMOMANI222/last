@@ -4,28 +4,30 @@ import Slider from "../../../Slider";
 import httpService from "../../../../common/httpService";
 import { useNavigate, useParams } from "react-router-dom";
 import { backendUrlImages } from "../../../../constant/config";
+import SimpleLabelValue from "../../../SimpleLabelValue";
 
 const ViewOneTripUser = () => {
   const { id } = useParams();
   const [tripData, setTripData] = useState({});
   const getAuthToken = () => localStorage.getItem("token");
   const navigate = useNavigate();
+
   const getTripById = async () => {
     try {
       const response = await httpService({
         method: "GET",
         url: `http://127.0.0.1:8000/api/trip_option/${id}`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
-
         showLoader: true,
+
       });
 
-      console.log(response?.trip);
       setTripData(response?.trip);
     } catch (error) {
       console.error("Error submitting discount", error);
     }
   };
+
   useEffect(() => {
     getTripById();
   }, []);
@@ -59,21 +61,37 @@ const ViewOneTripUser = () => {
       </div>
       <div>
         <h1>{tripData?.name}</h1>
-        <p>{tripData?.description}</p>
-        <h3>Price Information</h3>
-        <ul>
-          <li>Price per person: ${tripData?.price_per_person}</li>
-          <li>Price for two: ${tripData?.price_for_two}</li>
-          <li>Price for three or more: ${tripData?.price_for_three_or_more}</li>
-        </ul>
-        {tripData?.additional_options?.map((item) => {
-          return (
-            <div>
-              <div>{item?.option_name}</div>
-              <div>{`Price : ${item?.price}$`} </div>
-            </div>
-          );
-        })}
+        <div className="info-header">{tripData?.description}</div>
+        <h3>Price info-headerrmation</h3>
+        <div className="additional-options-container">
+          <SimpleLabelValue
+            label="Price per person"
+            value={` ${tripData?.price_per_person}$`}
+          />
+          <SimpleLabelValue
+            label="Price for two"
+            value={` ${tripData?.price_for_two}$`}
+          />
+          <SimpleLabelValue
+            label="Price for three or more"
+            value={` ${tripData?.price_for_three_or_more}$`}
+          />
+        </div>
+        <h3>Additional Options</h3>
+
+        <div className="additional-options-container">
+          {tripData?.additional_options?.map((item) => {
+            return (
+              <div>
+                <SimpleLabelValue
+                  label={item?.option_name}
+                  value={`${item?.price}$`}
+                />
+              </div>
+            );
+          })}
+        </div>
+
         <button
           className="register-trip-btn"
           onClick={() => {

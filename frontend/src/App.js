@@ -70,6 +70,8 @@ import Stepper from "./CoreComponent/stepper";
 import ParentComponent from "./components/ReservationstepperPage";
 import TripsStepperPage from "./components/TripsStepperPage/index";
 import Lastt from "./components/ReservationstepperPage/last";
+// import Echo from "laravel-echo";
+// import Pusher from 'pusher-js';
 const App = () => {
   const location = useLocation();
   const [showLoader, setShowLoader] = useState(false);
@@ -90,8 +92,12 @@ const App = () => {
     };
   }, []);
 
-  // Define the routes where the NavBar should be displayed
-
+  // const echo = new Echo({
+  //   broadcaster: "pusher",
+  //   key: "743171d2766ff157a71a",
+  //   cluster: "ap2",
+  //   forceTLS: true,
+  // });
   const noNavRoute = [
     "/registertype",
     "/register/speaker",

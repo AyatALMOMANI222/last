@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import SVG from "react-inlinesvg";
 import { close } from "../../icons";
 import "./style.scss";
-const Dialog = ({ header,open, setOpen, children }) => {
+const Dialog = ({ viewHeader, header, open, setOpen, children }) => {
   return (
     <Fragment>
       {open && (
@@ -10,10 +10,12 @@ const Dialog = ({ header,open, setOpen, children }) => {
           <div className="overlay">
             <div className="content-wrapper">
               <div className="children-container">
-                <div className="title-container">
-                  <span>{header}</span>
-                  <SVG src={close} onClick={() => setOpen(false)}></SVG>
-                </div>
+                {viewHeader && (
+                  <div className="title-container">
+                    <span>{header}</span>
+                    <SVG src={close} onClick={() => setOpen(false)}></SVG>
+                  </div>
+                )}
                 {children}
               </div>
             </div>

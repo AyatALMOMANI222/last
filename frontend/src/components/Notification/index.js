@@ -5,20 +5,19 @@ import "./style.scss";
 import axios from "axios";
 import httpService from "../../common/httpService";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify"; // استيراد ToastContainer و toast
+import Echo from "laravel-echo"; // استيراد Echo
+import Pusher from "pusher-js"; // استيراد Pusher
+import 'react-toastify/dist/ReactToastify.css'; // استيراد الأنماط
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
-
   const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleMarkAsRead = (id) => {
-    // Handle marking the notification as read
   };
 
   const handleClickOutside = (event) => {
@@ -39,50 +38,83 @@ const NotificationDropdown = () => {
 
       console.log(response.data);
       setNotifications(response?.data);
+
+      // عرض إشعار توست عند تلقي إشعار جديد
+      response.data.forEach((notification) => {
+        if (!notification.read) {
+          toast(notification.message); // عرض التوست
+        }
+      });
     } catch (error) {
-      console.error("Error fetching conferences", error);
+      console.error("Error fetching notifications", error);
     }
   };
 
   useEffect(() => {
     getAllNotifications();
-  }, []);
+
+    // إعداد Echo مع Pusher
+    const echo = new Echo({
+      broadcaster: 'pusher',
+      key: '743171d2766ff157a71a', // مفتاح Pusher
+      cluster: 'ap2', // كلاستر Pusher
+      forceTLS: true,
+      authEndpoint: 'http://yourapp.test/broadcasting/auth', // اضبطه كما هو مطلوب
+      auth: {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`, // إذا كنت تستخدم JWT
+        },
+      },
+    });
+
+    // تسجيل أحداث الاتصال
+    echo.connector.pusher.connection.bind('connected', () => {
+      console.log('Successfully connected to Pusher!'); // طباعة رسالة نجاح الاتصال
+    });
+
+    echo.connector.pusher.connection.bind('failed', () => {
+      console.error('Failed to connect to Pusher.'); // طباعة رسالة فشل الاتصال
+    });
+
+    return () => {
+      echo.disconnect(); // تنظيف الاتصال عند إزالة المكون
+    };
+  }, []); // تعمل فقط عند التركيب
 
   useEffect(() => {
     if (isOpen) {
-      // إضافة مستمع للنقر عندما تكون القائمة مفتوحة
       document.addEventListener("mousedown", handleClickOutside);
     } else {
-      // إزالة المستمع عندما تكون القائمة مغلقة
       document.removeEventListener("mousedown", handleClickOutside);
     }
 
-    // إزالة المستمع عند إزالة المكون (لتجنب تسريب الذاكرة)
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
+  // تصفية الإشعارات غير المقروءة
+  const unreadNotifications = notifications.filter(notification => !notification.read);
+
   return (
     <div className="notification-container" ref={dropdownRef}>
       <div className="notification-icon" onClick={toggleDropdown}>
         <SVG src={notification} fill="#000" />
-        {notifications.some((notif) => !notif.read) && (
+        {unreadNotifications.length > 0 && (
           <span className="notification-badge">
-            {notifications.filter((item) => !item.read).length}
+            {unreadNotifications.length}
           </span>
         )}
       </div>
-      {isOpen && (
+      {isOpen && unreadNotifications.length > 0 && (
         <div className="notification-dropdown">
-          {notifications.map((notification) => (
+          {unreadNotifications.map((notification) => (
             <div
               key={notification.id}
-              className={`notification-item ${
-                notification.read ? "read" : "unread"
-              }`}
+              className={`notification-item unread`}
               onClick={() => {
                 console.log({ notification });
+                // يمكنك تنفيذ أي إجراء عند النقر على الإشعار هنا
                 if (
                   notification?.message?.includes("New speaker registration")
                 ) {
@@ -92,15 +124,16 @@ const NotificationDropdown = () => {
                 }
               }}
             >
-              {!notification.read && <span className="notification-dot"></span>}
+              <span className="notification-dot"></span>
               <div className="notification-content">
                 <div className="notification-title">{notification.message}</div>
-                <small>{notification.read ? "Read" : "Unread"}</small>
+                <small>Unread</small>
               </div>
             </div>
           ))}
         </div>
       )}
+      <ToastContainer /> {/* إضافة ToastContainer هنا */}
     </div>
   );
 };

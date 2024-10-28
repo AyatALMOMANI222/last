@@ -3,9 +3,9 @@ import httpService from "../../../../common/httpService";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
 import { backendUrlImages } from "../../../../constant/config";
-
+import tripImage from "../../../../icons/tripImage.webp";
 const ViewUserTrips = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [allTrips, setAllTrips] = useState([]);
   const getAuthToken = () => localStorage.getItem("token");
 
@@ -15,13 +15,12 @@ const ViewUserTrips = () => {
         method: "GET",
         url: `http://127.0.0.1:8000/api/all-trip`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
-        withLoadder:true,
+        withLoadder: true,
         withToast: false,
       });
 
-      console.log( response?.trips
-      );
-      setAllTrips( response?.trips)
+      console.log(response?.trips);
+      setAllTrips(response?.trips);
     } catch (error) {
       console.error("Error fetching conferences", error);
     }
@@ -42,7 +41,14 @@ const ViewUserTrips = () => {
       <div className="trip-cards">
         {allTrips?.map((trip) => (
           <div className="trip-card" key={trip.id}>
-            <img src={`${backendUrlImages}${trip.image_1}`} className="trip-image" />
+            <img
+              src={`${backendUrlImages}${trip.image_1}`}
+              onError={(e) => {
+                e.currentTarget.src = tripImage;
+              }}
+              className="trip-image"
+              alt="Trip Image"
+            />
 
             <div className="trip-info">
               <div className="main-info">
@@ -50,10 +56,12 @@ const ViewUserTrips = () => {
                 <div className="desc">{trip.description}</div>
               </div>
               <div className="actions-btns">
-                <button className="view" onClick={() => {
-
-                  navigate(`/view/trip/${trip?.id}`)
-                }}>
+                <button
+                  className="view"
+                  onClick={() => {
+                    navigate(`/view/trip/${trip?.id}`);
+                  }}
+                >
                   Register for a Trip
                 </button>
               </div>

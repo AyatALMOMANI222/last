@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -52,7 +53,10 @@ class PaperController extends Controller
             try {
                 $message = 'Your scientific paper has been successfully submitted. Thank you for your submission.';
                 Notification::route('mail', $validatedData['email'])->notify(new EmailNotification($message));
-
+                broadcast(new NotificationSent([
+                    'message' => $message,
+                    'email' => $validatedData['email'],
+                ]));
                 return response()->json([
                     'message' => 'Paper created and notification sent successfully!',
                     'data' => $paper,

@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use Illuminate\Http\Request;
 use App\Models\AvailableFlight;
 use App\Models\Flight;
@@ -41,14 +42,14 @@ class AvailableFlightController extends Controller
                 ]);
     
                 // إرسال الإشعار إذا كان user_id موجود
-                // $message = 'You can now visit the website to check the available flight options within the requested dates. Please visit the site as soon as possible and select the appropriate flight to proceed with the necessary arrangements.';
-                // Notification::create([
-                //     'user_id' => $flight->user_id,  // إرسال الإشعار إلى user_id
-                //     'message' => $message,
-                //     'is_read' => false,
-                //     'register_id' => $flight->user_id,  // تعيين register_id كـ user_id
-                // ]);
-    
+                $message = 'You can now visit the website to check the available flight options within the requested dates. Please visit the site as soon as possible and select the appropriate flight to proceed with the necessary arrangements.';
+                $userNotification =  Notification::create([
+                    'user_id' => $flight->user_id,  // إرسال الإشعار إلى user_id
+                    'message' => $message,
+                    'is_read' => false,
+                    'register_id' => $flight->user_id,  // تعيين register_id كـ user_id
+                ]);
+                broadcast(new NotificationSent($userNotification));
                 return response()->json([
                     'message' => 'Available flight created successfully',
                     'available_flight' => $availableFlight,

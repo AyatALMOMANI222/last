@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Conference;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -47,13 +48,13 @@ class SpeakerController extends Controller
             ]));
     
             // إرسال إشعار إلى السبيكر باستخدام نموذج Notification
-            Notification::create([
+            $userNotification =  Notification::create([
                 'user_id' => $user_id,
                 'message' => 'We are pleased to inform you that your profile is now active. You can log in to the website and complete your profile.',
                 'conference_id' => $conference_id,
                 'is_read' => false, // يمكنك تعيين القيمة حسب الحاجة
             ]);
-    
+            broadcast(new NotificationSent($userNotification));
             // Return a success response
             return response()->json([
                 'message' => 'Speaker created successfully',
@@ -182,12 +183,12 @@ class SpeakerController extends Controller
                 $notificationMessage = 'سيتم تزويدك برابط الزوم الخاص بالمؤتمر قبل موعد المؤتمر أو محاضرتك بيوم واحد للمشاركة';
 
                 // إدخال الإشعار في قاعدة البيانات
-                Notification::create([
+                $userNotification =  Notification::create([
                     'user_id' => $userId, // إرسال الإشعار إلى المستخدم نفسه
                     'message' => $notificationMessage,
                     'is_read' => false, // الإشعار جديد لم يُقرأ بعد
                 ]);
-
+                broadcast(new NotificationSent($userNotification));
                 return response()->json(['message' => 'Online participation updated successfully', 'notification' => $notificationMessage, 'speaker' => $speaker], 200);
             } else {
                 return response()->json(['error' => 'Online participation is not approved for this speaker'], 400);

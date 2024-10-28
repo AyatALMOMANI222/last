@@ -1,61 +1,50 @@
 import React, { useState, useEffect } from "react";
-import "./style.scss"; 
+import "./style.scss";
 
-const Slider = () => {
+const ImageSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(false);
-  
+
   const slides = [
-    <img src="/image/conff66.webp" alt="Slide 1" />,
-    <img src="/image/conff.webp" alt="Slide 2" />,
-    <img src="/image/conf7.webp" alt="Slide 3" />,
-    <img src="/image/confg.jpeg" alt="Slide 4" />,
-    <img src="/image/1111.webp" alt="Slide 5" />,
-    <video 
-      src="/image/6774633-uhd_3840_2160_30fps.mp4" 
-      className={`slide-video ${fade ? "fade-out" : "fade-in"}`} 
-      autoPlay 
-      loop 
-      muted 
-      onEnded={() => {
-        setFade(false); // أوقف التلاشي
-        setCurrentIndex(0); // ارجع إلى الصورة الأولى
-      }} 
-      onPlay={() => setFade(false)} // عند تشغيل الفيديو، أوقف التلاشي
-    />
+    { type: 'image', src: "/image/conff66.webp", alt: "Slide 1" },
+    { type: 'image', src: "/image/conff.webp", alt: "Slide 2" },
+    { type: 'image', src: "/image/conf7.webp", alt: "Slide 3" },
+    { type: 'image', src: "/image/confg.jpeg", alt: "Slide 4" },
+    { type: 'image', src: "/image/1111.webp", alt: "Slide 5" },
+    { type: 'video', src: "/image/6774633-uhd_3840_2160_30fps.mp4", alt: "Video Slide" },
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(true); // بدء التلاشي قبل الانتقال إلى الشريحة التالية
+      setFade(true);
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
-        setFade(false); // إعادة الظهور بعد الانتقال
-      }, 500); // مدة التلاشي
-    }, 4000); // مدة العرض لكل شريحة
+        setFade(false);
+      }, 500);
+    }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
-  
+  }, [slides.length]);
+
   return (
-    <div className="slider-container">
-      <div className="slides-container">
-        <div
-          className="slides"
-          style={{
-            transform: `translateX(-${currentIndex * 100}%)`,
-            transition: currentIndex === 0 ? 'none' : 'transform 0.5s ease-in-out', // إلغاء الانتقال إذا كانت الصورة الأولى
-          }}
-        >
-          {slides.map((slide, index) => (
-            <div key={index} className="slide">
-              {slide}
-            </div>
-          ))}
-        </div>
+    <div className="image-slider">
+      <div className={`slide-wrapper ${fade ? "fade-effect" : ""}`}>
+        {slides.map((slide, index) => (
+          <div
+            key={index}
+            className={`slide-item ${index === currentIndex ? "active-slide" : ""}`}
+            style={{ display: index === currentIndex ? "block" : "none" }}
+          >
+            {slide.type === 'image' ? (
+              <img src={slide.src} alt={slide.alt} className="slide-image" />
+            ) : (
+              <video src={slide.src} autoPlay loop muted className="slide-video" />
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default Slider;
+export default ImageSlider;

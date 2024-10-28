@@ -7,6 +7,8 @@ use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
+use App\Events\NotificationSent;
 
 use function Laravel\Prompts\error;
 
@@ -71,23 +73,29 @@ class UserController extends Controller
             // إرسال الإشعار لجميع المدراء
             $admins = User::where('isAdmin', true)->get();
             foreach ($admins as $admin) {
-                Notification::create([
+                // إنشاء الإشعار
+                $notification = Notification::create([
                     'user_id' => $admin->id,
                     'register_id' => $user->id,
                     'conference_id' => $conference_id,
                     'message' => 'New speaker registration: ' . $user->name,
                     'is_read' => false,
                 ]);
-            }
     
-            // إرسال الإشعار للمستخدم الجديد
-            Notification::create([
+                // بث الإشعار
+                broadcast(new NotificationSent($notification))->toOthers();
+
+            }
+            $userNotification = Notification::create([
                 'user_id' => $user->id,
                 'register_id' => $user->id,
                 'conference_id' => $conference_id,
                 'message' => 'When the admin approves your addition as a speaker for this conference, you will be notified via email and an activation code will be sent for your profile on the website.',
                 'is_read' => false,
             ]);
+            
+            // بث الإشعار للمستخدم الجديد
+            broadcast(new NotificationSent($userNotification));
     
             return response()->json([
                 'message' => 'User created, added to conference, and notifications sent successfully!',
@@ -100,6 +108,7 @@ class UserController extends Controller
             ], 500);
         }
     }
+    
     
     
     public function getUserById()
@@ -156,13 +165,13 @@ class UserController extends Controller
                 : 'Your application has been rejected.';
 
             // إرسال الإشعار إلى المستخدم
-            Notification::create([
+            $userNotification = Notification::create([
                 'user_id' => $user->id, // المتحدث نفسه
                 'message' => $message,
                 'is_read' => false,
                 'register_id' => null, // بقاء register_id فارغة
             ]);
-
+            broadcast(new NotificationSent($userNotification));
             return response()->json([
                 'message' => 'User status updated successfully and notification sent!',
                 'status' => $user->status,

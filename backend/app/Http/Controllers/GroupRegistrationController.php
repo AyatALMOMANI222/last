@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\GroupRegistration;
 use App\Models\Notification;
 use App\Models\User;
@@ -46,22 +47,23 @@ class GroupRegistrationController extends Controller
             ]);
     
             // Send notification to the user
-            Notification::create([
+            $userNotification =  Notification::create([
                 'user_id' => $user->id,
                 'message' => 'You will be notified via email after your request is accepted to download the registered names. These names must be in English and in an Excel file format.',
                 'conference_id' => $validatedData['conference_id'],
                 'is_read' => false,
             ]);
-    
+            broadcast(new NotificationSent($userNotification));
             // Send notifications to all admins
             $admins = User::where('isAdmin', true)->get();
             foreach ($admins as $admin) {
-                Notification::create([
+                $notification =   Notification::create([
                     'user_id' => $admin->id,
                     'register_id' => $user->id,
                     'message' => 'New group registration: ' . $user->email,
                     'is_read' => false,
                 ]);
+                broadcast(new NotificationSent($notification))->toOthers();
             }
     
             // Return the response with user details and token

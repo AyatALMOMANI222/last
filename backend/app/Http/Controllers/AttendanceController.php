@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\Conference;
@@ -48,13 +49,13 @@ class AttendanceController extends Controller
             $message = "We are pleased to inform you that you have been successfully registered, and your profile is now active on the website. You can log in to it now.";
     
             // إرسال الإشعار إلى المستخدم
-            Notification::create([
+            $userNotification =   Notification::create([
                 'user_id' => $user->id, // المتحدث نفسه
                 'message' => $message,
                 'is_read' => false,
                 'register_id' => null, // بقاء register_id فارغة
             ]);
-    
+            broadcast(new NotificationSent($userNotification));
             // // إرسال الإشعار إلى جميع المدراء
             $admins = User::where('isAdmin', true)->get();
             foreach ($admins as $admin) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Notification;
 use App\Models\Sponsor;
 use App\Models\User;
@@ -46,22 +47,23 @@ use Illuminate\Validation\ValidationException;
                 $user->sponsors()->save($sponsor);
         
                 // إرسال إشعار إلى المستخدم
-                Notification::create([
+                $userNotification = Notification::create([
                     'user_id' => $user->id,
                     'message' => 'You will be contacted directly by the organizing company via email.',
                     'is_read' => false,
                 ]);
-        
+                broadcast(new NotificationSent($userNotification));
                 // **إضافة إشعار لجميع المدراء**
                 $admins = User::where('isAdmin', true)->get();
                 foreach ($admins as $admin) {
-                    Notification::create([
+                 $notification = Notification::create([
                         'user_id' => $admin->id,
                         'register_id' => $user->id,
                         // 'conference_id' => $validatedData['conference_id'],
                         'message' => 'New sponsor registration: ' . $user->email, // يمكنك تعديل هذه الرسالة حسب الحاجة
                         'is_read' => false,
                     ]);
+                    broadcast(new NotificationSent($notification))->toOthers();
                 }
         
                 return response()->json(['message' => 'User and Sponsor created successfully!', 'sponsor' => $sponsor], 201);

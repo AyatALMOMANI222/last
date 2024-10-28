@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\Notification;
 use App\Models\Reservation;
 use App\Models\Room;
@@ -196,11 +197,12 @@ class ReservationsController extends Controller
             $admins = User::where('isAdmin', true)->get(); // افترض أن لديك نموذج User
             foreach ($admins as $admin) {
                 // إنشاء إشعار وحفظه في جدول notifications
-                Notification::create([
+                $notification = Notification::create([
                     'user_id' => $admin->id, // استخدام معرف الإداري
                     'message' => 'Reservation ID ' . $reservation->id . ' has been deleted.',
                     'is_read' => false,
                 ]);
+                broadcast(new NotificationSent($notification))->toOthers();
             }
     
             return response()->json([
