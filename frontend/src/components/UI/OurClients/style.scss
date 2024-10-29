@@ -21,24 +21,26 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
-
 .clients-logo {
     width: 300px; /* يمكنك تعديل العرض حسب الحاجة */
     height: 300px; /* يمكنك تعديل الارتفاع حسب الحاجة */
-    background-color: #f0f0f0; /* لون الخلفية */
-    border-radius: 60px 0 60px 0; /* الزوايا الدائرية والحادة */
+    background-color: white; /* لون الخلفية */
+    border-radius: 60px; /* الزوايا الدائرية */
     position: relative; /* تأكد من أن العنصر سيكون موضعه الصحيح */
     margin: 9px;
     border: 2px solid #ff4d4d; /* حد أحمر رفيع */
+    display: flex;
+    justify-content: center; /* مركز العنصر عمودياً */
+    align-items: center; /* مركز العنصر أفقياً */
 }
 
 .client-logo {
-    width: 100%; /* اجعل الصورة تأخذ العرض الكامل */
-    height: 100%; /* اجعل الارتفاع يأخذ ارتفاع العنصر */
+    width: 80%; /* اجعل الصورة تأخذ 80% من العرض */
+    height: 80%; /* اجعل الارتفاع يأخذ 80% من الارتفاع */
     object-fit: contain; /* اجعل الصورة تظهر بالكامل مع الحفاظ على نسبة العرض إلى الارتفاع */
     object-position: center; /* اجعل الصورة في وسط العنصر */
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative; /* تغيير من absolute إلى relative */
 }

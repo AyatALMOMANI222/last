@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import Stepper from "../../CoreComponent/stepper";
 import "./style.scss";
+import FlightInformation from "./FlightInformation";
+import { FlightStepperProvider, useFlightStepper } from "./StepperContext";
+import CompanionInformation from "./CompanionInformation";
 
-const ParentComponent = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [completedSteps, setCompletedSteps] = useState([]);
+const FlightStepperPageContent = () => {
+  const { currentStep, completedSteps, setCurrentStep, completeStep } =
+    useFlightStepper();
 
   const stepperInfo = [
     { title: "Step 1" },
@@ -13,15 +16,9 @@ const ParentComponent = () => {
     { title: "Step 4" },
   ];
 
-  const completeStep = (stepIndex) => {
-    if (!completedSteps.includes(stepIndex)) {
-      setCompletedSteps((prev) => [...prev, stepIndex]);
-    }
-    setCurrentStep(stepIndex + 1);
-  };
   const componentsMap = [
-    <h1>step1</h1>,
-    <h1>step2</h1>,
+    <FlightInformation />,
+    <CompanionInformation />,
     <h1>step3</h1>,
     <h1>step4</h1>,
   ];
@@ -45,16 +42,14 @@ const ParentComponent = () => {
         <div className="header-current-step">Tilte </div>
         <div className="current-component">{componentsMap[currentStep]}</div>
       </div>
-      <div className="actions-section">
-        <button
-          className="next-button"
-          onClick={() => completeStep(currentStep)}
-        >
-          Next
-        </button>
-      </div>
     </div>
   );
 };
 
-export default ParentComponent
+const FlightStepperPage = () => (
+  <FlightStepperProvider>
+    <FlightStepperPageContent />
+  </FlightStepperProvider>
+);
+
+export default FlightStepperPage;

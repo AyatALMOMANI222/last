@@ -15,7 +15,6 @@ class AcceptedFlightController extends Controller
             $validatedData = $request->validate([
                 'flight_id' => 'required|exists:flights,flight_id',  
                 'price' => 'required|numeric|min:0',
-
                 'admin_set_deadline' => 'nullable|date',
                 'ticket_number' => 'nullable|string',
                 'ticket_image' => 'nullable|string',

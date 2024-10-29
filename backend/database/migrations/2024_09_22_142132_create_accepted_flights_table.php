@@ -12,6 +12,7 @@ class CreateAcceptedFlightsTable extends Migration
             $table->id('accepted_flight_id');  // معرّف الرحلة المقبولة (Primary Key)
             $table->foreignId('flight_id')->constrained('flights', 'flight_id')->onDelete('cascade');
             $table->decimal('price', 8, 2);  // سعر التذكرة
+            
             $table->timestamp('admin_set_deadline')->nullable();  // تاريخ آخر موعد تحدده الإدارة
         
             $table->string('ticket_number')->nullable();  // رقم التذكرة

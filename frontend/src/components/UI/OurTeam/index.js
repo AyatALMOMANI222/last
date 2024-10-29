@@ -12,7 +12,7 @@ const OurTeams = () => {
     {
       name: 'Ameera Abu Saif',
       role: 'Executive Secretary',
-      image: require('./image/ameera.jpg'), // استخدام require للصورة
+      image: require('./image/ameera.png'), // استخدام require للصورة
     },
     {
       name: 'Dana Al Sabbar',

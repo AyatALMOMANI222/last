@@ -28,6 +28,7 @@ use App\Http\Controllers\FlightController;
 use App\Http\Controllers\GroupRegistrationController;
 use App\Http\Controllers\GroupTripParticipantController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OurClientController;
 use App\Http\Controllers\PaperController;
 use App\Http\Controllers\ReservationsController;
 use App\Http\Controllers\RoomController;
@@ -234,3 +235,9 @@ Route::post('/attendances', [AttendanceController::class, 'storeAttendance']);
 Route::post('/register/group', [GroupRegistrationController::class, 'store']);
 Route::put('/update/Admin/group', [GroupRegistrationController::class, 'updateGroupByAdminByUserId'])->middleware(['auth:sanctum','admin']);
 Route::post('/update/user', [GroupRegistrationController::class, 'updateByUser'])->middleware('auth:sanctum');
+
+
+// ourClients
+Route::post('/clients', [OurClientController::class, 'store']);
+Route::get('/clients', [OurClientController::class, 'index']);
+Route::delete('/clients/{id}', [OurClientController::class, 'destroy']);
