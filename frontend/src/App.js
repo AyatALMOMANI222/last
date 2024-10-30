@@ -71,6 +71,8 @@ import ParentComponent from "./components/ReservationstepperPage";
 import TripsStepperPage from "./components/TripsStepperPage/index";
 import Lastt from "./components/ReservationstepperPage/last";
 import FlightStepperPage from "./components/FlightStepperPage";
+import FlightStepperPageAdmin from "./components/FlightStepperPageAdmin";
+import DinnerDetails from "./components/GalaDinner";
 // import Echo from "laravel-echo";
 // import Pusher from 'pusher-js';
 const App = () => {
@@ -158,7 +160,9 @@ const App = () => {
           path="/airport/transfer/price"
           element={<AirportTransferPrice />}
         />
-        <Route path="/GalaDinner" element={<GalaDinner />} />
+        <Route path="/gala" element={<GalaDinner />} />
+        <Route path="/gala/dinner" element={<DinnerDetails />} />
+
         <Route path="/paper" element={<AddScientificPaper />} />
         <Route path="/visa" element={<VisaPage />} />
         <Route path="/home" element={<HomeR />} />
@@ -197,6 +201,7 @@ const App = () => {
         <Route path="/add/excel" element={<ExcelUpload />} />
         <Route path="/group/update/admin" element={<AdminGroupComponent />} />
         <Route path="/flights/users" element={<FlightStepperPage />} />
+        <Route path="/flights/admins" element={<FlightStepperPageAdmin />} />
         <Route
           path="/user/flight/update/:id"
           element={<MainFlightFormUpdate />}

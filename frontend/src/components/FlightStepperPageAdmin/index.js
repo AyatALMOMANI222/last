@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import Stepper from "../../CoreComponent/stepper";
 import "./style.scss";
 import FlightInformation from "./FlightInformation";
-import { FlightStepperProvider, useFlightStepper } from "./StepperContext";
-import CompanionInformation from "./CompanionInformation";
+import { AdminFlightStepperProvider, useFlightStepperAdmin } from "./StepperContext";
+// import CompanionInformation from "./CompanionInformation";
 import { removeFromLocalStorage } from "../../common/localStorage";
 
-const FlightStepperPageContent = () => {
+const AdminFlightStepperPageContent = () => {
   const { currentStep, completedSteps, setCurrentStep, completeStep } =
-    useFlightStepper();
+    useFlightStepperAdmin();
 
   const stepperInfo = [
     { title: "Flight Information" },
     { title: "Companion Information" },
   ];
 
-  const componentsMap = [<FlightInformation />, <CompanionInformation />];
+  const componentsMap = [<FlightInformation/>, <h1>fddd</h1>];
 
   useEffect(() => {
     return () => {
@@ -46,10 +46,10 @@ const FlightStepperPageContent = () => {
   );
 };
 
-const FlightStepperPage = () => (
-  <FlightStepperProvider>
-    <FlightStepperPageContent />
-  </FlightStepperProvider>
+const FlightStepperPageAdmin = () => (
+  <AdminFlightStepperProvider>
+    <AdminFlightStepperPageContent />
+  </AdminFlightStepperProvider>
 );
 
-export default FlightStepperPage;
+export default FlightStepperPageAdmin;

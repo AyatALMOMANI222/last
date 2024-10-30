@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Models\DinnerAttendee;
+use App\Models\Notification;
 use App\Models\Speaker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +38,16 @@ class DinnerAttendeeController extends Controller
             // إنشاء سجل جديد في جدول DinnerAttendee
             DinnerAttendee::create($validatedData);
     
+            // إرسال الإشعار
+            $message = 'All information related to the dinner will be confirmed through a message sent by the organizing company to your WhatsApp.';
+            $userNotification = Notification::create([
+                'user_id' => $speaker->user_id,  // إرسال الإشعار إلى user_id الخاص بالمتحدث
+                'message' => $message,
+                'is_read' => false,
+                'register_id' => $speaker->user_id,  // تعيين register_id كـ user_id
+            ]);
+            broadcast(new NotificationSent($userNotification));
+    
             // استجابة عند النجاح
             return response()->json([
                 'success' => true,
@@ -57,6 +69,7 @@ class DinnerAttendeeController extends Controller
             ], 500); // 500 تعني Internal Server Error
         }
     }
+    
     
     public function destroy($id)
     {

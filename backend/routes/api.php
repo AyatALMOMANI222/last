@@ -133,8 +133,8 @@ Route::get('/flight', [FlightController ::class , 'getFlightByUserId'])->middlew
 Route::get('/companion-flight/{user_id}', [FlightController ::class , 'getFlightByUserIdForCompanion'])->middleware('auth:sanctum');
 Route::get('/user/pag/filter', [FlightController ::class , 'getAllFlightsPaginationAndFilter'])->middleware(['auth:sanctum', 'admin']);
 
-Route::post('/user/update-flight/{flight_id}', [FlightController ::class , 'updateFlightByUser'])->middleware('auth:sanctum');
-Route::put('/admin/update-flight/{flight_id}', [FlightController ::class , 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
+Route::post('/user/update-flight', [FlightController ::class , 'updateFlightByUser'])->middleware('auth:sanctum');
+Route::post('/admin/update-flight', [FlightController ::class , 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
 Route::delete('/flights/{flight_id}', [FlightController::class, 'deleteFlightByUser'])->middleware('auth:sanctum');
 
 // AvailableFlight
@@ -175,7 +175,8 @@ Route::get('/trip_option/{id}', [TripController::class, 'getTripByIdWithOptions'
 // trip-participants
 Route::post('/trip-participants', [TripParticipantController::class, 'addParticipant'])->middleware('auth:sanctum');
 Route::post('/group-trip-participants', [GroupTripParticipantController::class, 'store'])->middleware('auth:sanctum');
-Route::post('/trip-participants_user_companion', [TripParticipantController::class, 'storeUserAndParticipant'])->middleware('auth:sanctum');
+// Route::post('/trip-participants_user_companion', [TripParticipantController::class, 'storeUserAndParticipant'])->middleware('auth:sanctum');
+Route::put('/trip-participants/update', [TripParticipantController::class, 'updateParticipant'])->middleware('auth:sanctum');
 
 // conference-trips
 Route::post('/conference-trips', [ConferenceTripController::class, 'store'])->middleware(['auth:sanctum','admin']);
@@ -196,7 +197,7 @@ Route::get('/user/{id}/conferences', [ConferenceUserController::class, 'getConfe
 
 // DinnerDetail
 Route::post('/dinner-details', [DinnerDetailController::class, 'store'])->middleware(['auth:sanctum','admin']);
-Route::get('/dinners/conference/{conferenceId}', [DinnerDetailController::class, 'getDinnerByConferenceId'])->middleware(['auth:sanctum','admin']);
+Route::get('/dinners/conference/{conferenceId}', [DinnerDetailController::class, 'getDinnerByConferenceId'])->middleware('auth:sanctum');
 Route::put('/dinners/{id}', [DinnerDetailController::class, 'update'])->middleware(['auth:sanctum','admin'])->middleware(['auth:sanctum','admin']);
 Route::delete('/dinner-details/{id}', [DinnerDetailController::class, 'destroy'])->middleware(['auth:sanctum','admin']);
 

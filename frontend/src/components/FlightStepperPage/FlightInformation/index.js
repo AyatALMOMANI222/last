@@ -10,13 +10,15 @@ import {
   saveToLocalStorage,
 } from "../../../common/localStorage";
 import "./style.scss";
+import { useNavigate } from "react-router-dom";
 
 const FlightInformation = () => {
-  const { currentStep, completedSteps, setCurrentStep, completeStep } =
+  const navigate = useNavigate()
+  const { currentStep, completedSteps, setCurrentStep, completeStep , passportImage, setPassportImage } =
     useFlightStepper();
   const [arrivalDate, setArrivalDate] = useState("");
   const [departureDate, setDepartureDate] = useState("");
-  const [passportImage, setPassportImage] = useState(null);
+  // const [passportImage, setPassportImage] = useState(null);
   const [departureAirport, setDepartureAirport] = useState("");
   const [returnAirport, setReturnAirport] = useState("");
   const [specificFlightTime, setSpecificFlightTime] = useState(false);
@@ -45,7 +47,7 @@ const FlightInformation = () => {
       ticketCount,
     };
     completeStep(currentStep);
-console.log({currentStep});
+console.log({passportImage});
 
     saveToLocalStorage("flightDetails", formData);
 
@@ -55,7 +57,6 @@ console.log({currentStep});
     if (data) {
       setArrivalDate(data?.arrivalDate);
       setDepartureDate(data?.departureDate);
-      setPassportImage(data?.passportImage);
       setDepartureAirport(data?.departureAirport);
       setReturnAirport(data?.returnAirport);
       setSpecificFlightTime(data?.specificFlightTime);
@@ -185,10 +186,11 @@ console.log({currentStep});
           className={`next-button ${false ? "disabled" : ""}`}
           onClick={() => {
             handleSubmit();
+            navigate("/")
           }}
           disabled={false}
         >
-          Next
+          Submit
         </button>
       </div>
     </div>

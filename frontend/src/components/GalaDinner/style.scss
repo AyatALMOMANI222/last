@@ -1,0 +1,108 @@
+// Colors
+$primary-color: #c0392b; // Darker red
+$secondary-color: #e74c3c; // Bright red
+$background-color: #f9f9f9; // Light grey background for the page
+$card-bg-color: #ffffff; // White for card backgrounds
+$shadow-color: rgba(0, 0, 0, 0.2); // Softer shadow for depth
+$hover-bg-color: rgba(192, 57, 43, 0.1); // Light red for hover effect
+$font-family: 'Roboto', sans-serif;
+
+.dinner-details-container {
+    max-width: 900px;
+    margin: 0px auto; // قلل الهوامش العلوية والسفلية
+    padding: 20px; // قلل الحشو
+    background-color: $background-color;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px $shadow-color;
+    color: $primary-color;
+    font-family: $font-family;
+
+    .dinner-title {
+        text-align: center;
+        color: $secondary-color;
+        font-size: 2em; // قلل حجم الخط
+        font-weight: bold;
+        margin-bottom: 15px; // قلل الهامش السفلي
+        text-transform: uppercase;
+        // border-bottom: 2px solid $secondary-color; // Added bottom border
+        padding-bottom: 5px; // قلل الحشو
+    }
+
+    .dinner-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // قلل الحد الأدنى للعرض
+        gap: 15px; // قلل التباعد بين العناصر
+    }
+
+    .dinner-detail-item {
+        background-color: $card-bg-color;
+        padding: 15px; // قلل الحشو
+        border-radius: 10px;
+        box-shadow: 0 4px 8px $shadow-color;
+        display: flex;
+        align-items: center;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        border: 1px solid transparent;
+
+        &:hover {
+            transform: translateY(-2px); // قلل حركة التحويل
+            background-color: $hover-bg-color;
+            border: 1px solid $secondary-color;
+        }
+
+        &:active {
+            background-color: $card-bg-color;
+            box-shadow: none;
+            transform: translateY(0);
+        }
+
+        .icon {
+            font-size: 1.5em; // قلل حجم الأيقونة
+            color: $primary-color;
+            margin-right: 15px; // قلل الهامش
+        }
+
+        .text-content {
+            display: flex;
+            flex-direction: column;
+
+            strong {
+                color: $primary-color;
+                font-size: 1.1em; // قلل حجم الخط
+                font-weight: 600;
+                margin-bottom: 3px; // قلل الهامش السفلي
+            }
+
+            span {
+                color: darken($primary-color, 10%);
+                font-size: 0.9em;
+                line-height: 1.4;
+            }
+        }
+    }
+}
+
+// Responsive Adjustments
+@media (max-width: 768px) {
+    .dinner-title {
+        font-size: 1.7em;
+    }
+
+    .dinner-detail-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); // قلل الحد الأدنى للعرض
+    }
+}
+
+@media (max-width: 480px) {
+    .dinner-details-container {
+        padding: 15px;
+    }
+
+    .dinner-title {
+        font-size: 1.5em;
+    }
+
+    .dinner-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}

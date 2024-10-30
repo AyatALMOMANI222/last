@@ -1,9 +1,9 @@
 // StepperContext.js
 import React, { useState, createContext, useContext } from 'react';
 
-const FlightStepperContext = createContext();
+const AdminFlightStepperContext = createContext();
 
-export const FlightStepperProvider = ({ children }) => {
+export const AdminFlightStepperProvider = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [passportImage, setPassportImage] = useState(null);
@@ -16,11 +16,11 @@ export const FlightStepperProvider = ({ children }) => {
   };
 
   return (
-    <FlightStepperContext.Provider value={{ currentStep, setCurrentStep, completedSteps, completeStep , passportImage, setPassportImage }}>
+    <AdminFlightStepperContext.Provider value={{ currentStep, setCurrentStep, completedSteps, completeStep , passportImage, setPassportImage }}>
       {children}
-    </FlightStepperContext.Provider>
+    </AdminFlightStepperContext.Provider>
   );
 };
 
 // Custom hook to use the StepperContext
-export const useFlightStepper = () => useContext(FlightStepperContext);
+export const useFlightStepperAdmin = () => useContext(AdminFlightStepperContext);

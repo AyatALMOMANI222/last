@@ -116,66 +116,162 @@ class ReservationsController extends Controller
     
     
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    // public function deleteReservation($id)
+    // public function updateReservation(Request $request, $id)
     // {
     //     try {
-    //         // إيجاد الحجز بالمعرف (id)
-    //         $reservation = Reservation::find($id);
+    //         // الحصول على الحجز الحالي
+    //         $reservation = Reservation::findOrFail($id);
     
-    //         // التحقق إذا كان الحجز موجوداً
-    //         if (!$reservation) {
+    //         // التحقق إذا كان قد تم تجاوز الموعد النهائي للتحديث
+    //         if ($reservation->update_deadline && now()->greaterThan($reservation->update_deadline)) {
     //             return response()->json([
-    //                 'error' => 'Reservation not found.'
-    //             ], 404);
+    //                 'error' => 'The reservation cannot be updated because the deadline has passed.',
+    //             ], 403); // إرسال خطأ إذا تم تجاوز الموعد النهائي
     //         }
     
-    //         $reservation->is_delete = true;
-    //         $reservation->save();
+    //         // تحقق من القيم المدخلة وتحديث فقط إذا كانت موجودة
+    //         $dataToUpdate = [];
+    
+    //         // إذا تم تقديم قيمة جديدة، استخدمها، وإلا احتفظ بالقيمة القديمة
+    //         if ($request->has('room_count')) {
+    //             $dataToUpdate['room_count'] = $request->input('room_count');
+    //         } else {
+    //             $dataToUpdate['room_count'] = $reservation->room_count; // الاحتفاظ بالقيمة القديمة
+    //         }
+    
+    //         if ($request->has('companions_count')) {
+    //             $dataToUpdate['companions_count'] = $request->input('companions_count');
+    //         } else {
+    //             $dataToUpdate['companions_count'] = $reservation->companions_count; // الاحتفاظ بالقيمة القديمة
+    //         }
+    
+    //         if ($request->has('companions_names')) {
+    //             $dataToUpdate['companions_names'] = $request->input('companions_names');
+    //         } else {
+    //             $dataToUpdate['companions_names'] = $reservation->companions_names; // الاحتفاظ بالقيمة القديمة
+    //         }
+    
+    //         // تحديث الحجز باستخدام القيم المحدثة
+    //         $reservation->update($dataToUpdate);
     
     //         return response()->json([
-    //             'message' => 'Reservation marked as deleted successfully!',
+    //             'message' => 'Reservation updated successfully!',
     //             'reservation' => $reservation
     //         ], 200);
+    
     //     } catch (Exception $e) {
     //         return response()->json([
-    //             'error' => 'An error occurred while deleting the reservation.',
+    //             'error' => 'An error occurred while updating the reservation.',
     //             'message' => $e->getMessage()
-    //         ], 400);
+    //         ], 400); 
     //     }
     // }
+
+
+    public function updateReservation(Request $request, $id)
+    {
+        try {
+            // الحصول على الحجز الحالي
+            $reservation = Reservation::findOrFail($id);
+    
+            // التحقق إذا كان قد تم تجاوز الموعد النهائي للتحديث
+            if ($reservation->update_deadline && now()->greaterThan($reservation->update_deadline)) {
+                return response()->json([
+                    'error' => 'The reservation cannot be updated because the deadline has passed.',
+                ], 403); // إرسال خطأ إذا تم تجاوز الموعد النهائي
+            }
+    
+            // تحقق من القيم المدخلة لتحديث الحجز
+            $dataToUpdate = [
+                'room_count' => $request->input('room_count', $reservation->room_count),
+                'companions_count' => $request->input('companions_count', $reservation->companions_count),
+                'companions_names' => $request->input('companions_names', $reservation->companions_names),
+                'update_deadline' => $request->input('update_deadline', $reservation->update_deadline),
+            ];
+    
+            // تحديث الحجز باستخدام القيم المحدثة
+            $reservation->update($dataToUpdate);
+    
+            // تحديث بيانات الغرف المرتبطة بالحجز
+            if ($request->has('rooms')) {
+                foreach ($request->input('rooms') as $roomData) {
+                    // العثور على الغرفة بناءً على ID الغرفة
+                    $roomId = $roomData['id'] ?? null; // تأكد من وجود ID الغرفة
+                    if ($roomId) {
+                        $room = Room::find($roomId);
+                        if ($room) {
+                            // تحديث بيانات الغرفة
+                            $room->update([
+                                'room_type' => $roomData['room_type'] ?? $room->room_type,
+                                'occupant_name' => $roomData['occupant_name'] ?? $room->occupant_name,
+                                'check_in_date' => $roomData['check_in_date'] ?? $room->check_in_date,
+                                'check_out_date' => $roomData['check_out_date'] ?? $room->check_out_date,
+                                'total_nights' => $roomData['total_nights'] ?? $room->total_nights,
+                                'cost' => $roomData['cost'] ?? $room->cost,
+                                'additional_cost' => $roomData['additional_cost'] ?? $room->additional_cost,
+                                'update_deadline' => $roomData['update_deadline'] ?? $room->update_deadline,
+                            ]);
+                        }
+                    } else {
+                        // إذا لم يكن هناك ID للغرفة، يمكنك إضافة منطق لإضافة غرفة جديدة
+                        Room::create([
+                            'reservation_id' => $reservation->id, // تمرير ID الحجز
+                            'room_type' => $roomData['room_type'],
+                            'occupant_name' => $roomData['occupant_name'],
+                            'check_in_date' => $roomData['check_in_date'],
+                            'check_out_date' => $roomData['check_out_date'],
+                            'total_nights' => $roomData['total_nights'],
+                            'cost' => $roomData['cost'],
+                            'additional_cost' => $roomData['additional_cost'] ?? 0.00,
+                            'update_deadline' => $roomData['update_deadline'] ?? Carbon::now()->addDays(30),
+                        ]);
+                    }
+                }
+            }
+    
+            return response()->json([
+                'message' => 'Reservation and rooms updated successfully!',
+                'reservation' => $reservation
+            ], 200);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while updating the reservation.',
+                'message' => $e->getMessage()
+            ], 400); 
+        }
+    }
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
     
     public function deleteReservation($id)
     {
@@ -242,56 +338,7 @@ class ReservationsController extends Controller
         }
     }
     
-    public function updateReservation(Request $request, $id)
-    {
-        try {
-            // الحصول على الحجز الحالي
-            $reservation = Reservation::findOrFail($id);
-    
-            // التحقق إذا كان قد تم تجاوز الموعد النهائي للتحديث
-            if ($reservation->update_deadline && now()->greaterThan($reservation->update_deadline)) {
-                return response()->json([
-                    'error' => 'The reservation cannot be updated because the deadline has passed.',
-                ], 403); // إرسال خطأ إذا تم تجاوز الموعد النهائي
-            }
-    
-            // تحقق من القيم المدخلة وتحديث فقط إذا كانت موجودة
-            $dataToUpdate = [];
-    
-            // إذا تم تقديم قيمة جديدة، استخدمها، وإلا احتفظ بالقيمة القديمة
-            if ($request->has('room_count')) {
-                $dataToUpdate['room_count'] = $request->input('room_count');
-            } else {
-                $dataToUpdate['room_count'] = $reservation->room_count; // الاحتفاظ بالقيمة القديمة
-            }
-    
-            if ($request->has('companions_count')) {
-                $dataToUpdate['companions_count'] = $request->input('companions_count');
-            } else {
-                $dataToUpdate['companions_count'] = $reservation->companions_count; // الاحتفاظ بالقيمة القديمة
-            }
-    
-            if ($request->has('companions_names')) {
-                $dataToUpdate['companions_names'] = $request->input('companions_names');
-            } else {
-                $dataToUpdate['companions_names'] = $reservation->companions_names; // الاحتفاظ بالقيمة القديمة
-            }
-    
-            // تحديث الحجز باستخدام القيم المحدثة
-            $reservation->update($dataToUpdate);
-    
-            return response()->json([
-                'message' => 'Reservation updated successfully!',
-                'reservation' => $reservation
-            ], 200);
-    
-        } catch (Exception $e) {
-            return response()->json([
-                'error' => 'An error occurred while updating the reservation.',
-                'message' => $e->getMessage()
-            ], 400); 
-        }
-    }
+
     
 
 public function getReservationsByUserId(Request $request)

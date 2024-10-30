@@ -13,209 +13,7 @@ use Illuminate\Support\Facades\Validator; // تأكد من إضافة هذا ا�
 
 class FlightController extends Controller
 {
-    // public function createFlight(Request $request)
-    // {
-    //     try {
-    //         // Validate input data
-    //         $this->validateFlightData($request);
 
-    //         // Get the current user
-    //         $user = Auth::user();
-
-    //         // Check for an existing flight
-    //         $existingFlightId = Flight::where('user_id', $user->id)->value('flight_id');
-
-    //         // Create a new Flight instance
-    //         $flight = new Flight();
-
-    //         // Set user_id and ticket_count based on is_companion
-    //         $this->setFlightDetails($flight, $request, $user, $existingFlightId);
-
-    //         // Save the passport image if present
-    //         $this->handlePassportImage($request, $flight);
-
-    //         // Set additional fields
-    //         $this->setAdditionalFields($request, $flight);
-
-    //         // Save the flight data in the database
-    //         $flight->created_at = Carbon::now('Asia/Amman'); // Specify the timezone
-    //         $flight->save();
-    //         $message = 'The ticket will be available shortly, and you will be notified on the website once it becomes available.';
-    //         Notification::create([
-    //             'user_id' => $user->id, // المتحدث نفسه
-    //             'message' => $message,
-    //             'is_read' => false,
-    //             'register_id' => null, // بقاء register_id فارغة
-    //         ]);
-    //         $admins = User::where('isAdmin', true)->get();
-    //         foreach ($admins as $admin) {
-    //             $notification =    Notification::create([
-    //                 'user_id' => $admin->id,
-    //                 'message' => 'New flight registered by ' . $user->name . '. Log in to adjust the price.',
-    //                 'is_read' => false,
-    //                 'register_id' => $user->id, // استخدام user_id كمفتاح تسجيل
-    //             ]);
-    //             broadcast(new NotificationSent($notification))->toOthers();
-
-    //         }
-
-    //         return response()->json(['message' => 'Flight created successfully'], 201);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'An error occurred while creating the flight. Please try again later.'], 500);
-    //     }
-    // }
-
-    // private function validateFlightData(Request $request)
-    // {
-    //     $request->validate([
-    //         'departure_airport' => 'required|string|max:100',
-    //         'arrival_airport' => 'required|string|max:100',
-    //         'departure_date' => 'required|date',
-    //         'arrival_date' => 'required|date',
-    //         'ticket_count' => 'integer|min:1',
-    //         'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    //         'is_companion' => 'required|boolean',
-    //         'flight_number' => 'sometimes|string',
-    //         'seat_preference' => 'sometimes|string',
-    //         'upgrade_class' => 'sometimes|boolean',
-    //         'additional_requests' => 'sometimes|string',
-    //         'passenger_name' => 'sometimes|string',
-    //         'specific_flight_time' => 'sometimes',
-    //     ]);
-    // }
-
-    // private function setFlightDetails(Flight $flight, Request $request, $user, $existingFlightId)
-    // {
-    //     if ($request->is_companion) {
-    //         $flight->user_id = null;
-    //         $flight->ticket_count = 1;
-
-    //         if ($existingFlightId) {
-    //             $flight->main_user_id = $existingFlightId;
-    //         }
-    //     } else {
-    //         $flight->user_id = $user->id;
-    //         $flight->ticket_count = $request->ticket_count;
-    //         $flight->main_user_id = null;
-
-    //         // Set passenger name
-    //         $userDetails = User::find($flight->user_id);
-    //         if ($userDetails) {
-    //             $flight->passenger_name = $userDetails->name;
-    //         }
-    //     }
-
-    //     // Set mandatory fields
-    //     $flight->departure_airport = $request->departure_airport;
-    //     $flight->arrival_airport = $request->arrival_airport;
-    //     $flight->departure_date = $request->departure_date;
-    //     $flight->arrival_date = $request->arrival_date;
-    //     $flight->is_companion = $request->is_companion;
-    // }
-
-    // private function handlePassportImage(Request $request, Flight $flight)
-    // {
-    //     if ($request->hasFile('passport_image')) {
-    //         $image = $request->file('passport_image');
-    //         $imagePath = $image->store('public/passport_images');
-    //         $flight->passport_image = basename($imagePath);
-    //     }
-    // }
-
-    // private function setAdditionalFields(Request $request, Flight $flight)
-    // {
-    //     $flight->flight_number = $request->flight_number;
-    //     $flight->seat_preference = $request->seat_preference;
-    //     $flight->upgrade_class = $request->upgrade_class;
-    //     $flight->additional_requests = $request->additional_requests;
-    //     $flight->passenger_name = $request->passenger_name;
-    //     $flight->specific_flight_time = $request->specific_flight_time;
-    // }
-
-
-    // public function createFlight(Request $request)
-    // {
-    //     try {
-    //         // Validate input data
-    //         $this->validateFlightData($request);
-
-    //         // Get the current user
-    //         $user = Auth::user();
-
-    //         // Iterate through the provided flight data
-    //         foreach ($request->all() as $flightData) {
-    //             // Create a new Flight instance
-    //             $flight = new Flight();
-
-    //             // Set mandatory fields from the flight data
-    //             $flight->departure_airport = $flightData['departureAirport'];
-    //             $flight->arrival_airport = $flightData['returnAirport'];
-    //             $flight->departure_date = $flightData['departureDate'];
-    //             $flight->arrival_date = $flightData['arrivalDate'];
-    //             $flight->specific_flight_time = $flightData['specificFlightTime'];
-
-    //             // Handle passenger information
-    //             if ($flightData['name'] === $user->name) {
-    //                 // This is the main user
-    //                 $flight->user_id = $user->id; // Set the user ID
-    //                 $flight->ticket_count = 1; // Assuming one ticket for the main user
-    //                 $flight->main_user_id = null; // No main user ID for the main user
-    //                 $flight->passenger_name = $user->name; // Set the passenger name
-    //             } else {
-    //                 // This is a companion
-    //                 $flight->user_id = null; // Companions don't have a user ID
-    //                 $flight->ticket_count = 1; // Assuming one ticket for the companion
-    //                 $flight->main_user_id = $user->id; // Set the main user ID
-    //                 $flight->passenger_name = $flightData['name']; // Set the companion's name
-    //             }
-
-    //             // Set additional fields
-    //             $flight->flight_number = $flightData['flightNumber'];
-    //             $flight->seat_preference = $flightData['seatNumber'];
-    //             $flight->upgrade_class = $flightData['upgradeClass'];
-    //             $flight->additional_requests = $flightData['otherRequests'];
-
-    //             // Save the passport image if present
-    //             if (isset($flightData['passportImage']) && $flightData['passportImage']) {
-    //                 // Handle the passport image as necessary
-    //                 $flight->passport_image = $flightData['passportImage']; // Modify as needed
-    //             }
-
-    //             // Save the flight data in the database
-    //             $flight->created_at = Carbon::now('Asia/Amman'); // Specify the timezone
-    //             $flight->save();
-
-    //             // Notify the user about the created flight
-    //             $message = 'The ticket will be available shortly, and you will be notified on the website once it becomes available.';
-    //             Notification::create([
-    //                 'user_id' => $user->id,
-    //                 'message' => $message,
-    //                 'is_read' => false,
-    //                 'register_id' => null,
-    //             ]);
-
-    //             // Notify the admins about the new flight registration
-    //             $admins = User::where('isAdmin', true)->get();
-    //             foreach ($admins as $admin) {
-    //                 $notification = Notification::create([
-    //                     'user_id' => $admin->id,
-    //                     'message' => 'New flight registered by ' . $user->name . '. Log in to adjust the price.',
-    //                     'is_read' => false,
-    //                     'register_id' => $user->id,
-    //                 ]);
-    //                 broadcast(new NotificationSent($notification))->toOthers();
-    //             }
-    //         }
-
-    //         return response()->json(['message' => 'Flights created successfully'], 201);
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         // Return the validation errors
-    //         return response()->json(['errors' => $e->validator->errors()], 422);
-    //     } catch (\Exception $e) {
-    //         // Return the error message from the exception
-    //         return response()->json(['error' => 'An error occurred while creating the flights: ' . $e->getMessage()], 500);
-    //     }
-    // }
     public function createFlight(Request $request)
     {
         try {
@@ -315,10 +113,6 @@ class FlightController extends Controller
             return response()->json(['error' => 'An error occurred while creating the flights: ' . $e->getMessage()], 500);
         }
     }
-    
-
-
-
 
 
 
@@ -343,7 +137,7 @@ class FlightController extends Controller
     //             'admin_update_deadline' => 'nullable|date',
     //             'is_free' => 'sometimes|boolean',
     //             'is_available_for_download' => 'sometimes|boolean',
-    //             'download_url',
+    //             'download_url' => 'nullable|url', // تأكد من إضافة التحقق من صحة رابط التحميل
     //             'base_ticket_price' => 'nullable|numeric|min:0', // تم إضافة هذا الحقل
     //         ]);
 
@@ -360,77 +154,110 @@ class FlightController extends Controller
     //         // حفظ التغييرات
     //         $flight->save();
 
+    //         // إرسال إشعار إذا تم إدخال قيمة لـ download_url
+    //         if (isset($validatedData['download_url'])) {
+    //             // الحصول على user_id مباشرة
+    //             $userId = $flight->user_id; // استخدام user_id مباشرة
+
+    //             if ($userId) {
+    //                 // إرسال الإشعار للمستخدم
+    //                 $message = "You can visit your profile; the requested ticket is now available on the website.";
+
+    //                 // إرسال الإشعار إلى المستخدم
+    //                 Notification::create([
+    //                     'user_id' => $userId, // المستخدم الذي سيتم الإشعار له
+    //                     'message' => $message,
+    //                     'is_read' => false,
+    //                     'register_id' => null, // بقاء register_id فارغة
+    //                 ]);
+    //             }
+    //         }
+
     //         return response()->json(['message' => 'Flight updated successfully', 'flight' => $flight], 200);
     //     } catch (\Exception $e) {
     //         return response()->json(['message' => 'An error occurred while updating the flight.', 'error' => $e->getMessage()], 500);
     //     }
     // }
 
-
-    public function updateByAdmin(Request $request, $flight_id)
+    public function updateByAdmin(Request $request)
     {
         try {
             $user = Auth::user();
-
-            // العثور على الرحلة بناءً على ID
-            $flight = Flight::find($flight_id);
-
-            if (!$flight) {
-                return response()->json(['message' => 'Flight not found'], 404);
+            $flightsData = $request->input('flights'); // مصفوفة تحتوي على بيانات كل رحلة لتحديثها
+    
+            if (!$flightsData || !is_array($flightsData)) {
+                return response()->json(['message' => 'Invalid flights data provided.'], 400);
             }
-
-            // التحقق من صحة الحقول المطلوبة فقط
-            $validatedData = $request->validate([
-                'business_class_upgrade_cost' => 'nullable|numeric|min:0',
-                'reserved_seat_cost' => 'nullable|numeric|min:0',
-                'additional_baggage_cost' => 'nullable|numeric|min:0',
-                'other_additional_costs' => 'nullable|numeric|min:0',
-                'admin_update_deadline' => 'nullable|date',
-                'is_free' => 'sometimes|boolean',
-                'is_available_for_download' => 'sometimes|boolean',
-                'download_url' => 'nullable|url', // تأكد من إضافة التحقق من صحة رابط التحميل
-                'base_ticket_price' => 'nullable|numeric|min:0', // تم إضافة هذا الحقل
-            ]);
-
-            // تحديث الحقول بناءً على القيم المدخلة فقط
-            foreach ($validatedData as $key => $value) {
-                if ($request->has($key)) {
-                    $flight->{$key} = $value;
+    
+            $updatedFlights = [];
+    
+            foreach ($flightsData as $flightData) {
+                $flight_id = $flightData['flight_id'] ?? null;
+                if (!$flight_id) {
+                    continue; // تجاوز هذا العنصر إذا لم يحتوي على flight_id
                 }
-            }
-
-            // تحديث توقيت آخر تعديل من قبل المسؤول
-            $flight->last_admin_update_at = now()->setTimezone('Asia/Amman');
-
-            // حفظ التغييرات
-            $flight->save();
-
-            // إرسال إشعار إذا تم إدخال قيمة لـ download_url
-            if (isset($validatedData['download_url'])) {
-                // الحصول على user_id مباشرة
-                $userId = $flight->user_id; // استخدام user_id مباشرة
-
-                if ($userId) {
-                    // إرسال الإشعار للمستخدم
-                    $message = "You can visit your profile; the requested ticket is now available on the website.";
-
-                    // إرسال الإشعار إلى المستخدم
-                    Notification::create([
-                        'user_id' => $userId, // المستخدم الذي سيتم الإشعار له
-                        'message' => $message,
-                        'is_read' => false,
-                        'register_id' => null, // بقاء register_id فارغة
-                    ]);
+    
+                // العثور على الرحلة بناءً على ID
+                $flight = Flight::find($flight_id);
+    
+                if (!$flight) {
+                    continue; // تجاوز إذا لم يتم العثور على الرحلة
                 }
+    
+                // التحقق من صحة الحقول المطلوبة فقط
+                $validatedData = Validator::make($flightData, [
+                    'business_class_upgrade_cost' => 'nullable|numeric|min:0',
+                    'reserved_seat_cost' => 'nullable|numeric|min:0',
+                    'additional_baggage_cost' => 'nullable|numeric|min:0',
+                    'other_additional_costs' => 'nullable|numeric|min:0',
+                    'admin_update_deadline' => 'nullable|date',
+                    'is_free' => 'sometimes|boolean',
+                    'is_available_for_download' => 'sometimes|boolean',
+                    'download_url' => 'nullable|url',
+                    'base_ticket_price' => 'nullable|numeric|min:0',
+                ]);
+    
+                if ($validatedData->fails()) {
+                    return response()->json(['message' => 'Validation failed', 'errors' => $validatedData->errors()], 422);
+                }
+    
+                // تحديث الحقول بناءً على القيم المدخلة فقط
+                foreach ($validatedData->validated() as $key => $value) {
+                    if (isset($flightData[$key])) {
+                        $flight->{$key} = $value;
+                    }
+                }
+    
+                // تحديث توقيت آخر تعديل من قبل المسؤول
+                $flight->last_admin_update_at = now()->setTimezone('Asia/Amman');
+    
+                // حفظ التغييرات
+                $flight->save();
+    
+                // إرسال إشعار إذا تم إدخال قيمة لـ download_url
+                if (isset($flightData['download_url'])) {
+                    $userId = $flight->user_id;
+    
+                    if ($userId) {
+                        $message = "You can visit your profile; the requested ticket is now available on the website.";
+                        Notification::create([
+                            'user_id' => $userId,
+                            'message' => $message,
+                            'is_read' => false,
+                            'register_id' => null,
+                        ]);
+                    }
+                }
+    
+                $updatedFlights[] = $flight;
             }
-
-            return response()->json(['message' => 'Flight updated successfully', 'flight' => $flight], 200);
+    
+            return response()->json(['message' => 'Flights updated successfully', 'flights' => $updatedFlights], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occurred while updating the flight.', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'An error occurred while updating flights.', 'error' => $e->getMessage()], 500);
         }
     }
-
-
+    
 
 
     public function getFlightByUserId(Request $request)
@@ -512,107 +339,239 @@ class FlightController extends Controller
 
 
 
-    public function updateFlightByUser(Request $request, $flight_id)
+    // public function updateFlightByUser(Request $request, $flight_id)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'departure_airport' => 'sometimes|required|string|max:100',
+    //             'arrival_airport' => 'sometimes|required|string|max:100',
+    //             'departure_date' => 'sometimes|required|date',
+    //             'arrival_date' => 'sometimes|required|date',
+    //             'ticket_count' => 'sometimes|required|integer|min:1',
+    //             'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    //             'is_companion' => 'sometimes|required|boolean',
+    //             'flight_number' => 'sometimes|string',
+    //             'seat_preference' => 'sometimes|string',
+    //             'upgrade_class' => 'sometimes|boolean',
+    //             'additional_requests' => 'sometimes|string',
+    //             'passenger_name' => 'sometimes|string',
+    //             'specific_flight_time' => 'sometimes|date_format:H:i', // Add validation for specific_flight_time
+    //         ]);
+
+    //         // Get the authenticated user
+    //         $user = Auth::user();
+
+    //         // Find the flight by flight_id and user_id
+    //         $flight = Flight::where('flight_id', $flight_id)->where('user_id', $user->id)->firstOrFail();
+
+    //         // Check if the current date is before the admin's update deadline
+    //         $currentDateTime = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
+
+    //         if ($flight->admin_update_deadline && $currentDateTime->greaterThan($flight->admin_update_deadline)) {
+    //             return response()->json(['error' => 'The update deadline has passed. No further updates are allowed.'], 403);
+    //         }
+
+    //         // Update only the fields present in the request
+    //         if ($request->has('departure_airport')) {
+    //             $flight->departure_airport = $request->input('departure_airport');
+    //         }
+    //         if ($request->has('arrival_airport')) {
+    //             $flight->arrival_airport = $request->input('arrival_airport');
+    //         }
+    //         if ($request->has('departure_date')) {
+    //             $flight->departure_date = $request->input('departure_date');
+    //         }
+    //         if ($request->has('arrival_date')) {
+    //             $flight->arrival_date = $request->input('arrival_date');
+    //         }
+    //         if ($request->has('ticket_count')) {
+    //             $flight->ticket_count = $request->input('ticket_count');
+    //         }
+    //         if ($request->has('is_companion')) {
+    //             $flight->is_companion = $request->input('is_companion');
+    //         }
+    //         if ($request->has('flight_number')) {
+    //             $flight->flight_number = $request->input('flight_number');
+    //         }
+    //         if ($request->has('seat_preference')) {
+    //             $flight->seat_preference = $request->input('seat_preference');
+    //         }
+    //         if ($request->has('upgrade_class')) {
+    //             $flight->upgrade_class = $request->input('upgrade_class');
+    //         }
+    //         if ($request->has('additional_requests')) {
+    //             $flight->additional_requests = $request->input('additional_requests');
+    //         }
+    //         if ($request->has('passenger_name')) {
+    //             $flight->passenger_name = $request->input('passenger_name');
+    //         }
+
+    //         // Handle the passport image if present
+    //         if ($request->hasFile('passport_image')) {
+    //             $image = $request->file('passport_image');
+    //             $imagePath = $image->store('public/passport_images');
+    //             $flight->passport_image = basename($imagePath);
+    //         }
+
+    //         // Update the specific_flight_time if present
+    //         if ($request->has('specific_flight_time')) {
+    //             $flight->specific_flight_time = $request->input('specific_flight_time');
+    //         }
+
+    //         // Update the last speaker update timestamp with local timezone
+    //         $flight->last_speaker_update_at = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
+
+    //         // Save changes to the flight
+    //         $flight->save();
+
+    //         // Send notification to all admins
+    //         $admins = User::where('isAdmin', true)->get();
+    //         foreach ($admins as $admin) {
+    //             Notification::create([
+    //                 'user_id' => $admin->id,
+    //                 'message' => 'Flight number ' . $flight->flight_id . ' has been modified by user ' . $user->name,
+    //             ]);
+    //         }
+
+    //         return response()->json(['message' => 'Flight updated successfully'], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
+
+
+    public function updateFlightByUser(Request $request)
     {
         try {
-            $request->validate([
-                'departure_airport' => 'sometimes|required|string|max:100',
-                'arrival_airport' => 'sometimes|required|string|max:100',
-                'departure_date' => 'sometimes|required|date',
-                'arrival_date' => 'sometimes|required|date',
-                'ticket_count' => 'sometimes|required|integer|min:1',
-                'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-                'is_companion' => 'sometimes|required|boolean',
-                'flight_number' => 'sometimes|string',
-                'seat_preference' => 'sometimes|string',
-                'upgrade_class' => 'sometimes|boolean',
-                'additional_requests' => 'sometimes|string',
-                'passenger_name' => 'sometimes|string',
-                'specific_flight_time' => 'sometimes|date_format:H:i', // Add validation for specific_flight_time
-            ]);
-
-            // Get the authenticated user
+            // الحصول على معلومات المستخدم الحالي
             $user = Auth::user();
-
-            // Find the flight by flight_id and user_id
-            $flight = Flight::where('flight_id', $flight_id)->where('user_id', $user->id)->firstOrFail();
-
-            // Check if the current date is before the admin's update deadline
-            $currentDateTime = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
-
-            if ($flight->admin_update_deadline && $currentDateTime->greaterThan($flight->admin_update_deadline)) {
-                return response()->json(['error' => 'The update deadline has passed. No further updates are allowed.'], 403);
+            $mainUserId = $user->id; // معرّف المستخدم الأساسي
+    
+            // تحديث بيانات المستخدم الأساسي
+            $flight = Flight::where('flight_id', $request->input('flight_id'))
+                            ->where('user_id', $mainUserId)
+                            ->first();
+    
+            if ($flight) {
+                // التحقق من شرط المهلة الزمنية للتحديث
+                $currentDateTime = \Carbon\Carbon::now();
+                if ($flight->admin_update_deadline && $currentDateTime->greaterThan($flight->admin_update_deadline)) {
+                    return response()->json(['error' => 'The update deadline has passed. No further updates are allowed.'], 403);
+                }
+    
+                // إعداد مصفوفة التحديث
+                $updateData = [];
+    
+                // تحقق من القيم المدخلة وتحديث فقط ما تم تقديمه
+                if ($request->has('departure_airport')) {
+                    $updateData['departure_airport'] = $request->input('departure_airport');
+                }
+                if ($request->has('arrival_airport')) {
+                    $updateData['arrival_airport'] = $request->input('arrival_airport');
+                }
+                if ($request->has('departure_date')) {
+                    $updateData['departure_date'] = $request->input('departure_date');
+                }
+                if ($request->has('arrival_date')) {
+                    $updateData['arrival_date'] = $request->input('arrival_date');
+                }
+                if ($request->has('ticket_count')) {
+                    $updateData['ticket_count'] = $request->input('ticket_count');
+                }
+                if ($request->has('flight_number')) {
+                    $updateData['flight_number'] = $request->input('flight_number');
+                }
+                if ($request->has('seat_preference')) {
+                    $updateData['seat_preference'] = $request->input('seat_preference');
+                }
+                if ($request->has('upgrade_class')) {
+                    $updateData['upgrade_class'] = $request->input('upgrade_class');
+                }
+                if ($request->has('additional_requests')) {
+                    $updateData['additional_requests'] = $request->input('additional_requests');
+                }
+                if ($request->has('specific_flight_time')) {
+                    $updateData['specific_flight_time'] = $request->input('specific_flight_time');
+                }
+                if ($request->has('passport_image')) {
+                    $updateData['passport_image'] = $request->input('passport_image');
+                }
+    
+                // تحديث الرحلة إذا كانت هناك أي بيانات للتحديث
+                if (!empty($updateData)) {
+                    $flight->update($updateData);
+    
+                    // تحديث حقل last_speaker_update_at بعد التحديث
+                    $flight->last_speaker_update_at = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
+                    $flight->save();
+                }
+            } else {
+                return response()->json(['error' => 'الرحلة الأساسية غير موجودة أو غير مرتبطة بالمستخدم'], 404);
             }
-
-            // Update only the fields present in the request
-            if ($request->has('departure_airport')) {
-                $flight->departure_airport = $request->input('departure_airport');
+    
+            // تحديث معلومات المرافقين
+            foreach ($request->input('companions') as $companionData) {
+                $companionFlight = Flight::where('flight_id', $companionData['flight_id'])
+                                         ->whereNull('user_id') // تحقق من أن user_id فارغ
+                                         ->first();
+    
+                if ($companionFlight) {
+                    // إعداد مصفوفة التحديث للمرافق
+                    $companionUpdateData = [];
+    
+                    // تحقق من القيم المدخلة للمرافق
+                    if (isset($companionData['departure_airport'])) {
+                        $companionUpdateData['departure_airport'] = $companionData['departure_airport'];
+                    }
+                    if (isset($companionData['arrival_airport'])) {
+                        $companionUpdateData['arrival_airport'] = $companionData['arrival_airport'];
+                    }
+                    if (isset($companionData['departure_date'])) {
+                        $companionUpdateData['departure_date'] = $companionData['departure_date'];
+                    }
+                    if (isset($companionData['arrival_date'])) {
+                        $companionUpdateData['arrival_date'] = $companionData['arrival_date'];
+                    }
+                    if (isset($companionData['ticket_count'])) {
+                        $companionUpdateData['ticket_count'] = $companionData['ticket_count'];
+                    }
+                    if (isset($companionData['flight_number'])) {
+                        $companionUpdateData['flight_number'] = $companionData['flight_number'];
+                    }
+                    if (isset($companionData['seat_preference'])) {
+                        $companionUpdateData['seat_preference'] = $companionData['seat_preference'];
+                    }
+                    if (isset($companionData['upgrade_class'])) {
+                        $companionUpdateData['upgrade_class'] = $companionData['upgrade_class'];
+                    }
+                    if (isset($companionData['additional_requests'])) {
+                        $companionUpdateData['additional_requests'] = $companionData['additional_requests'];
+                    }
+                    if (isset($companionData['specific_flight_time'])) {
+                        $companionUpdateData['specific_flight_time'] = $companionData['specific_flight_time'];
+                    }
+                    if (isset($companionData['passport_image'])) {
+                        $companionUpdateData['passport_image'] = $companionData['passport_image'];
+                    }
+    
+                    // تحديث الرحلة للمرافق إذا كانت هناك أي بيانات للتحديث
+                    if (!empty($companionUpdateData)) {
+                        $companionUpdateData['main_user_id'] = $mainUserId; // تعيين معرّف المستخدم الأساسي للمرافق
+                        $companionFlight->update($companionUpdateData);
+                    }
+                } else {
+                    return response()->json(['error' => 'رحلة المرافق غير موجودة'], 404);
+                }
             }
-            if ($request->has('arrival_airport')) {
-                $flight->arrival_airport = $request->input('arrival_airport');
-            }
-            if ($request->has('departure_date')) {
-                $flight->departure_date = $request->input('departure_date');
-            }
-            if ($request->has('arrival_date')) {
-                $flight->arrival_date = $request->input('arrival_date');
-            }
-            if ($request->has('ticket_count')) {
-                $flight->ticket_count = $request->input('ticket_count');
-            }
-            if ($request->has('is_companion')) {
-                $flight->is_companion = $request->input('is_companion');
-            }
-            if ($request->has('flight_number')) {
-                $flight->flight_number = $request->input('flight_number');
-            }
-            if ($request->has('seat_preference')) {
-                $flight->seat_preference = $request->input('seat_preference');
-            }
-            if ($request->has('upgrade_class')) {
-                $flight->upgrade_class = $request->input('upgrade_class');
-            }
-            if ($request->has('additional_requests')) {
-                $flight->additional_requests = $request->input('additional_requests');
-            }
-            if ($request->has('passenger_name')) {
-                $flight->passenger_name = $request->input('passenger_name');
-            }
-
-            // Handle the passport image if present
-            if ($request->hasFile('passport_image')) {
-                $image = $request->file('passport_image');
-                $imagePath = $image->store('public/passport_images');
-                $flight->passport_image = basename($imagePath);
-            }
-
-            // Update the specific_flight_time if present
-            if ($request->has('specific_flight_time')) {
-                $flight->specific_flight_time = $request->input('specific_flight_time');
-            }
-
-            // Update the last speaker update timestamp with local timezone
-            $flight->last_speaker_update_at = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
-
-            // Save changes to the flight
-            $flight->save();
-
-            // Send notification to all admins
-            $admins = User::where('isAdmin', true)->get();
-            foreach ($admins as $admin) {
-                Notification::create([
-                    'user_id' => $admin->id,
-                    'message' => 'Flight number ' . $flight->flight_id . ' has been modified by user ' . $user->name,
-                ]);
-            }
-
-            return response()->json(['message' => 'Flight updated successfully'], 200);
+    
+            return response()->json(['message' => 'Update successful']);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'ERROR: ' . $e->getMessage()], 500);
         }
     }
-
-
+    
+    
+    
 
 
 

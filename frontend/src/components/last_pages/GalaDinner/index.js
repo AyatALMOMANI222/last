@@ -5,6 +5,7 @@ import DateInput from '../../../CoreComponent/Date';
 import CustomFormWrapper from '../../../CoreComponent/CustomFormWrapper';
 import MySideDrawer from '../../../CoreComponent/SideDrawer';
 
+
 const GalaDinner = ({ isOpen, setIsOpen }) => {
     // Defining the state variables
     const [dinnerDate, setDinnerDate] = useState('');
@@ -22,7 +23,7 @@ const GalaDinner = ({ isOpen, setIsOpen }) => {
         e.preventDefault();
 
         const dinnerDetails = {
-            conference_id: 19,
+            conference_id: 1,
             dinner_date: dinnerDate,
             restaurant_name: restaurantName,
             location,
@@ -49,7 +50,7 @@ const GalaDinner = ({ isOpen, setIsOpen }) => {
     };
 
     return (
-        <MySideDrawer isOpen={isOpen} onClose={() => setIsOpen(false)}> {/* SideDrawer Wrapper */}
+        // <MySideDrawer isOpen={isOpen} onClose={() => setIsOpen(false)}> {/* SideDrawer Wrapper */}
             <CustomFormWrapper
                 title="Gala Dinner Details"
                 handleSubmit={handleSubmit}
@@ -116,7 +117,7 @@ const GalaDinner = ({ isOpen, setIsOpen }) => {
                     />
                 </form>
             </CustomFormWrapper>
-        </MySideDrawer>
+        // </MySideDrawer>
     );
 };
 

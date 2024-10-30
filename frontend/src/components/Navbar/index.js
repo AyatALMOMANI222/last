@@ -93,6 +93,7 @@ const NavBar = () => {
         { label: "Trips", url: "/create/trip" },
         { label: "Trips User", url: "/trip/user" },
         { label: "All Trips", url: "/view-user-trips" },
+        { label: "Flights Users", url: "/flights/users" },
       ],
     },
     {

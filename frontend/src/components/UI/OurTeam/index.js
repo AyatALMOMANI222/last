@@ -7,37 +7,38 @@ const OurTeams = () => {
     {
       name: 'Mamoun Khraisheh',
       role: 'General Manager',
-      image: require('./image/Mamoun.jpg'), // استخدام require للصورة
+      image: require('./image/Mamoun4-removebg-preview.png'), // استخدام require للصورة
     },
     {
       name: 'Ameera Abu Saif',
       role: 'Executive Secretary',
       image: require('./image/ameera.png'), // استخدام require للصورة
     },
-    {
-      name: 'Dana Al Sabbar',
-      role: 'Events Manager',
-      image: require('./image/Dana.jpg'), // استخدام require للصورة
-    },
+  
     {
       name: 'Ahmad Hassan',
       role: 'Administration Assistant',
-      image: require('./image/ahmad2.jpg'), // استخدام require للصورة
+      image: require('./image/ahmad4-removebg-preview.png'), // استخدام require للصورة
     },
     {
       name: 'Mohammad Abu Laila',
       role: 'IT Supervisor',
-      image: require('./image/mhammd-abu-laila.jpg'), // استخدام require للصورة
+      image: require('./image/mhammd4-removebg-preview (1).png'), // استخدام require للصورة
+    },
+    {
+      name: 'Dana Al Sabbar',
+      role: 'Events Manager',
+      image: require('./image/dana4-removebg-preview.png'), // استخدام require للصورة
     },
     {
       name: 'Farah Jamal',
       role: 'Public Relations',
-      image: require('./image/farah2.jpg'), // استخدام require للصورة
+      image: require('./image/farah4-removebg-preview.png'), // استخدام require للصورة
     },
     {
       name: 'Baker Helmi',
       role: 'Designer',
-      image: require('./image/baker2.jpg'), // استخدام require للصورة
+      image: require('./image/baker4-removebg-preview.png'), // استخدام require للصورة
     },
     {
       name: 'Nancy Nehad',

@@ -6,8 +6,6 @@ import axios from "axios";
 import "./style.scss";
 
 const AddTripForm = ({ data, setOpen }) => {
-  // const [availableId, setAvailableId] = useState("");
-  // const [flightId, setFlightId] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [departureTime, setDepartureTime] = useState("");
   const [price, setPrice] = useState("");
@@ -46,22 +44,7 @@ const AddTripForm = ({ data, setOpen }) => {
     <div className="add-trip-admin">
       {/* <div className="header">{data.passenger_name}</div> */}
       <div className="form-section">
-        {/* <Input
-          label="Available ID"
-          placeholder="Enter available ID"
-          inputValue={availableId}
-          setInputValue={setAvailableId}
-          type="text"
-          required={true}
-        />
-        <Input
-          label="Flight ID"
-          placeholder="Enter flight ID"
-          inputValue={flightId}
-          setInputValue={setFlightId}
-          type="text"
-          required={true}
-        /> */}
+    
         <DateInput
           label="Departure Date"
           placeholder="Enter departure date"
