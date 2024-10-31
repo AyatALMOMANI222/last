@@ -70,7 +70,7 @@ const ImageUpload = ({
             {fileName ? (
               <span className="file-name">{fileName}</span>
             ) : (
-              "Upload Img"
+              "Upload"
             )}
           </div>
           <SVG

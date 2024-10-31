@@ -4,8 +4,7 @@ import doneIcon from "../../icons/doneIcon.svg";
 import SVG from "react-inlinesvg";
 
 import "./style.scss";
-const DialogMessage = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(true);
+const DialogMessage = ({isDialogOpen, setIsDialogOpen}) => {
 
   return (
     <div className="dialog-message-container">

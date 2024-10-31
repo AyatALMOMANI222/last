@@ -139,6 +139,8 @@ Route::delete('/flights/{flight_id}', [FlightController::class, 'deleteFlightByU
 
 // AvailableFlight
 Route::post('/available-flights', [AvailableFlightController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
+Route::post('/available-flights/all', [AvailableFlightController::class, 'storeAll'])->middleware(['auth:sanctum', 'admin']);
+
 Route::get('/available-flights/{flight_id}', [AvailableFlightController::class, 'getAvailableFlightByFlightId'])->middleware('auth:sanctum');
 // accepted_flight
 Route::post('/accepted-flights', [AcceptedFlightController::class, 'store'])->middleware('auth:sanctum');

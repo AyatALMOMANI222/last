@@ -208,7 +208,6 @@ class FlightController extends Controller
                 $validatedData = Validator::make($flightData, [
                     'business_class_upgrade_cost' => 'nullable|numeric|min:0',
                     'reserved_seat_cost' => 'nullable|numeric|min:0',
-                    'additional_baggage_cost' => 'nullable|numeric|min:0',
                     'other_additional_costs' => 'nullable|numeric|min:0',
                     'admin_update_deadline' => 'nullable|date',
                     'is_free' => 'sometimes|boolean',

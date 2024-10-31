@@ -40,11 +40,11 @@ const NotificationDropdown = () => {
       setNotifications(response?.data);
 
       // عرض إشعار توست عند تلقي إشعار جديد
-      response.data.forEach((notification) => {
-        if (!notification.read) {
-          toast(notification.message); // عرض التوست
-        }
-      });
+      // response.data.forEach((notification) => {
+      //   if (!notification.read) {
+      //     toast(notification.message); // عرض التوست
+      //   }
+      // });
     } catch (error) {
       console.error("Error fetching notifications", error);
     }
@@ -95,6 +95,7 @@ const NotificationDropdown = () => {
 
   // تصفية الإشعارات غير المقروءة
   const unreadNotifications = notifications.filter(notification => !notification.read);
+  const reversedNotifications = unreadNotifications.slice().reverse();
 
   return (
     <div className="notification-container" ref={dropdownRef}>
@@ -108,7 +109,7 @@ const NotificationDropdown = () => {
       </div>
       {isOpen && unreadNotifications.length > 0 && (
         <div className="notification-dropdown">
-          {unreadNotifications.map((notification) => (
+          {reversedNotifications.map((notification) => (
             <div
               key={notification.id}
               className={`notification-item unread`}
@@ -133,7 +134,7 @@ const NotificationDropdown = () => {
           ))}
         </div>
       )}
-      <ToastContainer /> {/* إضافة ToastContainer هنا */}
+      {/* <ToastContainer /> إضافة ToastContainer هنا */}
     </div>
   );
 };

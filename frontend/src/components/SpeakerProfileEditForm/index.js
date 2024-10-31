@@ -1,186 +1,144 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Input from "../../CoreComponent/Input";
-import FileUpload from "../../CoreComponent/FileUpload";
 import Checkbox from "../../CoreComponent/Checkbox";
 import ImageUpload from "../../CoreComponent/ImageUpload";
 import deleteIcon from "../../icons/deleteIcon.svg";
 import SVG from "react-inlinesvg";
 import httpService from "../../common/httpService";
-
 import "./style.scss";
 import { backendUrlImages } from "../../constant/config";
 
 const SpeakerProfileForm = () => {
   const [speakerInfo, setSpeakerInfo] = useState({});
-  const [image, setImage] = useState(null);
-  const [abstract, setAbstract] = useState(null);
-  const [presentationFile, setPresentationFile] = useState(null);
-  const [showOnlineOption, setShowOnlineOption] = useState(false);
-  const [inPerson, setInPerson] = useState(false);
-  const [onlineParticipation, setOnlineParticipation] = useState(false);
+  const [formFiles, setFormFiles] = useState({
+    image: null,
+    abstract: null,
+    presentationFile: null,
+  });
+  const [attendanceOptions, setAttendanceOptions] = useState({
+    showOnlineOption: false,
+    inPerson: false,
+    onlineParticipation: false,
+  });
   const [error, setError] = useState({});
   const [topics, setTopics] = useState([]);
-  const [userName, setUserName] = useState("");
-  const [userImage, setUserImage] = useState("");
-  const [userBio, setUserBio] = useState("");
+  const [profileDetails, setProfileDetails] = useState({
+    userName: "",
+    userImage: "",
+    userBio: "",
+  });
   const [isAccepted, setIsAccepted] = useState(false);
 
-  useEffect(() => {
-    const fetchSpeakerInfo = async () => {
-      try {
-        const token = getAuthToken();
-        const response = await axios.get(
-          "http://127.0.0.1:8000/api/speakers/info",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setUserBio(response.data.speaker.biography);
-        setUserName(response.data.speaker.name);
-        setUserImage(response.data.speaker.image);
-        setSpeakerInfo(response.data.speaker);
-        setShowOnlineOption(response.data.speaker.is_online_approved);
-        setTopics(
-          Array.isArray(response.data.speaker.topics)
-            ? response.data.speaker.topics
-            : [response.data.speaker.topics]
-        );
-      } catch (error) {
-        toast.error(
-          error?.response?.data?.error || "Failed to fetch speaker info"
-        );
-      }
-    };
+  const fetchSpeakerInfo = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const { data } = await axios.get(
+        "http://127.0.0.1:8000/api/speakers/info",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    fetchSpeakerInfo();
+      const { speaker } = data;
+      setProfileDetails({
+        userName: speaker.name,
+        userImage: speaker.image,
+        userBio: speaker.biography,
+      });
+      console.log(speaker.image
+      );
+      
+      setSpeakerInfo(speaker);
+      setAttendanceOptions((prev) => ({
+        ...prev,
+        showOnlineOption: speaker.is_online_approved,
+      }));
+      let topics;
+      try {
+        topics = JSON.parse(speaker.topics);
+      } catch {
+        topics = [];
+      }
+      setTopics(Array.isArray(topics) ? topics : [topics]);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.error || "Failed to fetch speaker info"
+      );
+    }
   }, []);
 
-  const getAuthToken = () => localStorage.getItem("token");
-
-  // const handleUpdate = async (e) => {
-  //   e.preventDefault();
-
-  //   const formData = new FormData();
-  //   if (image) {
-  //     formData.append("image", image);
-  //   }
-  //   if (abstract) {
-  //     formData.append("abstract", abstract);
-  //   }
-  //   if (topics) {
-  //     formData.append("topics", JSON.stringify(topics));
-  //   }
-  //   if (presentationFile) {
-  //     formData.append("presentation_file", presentationFile);
-  //   }
-  //   formData.append("online_participation", onlineParticipation ? 1 : 0);
-
-  //   try {
-  //     const token = getAuthToken();
-  //     await axios.post(
-  //       "http://127.0.0.1:8000/api/speakers/user/update",
-  //       formData,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     toast.success("Information updated successfully!");
-  //   } catch (error) {
-  //     toast.error(
-  //       error?.response?.data?.error || "Failed to update information"
-  //     );
-  //   }
-  // };
-
+  useEffect(() => {
+    fetchSpeakerInfo();
+  }, [fetchSpeakerInfo]);
+  useEffect(() => {
+console.log(profileDetails.userImage);
+  }, [profileDetails]);
   const handleUpdate = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
-    if (image) {
-      formData.append("image", image);
-    }
-    if (abstract) {
-      formData.append("abstract", abstract);
-    }
-    if (topics) {
-      formData.append("topics", JSON.stringify(topics));
-    }
-    if (presentationFile) {
-      formData.append("presentation_file", presentationFile);
-    }
-    formData.append("online_participation", onlineParticipation ? 1 : 0);
+    Object.entries(formFiles).forEach(([key, value]) => {
+      if (value) formData.append(key, value);
+    });
+    formData.append("topics", JSON.stringify(topics));
+    formData.append(
+      "online_participation",
+      attendanceOptions.onlineParticipation ? 1 : 0
+    );
 
     try {
-      const token = getAuthToken();
+      const token = localStorage.getItem("token");
 
       await httpService({
         method: "POST",
         url: "http://127.0.0.1:8000/api/speakers/user/update",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         data: formData,
-        withToast: true, // لإظهار الـ Toast للإشعارات
-        onSuccess: () => {
-          toast.success("Information updated successfully!");
-        },
-        onError: (message) => {
-          toast.error(message || "Failed to update information");
-        },
-        showLoader: true, // لإظهار اللودر أثناء تحميل البيانات
+        withToast: true,
+        onSuccess: () => toast.success("Information updated successfully!"),
+        onError: (message) =>
+          toast.error(message || "Failed to update information"),
+        showLoader: true,
       });
-    } catch (error) {
-      // سيتم التعامل مع الخطأ داخل httpService، لذا يمكنك إزالة الكود هنا
+    } catch {
+      // Error handling within httpService, no additional handling required here.
     }
   };
 
   useEffect(() => {
-    if (inPerson) {
-      setOnlineParticipation(false);
-    }
-  }, [inPerson]);
-
-  useEffect(() => {
-    if (onlineParticipation) {
-      setInPerson(false);
-    }
-  }, [onlineParticipation]);
+    setAttendanceOptions((prev) => ({
+      ...prev,
+      onlineParticipation: prev.inPerson ? false : prev.onlineParticipation,
+      inPerson: prev.onlineParticipation ? false : prev.inPerson,
+    }));
+  }, [attendanceOptions.inPerson, attendanceOptions.onlineParticipation]);
 
   const handleTopicChange = (index, newValue) => {
-    const updatedTopics = [...topics];
-    updatedTopics[index] = newValue;
-    setTopics(updatedTopics);
+    setTopics((prev) =>
+      prev.map((topic, i) => (i === index ? newValue : topic))
+    );
   };
 
-  const handleRemoveTopic = (index) => {
-    const updatedTopics = topics.filter((_, i) => i !== index);
-    setTopics(updatedTopics);
-  };
-
-  const handleAddTopic = () => {
-    setTopics([...topics, ""]);
-  };
+  const handleRemoveTopic = (index) =>
+    setTopics((prev) => prev.filter((_, i) => i !== index));
+  const handleAddTopic = () => setTopics((prev) => [...prev, ""]);
 
   return (
-    <div className="speaker-profile-container">
+    <div className="speaker-profile-section-container">
       <form onSubmit={handleUpdate} className="speaker-profile-form">
         <div className="profile-container-img">
           <div className="profile-section">
             <img
-              src={`${backendUrlImages}${userImage}`}
-              alt="Image 1"
-              className="profile-image"
+              src={`${backendUrlImages}${profileDetails.userImage}`}
+              alt="User Profile"
+              className="profile-image-speakerr"
             />
-
             <div className="profile-details">
-              <div className="profile-name">{userName}</div>
-              <div className="profile-bio">{userBio}</div>
+              <div className="profile-name">{profileDetails.userName}</div>
+              <div className="profile-bio">
+                <div>{profileDetails.userBio}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -188,26 +146,33 @@ const SpeakerProfileForm = () => {
         {/* File and Topic Uploads */}
         <div className="profile-files">
           <ImageUpload
-            errorMsg={""}
-            required={true}
+            errorMsg=""
+            required
             label="Abstract"
             allowedExtensions={["txt", "pdf", "doc", "docx"]}
-            inputValue={abstract}
-            setInputValue={setAbstract}
+            inputValue={formFiles.abstract}
+            setInputValue={(file) =>
+              setFormFiles((prev) => ({ ...prev, abstract: file }))
+            }
             className="image-upload"
+            placeholder="Abstract"
           />
 
           <ImageUpload
-            errorMsg={""}
-            required={true}
+            errorMsg=""
+            required
             label="Presentation File"
             allowedExtensions={["ppt", "pptx"]}
-            inputValue={presentationFile}
-            setInputValue={setPresentationFile}
+            inputValue={formFiles.presentationFile}
+            setInputValue={(file) =>
+              setFormFiles((prev) => ({ ...prev, presentationFile: file }))
+            }
             className="image-upload"
+            placeholder="Presentation File"
+
           />
 
-          {showOnlineOption && (
+          {attendanceOptions.showOnlineOption && (
             <div className="attendance-option">
               <h3 className="attendance-title">
                 How would you like to attend the conference?
@@ -215,25 +180,36 @@ const SpeakerProfileForm = () => {
               <div className="attendance-checkboxes">
                 <Checkbox
                   label="In-Person"
-                  checkboxValue={inPerson}
-                  setCheckboxValue={setInPerson}
+                  checkboxValue={attendanceOptions.inPerson}
+                  setCheckboxValue={(value) =>
+                    setAttendanceOptions((prev) => ({
+                      ...prev,
+                      inPerson: value,
+                    }))
+                  }
                   className="attendance-checkbox"
                 />
                 <Checkbox
                   label="Online"
-                  checkboxValue={onlineParticipation}
-                  setCheckboxValue={setOnlineParticipation}
+                  checkboxValue={attendanceOptions.onlineParticipation}
+                  setCheckboxValue={(value) =>
+                    setAttendanceOptions((prev) => ({
+                      ...prev,
+                      onlineParticipation: value,
+                    }))
+                  }
                   className="attendance-checkbox"
                 />
               </div>
-              {onlineParticipation && (
+              {attendanceOptions.onlineParticipation && (
                 <div className="notice">
-                  You will be provided with the Zoom link for the conference or
-                  your lecture one day before the event for participation.
+                  You will be provided with the Zoom link one day before the
+                  event.
                 </div>
               )}
             </div>
           )}
+
           <div className="topic-section">
             <div className="topics-container">
               <div className="topic-title">Topics</div>
@@ -255,25 +231,21 @@ const SpeakerProfileForm = () => {
                     />
                   </div>
                 ))}
-                <div className="add-topic-btn-container">
-                  <button
-                    type="button"
-                    onClick={handleAddTopic}
-                    className="add-topic-btn"
-                  >
-                    Add Topic
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={handleAddTopic}
+                  className="add-topic-btnn"
+                >
+                  Add Topic
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="register-btn-container">
-          <button className="register-btn" type="submit">
-            Update
-          </button>
-        </div>
+        <button className="register-btn" type="submit">
+          Update
+        </button>
       </form>
     </div>
   );

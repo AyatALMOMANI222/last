@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import SVG from "react-inlinesvg";
 import loginImg from "../../icons/loginImg.svg";
 import "./style.scss";
+import DialogMessage from "../../components/DialogMessage";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -32,13 +33,13 @@ const LoginPage = () => {
       const user = response.data.user;
 
       localStorage.setItem("token", token);
-      localStorage.setItem("user_id", user.id); // تخزين user_id
+      localStorage.setItem("user_id", user.id); 
       console.log(token);
-      // console.log(user_id);
       navigate("/");
     } catch (error) {
-      console.error("Login error:", error);
+      console.log(error.response?.data?.message);
       toast.error(error.response?.data?.message);
+      console.error("Login error:", error);
     }
   };
 
@@ -79,47 +80,49 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-page-container">
-      <form onSubmit={handleLogin} className="login-form">
-        <div className="title">
-          <span>Log in</span>
-          <span
-            className="sub-title"
-            onClick={() => {
-              navigate("/registertype");
-            }}
-          >
-            Register
-          </span>
-        </div>
-        <div className="note">Welcome back! Please enter your details</div>
+    <div>
+      <div className="login-page-container">
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="title">
+            <span>Log in</span>
+            <span
+              className="sub-title"
+              onClick={() => {
+                navigate("/registertype");
+              }}
+            >
+              Register
+            </span>
+          </div>
+          <div className="note">Welcome back! Please enter your details</div>
 
-        <div className="fields-container">
-          <Input
-            label={"Email"}
-            placeholder={"e.g. example@example.com"}
-            inputValue={email}
-            setInputValue={setEmail}
-            required={true}
-            errorMsg={error.email}
-          />
-          <Input
-            label={"Password"}
-            placeholder={"Your password"}
-            inputValue={password}
-            setInputValue={setPassword}
-            required={true}
-            errorMsg={error.password}
-            type="password"
-          />
-        </div>
-        <div className="login-btn-container">
-          <button className="login-btn" type="submit">
-            Login
-          </button>
-        </div>
-      </form>
-      <SVG className="login-img" src={loginImg} />
+          <div className="fields-container">
+            <Input
+              label={"Email"}
+              placeholder={"e.g. example@example.com"}
+              inputValue={email}
+              setInputValue={setEmail}
+              required={true}
+              errorMsg={error.email}
+            />
+            <Input
+              label={"Password"}
+              placeholder={"Your password"}
+              inputValue={password}
+              setInputValue={setPassword}
+              required={true}
+              errorMsg={error.password}
+              type="password"
+            />
+          </div>
+          <div className="login-btn-container">
+            <button className="login-btn" type="submit">
+              Login
+            </button>
+          </div>
+        </form>
+        <SVG className="login-img" src={loginImg} />
+      </div>
     </div>
   );
 };

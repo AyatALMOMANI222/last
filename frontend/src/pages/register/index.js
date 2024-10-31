@@ -12,10 +12,13 @@ import "./style.scss";
 import ImageUpload from "../../CoreComponent/ImageUpload";
 import TextArea from "../../CoreComponent/TextArea";
 import axios from "axios";
+import DialogMessage from "../../components/DialogMessage";
 
 const RegisterPage = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const navigate = useNavigate();
-  const {  id } = useParams();
+  const { id } = useParams();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -65,6 +68,7 @@ const RegisterPage = () => {
           },
         }
       );
+      setIsDialogOpen(true);
       toast.success("User created successfully!");
     } catch (error) {
       if (error.response) {
@@ -193,117 +197,123 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register-page-container">
-      <form onSubmit={handleRegister} className="register-form">
-        <div className="title">
-          <span>Sign Up</span>
-          <span
-            className="sub-title"
-            onClick={() => {
-              navigate("/login");
-            }}
-          >
-            login
-          </span>
-        </div>
-
-        <div className="fields-container">
-          <Input
-            label={"Name"}
-            placeholder={"e.g. John Doe"}
-            inputValue={name}
-            setInputValue={setName}
-            required={true}
-            errorMsg={error.name}
-          />
-          <Input
-            label={"Email"}
-            placeholder={"e.g. example@example.com"}
-            inputValue={email}
-            setInputValue={setEmail}
-            required={true}
-            errorMsg={error.email}
-          />
-          <PhoneNumberInput
-            label={"Phone Number"}
-            phone={phone}
-            setPhone={setPhone}
-            required={true}
-            errorMsg={error.phone}
-          />
-
-          <PhoneNumberInput
-            label={"WhatsApp Number"}
-            phone={whatsApp}
-            setPhone={setWhatsApp}
-            required={true}
-            errorMsg={error.whatsApp}
-          />
-
-          <Input
-            label={"Specialization"}
-            placeholder={"e.g. Software Engineer"}
-            inputValue={specialization}
-            setInputValue={setSpecialization}
-            required={true}
-            errorMsg={error.specialization}
-          />
-
-          <Select
-            options={nationalitiesOptions}
-            value={selectedNationality}
-            setValue={setSelectedNationality}
-            label="Nationality"
-            errorMsg={error.nationality}
-          />
-
-          <Input
-            label={"Password"}
-            placeholder={"Your password"}
-            inputValue={password}
-            setInputValue={setPassword}
-            required={true}
-            errorMsg={error.password}
-            type="password"
-          />
-
-          <Select
-            options={countriesOptions}
-            value={country}
-            setValue={setCountry}
-            label="Country"
-            errorMsg={error.country}
-          />
-
-          <TextArea
-            label="Resume"
-            placeholder="Write your resume here..."
-            value={resumeText}
-            setValue={setResumeText}
-            errorMsg={error.resume}
-            rows={8}
-          />
-
-          <div className="image-container">
-            <ImageUpload
-              errorMsg={error.image}
-              required={true}
-              label="Profile Picture"
-              allowedExtensions={["jpg", "jpeg", "png", "gif"]}
-              inputValue={image}
-              setInputValue={setImage}
-            />
+    <div >
+      <DialogMessage
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+      />
+      <div className="register-page-container">
+        <form onSubmit={handleRegister} className="register-form">
+          <div className="title">
+            <span>Sign Up</span>
+            <span
+              className="sub-title"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              login
+            </span>
           </div>
-        </div>
 
-        <div className="register-btn-container">
-          <button className="register-btn" type="submit">
-            Register
-          </button>
-        </div>
-      </form>
+          <div className="fields-container">
+            <Input
+              label={"Name"}
+              placeholder={"e.g. John Doe"}
+              inputValue={name}
+              setInputValue={setName}
+              required={true}
+              errorMsg={error.name}
+            />
+            <Input
+              label={"Email"}
+              placeholder={"e.g. example@example.com"}
+              inputValue={email}
+              setInputValue={setEmail}
+              required={true}
+              errorMsg={error.email}
+            />
+            <PhoneNumberInput
+              label={"Phone Number"}
+              phone={phone}
+              setPhone={setPhone}
+              required={true}
+              errorMsg={error.phone}
+            />
 
-      <SVG className="register-img" src={registerImg} />
+            <PhoneNumberInput
+              label={"WhatsApp Number"}
+              phone={whatsApp}
+              setPhone={setWhatsApp}
+              required={true}
+              errorMsg={error.whatsApp}
+            />
+
+            <Input
+              label={"Specialization"}
+              placeholder={"e.g. Software Engineer"}
+              inputValue={specialization}
+              setInputValue={setSpecialization}
+              required={true}
+              errorMsg={error.specialization}
+            />
+
+            <Select
+              options={nationalitiesOptions}
+              value={selectedNationality}
+              setValue={setSelectedNationality}
+              label="Nationality"
+              errorMsg={error.nationality}
+            />
+
+            <Input
+              label={"Password"}
+              placeholder={"Your password"}
+              inputValue={password}
+              setInputValue={setPassword}
+              required={true}
+              errorMsg={error.password}
+              type="password"
+            />
+
+            <Select
+              options={countriesOptions}
+              value={country}
+              setValue={setCountry}
+              label="Country"
+              errorMsg={error.country}
+            />
+
+            <TextArea
+              label="Resume"
+              placeholder="Write your resume here..."
+              value={resumeText}
+              setValue={setResumeText}
+              errorMsg={error.resume}
+              rows={8}
+            />
+
+            <div className="image-container">
+              <ImageUpload
+                errorMsg={error.image}
+                required={true}
+                label="Profile Picture"
+                allowedExtensions={["jpg", "jpeg", "png", "gif"]}
+                inputValue={image}
+                setInputValue={setImage}
+              />
+            </div>
+          </div>
+
+          <div className="register-btn-container">
+            <button className="register-btn" type="submit">
+              Register
+            </button>
+          </div>
+        </form>
+
+        <SVG className="register-img" src={registerImg} />
+      </div>
     </div>
   );
 };

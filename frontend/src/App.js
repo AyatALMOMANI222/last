@@ -73,6 +73,7 @@ import Lastt from "./components/ReservationstepperPage/last";
 import FlightStepperPage from "./components/FlightStepperPage";
 import FlightStepperPageAdmin from "./components/FlightStepperPageAdmin";
 import DinnerDetails from "./components/GalaDinner";
+import SponsorSection from "./components/Sponsor/SponsorshipOption";
 // import Echo from "laravel-echo";
 // import Pusher from 'pusher-js';
 const App = () => {
@@ -201,7 +202,7 @@ const App = () => {
         <Route path="/add/excel" element={<ExcelUpload />} />
         <Route path="/group/update/admin" element={<AdminGroupComponent />} />
         <Route path="/flights/users" element={<FlightStepperPage />} />
-        <Route path="/flights/admins" element={<FlightStepperPageAdmin />} />
+        <Route path="/flights/admins/:user_id" element={<FlightStepperPageAdmin />} />
         <Route
           path="/user/flight/update/:id"
           element={<MainFlightFormUpdate />}
@@ -209,6 +210,7 @@ const App = () => {
         <Route path="/companion" element={<GetCompanion />} />
 
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/sponsor/section" element={<SponsorSection />} />
 
       </Routes>
       {/* <Footer/> */}

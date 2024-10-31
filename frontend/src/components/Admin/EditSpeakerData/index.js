@@ -3,7 +3,8 @@ import Checkbox from "../../../CoreComponent/Checkbox";
 import { useParams } from 'react-router-dom';
 import httpService from "../../../../src/common/httpService"; 
 import { toast } from "react-toastify";
-import "./style.scss"
+import "./style.scss";
+
 const EditSpeakerData = () => {
   const { conferenceId, userId } = useParams();
   const [specificFlightTime, setSpecificFlightTime] = useState(false);
@@ -47,69 +48,58 @@ const EditSpeakerData = () => {
 
   return (
     <form onSubmit={handleSubmit} className="edit-speaker-form">
-      <Checkbox
-        label="Do you have specific flight time?"
-        checkboxValue={specificFlightTime}
-        setCheckboxValue={setSpecificFlightTime}
-        icon={""}
-        errorMsg={""}
-        className="form-checkbox"
-      />
+      <h2 className="form-title">Edit Speaker Data</h2>
+      <div className="checkbox-group">
+        <Checkbox
+          label="Do you have specific flight time?"
+          checkboxValue={specificFlightTime}
+          setCheckboxValue={setSpecificFlightTime}
+          className="form-checkbox"
+        />
 
-      <Checkbox
-        label="Is Online Approved?"
-        checkboxValue={isOnlineApproved}
-        setCheckboxValue={setIsOnlineApproved}
-        icon={""}
-        errorMsg={""}
-        className="form-checkbox"
-      />
+        <Checkbox
+          label="Is Online Approved?"
+          checkboxValue={isOnlineApproved}
+          setCheckboxValue={setIsOnlineApproved}
+          className="form-checkbox"
+        />
 
-      <Checkbox
-        label="Ticket Status (Active)"
-        checkboxValue={ticketStatus}
-        setCheckboxValue={setTicketStatus}
-        icon={""}
-        errorMsg={""}
-        className="form-checkbox"
-      />
+        <Checkbox
+          label="Ticket Status (Active)"
+          checkboxValue={ticketStatus}
+          setCheckboxValue={setTicketStatus}
+          className="form-checkbox"
+        />
 
-      <Checkbox
-        label="Dinner Invitation?"
-        checkboxValue={dinnerInvitation}
-        setCheckboxValue={setDinnerInvitation}
-        icon={""}
-        errorMsg={""}
-        className="form-checkbox"
-      />
+        <Checkbox
+          label="Dinner Invitation?"
+          checkboxValue={dinnerInvitation}
+          setCheckboxValue={setDinnerInvitation}
+          className="form-checkbox"
+        />
 
-      <Checkbox
-        label="Airport Pickup?"
-        checkboxValue={airportPickup}
-        setCheckboxValue={setAirportPickup}
-        icon={""}
-        errorMsg={""}
-        className="form-checkbox"
-      />
+        <Checkbox
+          label="Airport Pickup?"
+          checkboxValue={airportPickup}
+          setCheckboxValue={setAirportPickup}
+          className="form-checkbox"
+        />
 
-      <Checkbox
-        label="Free Trip?"
-        checkboxValue={freeTrip}
-        setCheckboxValue={setFreeTrip}
-        icon={""}
-        errorMsg={""}
-        className="form-checkbox"
-      />
+        <Checkbox
+          label="Free Trip?"
+          checkboxValue={freeTrip}
+          setCheckboxValue={setFreeTrip}
+          className="form-checkbox"
+        />
 
-      <Checkbox
-        label="Is Certificate Active?"
-        checkboxValue={isCertificateActive}
-        setCheckboxValue={setIsCertificateActive}
-        icon={""}
-        errorMsg={""}
-        className="form-checkbox"
-      />
-
+        <Checkbox
+          label="Is Certificate Active?"
+          checkboxValue={isCertificateActive}
+          setCheckboxValue={setIsCertificateActive}
+          className="form-checkbox"
+        />
+      </div>
+      
       <button type="submit" className="submit-btn">Submit</button>
     </form>
   );

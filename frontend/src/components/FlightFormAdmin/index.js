@@ -10,8 +10,10 @@ import "./style.scss";
 import axios from "axios";
 import UpdateDeadline from "./SetUpdateDeadline";
 import UpdateTicket from "./SetTicket";
+import { useNavigate } from "react-router-dom";
 
 const FlightFormAdmin = () => {
+  const navigate = useNavigate();
   const [flights, setFlights] = useState([]);
   const [companions, setCompanions] = useState([]);
   const headers = [
@@ -80,22 +82,11 @@ const FlightFormAdmin = () => {
         actions: (
           <div className="table-actions-container">
             <button
-              className="trip-btn"
               onClick={() => {
-                setOpenTripForm(true);
-                setSelectedItem(item);
+                navigate(`/flights/admins/${item?.user_id}`);
               }}
             >
-              Add Trip
-            </button>
-            <button
-              className="price-btn"
-              onClick={() => {
-                setOpenPriceForm(true);
-                setSelectedItem(item);
-              }}
-            >
-              Add Price
+              Add Trips
             </button>
             <button
               onClick={() => {
@@ -109,7 +100,7 @@ const FlightFormAdmin = () => {
               className="get-companion-btn"
               onClick={() => getCompanionFlights(item.user_id)}
             >
-              Get Companion
+              View Companion
             </button>
             <button
               onClick={() => {
@@ -117,7 +108,6 @@ const FlightFormAdmin = () => {
                 setSelectedItem(item);
               }}
             >
-              {" "}
               Set Update Deadline
             </button>
 
@@ -127,7 +117,6 @@ const FlightFormAdmin = () => {
                 setSelectedItem(item);
               }}
             >
-              {" "}
               Set Ticket
             </button>
           </div>

@@ -2,26 +2,36 @@ import React, { useEffect, useState } from "react";
 import Stepper from "../../CoreComponent/stepper";
 import "./style.scss";
 import FlightInformation from "./FlightInformation";
-import { AdminFlightStepperProvider, useFlightStepperAdmin } from "./StepperContext";
-// import CompanionInformation from "./CompanionInformation";
+import {
+  AdminFlightStepperProvider,
+  useFlightStepperAdmin,
+} from "./StepperContext";
 import { removeFromLocalStorage } from "../../common/localStorage";
 
 const AdminFlightStepperPageContent = () => {
-  const { currentStep, completedSteps, setCurrentStep, completeStep } =
-    useFlightStepperAdmin();
+  const {
+    currentStep,
+    completedSteps,
+    setCurrentStep,
+    completeStep,
+    flightMembers,
+  } = useFlightStepperAdmin();
 
-  const stepperInfo = [
-    { title: "Flight Information" },
-    { title: "Companion Information" },
-  ];
+  // Dynamically generate steps based on the number of flight members
+  const stepperInfo = flightMembers.map((member, index) => ({
+    title: `${member?.passenger_name} Flight Information `,
+  }));
 
-  const componentsMap = [<FlightInformation/>, <h1>fddd</h1>];
+  const componentsMap = flightMembers.map((member, index) => (
+    <FlightInformation key={index} member={member} index={index} />
+  ));
 
   useEffect(() => {
     return () => {
       removeFromLocalStorage("flightDetails");
     };
   }, []);
+
   return (
     <div className="stepper-page-container">
       <div className="stepper-section">
@@ -39,7 +49,7 @@ const AdminFlightStepperPageContent = () => {
         </div>
       </div>
       <div className="current-step">
-        <div className="header-current-step">Tilte </div>
+        <div className="header-current-step">Title</div>
         <div className="current-component">{componentsMap[currentStep]}</div>
       </div>
     </div>

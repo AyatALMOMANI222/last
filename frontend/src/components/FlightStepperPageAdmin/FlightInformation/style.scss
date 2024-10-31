@@ -12,11 +12,13 @@
     cursor: pointer;
   }
 
-  .flight-form-stepper {
+  .check-in-input-container {
+    padding: 10px 0px;
+  }
+  .room-form-stepper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-row-gap: 20px;
-    grid-column-gap: 30px;
+    grid-column-gap: 20px;
   }
 }
 
@@ -36,4 +38,23 @@
     cursor: pointer;
     color: green;
   }
+}
+.view-main-user-flight {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  grid-row-gap: 20px;
+  border: 1px solid #d8dae5;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.ticket-pricing-form-container {
+  border: 1px solid #d8dae5;
+  border-radius: 5px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 20px;
 }

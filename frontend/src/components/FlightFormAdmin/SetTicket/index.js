@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./style.scss";
 import ImageUpload from "../../../CoreComponent/ImageUpload";
-import Input  from "../../../CoreComponent/Input";
+import Input from "../../../CoreComponent/Input";
+import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
 
 const UpdateTicket = ({ data, setOpen }) => {
   const [ticket, setTicket] = useState("");
@@ -54,31 +55,18 @@ const UpdateTicket = ({ data, setOpen }) => {
     console.log(flightId);
   });
   return (
-    <div className="add-trip-admin">
-      <div className="form-section">
-        <Input label="Ticket" inputValue={ticket} setInputValue={setTicket} />
-        {/* <ImageUpload
-          label="Ticket"
-          inputValue={ticket}
-          setInputValue={setTicket}
-          allowedExtensions={["pdf"]}
-        //   errorMsg={errors.ticket}
-        /> */}
+    <CustomFormWrapper
+      title="Ticket Information"
+      handleSubmit={handleSubmit}
+      setOpenForm={setOpen}
+      noActions={false}
+    >
+      <div>
+        <div>
+          <Input label="Ticket" inputValue={ticket} setInputValue={setTicket} />
+        </div>
       </div>
-      <div className="actions-section-container">
-        <button
-          className="cancel-btn"
-          onClick={() => {
-            setOpen(false);
-          }}
-        >
-          Cancel
-        </button>
-        <button className="submit-btn" onClick={handleSubmit}>
-          Submit
-        </button>
-      </div>
-    </div>
+    </CustomFormWrapper>
   );
 };
 export default UpdateTicket;

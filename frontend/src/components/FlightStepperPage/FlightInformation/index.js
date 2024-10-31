@@ -186,7 +186,6 @@ console.log({passportImage});
           className={`next-button ${false ? "disabled" : ""}`}
           onClick={() => {
             handleSubmit();
-            navigate("/")
           }}
           disabled={false}
         >

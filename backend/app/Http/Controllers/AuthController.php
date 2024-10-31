@@ -29,40 +29,59 @@ class AuthController extends Controller
           * @param  \Illuminate\Http\Request  $request
           * @return \Illuminate\Http\JsonResponse
           */
-         public function login(Request $request)
-         {
-             // Validate the request inputs
-             $request->validate([
-                 'email' => 'required|email',
-                 'password' => 'required',
-             ]);
-         
-             // Find the user by email
-             $user = User::where('email', $request->email)->first();
-         
-             // Validate user credentials
-             if (!$user || !Hash::check($request->password, $user->password)) {
-                throw new AuthenticationException('The provided credentials are incorrect.');
-            }
-         
-             // Create a token for the user
-             $token = $user->createToken('laravel')->plainTextToken;
-             
-             // Return the token and user data including isAdmin
-             return response()->json([
-                 'status' => 'success',
-                 'token' => $token,
-                 'user' => [
-                     'id' => $user->id,
-                     'name' => $user->name,
-                     'email' => $user->email,
-                     'email_verified_at' => $user->email_verified_at,
-                     'created_at' => $user->created_at,
-                     'updated_at' => $user->updated_at,
-                     'isAdmin' => $user->isAdmin, // Include isAdmin in the response
-                 ],
-             ]);
-         }
+          public function login(Request $request)
+          {
+              // Validate the request inputs
+              $request->validate([
+                  'email' => 'required|email',
+                  'password' => 'required',
+              ]);
+          
+              // Find the user by email
+              $user = User::where('email', $request->email)->first();
+          
+              // Validate user credentials
+              if (!$user || !Hash::check($request->password, $user->password)) {
+                  throw new AuthenticationException('The provided credentials are incorrect.');
+              }
+          
+              // Check the user's status
+              if ($user->status === 'pending') {
+                  return response()->json([
+                      'status' => 'error',
+                      'message' => 'Your account is pending approval. Please wait for admin confirmation.',
+                  ], 403);
+              } elseif ($user->status === 'rejected') {
+                  return response()->json([
+                      'status' => 'error',
+                      'message' => 'Your account has been rejected. Please contact support for more information.',
+                  ], 403);
+              } elseif ($user->status !== 'approved') {
+                  return response()->json([
+                      'status' => 'error',
+                      'message' => 'Your account status is not valid for login.',
+                  ], 403);
+              }
+          
+              // Create a token for the user if approved
+              $token = $user->createToken('laravel')->plainTextToken;
+          
+              // Return the token and user data including isAdmin
+              return response()->json([
+                  'status' => 'success',
+                  'token' => $token,
+                  'user' => [
+                      'id' => $user->id,
+                      'name' => $user->name,
+                      'email' => $user->email,
+                      'email_verified_at' => $user->email_verified_at,
+                      'created_at' => $user->created_at,
+                      'updated_at' => $user->updated_at,
+                      'isAdmin' => $user->isAdmin, // Include isAdmin in the response
+                  ],
+              ]);
+          }
+          
      
          /**
           * Get the authenticated user's profile.

@@ -1,106 +1,194 @@
-.speaker-profile-container {
+.speaker-profile-section-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  background: #f9f9fc;
+
+  .speaker-profile-form {
+    width: 100%;
+    max-width: 900px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
   .profile-container-img {
     display: flex;
-    flex-direction: row;
-    // justify-content: center;
+    flex-direction: column;
     align-items: center;
-    padding-left: 40px;
+    gap: 1rem;
   }
+
   .profile-section {
     display: flex;
-    flex-direction: row;
-    gap: 30px;
-    justify-content: center;
-    align-items: start;
-    margin-top: 30px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #007bff;
   }
 
   .profile-name {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 30px;
-    margin-top: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
   }
+
   .profile-bio {
-    color: #6c757d;
-    line-break: anywhere;
-    width: 300px;
+    font-size: 1rem;
+    color: #777;
+    max-width: 300px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
   }
-  .profile-image {
-    width: 220px; /* Adjust the size as needed */
-    height: 220px; /* Same as width to make it a perfect circle */
-    border-radius: 50%; /* Makes the element circular */
+
+  .profile-files {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .image-upload {
+    width: 100%;
+  }
+
+  .attendance-option {
+    padding: 1rem;
+    border-radius: 10px;
+    background: #f0f4ff;
+    border: 1px solid #007bff;
+  }
+  .profile-image-speakerr {
     overflow: hidden; /* Ensures the content inside does not overflow the border */
     object-fit: cover; /* Ensures the image fits inside the circle */
     border: 2px solid #ccc; /* Optional: Adds a border */
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
   }
-  .profile-files {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-    padding: 20px;
-    grid-column-gap: 30px;
-    grid-row-gap: 20px;
-    width: 60%;
+  .attendance-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
   }
+
+  .attendance-checkboxes {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .attendance-checkbox {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  .notice {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
   .topic-section {
-    padding-top: 13px;
-    position: relative;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+  }
+
+  .topic-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  .topics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .topic-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .topic-input {
+    flex-grow: 1;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .delete-icon {
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .delete-icon:hover {
+    transform: scale(1.1);
+    filter: brightness(0.8);
+  }
+
+  .add-topic-btn-container {
+    text-align: center;
+  }
+
+  .add-topic-btnn {
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+  }
+
+  .add-topic-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .register-btn-container {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .register-btn {
+    font-size: 1.2rem;
+    padding: 0.75rem 2rem;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .register-btn:hover {
+    background-color: #218838;
   }
 
   .topics-container-inputs {
     display: flex;
     flex-direction: column;
     gap: 20px;
-  }
-  .topic-input-container {
-    display: grid;
-    grid-template-columns: 1fr 15px;
-    grid-column-gap: 20px;
-    grid-row-gap: 15px;
-  }
-  .add-topic-btn {
-    border: none;
-    background-color: rgba(255, 251, 251, 0.4862745098);
-    font-size: 14px;
-    font-weight: 500;
-    height: 40px;
-    cursor: pointer;
-    color: #b10000;
-    width: 100px;
-    position: absolute;
-    top: 0px;
-    right: -10px;
-  }
-  .topic-title {
-    padding-bottom: 5px;
-  }
-  .delete-icon {
-    padding-top: 6px;
-  }
-
-  .attendance-title {
-    font-size: 14px;
-    color: rgb(159, 0, 0);
-  }
-  .notice {
-    font-style: normal;
-    color: rgb(159, 0, 0);
-  }
-  .register-btn-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    button {
-      width: 150px;
-      background-color: #ef233c;
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-right: 30px;
-      margin-bottom: 30px;
-    }
   }
 }

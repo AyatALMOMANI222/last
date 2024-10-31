@@ -1,0 +1,124 @@
+body {
+    background-color: #f0f4f8; /* خلفية فاتحة لصفحة */
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.sponsor-section {
+    padding: 30px;
+    background-color: #ffffff; /* لون خلفية للقسم */
+    color: #333333; /* لون النص الداكن */
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* ظل خفيف */
+}
+
+.sponsorship-options {
+    display: flex; /* استخدام التخطيط المرن */
+    flex-wrap: wrap; /* السماح بتغليف العناصر */
+    gap: 20px; /* تباعد بين خيارات الرعاية */
+}
+
+.sponsorship-option {
+    flex: 1 1 calc(33% - 20px); /* تخصيص 33% من العرض مع مساحة فارغة */
+    min-width: 280px; /* الحد الأدنى للعرض */
+    border: 1px solid #B22222; /* إطار بلون رمادي فاتح */
+    padding: 20px;
+    border-radius: 10px; /* زوايا دائرية */
+    background-color: #f9f9f9; /* لون خلفية الكارد فاتح */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s; /* إضافة تأثير التحويل */
+    
+    &:hover {
+        background-color: #e0e0e0; /* لون الخلفية عند التمرير */
+        color: #000000; /* لون النص عند التمرير */
+        transform: translateY(-3px); /* رفع الكارد قليلاً عند التمرير */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* ظل عند التمرير */
+    }
+}
+
+.selected {
+    border-color: #007bff; /* تغيير لون الحدود عند الاختيار */
+}
+
+.option-header {
+    display: flex;
+    justify-content: space-between; /* توزيع العنوان والسعر */
+    margin-bottom: 15px; /* مسافة بين العنوان والوصف */
+}
+
+.price {
+    font-size: 1.5em; /* حجم خط السعر أكبر */
+    color: #B22222; /* لون السعر بالأزرق */
+}
+
+.booth-package {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f0f4f8; /* لون خلفية مختلف فاتح */
+    border: 1px solid #d1d1d1; /* إطار باللون الرمادي الفاتح */
+    border-radius: 10px; /* زوايا دائرية */
+}
+
+.button-container {
+    display: flex; /* استخدام التخطيط المرن */
+    justify-content: center; /* توسيط الأزرار */
+    margin-top: 20px; /* مسافة بين الأزرار والقسم العلوي */
+}
+
+.sign-agreement-button,
+.submit-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    margin: 0 10px; /* مسافة بين الأزرار */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s; /* تأثير التحويل */
+
+    &:hover {
+        transform: translateY(-2px); /* رفع الزر قليلاً عند التمرير */
+    }
+}
+
+.sign-agreement-button {
+    background-color: #007bff; /* لون أزرق لزر التوقيع */
+    color: #fff;
+
+    &:hover {
+        background-color: #0056b3; /* لون أزرق داكن عند التمرير */
+    }
+}
+
+.submit-button {
+    background-color: #B22222; /* لون أحمر لزر التقديم */
+    color: #fff;
+
+    &:hover {
+        background-color: #c82333; /* لون أحمر داكن عند التمرير */
+    }
+}
+.booth-cost-table {
+    margin-top: 20px;
+
+    table {
+        width: 90%;
+        border-collapse: collapse;
+        margin: 20px 0;
+
+
+        th, td {
+            border: 1px solid #d1d1d1; /* Light gray border */
+            padding: 10px; /* Padding for table cells */
+            text-align: center; /* Center alignment for text */
+            
+        }
+
+        th {
+            background-color: #f0f4f8; /* Header background color */
+            color: #333; /* Dark text color for header */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Light background for even rows */
+        }
+    }
+}

@@ -15,6 +15,68 @@ class SpeakerController extends Controller
 
 
 {
+    // public function store(Request $request, $user_id, $conference_id)
+    // {
+    //     try {
+    //         // Validate the incoming request data
+    //         $validatedData = $request->validate([
+    //             'is_online_approved' => 'nullable|boolean',
+    //             'ticket_status' => 'nullable|string',
+    //             'dinner_invitation' => 'nullable|boolean',
+    //             'airport_pickup' => 'nullable|boolean',
+    //             'free_trip' => 'nullable|boolean',
+    //             'is_certificate_active' => 'nullable|boolean',
+    //             'room_type' => 'nullable|string|in:single,double,triple',
+    //             'nights_covered' => 'nullable|integer|min:0', 
+    //         ]);
+    
+    //         // Check if the speaker already exists for this user and conference
+    //         $existingSpeaker = Speaker::where('user_id', $user_id)
+    //             ->where('conference_id', $conference_id)
+    //             ->first();
+    
+    //         if ($existingSpeaker) {
+    //             return response()->json([
+    //                 'error' => 'Speaker already exists for this user and conference.'
+    //             ], 409); // Use 409 for conflict
+    //         }
+    
+    //         // Create a new speaker entry
+    //         $speaker = Speaker::create(array_merge($validatedData, [
+    //             'user_id' => $user_id,
+    //             'conference_id' => $conference_id,
+    //         ]));
+    
+    //         // إرسال إشعار إلى السبيكر باستخدام نموذج Notification
+    //         $userNotification =  Notification::create([
+    //             'user_id' => $user_id,
+    //             'message' => 'We are pleased to inform you that your profile is now active. You can log in to the website and complete your profile.',
+    //             'conference_id' => $conference_id,
+    //             'is_read' => false, // يمكنك تعيين القيمة حسب الحاجة
+    //         ]);
+    //         broadcast(new NotificationSent($userNotification));
+    //         // Return a success response
+    //         return response()->json([
+    //             'message' => 'Speaker created successfully',
+    //             'speaker' => $speaker
+    //         ], 201); // Use 201 for created resource
+    
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         // Handle validation errors
+    //         return response()->json([
+    //             'error' => 'Validation error',
+    //             'details' => $e->errors()
+    //         ], 422);
+    //     } catch (\Exception $e) {
+    //         // Handle general errors
+    //         return response()->json([
+    //             'error' => 'An unexpected error occurred. Please try again.',
+    //             'details' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+    
+
     public function store(Request $request, $user_id, $conference_id)
     {
         try {
@@ -27,7 +89,7 @@ class SpeakerController extends Controller
                 'free_trip' => 'nullable|boolean',
                 'is_certificate_active' => 'nullable|boolean',
                 'room_type' => 'nullable|string|in:single,double,triple',
-                'nights_covered' => 'nullable|integer|min:0', 
+                'nights_covered' => 'nullable|integer|min:0',
             ]);
     
             // Check if the speaker already exists for this user and conference
@@ -47,17 +109,25 @@ class SpeakerController extends Controller
                 'conference_id' => $conference_id,
             ]));
     
+            // Update user status to "approved"
+            $user = User::findOrFail($user_id);
+            $user->status = 'approved';
+            $user->save();
+    
             // إرسال إشعار إلى السبيكر باستخدام نموذج Notification
-            $userNotification =  Notification::create([
+            $userNotification = Notification::create([
                 'user_id' => $user_id,
                 'message' => 'We are pleased to inform you that your profile is now active. You can log in to the website and complete your profile.',
                 'conference_id' => $conference_id,
                 'is_read' => false, // يمكنك تعيين القيمة حسب الحاجة
             ]);
+    
+            // Broadcast the notification
             broadcast(new NotificationSent($userNotification));
+    
             // Return a success response
             return response()->json([
-                'message' => 'Speaker created successfully',
+                'message' => 'Speaker created successfully, and user status updated to approved.',
                 'speaker' => $speaker
             ], 201); // Use 201 for created resource
     
@@ -76,8 +146,6 @@ class SpeakerController extends Controller
         }
     }
     
-
-
 
     // هنا يعدل على user_id ,عملتله check admin خارجي
     public function updateByUser(Request $request)
