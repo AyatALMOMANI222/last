@@ -6,7 +6,7 @@ import {
   StepperAcceptFlightProvider,
   useFlightStepperAdmin,
 } from "./StepperContext";
-// import { removeFromLocalStorage, removeFromLocalStorageStartWith } from "../../common/localStorage";
+import { removeFromLocalStorage, removeFromLocalStorageStartWith } from "../../common/localStorage";
 
 const StepperAcceptFlightPageContent = () => {
   const {
@@ -31,7 +31,7 @@ const StepperAcceptFlightPageContent = () => {
 
   useEffect(() => {
     return () => {
-      // removeFromLocalStorageStartWith("Avalible_Trip_ID_");
+      removeFromLocalStorageStartWith("Available_Trip_ID_");
     };
   }, []);
 

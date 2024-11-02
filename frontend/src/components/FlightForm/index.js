@@ -222,8 +222,9 @@ const FlightForm = () => {
         <div className="title-container">Flight Information Page</div>
         <div className="flight-actions">
           <button
-            // className={`${Object.keys(data).length ? "disabled-btn" : ""}`}
+            className={`${!Object.keys(data).length ? "disabled-btn" : ""}`}
             type="button"
+            disabled={!Object.keys(data).length}
             onClick={() => {
               const userId = localStorage.getItem("user_id");
               navigate(`/accept/flight/${userId}`);

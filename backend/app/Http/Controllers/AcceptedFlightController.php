@@ -52,34 +52,36 @@ class AcceptedFlightController extends Controller
     public function storeAll(Request $request)
     {
         try {
-            // تحقق من أن البيانات المرسلة هي مصفوفة وتحتوي على العناصر المطلوبة
+            // Validate the incoming request data
             $validatedData = $request->validate([
                 'flights' => 'required|array',
-                'flights.*.flight_id' => 'required|exists:flights,flight_id',  
+                'flights.*.available_id' => 'required|integer',  // New field validation
+                'flights.*.flight_id' => 'required|exists:flights,flight_id',
                 'flights.*.price' => 'required|numeric|min:0',
                 'flights.*.departure_date' => 'required|date',
-                'flights.*.departure_time' => 'required|date_format:H:i',
-                'flights.*.admin_set_deadline' => 'nullable|date',
-                'flights.*.ticket_number' => 'nullable|string',
+                'flights.*.departure_time' => 'required|date_format:H:i:s', // Ensure the time is in HH:MM:SS format
+                // Removed 'admin_set_deadline' and 'ticket_number' as they are not present in the new structure
                 'flights.*.ticket_image' => 'nullable|string',
                 'flights.*.issued_at' => 'nullable|date',
                 'flights.*.expiration_date' => 'nullable|date',
+                'flights.*.is_free' => 'nullable|boolean', // New field validation
             ]);
     
             $acceptedFlights = [];
     
-            // تكرار البيانات وإدخال كل رحلة في قاعدة البيانات
+            // Iterate through the validated data and insert each flight into the database
             foreach ($validatedData['flights'] as $flightData) {
                 $acceptedFlight = AcceptedFlight::create([
                     'flight_id' => $flightData['flight_id'],
                     'price' => $flightData['price'],
                     'departure_date' => $flightData['departure_date'],
-                    'departure_time' => $flightData['departure_time'],
-                    'admin_set_deadline' => $flightData['admin_set_deadline'],
-                    'ticket_number' => $flightData['ticket_number'],
-                    'ticket_image' => $flightData['ticket_image'],
-                    'issued_at' => $flightData['issued_at'],
-                    'expiration_date' => $flightData['expiration_date'],
+                    'departure_time' => $flightData['departure_time'], // Store time as is, format validated
+                    // 'ticket_image' => $flightData['ticket_image'],
+                    // 'issued_at' => $flightData['issued_at'],
+                    // 'expiration_date' => $flightData['expiration_date'],
+                    // Include the new fields in the database creation if applicable
+                    // 'available_id' => $flightData['available_id'],  // New field
+                    'is_free' => $flightData['is_free'],  // New field
                 ]);
     
                 $acceptedFlights[] = $acceptedFlight;

@@ -47,7 +47,7 @@ const AcceptFlight = ({ member, index }) => {
     const flightTrips = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key.startsWith("Avalible_Trip_ID_")) {
+      if (key.startsWith("Available_Trip_ID_")) {
         const value = localStorage.getItem(key);
         try {
           flightTrips.push(JSON.parse(value));
@@ -59,10 +59,24 @@ const AcceptFlight = ({ member, index }) => {
     return flightTrips;
   };
 
-  const submit = () => {
+  const submit = async () => {
     const data = getFlights();
-    console.log(data);
-    // Please Ayat connect this data with API
+    const getAuthToken = () => localStorage.getItem("token");
+
+    try {
+      await httpService({
+        method: "POST",
+        url: `http://localhost:8000/api/accepted-flights/user/all`,
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+        showLoader: true,
+        data: {
+          flights: data,
+        },
+        withToast: true,
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   const handleSubmit = () => {
@@ -79,7 +93,7 @@ const AcceptFlight = ({ member, index }) => {
   useEffect(() => {
     getAvailableFlights();
     const storedFlight = getFromLocalStorage(
-      `Avalible_Trip_ID_${member?.flight_id}`
+      `Available_Trip_ID_${member?.flight_id}`
     );
     if (storedFlight) {
       setSelectedFlight(storedFlight);
@@ -104,7 +118,7 @@ const AcceptFlight = ({ member, index }) => {
               onClick={() => {
                 setSelectedFlight(flight);
                 saveToLocalStorage(
-                  `Avalible_Trip_ID_${member?.flight_id}`,
+                  `Available_Trip_ID_${member?.flight_id}`,
                   flight
                 );
               }}

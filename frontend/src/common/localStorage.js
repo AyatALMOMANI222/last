@@ -23,3 +23,19 @@ export const saveToLocalStorage = (key, value) => {
       console.error("Error removing from localStorage", error);
     }
   };
+
+  export const removeFromLocalStorageStartWith = (prefix) => {
+    try {
+      // Iterate through all keys in localStorage
+      Object.keys(localStorage).forEach((key) => {
+        // Check if the key starts with the specified prefix
+        if (key.startsWith(prefix)) {
+          // Remove the item from localStorage
+          localStorage.removeItem(key);
+        }
+      });
+    } catch (error) {
+      console.error("Error removing from localStorage", error);
+    }
+  };
+  
