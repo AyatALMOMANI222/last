@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify"; // استيراد ToastContainer و toast
 import Echo from "laravel-echo"; // استيراد Echo
 import Pusher from "pusher-js"; // استيراد Pusher
-import 'react-toastify/dist/ReactToastify.css'; // استيراد الأنماط
+import "react-toastify/dist/ReactToastify.css"; // استيراد الأنماط
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +22,7 @@ const NotificationDropdown = () => {
 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsOpen(false); // إغلاق الـ dropdown عند النقر خارجها
+      setIsOpen(false);
     }
   };
 
@@ -35,31 +35,41 @@ const NotificationDropdown = () => {
         url: `http://127.0.0.1:8000/api/not`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
       });
-
-      console.log(response.data);
-      setNotifications(response?.data);
-
-      // عرض إشعار توست عند تلقي إشعار جديد
-      // response.data.forEach((notification) => {
-      //   if (!notification.read) {
-      //     toast(notification.message); // عرض التوست
-      //   }
-      // });
+      const data = response?.data?.filter((item) => {
+        return !item?.is_read;
+      });
+      setNotifications(data);
     } catch (error) {
       console.error("Error fetching notifications", error);
     }
   };
 
+  const read = async (notiId) => {
+    const userId = localStorage.getItem("user_id");
+    try {
+      const response = await httpService({
+        method: "POST",
+        url: `http://127.0.0.1:8000/api/notifications/${notiId}/read`,
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+        data: {
+          user_id: userId,
+        },
+      });
+      getAllNotifications();
+      console.log(response);
+    } catch (error) {
+      console.error("Error fetching notifications", error);
+    }
+  };
   useEffect(() => {
     getAllNotifications();
 
-    // إعداد Echo مع Pusher
     const echo = new Echo({
-      broadcaster: 'pusher',
-      key: '743171d2766ff157a71a', // مفتاح Pusher
-      cluster: 'ap2', // كلاستر Pusher
+      broadcaster: "pusher",
+      key: "743171d2766ff157a71a", // مفتاح Pusher
+      cluster: "ap2", // كلاستر Pusher
       forceTLS: true,
-      authEndpoint: 'http://yourapp.test/broadcasting/auth', // اضبطه كما هو مطلوب
+      authEndpoint: "http://yourapp.test/broadcasting/auth", // اضبطه كما هو مطلوب
       auth: {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`, // إذا كنت تستخدم JWT
@@ -68,12 +78,12 @@ const NotificationDropdown = () => {
     });
 
     // تسجيل أحداث الاتصال
-    echo.connector.pusher.connection.bind('connected', () => {
-      console.log('Successfully connected to Pusher!'); // طباعة رسالة نجاح الاتصال
+    echo.connector.pusher.connection.bind("connected", () => {
+      console.log("Successfully connected to Pusher!"); // طباعة رسالة نجاح الاتصال
     });
 
-    echo.connector.pusher.connection.bind('failed', () => {
-      console.error('Failed to connect to Pusher.'); // طباعة رسالة فشل الاتصال
+    echo.connector.pusher.connection.bind("failed", () => {
+      console.error("Failed to connect to Pusher."); // طباعة رسالة فشل الاتصال
     });
 
     return () => {
@@ -94,7 +104,9 @@ const NotificationDropdown = () => {
   }, [isOpen]);
 
   // تصفية الإشعارات غير المقروءة
-  const unreadNotifications = notifications.filter(notification => !notification.read);
+  const unreadNotifications = notifications.filter(
+    (notification) => !notification.read
+  );
   const reversedNotifications = unreadNotifications.slice().reverse();
 
   return (
@@ -114,8 +126,7 @@ const NotificationDropdown = () => {
               key={notification.id}
               className={`notification-item unread`}
               onClick={() => {
-                console.log({ notification });
-                // يمكنك تنفيذ أي إجراء عند النقر على الإشعار هنا
+                read(notification.id);
                 if (
                   notification?.message?.includes("New speaker registration")
                 ) {
@@ -125,16 +136,15 @@ const NotificationDropdown = () => {
                 }
               }}
             >
-              <span className="notification-dot"></span>
+              {/* <span className="notification-dot"></span> */}
               <div className="notification-content">
                 <div className="notification-title">{notification.message}</div>
-                <small>Unread</small>
+                {/* <small>Unread</small> */}
               </div>
             </div>
           ))}
         </div>
       )}
-      {/* <ToastContainer /> إضافة ToastContainer هنا */}
     </div>
   );
 };

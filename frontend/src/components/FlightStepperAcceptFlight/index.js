@@ -18,13 +18,16 @@ const StepperAcceptFlightPageContent = () => {
   } = useFlightStepperAdmin();
 
   // Dynamically generate steps based on the number of flight members
-  const stepperInfo = flightMembers.map((member, index) => ({
-    title: `${member?.passenger_name} Flight Information `,
-  }));
+  const stepperInfo =
+    flightMembers?.map((member, index) => ({
+      title: `${member?.passenger_name} Flight Information `,
+    })) || [];
 
-  const componentsMap = flightMembers.map((member, index) => (
-    <AcceptFlight key={index} member={member} index={index} />
-  ));
+  const componentsMap =
+    flightMembers?.map((member, index) => (
+      // <h1>hiii</h/1>
+      <AcceptFlight key={index} member={member} index={index} />
+    )) || [];
 
   useEffect(() => {
     return () => {

@@ -9,8 +9,8 @@ export const StepperAcceptFlightProvider = ({ children }) => {
   const [completedSteps, setCompletedSteps] = useState([]);
   const [passportImage, setPassportImage] = useState(null);
   const [flightMembers, setFlightMembers] = useState([]);
-  // const { user_id } = useParams();
-  const user_id = 2;
+  const { user_id } = useParams();
+  // const user_id = 13;
 
   const getFlightData = async () => {
     const getAuthToken = () => localStorage.getItem("token");
@@ -20,6 +20,8 @@ export const StepperAcceptFlightProvider = ({ children }) => {
       url: `http://127.0.0.1:8000/api/companion-flight/${user_id}`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
     });
+    console.log({ response });
+
     setFlightMembers(response);
   };
   const completeStep = (stepIndex) => {

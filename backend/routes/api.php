@@ -63,6 +63,8 @@ Route::get('/users/id', [UserController::class, 'getUserById']);
 Route::post('/users/not/email/{id}', [AuthController::class, 'sendNotification'])->middleware('auth:sanctum');
 // Route::post('/users/not/database/{id}', [NotificationController::class, 'sendNotification']);
 // whatsApp
+Route::post('/notifications/{notificationId}/read', [NotificationController::class, 'markNotificationAsRead']);
+
 Route::post('users/whatsapp-not', [WhatsAppController::class, 'sendWhatsAppNotification']);
 // conference
 Route::post('/con', [ConferenceController::class, 'store']);

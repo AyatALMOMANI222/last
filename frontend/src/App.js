@@ -216,7 +216,7 @@ const App = () => {
 
         <Route path="/faq" element={<FAQ />} />
         <Route path="/sponsor/section" element={<SponsorSection />} />
-        <Route path="/accept/flight" element={<StepperAcceptFlight/>} />
+        <Route path={`/accept/flight/:user_id`} element={<StepperAcceptFlight/>} />
 
       </Routes>
       {/* <Footer/> */}

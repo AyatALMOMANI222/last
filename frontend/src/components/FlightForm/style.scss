@@ -1,501 +1,166 @@
-.main-flight-form {
-  margin: 0 auto;
-  border: 1px solid #e0e0e0;
-  background-color: #f9f9f9;
-  font-family: "Arial", sans-serif;
-  height: 100vh;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-  .flight-information-header {
-    background-color: rgb(241, 241, 241);
-    padding: 0px 20px;
-    height: 60px;
-    font-size: 15px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 500;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  .form-section {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    height: calc(99vh - 159px);
-    overflow: overlay;
-    background-color: #fff;
-    &::-webkit-scrollbar {
-      width: 3px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: var(--scrollbar-track-color);
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--scrollbar-thumb-color);
-      border-radius: 50px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: var(--scrollbar-thumb-hover-color);
-    }
-  }
-
-  .actions-section-container {
-    height: 64px;
-    background-color: rgb(235, 235, 235);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
-    padding: 0px 20px;
-    .cancel-btn {
-      width: 100%;
-      height: 40px;
-      background-color: #fff;
-      border: 1px solid #ef233c;
-      color: #3b3b3b;
-      border-radius: 5px;
-      cursor: pointer;
-      &:hover {
-        background-color: #ef233c;
-        color: #fff;
-      }
-      &:active {
-        background-color: #4f75ff;
-        color: #fff;
-      }
-      font-size: 14px;
-    }
-    .submit-btn {
-      width: 100%;
-      height: 40px;
-      background-color: #ef233c;
-      font-size: 14px;
-
-      border: 1px solid rgb(222, 222, 222);
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-      &:hover {
-        background-color: #ef233c;
-        color: #fff;
-      }
-      &:active {
-        background-color: #4f75ff;
-        color: #fff;
-      }
-    }
-  }
-}
-.companion-form {
-  margin: 0 auto;
-  border: 1px solid #e0e0e0;
-  background-color: #f9f9f9;
-  font-family: "Arial", sans-serif;
-  height: 100vh;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-  .flight-information-header {
-    background-color: rgb(241, 241, 241);
-    padding: 0px 20px;
-    height: 60px;
-    font-size: 15px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 500;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  .form-section {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    height: calc(99vh - 159px);
-    overflow: overlay;
-    background-color: #fff;
-
-    &::-webkit-scrollbar {
-      width: 3px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: var(--scrollbar-track-color);
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--scrollbar-thumb-color);
-      border-radius: 50px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: var(--scrollbar-thumb-hover-color);
-    }
-  }
-
-  .actions-section-container {
-    height: 64px;
-    background-color: rgb(235, 235, 235);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
-    padding: 0px 20px;
-    .cancel-btn {
-      width: 100%;
-      height: 40px;
-      background-color: #fff;
-      border: 1px solid #ef233c;
-      color: #3b3b3b;
-      border-radius: 5px;
-      cursor: pointer;
-      &:hover {
-        background-color: #ef233c;
-        color: #fff;
-      }
-      &:active {
-        background-color: #4f75ff;
-        color: #fff;
-      }
-      font-size: 14px;
-    }
-    .submit-btn {
-      width: 100%;
-      height: 40px;
-      background-color: #ef233c;
-      font-size: 14px;
-
-      border: 1px solid rgb(222, 222, 222);
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-      &:hover {
-        background-color: #ef233c;
-        color: #fff;
-      }
-      &:active {
-        background-color: #4f75ff;
-        color: #fff;
-      }
-    }
-  }
-}
+$primary-color: #c82333; // Updated to red
+$secondary-color: #c82333; // Retaining this color for now; adjust if needed
+$accent-color: #fd7e14; // Keep as is
+$background-color: #f0f4f8; // Keep as is
+$text-color: #212529; // Keep as is
+$light-color: #ffffff; // Keep as is
+$border-color: #dee2e6; // Keep as is
+$font-family: "Helvetica Neue", Arial, sans-serif;
+$border-radius: 12px;
+$shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
 .flight-form-page-container {
-  
-  .flight-form-header-container {
-    margin: 20px;
-    height: 30px;
-    padding: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 10px;
-    border: 1px solid rgb(242, 239, 239);
-    background-color: #4f75ff;
-    .flight-actions {
-      display: flex;
-      flex-direction: row;
-      gap: 20px;
-      button {
-        padding: 0px 20px;
-        height: 35px;
-        background-color: #fff;
-        border: 1px solid #ef233c;
-        color: #3b3b3b;
-        border-radius: 5px;
-        cursor: pointer;
-        &.disabled-btn {
-          background-color: rgb(214, 214, 214);
-          color: #fff;
-        }
-        &:hover {
-          background-color: #ef233c;
-          color: #fff;
-        }
-        &:active {
-          background-color: #4f75ff;
-          color: #fff;
-        }
-        font-size: 15px;
-      }
-    }
-    .title-container {
-      font-size: 19px;
-      font-weight: 500;
-      color: #fff;
-    }
-  }
-  .view-flight-details {
-    width: 70%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-row-gap: 20px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-  }
-  .no-data {
-    padding:30px;
-    font-size: 16px;
-    font-weight: 500;
-    color: #ef233c;
-  }
+  max-width: 800px;
+  margin: auto;
+  padding: 30px;
+  background-color: $light-color;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  transition: transform 0.3s;
+  margin-top: 20px;
+}
 
-
-
-
-  $btn-padding: 1rem 2rem;
-$btn-font-size: 1rem;
-$btn-border-radius: 2rem;
-$btn-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-$hover-transform: translateY(-3px);
-$hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-
-$cancel-color: #f0ad4e;
-$cancel-hover: #ec971f;
-
-$emergency-color: #d9534f;
-$emergency-hover: #c9302c;
-
-$update-color: #5cb85c;
-$update-hover: #4cae4c;
-
-.button-section {
+.flight-form-header-container {
   display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 
-  .custom-btn {
-    padding: $btn-padding;
-    font-size: $btn-font-size;
+  .title-container {
+    font-size: 2rem;
     font-weight: bold;
-    border-radius: $btn-border-radius;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: $btn-shadow;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    width: 15vw; // الحجم النسبي لعرض الأزرار
-    min-width: 120px; // عرض الأدنى للأزرار
+    color: $primary-color; // Updated to red
+  }
 
-    &:hover {
-      transform: $hover-transform;
-      box-shadow: $hover-shadow;
-    }
+  .flight-actions {
+    display: flex;
+    gap: 15px;
 
-    &.cancel-btn {
-      background-color: $cancel-color;
-      color: white;
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: $border-radius;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
 
-      &:hover {
-        background-color: $cancel-hover;
+      &.disabled-btn {
+        background-color: $border-color;
+        cursor: not-allowed;
       }
-    }
 
-    &.emergency-btn {
-      background-color: $emergency-color;
-      color: white;
-
-      &:hover {
-        background-color: $emergency-hover;
-      }
-    }
-
-    &.update-btn {
-      background-color: $update-color;
-      color: white;
-
-      &:hover {
-        background-color: $update-hover;
+      &:not(.disabled-btn) {
+        background-color: $secondary-color; // This can remain or change as needed
+        color: $light-color;
       }
     }
   }
 }
 
-// استجابة الشاشات الصغيرة
-@media (max-width: 768px) {
-  .button-section {
-    flex-direction: column;
-    align-items: center;
+.view-flight-details {
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  padding: 25px;
+  margin-bottom: 30px;
+  background: linear-gradient(white, $light-color);
+  box-shadow: $shadow;
 
-    .custom-btn {
-      width: 60vw;
-      font-size: 0.9rem;
-      padding: 0.8rem 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-row-gap: 20px;
+
+  h3 {
+    margin-bottom: 20px;
+    color: $primary-color; // Updated to red
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .simple-label-value {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 5px 0;
+
+    label {
+      font-weight: bold;
+      color: $text-color;
+    }
+
+    span {
+      color: $text-color;
     }
   }
-  .my-side-drawer {
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 500px;
-    width: 100%;
-    border-radius: 8px;
-    
-    // التخطيط الرئيسي
-    .flight-item {
-      border-bottom: 1px solid #ddd;
-      padding: 10px 0;
-      margin-bottom: 10px;
-      display: flex;
-      flex-direction: column;
-      
-      p {
-        margin: 5px 0;
-        font-size: 16px;
-        color: #333;
-      }
-      
-      // أزرار
-      button {
-        background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 10px 15px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 5px;
-        cursor: pointer;
-        border-radius: 4px;
-        
-        &:hover {
-          background-color: #45a049;
-        }
-      }
-  
-      .cancel-button {
-        background-color: #f44336;
-        
-        &:hover {
-          background-color: #d32f2f;
-        }
-      }
-    }
-  
-    // لا توجد رحلات متاحة
-    p {
-      text-align: center;
-      color: #999;
-    }
-  }
-  
-  // لجعل المكون متجاوب
-  @media (max-width: 768px) {
-    .my-side-drawer {
-      max-width: 100%;
-      padding: 10px;
-    }
-    
-    .flight-item {
-      p {
-        font-size: 14px;
-      }
-  
-      button {
-        font-size: 14px;
-        padding: 8px 12px;
-      }
-    }
-  }
-  .my-side-drawer {
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 500px;
-    width: 100%;
-    border-radius: 8px;
-    
-    // التخطيط الرئيسي
-    .flight-item {
-      border-bottom: 1px solid #ddd;
-      padding: 10px 0;
-      margin-bottom: 10px;
-      display: flex;
-      flex-direction: column;
-      
-      p {
-        margin: 5px 0;
-        font-size: 16px;
-        color: #333;
-      }
-      
-      // أزرار
-      button {
-        background-color: #4CAF50;
-        border: none;
-        color: white;
-        padding: 10px 15px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 5px;
-        cursor: pointer;
-        border-radius: 4px;
-        
-        &:hover {
-          background-color: #45a049;
-        }
-      }
-  
-      .cancel-button {
-        background-color: #f44336;
-        
-        &:hover {
-          background-color: #d32f2f;
-        }
-      }
-    }
-  
-    // لا توجد رحلات متاحة
-    p {
-      text-align: center;
-      color: #999;
-    }
-  }
-  
-  // لجعل المكون متجاوب
-  @media (max-width: 768px) {
-    .my-side-drawer {
-      max-width: 100%;
-      padding: 10px;
-    }
-    
-    .flight-item {
-      p {
-        font-size: 14px;
-      }
-  
-      button {
-        font-size: 14px;
-        padding: 8px 12px;
-      }
-    }
-  }
-    
 }
 
-// استجابة الشاشات الكبيرة
-@media (min-width: 1200px) {
-  .custom-btn {
-    width: 10vw;
+.no-flight-data {
+  text-align: center;
+  padding: 30px;
+  border: 1px dashed $border-color;
+  border-radius: $border-radius;
+  background-color: #ffeeba;
+  color: $text-color;
+  box-shadow: $shadow;
+
+  p {
+    margin: 0 0 15px;
     font-size: 1.1rem;
   }
+
+  .open-form-btn {
+    padding: 12px 20px;
+    background-color: $primary-color; // Updated to red
+    color: $light-color;
+    border: none;
+    border-radius: $border-radius;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
 }
 
+.actions-section-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
 
+  button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px; // Replace with your desired border radius
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    background-color: #c82333; // Darker red for submit button
+    color: #ffffff; // Light text color
+
+    &.cancel-btn {
+      background-color: #dc3545; // Red color
+      color: #ffffff; // Light text color
+
+      &:hover {
+        background-color: #c82333; // Darker red on hover
+        transform: scale(1.05);
+      }
+
+      &:disabled {
+        background-color: #f8d7da; // Light red for disabled state
+        color: #6c757d; // Dark gray text color
+        cursor: not-allowed;
+      }
+    }
+
+    &.submit-btn {
+      background-color: #c82333; // Darker red for submit button
+      color: #ffffff; // Light text color
+
+      &:hover {
+        background-color: #dc3545; // Lighter red on hover
+        transform: scale(1.05);
+      }
+
+      &:disabled {
+        background-color: #f8d7da; // Light red for disabled state
+        color: #6c757d; // Dark gray text color
+        cursor: not-allowed;
+      }
+    }
+  }
 }
-
-
-

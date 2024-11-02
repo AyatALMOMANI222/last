@@ -22,13 +22,13 @@ class AvailableFlightController extends Controller
     //             'price' => 'required|numeric|min:0',
     //             'is_free' => 'boolean',
     //         ]);
-    
+
     //         // إعداد المنطقة الزمنية إلى آسيا/عمان
     //         date_default_timezone_set('Asia/Amman');
-    
+
     //         // استرجاع الرحلة المرتبطة بـ flight_id من جدول flights
     //         $flight = Flight::where('flight_id', $validatedData['flight_id'])->first();
-    
+
     //         // التحقق إذا كان هناك user_id في هذه الرحلة
     //         if ($flight) {
     //             // إنشاء رحلة متاحة
@@ -40,7 +40,7 @@ class AvailableFlightController extends Controller
     //                 'is_free' => $validatedData['is_free'] ?? false,
     //                 'created_at' => now(), // إضافة حقل created_at مع الوقت الحالي
     //             ]);
-    
+
     //             // تحقق من وجود user_id قبل إرسال الإشعار
     //             if (!empty($flight->user_id)) {
     //                 // إرسال الإشعار
@@ -53,7 +53,7 @@ class AvailableFlightController extends Controller
     //                 ]);
     //                 broadcast(new NotificationSent($userNotification));
     //             }
-    
+
     //             return response()->json([
     //                 'message' => 'Available flight created successfully' . (empty($flight->user_id) ? ', but no notification sent as the user is not assigned.' : ''),
     //                 'available_flight' => $availableFlight,
@@ -64,13 +64,13 @@ class AvailableFlightController extends Controller
     //                 'message' => 'Flight not found.',
     //             ], 404);
     //         }
-    
+
     //     } catch (\Illuminate\Validation\ValidationException $e) {
     //         return response()->json([
     //             'error' => 'Validation failed',
     //             'messages' => $e->errors(),  
     //         ], 422);
-    
+
     //     } catch (\Exception $e) {
     //         return response()->json([
     //             'error' => 'An error occurred',
@@ -90,17 +90,17 @@ class AvailableFlightController extends Controller
                 'flights.*.data.*.price' => 'required|numeric|min:0',
                 'flights.*.data.*.is_free' => 'boolean',
             ]);
-    
+
             $availableFlights = [];
             $notifications = [];
-    
+
             foreach ($validatedData['flights'] as $flightData) {
                 $flight = Flight::where('flight_id', $flightData['flight_id'])->first();
-    
+
                 if ($flight) {
                     foreach ($flightData['data'] as $tripData) {
                         date_default_timezone_set('Asia/Amman');
-                        
+
                         // إنشاء رحلة متاحة
                         $availableFlight = AvailableFlight::create([
                             'flight_id' => $flightData['flight_id'],
@@ -110,10 +110,10 @@ class AvailableFlightController extends Controller
                             'is_free' => $tripData['is_free'] ?? false,
                             'created_at' => now(),
                         ]);
-    
+
                         $availableFlights[] = $availableFlight;
                     }
-    
+
                     // تحقق من وجود user_id لإرسال الإشعار
                     if (!empty($flight->user_id)) {
                         $message = 'You can now visit the website to check the available flight options within the requested dates. Please visit the site as soon as possible and select the appropriate flight to proceed with the necessary arrangements.';
@@ -123,25 +123,23 @@ class AvailableFlightController extends Controller
                             'is_read' => false,
                             'register_id' => $flight->user_id,
                         ]);
-    
+
                         $notifications[] = $userNotification;
                         broadcast(new NotificationSent($userNotification));
                     }
                 }
             }
-    
+
             return response()->json([
                 'message' => 'Available flights created successfully.',
                 'available_flights' => $availableFlights,
                 'notifications' => $notifications,
             ], 201);
-    
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'error' => 'Validation failed',
                 'messages' => $e->errors(),
             ], 422);
-    
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'An error occurred',
@@ -149,9 +147,9 @@ class AvailableFlightController extends Controller
             ], 500);
         }
     }
-    
-      
-    
+
+
+
     public function getAvailableFlightByFlightId($flight_id)
     {
         try {
@@ -161,25 +159,25 @@ class AvailableFlightController extends Controller
                     'error' => 'Unauthorized. Please log in.',
                 ], 401);
             }
-    
+
             // جلب الرحلات المتاحة المتعلقة بالـ flight_id
             $availableFlights = AvailableFlight::where('available_flights.flight_id', $flight_id) // تحديد الجدول
                 ->join('flights', 'available_flights.flight_id', '=', 'flights.flight_id')  // عمل جوين مع جدول الرحلات
                 ->select('available_flights.*')  // جلب الحقول المطلوبة من available_flights و flights
                 ->get();
-    
+
             // إذا لم يتم العثور على أي رحلة متاحة
             if ($availableFlights->isEmpty()) {
                 return response()->json([
                     'error' => 'No available flights found for the given flight ID.',
-                ], 404);
+                    'data' => []
+                ], 200);
             }
-    
+
             return response()->json([
                 'message' => 'Available flights retrieved successfully',
                 'available_flights' => $availableFlights,
             ], 200);
-    
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'An error occurred',
@@ -187,8 +185,4 @@ class AvailableFlightController extends Controller
             ], 500);
         }
     }
-    
-    
-   
 }
-

@@ -66,46 +66,59 @@
       }
     }
   }
-  
+
   .flight-card.selected {
     border: 2px solid #007bff; /* Highlight selected card */
     background-color: #e6f0ff; /* Light background for selected card */
   }
-  
-.actions-section {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 80px;
-  border-top: 1px solid #d8dae5;
+
+  .actions-section {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    border-top: 1px solid #d8dae5;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+  }
+  .next-button {
+    margin-right: 30px;
+    width: 200px;
+    height: 45px;
+    background-color: #007bff; // Blue background
+    color: #fff; // White text color
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    // transition: background-color 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      background-color: #0056b3; // Darker blue on hover
+    }
+
+    &:active {
+      background-color: #004085; // Even darker blue on active
+      transform: scale(0.98); // Slightly shrink the button on click
+    }
+  }
+  .other {
+    margin: auto;
+  }
+}
+
+.no-data-biv {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: end;
-}
-.next-button {
-  margin-right: 30px;
-  width: 200px;
-  height: 45px;
-  background-color: #007bff; // Blue background
-  color: #fff; // White text color
-  border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  // transition: background-color 0.3s ease, transform 0.2s ease;
-
-  &:hover {
-    background-color: #0056b3; // Darker blue on hover
-  }
-
-  &:active {
-    background-color: #004085; // Even darker blue on active
-    transform: scale(0.98); // Slightly shrink the button on click
-  }
-}
-.other{
-  margin: auto;
-}
+  justify-content: center;
+  color: #a0a0a0; /* White text */
+  padding: 20px; /* Padding around the header */
+  text-align: center; /* Centered text */
+  font-size: 24px; /* Larger font size for the header text */
+  font-family: 'Arial', sans-serif; /* Font style */
+  // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }

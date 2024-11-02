@@ -18,11 +18,11 @@ const AdminFlightStepperPageContent = () => {
   } = useFlightStepperAdmin();
 
   // Dynamically generate steps based on the number of flight members
-  const stepperInfo = flightMembers.map((member, index) => ({
+  const stepperInfo = flightMembers?.map((member, index) => ({
     title: `${member?.passenger_name} Flight Information `,
   }));
 
-  const componentsMap = flightMembers.map((member, index) => (
+  const componentsMap = flightMembers?.map((member, index) => (
     <FlightInformation key={index} member={member} index={index} />
   ));
 

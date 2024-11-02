@@ -1,18 +1,16 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../../CoreComponent/Input/index";
 import Checkbox from "../../CoreComponent/Checkbox/index";
 import DateInput from "../../CoreComponent/Date/index";
 import MySideDrawer from "../../CoreComponent/SideDrawer";
 import SimpleLabelValue from "../../components/SimpleLabelValue";
 import { useNavigate } from "react-router-dom";
-
 import axios from "axios";
-import "./style.scss";
 import { toast } from "react-toastify";
-
 import ImageUpload from "../../CoreComponent/ImageUpload";
 import WhatsAppButton from "../WhatsAppButton";
 import MainFlightFormUpdate from "./updateMainFlightForm";
+import "./style.scss";
 
 const MainFlightForm = ({ setOpenForm, getFlightData }) => {
   const [arrivalDate, setArrivalDate] = useState("");
@@ -33,52 +31,43 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Create a new FormData instance
     const formData = new FormData();
 
-    // Append the necessary fields
     formData.append("arrival_date", arrivalDate);
     formData.append("departure_date", departureDate);
-    formData.append("passport_image", passportImage); // Uncomment if needed
+    formData.append("passport_image", passportImage);
     formData.append("departure_airport", departureAirport);
     formData.append("arrival_airport", returnAirport);
-    formData.append("specific_flight_time", flightTime ); // Adjusted to match the key in your original object
-    formData.append("flight_number", flightNumber ? flightNumber : 0);
-    formData.append("additional_requests", otherRequests ?  otherRequests : "none");
-    formData.append("seat_preference", seatNumber ? seatNumber:0 );
+    formData.append("specific_flight_time", flightTime);
+    formData.append("flight_number", flightNumber || 0);
+    formData.append("additional_requests", otherRequests || "none");
+    formData.append("seat_preference", seatNumber || 0);
     formData.append("upgrade_class", upgradeClass ? 1 : 0);
     formData.append("ticket_count", ticketCount);
-    formData.append("is_companion", 0); // Set is_companion to false
-    formData.append("user_id", userId); // Add user_id to the data
+    formData.append("is_companion", 0);
+    formData.append("user_id", userId);
 
     axios
       .post("http://127.0.0.1:8000/api/flights", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the header
-          // No need to set 'Content-Type' for FormData, it will be set automatically
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         toast.success(response?.data?.message);
         setOpenForm(false);
         getFlightData();
-        console.log("Flight created successfully:", response.data);
-        // Handle success (like showing a success message, redirecting, etc.)
       })
       .catch((error) => {
         console.error(
           "There was an error creating the flight:",
           error.response.data
         );
-        // Handle error (like showing an error message)
       });
   };
 
   return (
     <form className="main-flight-form" onSubmit={handleSubmit}>
       <div className="flight-information-header">Flight Information</div>
-     <div className="form-section">
+      <div className="form-section">
         <DateInput
           label="Arrival Date"
           inputValue={arrivalDate}
@@ -86,7 +75,6 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
           placeholder="Arrival Date"
           required={true}
         />
-
         <DateInput
           label="Departure Date"
           inputValue={departureDate}
@@ -94,14 +82,12 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
           placeholder="Departure Date"
           required={true}
         />
-
         <ImageUpload
-          errorMsg={""}
-          required={true}
           label="Passport Image"
           allowedExtensions={["jpg", "jpeg", "png", "gif"]}
           inputValue={passportImage}
           setInputValue={setPassportImage}
+          required={true}
         />
         <Input
           label="Departure Airport"
@@ -111,7 +97,6 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
           placeholder="Departure Airport"
           required={true}
         />
-
         <Input
           label="Return Airport"
           type="text"
@@ -120,17 +105,13 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
           placeholder="Return Airport"
           required={true}
         />
-
         <Checkbox
           label="Do you have specific flight time?"
           checkboxValue={specificFlightTime}
           setCheckboxValue={setSpecificFlightTime}
-          icon={""}
-          errorMsg={""}
         />
-
         {specificFlightTime && (
-          <Fragment>
+          <>
             <Input
               label="Flight Time"
               type="time"
@@ -147,9 +128,8 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
               placeholder="Flight Number"
               required={false}
             />
-          </Fragment>
+          </>
         )}
-
         <Input
           label="Other Requests"
           type="text"
@@ -158,7 +138,6 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
           placeholder="Other Requests"
           required={false}
         />
-
         <Input
           label="Seat Number"
           type="text"
@@ -167,15 +146,11 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
           placeholder="Seat Number"
           required={false}
         />
-
         <Checkbox
           label="Do you want to upgrade from economy to business class?"
           checkboxValue={upgradeClass}
           setCheckboxValue={setUpgradeClass}
-          icon={""}
-          errorMsg={""}
         />
-
         <Input
           label="Number of Tickets to Book"
           type="number"
@@ -185,17 +160,11 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
           required={true}
         />
       </div>
-
       <div className="actions-section-container">
-        <button
-          className="cancel-btn"
-          onClick={() => {
-            setOpenForm(false);
-          }}
-        >
+        <button className="cancel-btn" onClick={() => setOpenForm(false)}>
           Cancel
         </button>
-        <button className="submit-btn" type="submit" onClick={handleSubmit}>
+        <button className="submit-btn" type="submit">
           Submit
         </button>
       </div>
@@ -203,311 +172,70 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
   );
 };
 
-const CompanionForm = ({ setOpenForm }) => {
-  const [companions, setCompanions] = useState([]); // Array to store companions' data
-  const [currentCompanion, setCurrentCompanion] = useState({
-    name: "",
-    arrivalDate: "",
-    departureDate: "",
-    passportImage: null,
-    departureAirport: "",
-    returnAirport: "",
-    specificFlightTime: false,
-    flightTime: "",
-    flightNumber: "",
-    seatNumber: "",
-    otherRequests: "",
-    upgradeClass: false,
-  });
-
-  // Add a new companion to the list
-  const addCompanionToList = () => {
-    setCompanions([...companions, currentCompanion]);
-    setCurrentCompanion({
-      arrivalDate: "",
-      departureDate: "",
-      passportImage: null,
-      departureAirport: "",
-      returnAirport: "",
-      specificFlightTime: false,
-      flightTime: "",
-      flightNumber: "",
-      seatNumber: "",
-      otherRequests: "",
-      upgradeClass: false,
-    });
-    setOpenForm(false);
-  };
-
-  // Handle input change in the side drawer form
-  const handleCompanionChange = (field, value) => {
-    setCurrentCompanion((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("user_id");
-  const handleCompanionSubmit = (e) => {
-    e.preventDefault();
-
-    // Create a new FormData instance
-    const formData = new FormData();
-
-    // Append the necessary fields
-    formData.append("passenger_name", currentCompanion.name);
-    formData.append("arrival_date", currentCompanion.arrivalDate);
-    formData.append("departure_date", currentCompanion.departureDate);
-    formData.append("passport_image", currentCompanion.passportImage); // Uncomment if needed
-    formData.append("departure_airport", currentCompanion.departureAirport);
-    formData.append("arrival_airport", currentCompanion.returnAirport);
-
-    formData.append("specific_flight_time", currentCompanion.flightTime ? currentCompanion.flightTime : "00:00");
-    formData.append("flight_number", currentCompanion.flightNumber ? currentCompanion.flightNumber : 0 );
-    formData.append("additional_requests", currentCompanion.otherRequests ? currentCompanion.otherRequests :"none");
-    formData.append("seat_preference", currentCompanion.seatNumber ? currentCompanion.seatNumber : 0 );
-    formData.append("upgrade_class", currentCompanion.upgradeClass ? 1 : 0);
-    formData.append("ticket_count", 1); // Set ticket count to 1 for a companion
-    formData.append("is_companion", 1); // Specify companion status
-
-
-    axios
-      .post("http://127.0.0.1:8000/api/flights", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the header
-          // No need to set 'Content-Type' for FormData, it will be set automatically
-        },
-      })
-      .then((response) => {
-        setOpenForm(false);
-
-        toast.success(response?.data?.message);
-
-        // Handle success (like showing a success message, redirecting, etc.)
-      })
-      .catch((error) => {
-        toast.error("Something went wrong, please try again.");
-        console.error(
-          "There was an error creating the flight:",
-          
-          error.response.data
-        );
-        // Handle error (like showing an error message)
-      });
-  };
-
-  return (
-    <div className="companion-form">
-      <div className="flight-information-header">Add Companion</div>
-      <form className="form-section">
-        <Input
-          label="Name"
-          type="text"
-          inputValue={currentCompanion.name}
-          setInputValue={(value) => handleCompanionChange("name", value)}
-          placeholder="Name"
-          required
-        />
-        <DateInput
-          label="Arrival Date"
-          inputValue={currentCompanion.arrivalDate}
-          setInputValue={(value) => handleCompanionChange("arrivalDate", value)}
-          placeholder="Arrival Date"
-          required
-        />
-        <DateInput
-          label="Departure Date"
-          inputValue={currentCompanion.departureDate}
-          setInputValue={(value) =>
-            handleCompanionChange("departureDate", value)
-          }
-          placeholder="Departure Date"
-          required
-        />
-
-        <ImageUpload
-          errorMsg={""}
-          required={true}
-          label="passport Image"
-          allowedExtensions={["jpg", "jpeg", "png", "gif"]}
-          inputValue={currentCompanion.passportImage}
-          setInputValue={(value) =>
-            handleCompanionChange("passportImage", value)
-          }
-        />
-        <Input
-          label="Departure Airport"
-          type="text"
-          inputValue={currentCompanion.departureAirport}
-          setInputValue={(value) =>
-            handleCompanionChange("departureAirport", value)
-          }
-          placeholder="Departure Airport"
-          required
-        />
-        <Input
-          label="Return Airport"
-          type="text"
-          inputValue={currentCompanion.returnAirport}
-          setInputValue={(value) =>
-            handleCompanionChange("returnAirport", value)
-          }
-          placeholder="Return Airport"
-          required
-        />
-
-        <Checkbox
-          label="Do you have specific flight time?"
-          checkboxValue={currentCompanion.specificFlightTime}
-          setCheckboxValue={(value) => {
-            handleCompanionChange("specificFlightTime", value);
-          }}
-          icon={""}
-          errorMsg={""}
-        />
-        {currentCompanion?.specificFlightTime && (
-          <Fragment>
-            <Input
-              label="Flight Time"
-              type="time"
-              inputValue={currentCompanion.flightTime}
-              setInputValue={(value) =>
-                handleCompanionChange("flightTime", value)
-              }
-              placeholder="Flight Time"
-              required
-            />
-            <Input
-              label="Flight Number"
-              type="text"
-              inputValue={currentCompanion.flightNumber}
-              setInputValue={(value) =>
-                handleCompanionChange("flightNumber", value)
-              }
-              placeholder="Flight Number"
-              required
-            />
-          </Fragment>
-        )}
-
-        <Input
-          label="Seat Number"
-          type="text"
-          inputValue={currentCompanion.seatNumber}
-          setInputValue={(value) => handleCompanionChange("seatNumber", value)}
-          placeholder="Seat Number"
-        />
-        <Input
-          label="Other Requests"
-          type="text"
-          inputValue={currentCompanion.otherRequests}
-          setInputValue={(value) =>
-            handleCompanionChange("otherRequests", value)
-          }
-          placeholder="Other Requests"
-        />
-
-        <Checkbox
-          label="Do you want to upgrade from economy to business class?"
-          checkboxValue={currentCompanion.upgradeClass}
-          setCheckboxValue={(value) =>
-            handleCompanionChange("upgradeClass", value)
-          }
-          icon={""}
-          errorMsg={""}
-        />
-      </form>
-      <div className="actions-section-container">
-        <button
-          className="cancel-btn"
-          onClick={() => {
-            setOpenForm(false);
-          }}
-        >
-          Cancel
-        </button>
-        <button className="submit-btn" onClick={handleCompanionSubmit}>
-          Submit
-        </button>
-      </div>
-    </div>
-  );
-};
-
 const FlightForm = () => {
   const [data, setData] = useState({});
   const [openFlight, setOpenFlight] = useState(false);
-  const [openFlightUpdate,setOpenFlightUpdate] = useState(false);
+  const [openFlightUpdate, setOpenFlightUpdate] = useState(false);
   const [availableFlights, setAvailableFlights] = useState([]);
-  const [openIsAvailableFlights,setOpenIsAvailableFlights]=useState(false)
-
-  const navigate=useNavigate()
-
+  const [openIsAvailableFlights, setOpenIsAvailableFlights] = useState(false);
+  const navigate = useNavigate();
   const [openCompanion, setOpenCompanion] = useState(false);
+
   const getFlightData = () => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("user_id");
 
     axios
       .get("http://127.0.0.1:8000/api/flight", {
-        headers: {
-          Authorization: `Bearer ${token}`, // تمرير الـ token
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         setData(response.data[0]);
       })
       .catch((error) => {
+        console.error("Error fetching flight data:", error);
       });
   };
-  useEffect(() => {
-    getFlightData(data.flight_id);
-  }, [data.flight_id]);
-  const handleAvailableFlight =(id)=>{
-    const token=localStorage.getItem("token")
 
-  
-      axios.get(`http://127.0.0.1:8000/api/available-flights/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}` // تمرير التوكن باستخدام Bearer
-          }
-        })
-        .then(response => {
-       console.log(response.data.available_flights);
-       setAvailableFlights(response.data.available_flights)
-        })
-        .catch(error => {
-       
-          console.error("Error fetching flight data:", error.response);
-        });
-        
-    
-  
-  
-  }
-  // useEffect(()=>{
-  // handleAvailableFlight();
-  // })
+  useEffect(() => {
+    getFlightData();
+  }, []);
+
+  const handleAvailableFlight = (id) => {
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(`http://127.0.0.1:8000/api/available-flights/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setAvailableFlights(response.data.available_flights);
+      })
+      .catch((error) => {
+        console.error("Error fetching flight data:", error);
+      });
+  };
+
   return (
     <div className="flight-form-page-container">
       <div className="flight-form-header-container">
         <div className="title-container">Flight Information Page</div>
         <div className="flight-actions">
           <button
+            // className={`${Object.keys(data).length ? "disabled-btn" : ""}`}
             type="button"
-            onClick={() => setOpenFlight(true)}
-            disabled={Object.keys(data).length ? false : true}
-            className={`add-companion-btn ${
-              Object.keys(data).length ? "" : "disabled-btn"
-            }`}
+            onClick={() => {
+              const userId = localStorage.getItem("user_id");
+              navigate(`/accept/flight/${userId}`);
+            }}
           >
-            Add Companion
+            Choose Accepted Flight
           </button>
           <button
             className={`${Object.keys(data).length ? "disabled-btn" : ""}`}
             type="button"
-            disabled={Object.keys(data).length ? true : false}
-            onClick={() => {
-              setOpenCompanion(true);
-            }}
+            onClick={() => navigate(`/flights/users`)}
+            disabled={Object.keys(data).length}
           >
             Add Flight Information
           </button>
@@ -535,14 +263,9 @@ const FlightForm = () => {
           <SimpleLabelValue
             label="Flight Time"
             value={data.specific_flight_time}
-          />{" "}
-          {/* Adjust if necessary */}
+          />
           <SimpleLabelValue label="Flight Number" value={data.flight_number} />
-          <SimpleLabelValue
-            label="Seat Number"
-            value={data.seat_preference}
-          />{" "}
-          {/* Changed from seatNumber */}
+          <SimpleLabelValue label="Seat Number" value={data.seat_preference} />
           <SimpleLabelValue
             label="Upgrade Class"
             value={data.upgrade_class ? "Yes" : "No"}
@@ -552,87 +275,35 @@ const FlightForm = () => {
             label="Other Requests"
             value={data.additional_requests}
           />
-  <SimpleLabelValue
-  label="Ticket"
-  value={
-    data.download_url ? (
-      <a href={data.download_url} download>
-        {data.download_url}
-      </a>
-    ) : (
-      'Not available'
-    )
-  }
-/>
-
-<button onClick={()=>{handleAvailableFlight(data.flight_id);
-  setOpenIsAvailableFlights(true)
-}}>Get Available Flight</button>
-
         </div>
       ) : (
-        <div className="no-data">
-          No Data Available , Please Enter Flight Information
+        <div className="no-flight-data">
+          <p>No flight data available.</p>
         </div>
       )}
-
-<div className="button-section">
-      <WhatsAppButton
-        phoneNumber="+962787002103" // Replace with the desired phone number
-        message="I would like to formally request the cancellation of my trip." // Customize the message for the Cancel button
-        buttonText="Cancel"
-      />
-      <WhatsAppButton 
-        phoneNumber="+962787002103" // Replace with the desired phone number
-        message="I have an emergency situation." // Customize the message for the Emergency button
-        buttonText="Emergency"
-      />
-      <button type="button" className="btn btn-success" onClick={() => {
-        navigate(`/user/flight/update/${data.flight_id}`)
-      }}>
-        Update
-      </button>
-    </div>
-
-
-      <MySideDrawer isOpen={openCompanion} setIsOpen={setOpenCompanion}>
-        <MainFlightForm
-          setOpenForm={setOpenCompanion}
-          getFlightData={getFlightData}
+      {openFlight && (
+        <MySideDrawer open={openFlight} setOpen={setOpenFlight}>
+          <MainFlightForm
+            setOpenForm={setOpenFlight}
+            getFlightData={getFlightData}
+          />
+        </MySideDrawer>
+      )}
+      {openFlightUpdate && (
+        <MySideDrawer open={openFlightUpdate} setOpen={setOpenFlightUpdate}>
+          <MainFlightFormUpdate setOpenForm={setOpenFlightUpdate} />
+        </MySideDrawer>
+      )}
+      {openIsAvailableFlights && (
+        <WhatsAppButton
+          open={openIsAvailableFlights}
+          setOpen={setOpenIsAvailableFlights}
+          availableFlights={availableFlights}
+          handleAvailableFlight={handleAvailableFlight}
+          setOpenCompanion={setOpenCompanion}
+          openCompanion={openCompanion}
         />
-      </MySideDrawer>
-
-      <MySideDrawer isOpen={openFlight} setIsOpen={setOpenFlight}>
-        <CompanionForm setOpenForm={setOpenFlight} />
-      </MySideDrawer>
-{/* 
-      <MySideDrawer isOpen={openFlightUpdate} setIsOpen={setOpenFlightUpdate}>
-        <MainFlightFormUpdate setOpenForm={setOpenFlightUpdate} />
-      </MySideDrawer> */}
-        <MySideDrawer
-        isOpen={openIsAvailableFlights}
-        setIsOpen={setOpenIsAvailableFlights}
-      >
-        {availableFlights.length > 0 ? (
-          <div>
-            {availableFlights.map((flight) => (
-              <div key={flight.id} className="flight-item">
-                <p>Flight Number: {flight.flight_number}</p>
-                <p>Departure Time: {flight.departure_time}</p>
-                <p>Arrival Time: {flight.arrival_time}</p>
-                <button onClick={() => console.log("Selected", flight.id)}>
-                  Select Flight
-                </button>
-                <button onClick={() => console.log("Cancelled", flight.id)}>
-                  Cancel Flight
-                </button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No available flights</p>
-        )}
-      </MySideDrawer>
+      )}
     </div>
   );
 };

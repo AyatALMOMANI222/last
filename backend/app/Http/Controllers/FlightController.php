@@ -35,22 +35,22 @@ class FlightController extends Controller
                     'specificFlightTime' => 'sometimes|string',
                 ])->validate();
             }
-    
+
             // Get the current user
             $user = Auth::user();
-    
+
             // Iterate through the provided flight data
             foreach ($flights as $index => $flightData) {
                 // Create a new Flight instance
                 $flight = new Flight();
-    
+
                 // Set mandatory fields from the flight data
                 $flight->departure_airport = $flightData['departureAirport'];
                 $flight->arrival_airport = $flightData['returnAirport'];
                 $flight->departure_date = $flightData['departureDate'];
                 $flight->arrival_date = $flightData['arrivalDate'];
                 $flight->specific_flight_time = $flightData['specificFlightTime'];
-    
+
                 // Handle passenger information
                 if ($index === 0) { // Assuming the first entry is the main user
                     $flight->user_id = $user->id; // Set the user ID
@@ -65,23 +65,23 @@ class FlightController extends Controller
                     $flight->passenger_name = $flightData['name']; // Set the companion's name
                     $flight->is_companion = true; // Companion flag
                 }
-    
+
                 // Set additional fields
                 $flight->flight_number = $flightData['flightNumber'];
                 $flight->seat_preference = $flightData['seatNumber'];
                 $flight->upgrade_class = $flightData['upgradeClass'];
                 $flight->additional_requests = $flightData['otherRequests'];
-    
+
                 // Save the passport image if present
                 if ($request->hasFile('passportImage')) {
                     $imagePath = $request->file('passportImage')->store('images', 'public');
                     $flight->passport_image = $imagePath; // قم بتحديث مسار الصورة
                 }
-    
+
                 // Save the flight data in the database
                 $flight->created_at = Carbon::now('Asia/Amman'); // Specify the timezone
                 $flight->save();
-    
+
                 // Notify the user about the created flight
                 $message = 'The ticket will be available shortly, and you will be notified on the website once it becomes available.';
                 Notification::create([
@@ -90,7 +90,7 @@ class FlightController extends Controller
                     'is_read' => false,
                     'register_id' => null,
                 ]);
-    
+
                 // Notify the admins about the new flight registration
                 $admins = User::where('isAdmin', true)->get();
                 foreach ($admins as $admin) {
@@ -103,7 +103,7 @@ class FlightController extends Controller
                     broadcast(new NotificationSent($notification))->toOthers();
                 }
             }
-    
+
             return response()->json(['message' => 'Flights created successfully'], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Return the validation errors
@@ -184,26 +184,26 @@ class FlightController extends Controller
         try {
             $user = Auth::user();
             $flightsData = $request->input('flights'); // مصفوفة تحتوي على بيانات كل رحلة لتحديثها
-    
+
             if (!$flightsData || !is_array($flightsData)) {
                 return response()->json(['message' => 'Invalid flights data provided.'], 400);
             }
-    
+
             $updatedFlights = [];
-    
+
             foreach ($flightsData as $flightData) {
                 $flight_id = $flightData['flight_id'] ?? null;
                 if (!$flight_id) {
                     continue; // تجاوز هذا العنصر إذا لم يحتوي على flight_id
                 }
-    
+
                 // العثور على الرحلة بناءً على ID
                 $flight = Flight::find($flight_id);
-    
+
                 if (!$flight) {
                     continue; // تجاوز إذا لم يتم العثور على الرحلة
                 }
-    
+
                 // التحقق من صحة الحقول المطلوبة فقط
                 $validatedData = Validator::make($flightData, [
                     'business_class_upgrade_cost' => 'nullable|numeric|min:0',
@@ -215,28 +215,28 @@ class FlightController extends Controller
                     'download_url' => 'nullable|url',
                     'base_ticket_price' => 'nullable|numeric|min:0',
                 ]);
-    
+
                 if ($validatedData->fails()) {
                     return response()->json(['message' => 'Validation failed', 'errors' => $validatedData->errors()], 422);
                 }
-    
+
                 // تحديث الحقول بناءً على القيم المدخلة فقط
                 foreach ($validatedData->validated() as $key => $value) {
                     if (isset($flightData[$key])) {
                         $flight->{$key} = $value;
                     }
                 }
-    
+
                 // تحديث توقيت آخر تعديل من قبل المسؤول
                 $flight->last_admin_update_at = now()->setTimezone('Asia/Amman');
-    
+
                 // حفظ التغييرات
                 $flight->save();
-    
+
                 // إرسال إشعار إذا تم إدخال قيمة لـ download_url
                 if (isset($flightData['download_url'])) {
                     $userId = $flight->user_id;
-    
+
                     if ($userId) {
                         $message = "You can visit your profile; the requested ticket is now available on the website.";
                         Notification::create([
@@ -247,16 +247,16 @@ class FlightController extends Controller
                         ]);
                     }
                 }
-    
+
                 $updatedFlights[] = $flight;
             }
-    
+
             return response()->json(['message' => 'Flights updated successfully', 'flights' => $updatedFlights], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while updating flights.', 'error' => $e->getMessage()], 500);
         }
     }
-    
+
 
 
     public function getFlightByUserId(Request $request)
@@ -280,6 +280,28 @@ class FlightController extends Controller
         }
     }
 
+    // public function getFlightByUserIdForCompanion($userId)
+    // {
+    //     try {
+    //         // تحقق من أن user_id موجود
+    //         if (!$userId) {
+    //             return response()->json(['message' => 'User ID is required.'], 400);
+    //         }
+
+    //         // ابحث عن جميع الرحلات حيث يكون main_user_id مساويًا لـ userId
+    //         $flights = Flight::where('main_user_id', $userId)->get();
+
+    //         // تحقق إذا كانت هناك رحلات
+    //         if ($flights->isEmpty()) {
+    //             return response()->json(['message' => 'No flights found with the given main_user_id.'], 404);
+    //         }
+
+    //         // إرجاع الرحلات
+    //         return response()->json($flights, 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
     public function getFlightByUserIdForCompanion($userId)
     {
         try {
@@ -287,15 +309,18 @@ class FlightController extends Controller
             if (!$userId) {
                 return response()->json(['message' => 'User ID is required.'], 400);
             }
-    
-            // ابحث عن جميع الرحلات حيث يكون main_user_id مساويًا لـ userId
-            $flights = Flight::where('main_user_id', $userId)->get();
-    
+
+            // ابحث عن جميع الرحلات حيث يكون main_user_id أو user_id مساويًا لـ userId
+            $flights = Flight::where(function ($query) use ($userId) {
+                $query->where('main_user_id', $userId)
+                    ->orWhere('user_id', $userId); // إضافة شرط user_id
+            })->get();
+
             // تحقق إذا كانت هناك رحلات
             if ($flights->isEmpty()) {
-                return response()->json(['message' => 'No flights found with the given main_user_id.'], 404);
+                return response()->json(['message' => 'No flights found with the given user_id or main_user_id.', 'data' => false], 200);
             }
-    
+
             // إرجاع الرحلات
             return response()->json($flights, 200);
         } catch (\Exception $e) {
@@ -303,7 +328,7 @@ class FlightController extends Controller
         }
     }
 
-    
+
 
 
 
@@ -445,22 +470,22 @@ class FlightController extends Controller
             // الحصول على معلومات المستخدم الحالي
             $user = Auth::user();
             $mainUserId = $user->id; // معرّف المستخدم الأساسي
-    
+
             // تحديث بيانات المستخدم الأساسي
             $flight = Flight::where('flight_id', $request->input('flight_id'))
-                            ->where('user_id', $mainUserId)
-                            ->first();
-    
+                ->where('user_id', $mainUserId)
+                ->first();
+
             if ($flight) {
                 // التحقق من شرط المهلة الزمنية للتحديث
                 $currentDateTime = \Carbon\Carbon::now();
                 if ($flight->admin_update_deadline && $currentDateTime->greaterThan($flight->admin_update_deadline)) {
                     return response()->json(['error' => 'The update deadline has passed. No further updates are allowed.'], 403);
                 }
-    
+
                 // إعداد مصفوفة التحديث
                 $updateData = [];
-    
+
                 // تحقق من القيم المدخلة وتحديث فقط ما تم تقديمه
                 if ($request->has('departure_airport')) {
                     $updateData['departure_airport'] = $request->input('departure_airport');
@@ -495,11 +520,11 @@ class FlightController extends Controller
                 if ($request->has('passport_image')) {
                     $updateData['passport_image'] = $request->input('passport_image');
                 }
-    
+
                 // تحديث الرحلة إذا كانت هناك أي بيانات للتحديث
                 if (!empty($updateData)) {
                     $flight->update($updateData);
-    
+
                     // تحديث حقل last_speaker_update_at بعد التحديث
                     $flight->last_speaker_update_at = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
                     $flight->save();
@@ -507,17 +532,17 @@ class FlightController extends Controller
             } else {
                 return response()->json(['error' => 'الرحلة الأساسية غير موجودة أو غير مرتبطة بالمستخدم'], 404);
             }
-    
+
             // تحديث معلومات المرافقين
             foreach ($request->input('companions') as $companionData) {
                 $companionFlight = Flight::where('flight_id', $companionData['flight_id'])
-                                         ->whereNull('user_id') // تحقق من أن user_id فارغ
-                                         ->first();
-    
+                    ->whereNull('user_id') // تحقق من أن user_id فارغ
+                    ->first();
+
                 if ($companionFlight) {
                     // إعداد مصفوفة التحديث للمرافق
                     $companionUpdateData = [];
-    
+
                     // تحقق من القيم المدخلة للمرافق
                     if (isset($companionData['departure_airport'])) {
                         $companionUpdateData['departure_airport'] = $companionData['departure_airport'];
@@ -552,7 +577,7 @@ class FlightController extends Controller
                     if (isset($companionData['passport_image'])) {
                         $companionUpdateData['passport_image'] = $companionData['passport_image'];
                     }
-    
+
                     // تحديث الرحلة للمرافق إذا كانت هناك أي بيانات للتحديث
                     if (!empty($companionUpdateData)) {
                         $companionUpdateData['main_user_id'] = $mainUserId; // تعيين معرّف المستخدم الأساسي للمرافق
@@ -562,15 +587,15 @@ class FlightController extends Controller
                     return response()->json(['error' => 'رحلة المرافق غير موجودة'], 404);
                 }
             }
-    
+
             return response()->json(['message' => 'Update successful']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'ERROR: ' . $e->getMessage()], 500);
         }
     }
-    
-    
-    
+
+
+
 
 
 
