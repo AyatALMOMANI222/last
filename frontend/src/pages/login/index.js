@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../../CoreComponent/Input";
 import axiosInstance from "../../common/http";
 import { useNavigate } from "react-router-dom";
@@ -8,12 +8,16 @@ import SVG from "react-inlinesvg";
 import loginImg from "../../icons/loginImg.svg";
 import "./style.scss";
 import DialogMessage from "../../components/DialogMessage";
+import httpService from "../../common/httpService";
+import { saveToLocalStorage } from "../../common/localStorage";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [conferencesId, setConferencesId] = useState(null);
+
   const [error, setError] = useState({
     email: "",
     password: "",
@@ -33,14 +37,28 @@ const LoginPage = () => {
       const user = response.data.user;
 
       localStorage.setItem("token", token);
-      localStorage.setItem("user_id", user.id); 
+      localStorage.setItem("user_id", user.id);
       console.log(token);
+      getUpcomingConferences();
+
       navigate("/");
     } catch (error) {
       console.log(error.response?.data?.message);
       toast.error(error.response?.data?.message);
       console.error("Login error:", error);
     }
+  };
+  const getUpcomingConferences = async () => {
+    const getAuthToken = () => localStorage.getItem("token");
+    const response = await httpService({
+      method: "GET",
+      url: "http://localhost:8000/api/con/up",
+      headers: { Authorization: `Bearer ${getAuthToken()}` },
+      withToast: true,
+      showLoader: true,
+    });
+    const conferencesId = response?.data?.[0]?.id;
+    saveToLocalStorage("myConferencesId", conferencesId);
   };
 
   const handleLogin = (e) => {
