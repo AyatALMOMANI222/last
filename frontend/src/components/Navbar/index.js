@@ -85,6 +85,10 @@ const NavBar = () => {
       ],
     },
     {
+      title: "Visa",
+      links: [{ label: "Visa", url: "/visa" }],
+    },
+    {
       title: "Admin",
       links: [
         { label: "Conferences", url: "/conferences/page" },
@@ -172,7 +176,7 @@ const NavBar = () => {
             className="auth-btn register-btn"
             onClick={() => {
               localStorage.removeItem("token");
-              navigate("login")
+              navigate("login");
             }}
           >
             Logout

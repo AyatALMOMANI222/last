@@ -54,8 +54,8 @@ const LoginPage = () => {
       method: "GET",
       url: "http://localhost:8000/api/con/up",
       headers: { Authorization: `Bearer ${getAuthToken()}` },
-      withToast: true,
-      showLoader: true,
+      withToast: false,
+      showLoader: false,
     });
     const conferencesId = response?.data?.[0]?.id;
     saveToLocalStorage("myConferencesId", conferencesId);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useNavigate } from "react-router-dom"; // For navigation after clicking "Yes"
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -7,6 +7,8 @@ import ImageUpload from "../../../CoreComponent/ImageUpload"; // Importing Image
 import DateInput from "../../../CoreComponent/Date"; // Importing DateInput component
 import "./style.scss"; // Importing Sass file for styling
 import httpService from "../../../common/httpService";
+import { getFromLocalStorage } from "../../../common/localStorage";
+import SimpleLabelValue from "../../SimpleLabelValue";
 
 const VisaPage = () => {
   const navigate = useNavigate(); // For navigation later
@@ -15,9 +17,11 @@ const VisaPage = () => {
   const [arrivalDate, setArrivalDate] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [error, setError] = useState("");
+  const [visaPrice, setVisaPrice] = useState(0); // Changed initial state to null to check for data
+
   const [visaData, setVisaData] = useState(null); // Changed initial state to null to check for data
   const userId = localStorage.getItem("user_id");
-
+  const conferenceId = getFromLocalStorage("myConferencesId");
   const handleUserChoice = (choice) => {
     if (choice === "yes") {
       setShowVisaForm(true); // Show the visa form if "Yes" is chosen
@@ -25,6 +29,28 @@ const VisaPage = () => {
       setShowVisaForm(false); // Close the form if "No" is chosen
     }
   };
+
+  async function getConferenceById(conferenceId) {
+    const url = `http://localhost:8000/api/con/id/${conferenceId}`;
+
+    try {
+      const response = await axios.get(url);
+      console.log("Conference data retrieved successfully:", response.data);
+      // console.log(response.data.visa_price);
+      setVisaPrice(response.data.visa_price);
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error fetching conference data:",
+        error.response ? error.response.data : error.message
+      );
+      throw error; // Optionally rethrow the error for further handling
+    }
+  }
+  useEffect(() => {
+    getConferenceById(conferenceId);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,31 +64,29 @@ const VisaPage = () => {
     formData.append("departure_date", departureDate);
 
     try {
-        const response = await axios.post(
-            `http://127.0.0.1:8000/api/visa`,
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`, // Pass token in header
-                },
-            }
-        );
-
-        toast.success(response.data.message); // Show success message
-
-        // Fetch updated visa data after successful submission
-        await fetchVisaData(); // <-- Add this line to fetch updated data
-
-    } catch (error) {
-        if (error.response) {
-            setError(error.response.data.message || "An error occurred");
-        } else {
-            setError("An error occurred");
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/visa`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // Pass token in header
+          },
         }
-    }
-};
+      );
 
+      toast.success("The Data updated Successfully"); // Show success message
+
+      // Fetch updated visa data after successful submission
+      await fetchVisaData(); // <-- Add this line to fetch updated data
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.message || "An error occurred");
+      } else {
+        setError("An error occurred");
+      }
+    }
+  };
 
   const fetchVisaData = async () => {
     const token = localStorage.getItem("token"); // Retrieve the token
@@ -83,6 +107,7 @@ const VisaPage = () => {
       // Set fields based on the data
       if (data.visa) {
         setArrivalDate(data.arrival_date);
+
         setDepartureDate(data.departure_date);
         setShowVisaForm(false); // Hide the form if there is data
       } else {
@@ -100,19 +125,30 @@ const VisaPage = () => {
 
   return (
     <div className="visa-page-container">
-      {!visaData && !showVisaForm && ( // Show the question only if there is no data and the form is closed
-        <div className="question-container">
-          <h2>Would you like the organizing company to handle the visa for you?</h2>
-          <div className="button-group">
-            <button className="yes-btn" onClick={() => handleUserChoice("yes")}>Yes</button>
-            <button className="no-btn" onClick={() => handleUserChoice("no")}>No</button>
+      {!visaData &&
+        !showVisaForm && ( // Show the question only if there is no data and the form is closed
+          <div className="question-container">
+            <h2>
+              Would you like the organizing company to handle the visa for you?
+            </h2>
+            <div className="button-group">
+              <button
+                className="yes-btn"
+                onClick={() => handleUserChoice("yes")}
+              >
+                Yes
+              </button>
+              <button className="no-btn" onClick={() => handleUserChoice("no")}>
+                No
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {showVisaForm && ( // Show the form only if "Yes" was chosen
         <form onSubmit={handleSubmit} className="visa-form">
           <div className="fields-container">
+            <div>The Visa Price Is {visaPrice} $</div>
             <ImageUpload
               label="Upload Passport Image"
               inputValue={passportImage}
@@ -143,41 +179,38 @@ const VisaPage = () => {
         </form>
       )}
 
-      {visaData && ( // Show visa information if visaData is available
-        <div className="visa-info">
+      {visaData && (
+        <Fragment>
           <h2>Visa Information</h2>
-          {visaData.arrival_date && (
-            <p>
-              <strong>Arrival Date:</strong> {visaData.arrival_date}
-            </p>
-          )}
-          {visaData.departure_date && (
-            <p>
-              <strong>Departure Date:</strong> {visaData.departure_date}
-            </p>
-          )}
-          <p>
-            <strong>Status:</strong> {visaData.status}
-          </p>
-          <p>
-            <strong>Visa Cost:</strong> {visaData.visa_cost}
-          </p>
-          {/* <p>
-            <strong>Payment Required:</strong>{" "}
-            {visaData.payment_required ? "Yes" : "No"}
-          </p> */}
-          {visaData.updated_at_by_admin && (
-            <p>
-              <strong>Last Updated by Admin:</strong>{" "}
-              {visaData.updated_at_by_admin}
-            </p>
-          )}
-          <p>You cannot apply for another visa.</p>
-        </div>
+
+          <div className="visa-info">
+            {visaData.arrival_date && (
+              <SimpleLabelValue
+                label="Arrival Date"
+                value={visaData.arrival_date}
+              />
+            )}
+            {visaData.departure_date && (
+              <SimpleLabelValue
+                label="Departure Date"
+                value={visaData.departure_date}
+              />
+            )}
+            <SimpleLabelValue label="Status" value={visaData.status} />
+            <SimpleLabelValue label="Visa Cost" value={visaData.visa_cost} />
+
+            {visaData.updated_at_by_admin && (
+              <SimpleLabelValue
+                label="Last Updated by Admin"
+                value={visaData.updated_at_by_admin}
+              />
+            )}
+            <p>You cannot apply for another visa.</p>
+          </div>
+        </Fragment>
       )}
     </div>
   );
-
 };
 
 export default VisaPage;

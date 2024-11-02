@@ -126,12 +126,18 @@ const NotificationDropdown = () => {
               key={notification.id}
               className={`notification-item unread`}
               onClick={() => {
-                read(notification.id);
+                // read(notification.id);
                 if (
                   notification?.message?.includes("New speaker registration")
                 ) {
                   navigate(
                     `/edit/speaker/data/${notification?.conference_id}/${notification?.register_id}`
+                  );
+                } else if (
+                  notification?.message?.includes("New visa request from user")
+                ) {
+                  navigate(
+                    `/admin/visa2`
                   );
                 }
               }}
