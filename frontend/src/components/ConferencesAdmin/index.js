@@ -162,6 +162,7 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
   const [secondAnnouncement, setSecondAnnouncement] = useState(null);
   const [brochure, setBrochure] = useState(null);
   const [scientificProgram, setScientificProgram] = useState(null);
+  const [visaCost, setVisaCost] = useState("");
   const [entries, setEntries] = useState([
     { id: Date.now(), price_type: "", price: "", description: "" },
   ]);
@@ -244,13 +245,15 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
     formData.append("start_date", startDate);
     formData.append("end_date", endDate);
     formData.append("location", location);
-    formData.append("status", status.value);
+    // formData.append("status", status.value);
     formData.append("image", image);
     formData.append("first_announcement_pdf", firstAnnouncement);
     formData.append("second_announcement_pdf", secondAnnouncement);
     formData.append("conference_brochure_pdf", brochure);
     formData.append("conference_scientific_program_pdf", scientificProgram);
+    formData.append("visa_price", visaCost || 0);
     formData.append("scientific_topics", topics);
+
     formData.append("timestamps", new Date().toISOString());
     const token = localStorage.getItem("token");
     axios
@@ -311,7 +314,7 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
           type="text"
           required
         />
-        <Select
+        {/* <Select
           options={[
             { value: "upcoming", label: "Upcoming" },
             { value: "past", label: "Past" },
@@ -320,7 +323,7 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
           setValue={setStatus}
           label="Status"
           errorMsg={""}
-        />
+        /> */}
 
         <ImageUpload
           label="Upload Image"
@@ -355,6 +358,14 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
           inputValue={scientificProgram}
           setInputValue={setScientificProgram}
           allowedExtensions={["pdf"]}
+        />
+        <Input
+          label="Visa Cost (USD)"
+          placeholder="Enter visa cost"
+          inputValue={visaCost}
+          setInputValue={setVisaCost}
+          type="number" 
+          required
         />
         <div className="topics-container">
           <div className="topic-title">

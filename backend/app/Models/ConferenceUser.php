@@ -15,7 +15,8 @@ class ConferenceUser extends Model
     // الحقول القابلة للتعبئة
     protected $fillable = [
         'user_id',
-        'conference_id'
+        'conference_id',
+        'is_visa_payment_required'
     ];
 
     // العلاقة مع جدول users

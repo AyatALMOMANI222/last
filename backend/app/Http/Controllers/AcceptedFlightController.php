@@ -9,34 +9,87 @@ use App\Models\Notification;
 class AcceptedFlightController extends Controller
 {
 
-    public function store(Request $request)
+    // public function store(Request $request)
+    // {
+    //     try {
+    //         $validatedData = $request->validate([
+    //             'flight_id' => 'required|exists:flights,flight_id',  
+    //             'price' => 'required|numeric|min:0',
+    //             'departure_date' => 'required|date',
+    //             'departure_time' => 'required|date_format:H:i',
+    //             'admin_set_deadline' => 'nullable|date',
+    //             'ticket_number' => 'nullable|string',
+    //             'ticket_image' => 'nullable|string',
+    //             'issued_at' => 'nullable|date',
+    //             'expiration_date' => 'nullable|date',
+    //         ]);
+    
+    //         $acceptedFlight = AcceptedFlight::create([
+    //             'flight_id' => $validatedData['flight_id'],
+    //             'price' => $validatedData['price'],
+    //             'departure_date' => $validatedData['departure_date'],
+    //             'departure_time' => $validatedData['departure_time'],
+    //             'admin_set_deadline' => $validatedData['admin_set_deadline'],
+    //             'ticket_number' => $validatedData['ticket_number'],
+    //             'ticket_image' => $validatedData['ticket_image'],
+    //             'issued_at' => $validatedData['issued_at'],
+    //             'expiration_date' => $validatedData['expiration_date'],
+    //         ]);
+    
+    //         return response()->json([
+    //             'message' => 'Accepted flight created successfully',
+    //             'accepted_flight' => $acceptedFlight,
+    //         ], 201);
+    
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'error' => 'An error occurred',
+    //             'message' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+    
+    public function storeAll(Request $request)
     {
         try {
+            // تحقق من أن البيانات المرسلة هي مصفوفة وتحتوي على العناصر المطلوبة
             $validatedData = $request->validate([
-                'flight_id' => 'required|exists:flights,flight_id',  
-                'price' => 'required|numeric|min:0',
-                'admin_set_deadline' => 'nullable|date',
-                'ticket_number' => 'nullable|string',
-                'ticket_image' => 'nullable|string',
-                'issued_at' => 'nullable|date',
-                'expiration_date' => 'nullable|date',
+                'flights' => 'required|array',
+                'flights.*.flight_id' => 'required|exists:flights,flight_id',  
+                'flights.*.price' => 'required|numeric|min:0',
+                'flights.*.departure_date' => 'required|date',
+                'flights.*.departure_time' => 'required|date_format:H:i',
+                'flights.*.admin_set_deadline' => 'nullable|date',
+                'flights.*.ticket_number' => 'nullable|string',
+                'flights.*.ticket_image' => 'nullable|string',
+                'flights.*.issued_at' => 'nullable|date',
+                'flights.*.expiration_date' => 'nullable|date',
             ]);
-
-            $acceptedFlight = AcceptedFlight::create([
-                'flight_id' => $validatedData['flight_id'],
-                'price' => $validatedData['price'],
-                'admin_set_deadline' => $validatedData['admin_set_deadline'],
-                'ticket_number' => $validatedData['ticket_number'],
-                'ticket_image' => $validatedData['ticket_image'],
-                'issued_at' => $validatedData['issued_at'],
-                'expiration_date' => $validatedData['expiration_date'],
-            ]);
-
+    
+            $acceptedFlights = [];
+    
+            // تكرار البيانات وإدخال كل رحلة في قاعدة البيانات
+            foreach ($validatedData['flights'] as $flightData) {
+                $acceptedFlight = AcceptedFlight::create([
+                    'flight_id' => $flightData['flight_id'],
+                    'price' => $flightData['price'],
+                    'departure_date' => $flightData['departure_date'],
+                    'departure_time' => $flightData['departure_time'],
+                    'admin_set_deadline' => $flightData['admin_set_deadline'],
+                    'ticket_number' => $flightData['ticket_number'],
+                    'ticket_image' => $flightData['ticket_image'],
+                    'issued_at' => $flightData['issued_at'],
+                    'expiration_date' => $flightData['expiration_date'],
+                ]);
+    
+                $acceptedFlights[] = $acceptedFlight;
+            }
+    
             return response()->json([
-                'message' => 'Accepted flight created successfully',
-                'accepted_flight' => $acceptedFlight,
+                'message' => 'Accepted flights created successfully',
+                'accepted_flights' => $acceptedFlights,
             ], 201);
-
+    
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'An error occurred',
@@ -44,6 +97,9 @@ class AcceptedFlightController extends Controller
             ], 500);
         }
     }
+    
+
+
  
     public function getAcceptedFlightByFlightId($flight_id)
 {

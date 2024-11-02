@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NotificationSent;
 use App\Models\Conference;
+use App\Models\ConferenceUser;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\Speaker;
@@ -90,6 +91,7 @@ class SpeakerController extends Controller
                 'is_certificate_active' => 'nullable|boolean',
                 'room_type' => 'nullable|string|in:single,double,triple',
                 'nights_covered' => 'nullable|integer|min:0',
+                'is_visa_payment_required' => 'nullable|boolean', // الحقل الجديد
             ]);
     
             // Check if the speaker already exists for this user and conference
@@ -101,6 +103,21 @@ class SpeakerController extends Controller
                 return response()->json([
                     'error' => 'Speaker already exists for this user and conference.'
                 ], 409); // Use 409 for conflict
+            }
+    
+            // Check if conference_user record exists and update only is_visa_payment_required
+            $conferenceUser = ConferenceUser::where('user_id', $user_id)
+                ->where('conference_id', $conference_id)
+                ->first();
+    
+            if ($conferenceUser) {
+                // Update only the is_visa_payment_required field
+                $conferenceUser->is_visa_payment_required = $request->input('is_visa_payment_required', false);
+                $conferenceUser->save();
+            } else {
+                return response()->json([
+                    'error' => 'ConferenceUser record not found for this user and conference.'
+                ], 404);
             }
     
             // Create a new speaker entry
@@ -128,7 +145,8 @@ class SpeakerController extends Controller
             // Return a success response
             return response()->json([
                 'message' => 'Speaker created successfully, and user status updated to approved.',
-                'speaker' => $speaker
+                'speaker' => $speaker,
+                'conference_user' => $conferenceUser,
             ], 201); // Use 201 for created resource
     
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -145,6 +163,7 @@ class SpeakerController extends Controller
             ], 500);
         }
     }
+    
     
 
     // هنا يعدل على user_id ,عملتله check admin خارجي

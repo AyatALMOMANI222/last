@@ -1,0 +1,53 @@
+.update-visa-status {
+    max-width: 400px; /* تحديد عرض الحد الأقصى */
+    margin: 0 auto; /* توسيط المكون */
+    padding: 20px; /* إضافة padding */
+    border-radius: 8px; /* زوايا دائرية */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* ظل */
+    background-color: #f9f9f9; /* لون خلفية فاتح */
+    font-family: Arial, sans-serif; /* نوع الخط */
+}
+
+h2 {
+    text-align: center; /* توسيط العنوان */
+    color: #333; /* لون العنوان */
+}
+
+.success-message {
+    background-color: #d4edda; /* لون خلفية الرسالة الناجحة */
+    color: #155724; /* لون النص */
+    padding: 10px; /* إضافة padding */
+    border: 1px solid #c3e6cb; /* حد */
+    border-radius: 4px; /* زوايا دائرية */
+    margin-bottom: 20px; /* هامش سفلي */
+}
+
+.error-message {
+    background-color: #f8d7da; /* لون خلفية رسالة الخطأ */
+    color: #721c24; /* لون النص */
+    padding: 10px; /* إضافة padding */
+    border: 1px solid #f5c6cb; /* حد */
+    border-radius: 4px; /* زوايا دائرية */
+    margin-bottom: 20px; /* هامش سفلي */
+}
+
+.update-button {
+    width: 100%; /* جعل الزر بعرض كامل */
+    padding: 10px; /* إضافة padding */
+    background-color: #007bff; /* لون خلفية الزر */
+    color: white; /* لون النص */
+    border: none; /* إزالة الحدود */
+    border-radius: 4px; /* زوايا دائرية */
+    font-size: 16px; /* حجم الخط */
+    cursor: pointer; /* تغيير شكل المؤشر */
+    transition: background-color 0.3s; /* تأثير الانتقال */
+}
+
+.update-button:hover {
+    background-color: #0056b3; /* لون الزر عند المرور */
+}
+
+.update-button:disabled {
+    background-color: #b0c4de; /* لون الزر عند التعطيل */
+    cursor: not-allowed; /* تغيير شكل المؤشر عند التعطيل */
+}

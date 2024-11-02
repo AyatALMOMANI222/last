@@ -74,6 +74,9 @@ import FlightStepperPage from "./components/FlightStepperPage";
 import FlightStepperPageAdmin from "./components/FlightStepperPageAdmin";
 import DinnerDetails from "./components/GalaDinner";
 import SponsorSection from "./components/Sponsor/SponsorshipOption";
+import UpdateVisaStatus from "./components/UpdateVisaStatus";
+import AcceptFlight from "./components/FlightStepperAcceptFlight/AcceptFlight";
+import StepperAcceptFlight from "./components/FlightStepperAcceptFlight";
 // import Echo from "laravel-echo";
 // import Pusher from 'pusher-js';
 const App = () => {
@@ -209,8 +212,11 @@ const App = () => {
         />
         <Route path="/companion" element={<GetCompanion />} />
 
+        <Route path="/admin/visa2" element={< UpdateVisaStatus />} />
+
         <Route path="/faq" element={<FAQ />} />
         <Route path="/sponsor/section" element={<SponsorSection />} />
+        <Route path="/accept/flight" element={<StepperAcceptFlight/>} />
 
       </Routes>
       {/* <Footer/> */}

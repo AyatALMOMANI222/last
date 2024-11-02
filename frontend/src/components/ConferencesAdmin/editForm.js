@@ -347,7 +347,7 @@ const EditConferencesAdmin = ({
     if (!startDate) validationErrors.startDate = "Start date is required";
     if (!endDate) validationErrors.endDate = "End date is required";
     if (!location) validationErrors.location = "Location is required";
-    if (!status) validationErrors.status = "Status is required";
+    // if (!status) validationErrors.status = "Status is required";
     if (!image) validationErrors.image = "Image is required";
     if (!firstAnnouncement)
       validationErrors.firstAnnouncement = "First announcement PDF is required";
@@ -407,7 +407,7 @@ const EditConferencesAdmin = ({
           required
           errorMsg={errors.location}
         />
-        <Select
+        {/* <Select
           options={[
             { value: "upcoming", label: "upcoming" },
             { value: "past", label: "past" },
@@ -419,7 +419,7 @@ const EditConferencesAdmin = ({
           setValue={setStatus}
           label="Status"
           errorMsg={errors.status}
-        />
+        /> */}
 
         <ImageUpload
           label="Upload Image"

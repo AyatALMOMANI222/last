@@ -1,0 +1,111 @@
+.accept-flight-information {
+  padding: 20px;
+  // background-color: #f9f9f9;
+
+  .title {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .flight-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .flight-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 200px;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    &__detail {
+      margin: 5px 0;
+      font-size: 0.9rem;
+      color: #555;
+
+      span {
+        font-weight: 500;
+        color: #333;
+      }
+    }
+  }
+
+  .actions-section {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+
+    .submit-button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+  .flight-card.selected {
+    border: 2px solid #007bff; /* Highlight selected card */
+    background-color: #e6f0ff; /* Light background for selected card */
+  }
+  
+.actions-section {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
+  border-top: 1px solid #d8dae5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+}
+.next-button {
+  margin-right: 30px;
+  width: 200px;
+  height: 45px;
+  background-color: #007bff; // Blue background
+  color: #fff; // White text color
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  // transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #0056b3; // Darker blue on hover
+  }
+
+  &:active {
+    background-color: #004085; // Even darker blue on active
+    transform: scale(0.98); // Slightly shrink the button on click
+  }
+}
+.other{
+  margin: auto;
+}
+}

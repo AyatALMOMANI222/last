@@ -122,9 +122,9 @@ Route::get('/not', [NotificationController::class, 'getAllNotificationsByUserId'
 
 // visa
 Route::post('/visa', [VisaController::class, 'postVisaByUser'])->middleware('auth:sanctum');
-Route::post('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin'])->name('admin.updateVisa');
+Route::post('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/visa', [VisaController::class, 'getVisaByAuthUser'])->middleware('auth:sanctum');
-Route::put('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin']);
+// Route::put('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin']);
 
 
 // Flight
@@ -147,6 +147,7 @@ Route::post('/accepted-flights', [AcceptedFlightController::class, 'store'])->mi
 Route::get('/accepted-flights/{flight_id}', [AcceptedFlightController::class, 'getAcceptedFlightByFlightId']);
 Route::post('/accepted-flights/{flight_id}', [AcceptedFlightController::class, 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/ticket/download/{id}', [AcceptedFlightController::class, 'downloadTicket']);
+Route::post('/accepted-flights/user/all', [AcceptedFlightController::class, 'storeAll'])->middleware('auth:sanctum');
 
 
 Route::post('/reservation', [ReservationsController::class, 'createReservation'])->middleware('auth:sanctum');

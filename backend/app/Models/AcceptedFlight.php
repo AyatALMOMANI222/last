@@ -21,6 +21,9 @@ class AcceptedFlight extends Model
         'ticket_image',
         'issued_at',
         'expiration_date',
+        'departure_date',
+        'departure_time',
+        
     ];
 
     public function flight()

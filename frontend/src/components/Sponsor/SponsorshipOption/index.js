@@ -27,6 +27,7 @@ const StandardBoothPackage = () => {
     return (
         <div className="booth-package">
             <h2>Standard Booth Package</h2>
+            <img src={require("./both.jfif")}/>
             <p>(Minimum space 9 sqm)</p>
             <ul>
                 <li>Fascia board with company name & stand number.</li>
