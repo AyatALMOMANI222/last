@@ -2,13 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conference;
 use App\Models\ConferenceUser;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class ConferenceUserController extends Controller
 {
+
+public function getUpcomingConferencesByUserId(Request $request)
+{
+    // Get the authenticated user ID from the token
+    $userId = Auth::id(); // Assuming you are using Laravel's built-in Auth
+
+    // Check if user ID exists
+    if (!$userId) {
+        return response()->json([
+            'message' => 'User not authenticated.',
+        ], 401);
+    }
+
+    // Get current date
+    $currentDate = Carbon::now();
+
+    // Fetch conferences for the authenticated user with start date greater than now
+    $conferencesIds = ConferenceUser::where('user_id', $userId)->pluck('conference_id'); // Assuming ConferenceUser model has a user_id and conference_id
+
+    // Check if there are any conferences
+    if ($conferencesIds->isEmpty()) {
+        return response()->json([
+            'message' => 'No upcoming conferences found.',
+            'data' => [],
+        ], 404);
+    }
+
+    // Fetch upcoming conferences
+    $conferences = Conference::whereIn('id', $conferencesIds) 
+        ->where('start_date', '>', $currentDate)
+        ->get();
+
+    // Return response
+    return response()->json([
+        'message' => 'Upcoming conferences retrieved successfully.',
+        'data' => $conferences,
+    ]);
+}
+
     public function store(Request $request)
     {
         $request->validate([
