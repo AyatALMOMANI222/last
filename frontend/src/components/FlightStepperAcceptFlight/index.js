@@ -6,7 +6,11 @@ import {
   StepperAcceptFlightProvider,
   useFlightStepperAdmin,
 } from "./StepperContext";
-import { removeFromLocalStorage, removeFromLocalStorageStartWith } from "../../common/localStorage";
+import {
+  removeFromLocalStorage,
+  removeFromLocalStorageStartWith,
+} from "../../common/localStorage";
+import Invoice from "./Invoice";
 
 const StepperAcceptFlightPageContent = () => {
   const {
@@ -19,15 +23,22 @@ const StepperAcceptFlightPageContent = () => {
 
   // Dynamically generate steps based on the number of flight members
   const stepperInfo =
-    flightMembers?.map((member, index) => ({
-      title: `${member?.passenger_name} Flight Information `,
-    })) || [];
+    [
+      ...flightMembers?.map((member, index) => ({
+        title: `${member?.passenger_name} Flight Information `,
+      })),
+      {
+        title: `الفاتورة `,
+      },
+    ] || [];
 
   const componentsMap =
-    flightMembers?.map((member, index) => (
-      // <h1>hiii</h/1>
-      <AcceptFlight key={index} member={member} index={index} />
-    )) || [];
+    [
+      ...flightMembers?.map((member, index) => (
+        <AcceptFlight key={index} member={member} index={index} />
+      )),
+      <Invoice />,
+    ] || [];
 
   useEffect(() => {
     return () => {

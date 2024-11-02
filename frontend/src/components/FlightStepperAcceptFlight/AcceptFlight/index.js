@@ -74,6 +74,7 @@ const AcceptFlight = ({ member, index }) => {
         },
         withToast: true,
       });
+      completeStep(currentStep);
     } catch (error) {
       console.error("Error submitting form:", error);
     }

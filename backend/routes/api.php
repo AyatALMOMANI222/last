@@ -134,6 +134,7 @@ Route::post('/flights', [FlightController::class, 'createFlight'])->middleware('
 Route::get('/flight', [FlightController ::class , 'getFlightByUserId'])->middleware('auth:sanctum');
 Route::get('/companion-flight/{user_id}', [FlightController ::class , 'getFlightByUserIdForCompanion'])->middleware('auth:sanctum');
 Route::get('/user/pag/filter', [FlightController ::class , 'getAllFlightsPaginationAndFilter'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/flight/id/{flight_id}', [FlightController ::class , 'getFlightById']);
 
 Route::post('/user/update-flight', [FlightController ::class , 'updateFlightByUser'])->middleware('auth:sanctum');
 Route::post('/admin/update-flight', [FlightController ::class , 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);

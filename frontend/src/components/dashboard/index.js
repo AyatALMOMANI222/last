@@ -62,7 +62,7 @@ const Dashboard = () => {
     price: conference.price,
   }));
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red"];
+  const COLORS = ["#03045e", "#023e8a", "#0077b6", "#00b4d8", "#48cae4"];
 
   const columns = [
     { title: "Title", dataIndex: "title", key: "title" },
@@ -80,7 +80,8 @@ const Dashboard = () => {
               <XAxis dataKey="title" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="attendees" fill="#8884d8" />
+              <Bar dataKey="attendees" fill="#0077b6" barSize={30} />{" "}
+              {/* Change 30 to your desired width */}
             </BarChart>
           </ResponsiveContainer>
         </div>

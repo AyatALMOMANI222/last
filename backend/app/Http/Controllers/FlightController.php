@@ -363,106 +363,6 @@ class FlightController extends Controller
 
 
 
-    // public function updateFlightByUser(Request $request, $flight_id)
-    // {
-    //     try {
-    //         $request->validate([
-    //             'departure_airport' => 'sometimes|required|string|max:100',
-    //             'arrival_airport' => 'sometimes|required|string|max:100',
-    //             'departure_date' => 'sometimes|required|date',
-    //             'arrival_date' => 'sometimes|required|date',
-    //             'ticket_count' => 'sometimes|required|integer|min:1',
-    //             'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    //             'is_companion' => 'sometimes|required|boolean',
-    //             'flight_number' => 'sometimes|string',
-    //             'seat_preference' => 'sometimes|string',
-    //             'upgrade_class' => 'sometimes|boolean',
-    //             'additional_requests' => 'sometimes|string',
-    //             'passenger_name' => 'sometimes|string',
-    //             'specific_flight_time' => 'sometimes|date_format:H:i', // Add validation for specific_flight_time
-    //         ]);
-
-    //         // Get the authenticated user
-    //         $user = Auth::user();
-
-    //         // Find the flight by flight_id and user_id
-    //         $flight = Flight::where('flight_id', $flight_id)->where('user_id', $user->id)->firstOrFail();
-
-    //         // Check if the current date is before the admin's update deadline
-    //         $currentDateTime = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
-
-    //         if ($flight->admin_update_deadline && $currentDateTime->greaterThan($flight->admin_update_deadline)) {
-    //             return response()->json(['error' => 'The update deadline has passed. No further updates are allowed.'], 403);
-    //         }
-
-    //         // Update only the fields present in the request
-    //         if ($request->has('departure_airport')) {
-    //             $flight->departure_airport = $request->input('departure_airport');
-    //         }
-    //         if ($request->has('arrival_airport')) {
-    //             $flight->arrival_airport = $request->input('arrival_airport');
-    //         }
-    //         if ($request->has('departure_date')) {
-    //             $flight->departure_date = $request->input('departure_date');
-    //         }
-    //         if ($request->has('arrival_date')) {
-    //             $flight->arrival_date = $request->input('arrival_date');
-    //         }
-    //         if ($request->has('ticket_count')) {
-    //             $flight->ticket_count = $request->input('ticket_count');
-    //         }
-    //         if ($request->has('is_companion')) {
-    //             $flight->is_companion = $request->input('is_companion');
-    //         }
-    //         if ($request->has('flight_number')) {
-    //             $flight->flight_number = $request->input('flight_number');
-    //         }
-    //         if ($request->has('seat_preference')) {
-    //             $flight->seat_preference = $request->input('seat_preference');
-    //         }
-    //         if ($request->has('upgrade_class')) {
-    //             $flight->upgrade_class = $request->input('upgrade_class');
-    //         }
-    //         if ($request->has('additional_requests')) {
-    //             $flight->additional_requests = $request->input('additional_requests');
-    //         }
-    //         if ($request->has('passenger_name')) {
-    //             $flight->passenger_name = $request->input('passenger_name');
-    //         }
-
-    //         // Handle the passport image if present
-    //         if ($request->hasFile('passport_image')) {
-    //             $image = $request->file('passport_image');
-    //             $imagePath = $image->store('public/passport_images');
-    //             $flight->passport_image = basename($imagePath);
-    //         }
-
-    //         // Update the specific_flight_time if present
-    //         if ($request->has('specific_flight_time')) {
-    //             $flight->specific_flight_time = $request->input('specific_flight_time');
-    //         }
-
-    //         // Update the last speaker update timestamp with local timezone
-    //         $flight->last_speaker_update_at = \Carbon\Carbon::now()->setTimezone('Asia/Amman');
-
-    //         // Save changes to the flight
-    //         $flight->save();
-
-    //         // Send notification to all admins
-    //         $admins = User::where('isAdmin', true)->get();
-    //         foreach ($admins as $admin) {
-    //             Notification::create([
-    //                 'user_id' => $admin->id,
-    //                 'message' => 'Flight number ' . $flight->flight_id . ' has been modified by user ' . $user->name,
-    //             ]);
-    //         }
-
-    //         return response()->json(['message' => 'Flight updated successfully'], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    // }
-
 
     public function updateFlightByUser(Request $request)
     {
@@ -599,7 +499,23 @@ class FlightController extends Controller
 
 
 
-
+    public function getFlightById($flight_id)
+    {
+        // البحث عن الرحلة باستخدام معرف الرحلة
+        $flight = Flight::where('flight_id', $flight_id)->first();
+    
+        // التحقق مما إذا كانت الرحلة موجودة
+        if (!$flight) {
+            // في حال عدم وجود الرحلة، إرجاع رسالة خطأ
+            return response()->json([
+                'message' => 'Flight not found'
+            ], 404);
+        }
+    
+        // في حال وجود الرحلة، إرجاع بياناتها
+        return response()->json($flight, 200);
+    }
+    
 
 
     public function deleteFlightByUser($flight_id)
