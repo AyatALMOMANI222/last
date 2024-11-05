@@ -1,52 +1,62 @@
-import React, { useState } from 'react';
-import axios from 'axios'; // استيراد axios
-import './style.scss'; // استيراد ملف Sass
-import DateInput from '../../../../CoreComponent/Date';
-
+import React, { useState } from "react";
+import axios from "axios"; // استيراد axios
+import "./style.scss"; // استيراد ملف Sass
+import DateInput from "../../../../CoreComponent/Date";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 const AdminGroupComponent = () => {
-//   const [acceptGroup, setAcceptGroup] = useState(null); // لتحديد هل ضغط المستخدم YES أم NO
-  const [startDate, setStartDate] = useState(''); // تخزين التاريخ المدخل
-  const [isActive, setIsActive] = useState(false); // لتحديد حالة is_active
-  const userId = 3; // معرف المستخدم الثابت
-//   سيؤخذ من الاشعار 
-  const token = localStorage.getItem('token'); // جلب الـ token من localStorage
-
-
+  const [startDate, setStartDate] = useState("");
+  const [isActive, setIsActive] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // إضافة حالة التحميل
+  const {register_id} = useParams();
+  const token = localStorage.getItem("token");
+const navigate=useNavigate()
   const handleYesNoClick = (answer) => {
-    setIsActive(answer === 'yes'); // تحديث حالة is_active حسب الجواب
+    setIsActive(answer === "yes");
+    setIsDisabled(true);
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true); // تعيين حالة التحميل إلى true
     try {
       const response = await axios.put(
-        'http://127.0.0.1:8000/api/update/Admin/group',
+        `http://127.0.0.1:8000/api/group/update/admin/${register_id}`,
         {
-          user_id: userId,
           is_active: isActive,
           update_deadline: startDate,
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // إضافة التوكن للـ headers
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
-      console.log('Response:', response.data);
-      // يمكن إضافة رسالة نجاح أو إعادة توجيه
+      console.log("Response:", response.data);
+      toast.success("Group Updated Successfully!");
+      
+      navigate("/")
     } catch (error) {
-      console.error('Error updating group:', error);
-      // يمكن إضافة رسالة خطأ
+      console.error("Error updating group:", error);
+      toast.error("Failed to Update the Group: " + error);
+    } finally {
+      setIsLoading(false); // تعيين حالة التحميل إلى false بعد الانتهاء
     }
   };
 
   return (
     <div className="admin-update-container">
-      <h2>هل تقبل إضافة المجموعة؟</h2>
-      <button onClick={() => handleYesNoClick('yes')}>YES</button>
-      <button onClick={() => handleYesNoClick('no')}>NO</button>
+      <h2>Do you accept adding the group?</h2>
 
-      {/* إذا ضغط المستخدم YES، نعرض له حقل التاريخ */}
+      <button onClick={() => handleYesNoClick("yes")} disabled={isDisabled}>
+        YES
+      </button>
+      <button onClick={() => handleYesNoClick("no")} disabled={isDisabled}>
+        NO
+      </button>
+
       {isActive && (
         <div className="date-input-container">
           <DateInput
@@ -56,14 +66,14 @@ const AdminGroupComponent = () => {
             setInputValue={setStartDate}
             required
           />
-          {/* زر إرسال المعلومات */}
-          <button className="submit-btn" onClick={handleSubmit}>
-            Submit
+          <button className="submit-btn" onClick={handleSubmit} disabled={isLoading}>
+            {isLoading ? "Submitting..." : "Submit"} {/* عرض حالة التحميل */}
           </button>
         </div>
       )}
     </div>
   );
 };
+
 
 export default AdminGroupComponent;

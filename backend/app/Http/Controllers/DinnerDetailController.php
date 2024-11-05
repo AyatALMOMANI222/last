@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DinnerDetail;
+use App\Models\Speaker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,13 +39,45 @@ class DinnerDetailController extends Controller
     }
     
 
-    public function getDinnerByConferenceId($conferenceId)
+//     public function getDinnerByConferenceId($conferenceId)
+// {
+//     $userId = Auth::id(); // الحصول على معرف المستخدم الحالي
+
+//     // التحقق من تسجيل الدخول
+//     if (!$userId) {
+//         return response()->json(['message' => 'Unauthorized: Please log in to access this resource'], 401);
+//     }
+
+//     // استرجاع تفاصيل العشاء حسب conference_id
+//     try {
+//         $dinnerDetail = DinnerDetail::where('conference_id', $conferenceId)->first();
+
+//         if (!$dinnerDetail) {
+//             return response()->json(['message' => 'Dinner details not found for this conference'], 404);
+//         }
+
+//         return response()->json([
+    
+//             'dinner_detail' => $dinnerDetail // إضافة تفاصيل العشاء
+//         ], 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['message' => 'Error retrieving dinner details: ' . $e->getMessage()], 500);
+//     }
+// }
+public function getDinnerByConferenceId($conferenceId)
 {
     $userId = Auth::id(); // الحصول على معرف المستخدم الحالي
 
     // التحقق من تسجيل الدخول
     if (!$userId) {
         return response()->json(['message' => 'Unauthorized: Please log in to access this resource'], 401);
+    }
+
+    // التحقق من وجود المستخدم كمتحدث والتحقق من دعوة العشاء
+    $speaker = Speaker::where('user_id', $userId)->first();
+
+    if (!$speaker || !$speaker->dinner_invitation) {
+        return response()->json(['message' => 'No speaker found for this user or no dinner invitation available'], 403);
     }
 
     // استرجاع تفاصيل العشاء حسب conference_id
@@ -56,7 +89,6 @@ class DinnerDetailController extends Controller
         }
 
         return response()->json([
-    
             'dinner_detail' => $dinnerDetail // إضافة تفاصيل العشاء
         ], 200);
     } catch (\Exception $e) {

@@ -12,43 +12,9 @@ use Illuminate\Support\Facades\Auth;
 class ConferenceUserController extends Controller
 {
 
-public function getUpcomingConferencesByUserId(Request $request)
-{
-    // Get the authenticated user ID from the token
-    $userId = Auth::id(); // Assuming you are using Laravel's built-in Auth
+  
+   
 
-    // Check if user ID exists
-    if (!$userId) {
-        return response()->json([
-            'message' => 'User not authenticated.',
-        ], 401);
-    }
-
-    // Get current date
-    $currentDate = Carbon::now();
-
-    // Fetch conferences for the authenticated user with start date greater than now
-    $conferencesIds = ConferenceUser::where('user_id', $userId)->pluck('conference_id'); // Assuming ConferenceUser model has a user_id and conference_id
-
-    // Check if there are any conferences
-    if ($conferencesIds->isEmpty()) {
-        return response()->json([
-            'message' => 'No upcoming conferences found.',
-            'data' => [],
-        ], 404);
-    }
-
-    // Fetch upcoming conferences
-    $conferences = Conference::whereIn('id', $conferencesIds) 
-        ->where('start_date', '>', $currentDate)
-        ->get();
-
-    // Return response
-    return response()->json([
-        'message' => 'Upcoming conferences retrieved successfully.',
-        'data' => $conferences,
-    ]);
-}
 
     public function store(Request $request)
     {
@@ -75,8 +41,8 @@ public function getUpcomingConferencesByUserId(Request $request)
 
         // ابحث عن السجل باستخدام user_id و conference_id
         $conferenceUser = ConferenceUser::where('user_id', $userId)
-                                        ->where('conference_id', $conferenceId)
-                                        ->first();
+            ->where('conference_id', $conferenceId)
+            ->first();
 
         if (!$conferenceUser) {
             return response()->json(['message' => 'Conference user record not found'], 404);
@@ -99,4 +65,62 @@ public function getUpcomingConferencesByUserId(Request $request)
 
         return response()->json($user->conferences, 200);
     }
+    public function getUpcomingConferencesByUserId(Request $request)
+    {
+        try {
+            // الحصول على معرف المستخدم من التوكن
+            $userId = Auth::id(); // باستخدام Laravel Auth للحصول على user_id
+    
+            // التحقق من وجود معرف المستخدم
+            if (!$userId) {
+                return response()->json([
+                    'message' => 'User not authenticated.',
+                ], 401);
+            }
+    
+            // الحصول على التاريخ الحالي
+            $currentDate = Carbon::now();
+    
+            // جلب معرفات المؤتمرات المرتبطة بالمستخدم من جدول ConferenceUser
+            $conferenceUsers = ConferenceUser::where('user_id', $userId)->get();
+            $conferenceIds = [];
+            foreach ($conferenceUsers as $conferenceUser) {
+                $conferenceIds[] = $conferenceUser->conference_id;
+            }
+    
+            // التحقق من وجود أي معرفات للمؤتمرات
+            if (empty($conferenceIds)) {
+                return response()->json([
+                    'message' => 'No upcoming conferences found.',
+                    'data' => [],
+                ], 404);
+            }
+    
+            // جلب المؤتمرات التي تواريخ البدء الخاصة بها أكبر من التاريخ الحالي
+            $conferences = Conference::whereIn('id', $conferenceIds)
+                ->where('start_date', '>', $currentDate)
+                ->get();
+    
+            // التحقق من وجود مؤتمرات قادمة
+            if ($conferences->isEmpty()) {
+                return response()->json([
+                    'message' => 'No upcoming conferences found.',
+                    'data' => [],
+                ], 404);
+            }
+    
+            // إرجاع رد يحتوي على المؤتمرات القادمة
+            return response()->json([
+                'message' => 'Upcoming conferences retrieved successfully.',
+                'data' => $conferences,
+            ]);
+        } catch (\Exception $e) {
+            // معالجة أي خطأ وإرجاع رسالة توضح السبب
+            return response()->json([
+                'message' => 'An error occurred while retrieving upcoming conferences.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 }

@@ -189,6 +189,7 @@ public function postVisaByUser(Request $request)
                 'conference_id' => $conference_id,
                 'message' => 'New visa request from user: ' . $userName . ' for conference: ' . $conferenceTitle, // إضافة title في الرسالة
                 'is_read' => false,
+                'register_id' => Auth::id(),
             ]);
 
             // بث الإشعار

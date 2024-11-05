@@ -9,7 +9,10 @@ import loginImg from "../../icons/loginImg.svg";
 import "./style.scss";
 import DialogMessage from "../../components/DialogMessage";
 import httpService from "../../common/httpService";
-import { saveToLocalStorage } from "../../common/localStorage";
+import {
+  getFromLocalStorage,
+  saveToLocalStorage,
+} from "../../common/localStorage";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -17,6 +20,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [conferencesId, setConferencesId] = useState(null);
+  const [userInfo, setUserInfo] = useState({});
 
   const [error, setError] = useState({
     email: "",
@@ -33,15 +37,37 @@ const LoginPage = () => {
 
     try {
       const response = await axiosInstance.post(url, userData);
+      // console.log("Response Data:", response.data.user); // طباعة البيانات المستلمة
+      // const userInfo =response.data.user
+      console.log('user', response.data.user);
+      
+// setUserInfo(response.data.user)
+    
+// if (response.data && response.data.user) {
+//   setUserInfo(response.data.user); // تعيين الحالة فقط إذا كانت موجودة
+// } else {
+//   console.log("User data not found in response");
+// }
+// console.log(userInfo);
+
       const token = response.data.token;
       const user = response.data.user;
 
       localStorage.setItem("token", token);
       localStorage.setItem("user_id", user.id);
       console.log(token);
-      getUpcomingConferences();
+      const isAdmin = getFromLocalStorage(`isAdmin`);
 
-      navigate("/");
+      getUpcomingConferences();
+ 
+       if (email === "admin@gmail.com") {
+        navigate("/");
+
+        saveToLocalStorage(`isAdmin`, true);
+      }  else {
+        saveToLocalStorage(`isAdmin`, false);
+        navigate("/tour_slider");
+      }
     } catch (error) {
       console.log(error.response?.data?.message);
       toast.error(error.response?.data?.message);
@@ -51,14 +77,19 @@ const LoginPage = () => {
   const getUpcomingConferences = async () => {
     const getAuthToken = () => localStorage.getItem("token");
     const response = await httpService({
-      method: "GET",
-      url: "http://localhost:8000/api/con/up",
+      method: "get",
+      url: "http://127.0.0.1:8000/api/con/up",
       headers: { Authorization: `Bearer ${getAuthToken()}` },
       withToast: false,
       showLoader: false,
     });
     const conferencesId = response?.data?.[0]?.id;
+    console.log(response.data[0]);
+    
     saveToLocalStorage("myConferencesId", conferencesId);
+    // localStorage.getItem('conId',conferencesId )
+    localStorage.setItem('conId', conferencesId); // تخزين قيمة تحت مفتاح conId
+
   };
 
   const handleLogin = (e) => {

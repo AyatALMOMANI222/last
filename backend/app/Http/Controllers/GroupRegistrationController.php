@@ -6,6 +6,7 @@ use App\Events\NotificationSent;
 use App\Models\GroupRegistration;
 use App\Models\Notification;
 use App\Models\User;
+use App\Notifications\EmailNotification;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,47 +86,188 @@ class GroupRegistrationController extends Controller
 
 
 
-    public function updateGroupByAdminByUserId(Request $request)
-    {
-        // تحقق من صحة المدخلات
-        $request->validate([
-            'user_id' => 'required|exists:users,id', // تحقق من وجود المستخدم
-            'is_active' => 'required|boolean',
-            'update_deadline' => 'nullable|date',
-        ]);
+    // public function updateGroupByAdminByUserId(Request $request)
+    // {
+    //     // تحقق من صحة المدخلات
+    //     $request->validate([
+    //         'user_id' => 'required|exists:users,id', // تحقق من وجود المستخدم
+    //         'is_active' => 'required|boolean',
+    //         'update_deadline' => 'nullable|date',
+    //     ]);
     
-        try {
-            // تحديث حالة التسجيل
-            $groupRegistration = GroupRegistration::where('user_id', $request->user_id)->firstOrFail();
-            $groupRegistration->is_active = $request->is_active;
-            $groupRegistration->update_deadline = $request->update_deadline;
-            $groupRegistration->save();
+    //     try {
+    //         // تحديث حالة التسجيل
+    //         $groupRegistration = GroupRegistration::where('user_id', $request->user_id)->firstOrFail();
+    //         $groupRegistration->is_active = $request->is_active;
+    //         $groupRegistration->update_deadline = $request->update_deadline;
+    //         $groupRegistration->save();
     
-            // إذا أصبحت الحالة نشطة، أرسل إشعاراً للمستخدم
-            if ($groupRegistration->is_active) {
-                $message = "Now you can access the activated file and download the registered names.";
+    //         $user = User::findOrFail($request->user_id);
+    //         if ($groupRegistration->is_active) {
+    //             $user->status = 'approved';
+    //             $message = "Now you can access the activated file and download the registered names.";
+    //         } else {
+    //             $user->status = 'rejected';
+    //             $message = "Your registration has been rejected. Please contact support for further assistance.";
+    //         }
+    //         $user->save();
     
-                Notification::create([
-                    'user_id' => $request->user_id,
-                    'message' => $message,
-                    'is_read' => false,
-                    'register_id' => null,
-                ]);
-            }
+    //         // إذا أصبحت الحالة نشطة، أرسل إشعاراً للمستخدم
+    //         if ($groupRegistration->is_active) {
+    //             $message = "Now you can access the activated file and download the registered names.";
     
-            return response()->json([
-                'message' => 'Group registration updated successfully.',
-                'user_id' => $request->user_id,
-            ], 200);
+    //             // إنشاء إشعار في قاعدة البيانات
+    //             Notification::create([
+    //                 'user_id' => $request->user_id,
+    //                 'message' => $message,
+    //                 'is_read' => false,
+    //                 'register_id' => null,
+    //             ]);
+    // echo( $user->email);
+    //             // إرسال الإشعار عبر البريد الإلكتروني
+    //             try {
+    //                 Notification::route('mail', $user->email)->notify(new EmailNotification($message));
+    //             } catch (\Exception $e) {
+    //                 // في حال فشل إرسال البريد الإلكتروني
+    //                 return response()->json([
+    //                     'message' => 'Group registration updated successfully, but email notification failed to send.',
+    //                     'error' => $e->getMessage(),
+    //                 ], 200);
+    //             }
+    //         }
     
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to update group registration.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
+    //         return response()->json([
+    //             'message' => 'Group registration updated successfully.',
+    //             'user_id' => $request->user_id,
+    //         ], 200);
+    
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Failed to update group registration.',
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+    
+    // public function updateGroupByAdminByUserId(Request $request)
+    // {
+    //     // تحقق من صحة المدخلات
+    //     $request->validate([
+    //         'user_id' => 'required|exists:users,id', // تحقق من وجود المستخدم
+    //         'is_active' => 'required|boolean',
+    //         'update_deadline' => 'nullable|date',
+    //     ]);
+    
+    //     try {
+    //         // تحديث حالة التسجيل
+    //         $groupRegistration = GroupRegistration::where('user_id', $request->user_id)->firstOrFail();
+    //         $groupRegistration->is_active = $request->is_active;
+    //         $groupRegistration->update_deadline = $request->update_deadline;
+    //         $groupRegistration->save();
+    
+    //         $user = User::findOrFail($request->user_id);
+    //         if ($groupRegistration->is_active) {
+    //             $user->status = 'approved';
+    //             $message = "Now you can access the activated file and download the registered names.";
+    //         } else {
+    //             $user->status = 'rejected';
+    //             $message = "Your registration has been rejected. Please contact support for further assistance.";
+    //         }
+    //         $user->save();
+    
+    //         // إذا أصبحت الحالة نشطة، أرسل إشعاراً للمستخدم
+    //         if ($groupRegistration->is_active) {
+    //             // إنشاء إشعار في قاعدة البيانات
+    //             Notification::create([
+    //                 'user_id' => $request->user_id,
+    //                 'message' => $message,
+    //                 'is_read' => false,
+    //                 'register_id' => null,
+    //             ]);
+    
+    //             // إرسال الإشعار عبر البريد الإلكتروني
+    //             try {
+    //                 $user->notify(new EmailNotification($message)); // استخدم notify على الكائن $user
+    //             } catch (\Exception $e) {
+    //                 // في حال فشل إرسال البريد الإلكتروني
+    //                 return response()->json([
+    //                     'message' => 'Group registration updated successfully, but email notification failed to send.',
+    //                     'error' => $e->getMessage(),
+    //                 ], 200);
+    //             }
+    //         }
+    
+    //         return response()->json([
+    //             'message' => 'Group registration updated successfully.',
+    //             'user_id' => $request->user_id,
+    //         ], 200);
+    
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Failed to update group registration.',
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+    public function updateGroupByAdminByUserId(Request $request, $user_id) // أضف $user_id كمعامل
+{
+    // تحقق من صحة المدخلات
+    $request->validate([
+        'is_active' => 'required|boolean',
+        'update_deadline' => 'nullable|date',
+    ]);
 
+    try {
+        // تحديث حالة التسجيل
+        $groupRegistration = GroupRegistration::where('user_id', $user_id)->firstOrFail();
+        $groupRegistration->is_active = $request->is_active;
+        $groupRegistration->update_deadline = $request->update_deadline;
+        $groupRegistration->save();
+
+        $user = User::findOrFail($user_id);
+        if ($groupRegistration->is_active) {
+            $user->status = 'approved';
+            $message = "Now you can access the activated file and download the registered names.";
+        } else {
+            $user->status = 'rejected';
+            $message = "Your registration has been rejected. Please contact support for further assistance.";
+        }
+        $user->save();
+
+        // إذا أصبحت الحالة نشطة، أرسل إشعاراً للمستخدم
+        if ($groupRegistration->is_active) {
+            // إنشاء إشعار في قاعدة البيانات
+            Notification::create([
+                'user_id' => $user_id,
+                'message' => $message,
+                'is_read' => false,
+                'register_id' => null,
+            ]);
+
+            // إرسال الإشعار عبر البريد الإلكتروني
+            try {
+                $user->notify(new EmailNotification($message)); // استخدم notify على الكائن $user
+            } catch (\Exception $e) {
+                // في حال فشل إرسال البريد الإلكتروني
+                return response()->json([
+                    'message' => 'Group registration updated successfully, but email notification failed to send.',
+                    'error' => $e->getMessage(),
+                ], 200);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Group registration updated successfully.',
+            'user_id' => $user_id,
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to update group registration.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 
 
     public function updateByUser(Request $request)
@@ -148,7 +290,7 @@ class GroupRegistrationController extends Controller
             if ($groupRegistration->update_deadline && now()->greaterThan($groupRegistration->update_deadline)) {
                 return response()->json([
                     'message' => 'Update deadline has passed. You cannot update the excel file.',
-                ], 403);
+                ], 200);
             }
     
             // تخزين ملف الإكسل
@@ -174,6 +316,42 @@ class GroupRegistrationController extends Controller
     
     
 
+
+
+    public function getRegistrationGroupDataByToken()
+{
+    // الحصول على user_id من التوكن
+    $user_id = Auth::id();
+
+    // التحقق من أن المستخدم مصادق عليه
+    if (!$user_id) {
+        return response()->json([
+            'message' => 'User not authenticated.'
+        ], 401);
+    }
+
+    try {
+        // جلب معلومات التسجيل من جدول GroupRegistration باستخدام user_id
+        $groupRegistration = GroupRegistration::where('user_id', $user_id)->first();
+
+        if (!$groupRegistration) {
+            return response()->json([
+                'message' => 'No registration data found for this user.'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Registration data retrieved successfully.',
+            'data' => $groupRegistration
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to retrieve registration data.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 }
 
 

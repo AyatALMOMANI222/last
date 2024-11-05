@@ -1,6 +1,5 @@
 // StepperContext.js
 import React, { useState, createContext, useContext } from 'react';
-
 const FlightStepperContext = createContext();
 
 export const FlightStepperProvider = ({ children }) => {

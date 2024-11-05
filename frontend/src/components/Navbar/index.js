@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import "./style.scss";
 import NotificationDropdown from "../Notification";
 import ListOption from "../../CoreComponent/ListOptions";
+import { getFromLocalStorage } from "../../common/localStorage";
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const isAdmin = getFromLocalStorage(`isAdmin`);
 
   const menuItems = [
     {
@@ -80,26 +82,33 @@ const NavBar = () => {
       title: "Flight",
       links: [
         { label: "Flight", url: "/flight/form" },
-        { label: "Flight Admin", url: "/flights " },
-        { label: "Users Admin", url: "/user " },
+
+        // { label: "Flight Admin", url: "/flights" },
+        // { label: "Users Admin", url: "/user" },
       ],
     },
     {
-      title: "Visa",
-      links: [{ label: "Visa", url: "/visa" }],
+      title:"page",
+      links: [{ label: "Visa", url: "/visa" },{ label: "Airport Transfer", url: "/airport/transfer" }],
+      
+
     },
-    {
-      title: "Admin",
-      links: [
-        { label: "Conferences", url: "/conferences/page" },
-        { label: "Exhibitions ", url: "/exhibitions " },
-        { label: "Reservation", url: "/reservation/form" },
-        { label: "Trips", url: "/create/trip" },
-        { label: "Trips User", url: "/trip/user" },
-        { label: "All Trips", url: "/view-user-trips" },
-        { label: "Flights Users", url: "/flights/users" },
-      ],
-    },
+    ...(isAdmin
+      ? [
+          {
+            title: "Admin",
+            links: [
+              { label: "Conferences", url: "/conferences/page" },
+              { label: "Exhibitions", url: "/exhibitions" },
+              { label: "Reservation", url: "/reservation/form" },
+              { label: "Trips", url: "/create/trip" },
+              { label: "Trips User", url: "/trip/user" },
+              { label: "All Trips", url: "/view-user-trips" },
+              { label: "Flight Admin", url: "/flights" },
+            ],
+          },
+        ]
+      : []),
     {
       title: "Contact Us",
       links: [{ label: "Contact Us", url: "/contact_us" }],

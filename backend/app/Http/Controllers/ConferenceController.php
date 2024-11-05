@@ -16,91 +16,7 @@ use Carbon\Carbon;
 
 class ConferenceController extends Controller
 {
-    // public function store(Request $request)
-    // {
-    //     // Validate request
-    //     $request->validate([
-    //         'title' => 'required|string|max:255',
-    //         'description' => 'nullable|string',
-    //         'start_date' => 'required|date',
-    //         'end_date' => 'nullable|date',
-    //         'location' => 'required|string|max:255',
-    //         // 'status' => 'required|in:upcoming,past',
-    //         'image' => 'nullable|image',
-    //         'first_announcement_pdf' => 'nullable|file|mimes:pdf',
-    //         'second_announcement_pdf' => 'nullable|file|mimes:pdf',
-    //         'conference_brochure_pdf' => 'nullable|file|mimes:pdf',
-    //         'conference_scientific_program_pdf' => 'nullable|file|mimes:pdf',
-    //         'scientific_topics' => 'nullable|string',
-    //         'prices' => 'nullable|array',
-    //         'prices.*.price_type' => 'required|string|max:255',
-    //         'prices.*.price' => 'required|numeric',
-    //         'prices.*.price_description' => 'nullable|string|max:255',
-    //         'visa_price' => 'nullable|numeric', // التحقق من visa_price
-    //     ]);
-
-    //     try {
-    //         $conference = new Conference();
-    //         $conference->title = $request->input('title');
-    //         $conference->description = $request->input('description');
-    //         $conference->start_date = $request->input('start_date');
-    //         $conference->end_date = $request->input('end_date');
-    //         $conference->location = $request->input('location');
-    //         // $conference->status = $request->input('status');
-    //         $conference->visa_price = $request->input('visa_price'); // تخزين قيمة visa_price
-
-    //         // معالجة رفع الملفات
-    //         if ($request->hasFile('image')) {
-    //             $conference->image = $request->file('image')->store('conference_images', 'public');
-    //         }
-    //         if ($request->hasFile('first_announcement_pdf')) {
-    //             $conference->first_announcement_pdf = $request->file('first_announcement_pdf')->store('conference_announcements', 'public');
-    //         }
-    //         if ($request->hasFile('second_announcement_pdf')) {
-    //             $conference->second_announcement_pdf = $request->file('second_announcement_pdf')->store('conference_announcements', 'public');
-    //         }
-    //         if ($request->hasFile('conference_brochure_pdf')) {
-    //             $conference->conference_brochure_pdf = $request->file('conference_brochure_pdf')->store('conference_brochures', 'public');
-    //         }
-    //         if ($request->hasFile('conference_scientific_program_pdf')) {
-    //             $conference->conference_scientific_program_pdf = $request->file('conference_scientific_program_pdf')->store('conference_programs', 'public');
-    //         }
-
-    //         $conference->save(); // حفظ المؤتمر
-
-    //         // معالجة المواضيع العلمية
-    //         if ($request->filled('scientific_topics')) {
-    //             $topics = explode(',', $request->input('scientific_topics'));
-    //             foreach ($topics as $topic) {
-    //                 $topic = trim($topic);
-    //                 if (!empty($topic)) {
-    //                     ScientificTopic::create([
-    //                         'conference_id' => $conference->id,
-    //                         'title' => $topic
-    //                     ]);
-    //                 }
-    //             }
-    //         }
-
-    //         // معالجة الأسعار
-    //         if ($request->filled('prices')) {
-    //             $prices = $request->input('prices');
-
-    //             foreach ($prices as $priceData) {
-    //                 ConferencePrice::create([
-    //                     'conference_id' => $conference->id,
-    //                     'price_type' => $priceData['price_type'],
-    //                     'price' => $priceData['price'],
-    //                     'description' => $priceData['price_description'] ?? null,
-    //                 ]);
-    //             }
-    //         }
-
-    //         return response()->json(['message' => 'Conference created successfully!', "id" => $conference->id], 201);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['message' => 'Failed to create conference.', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
+   
     public function store(Request $request)
     {
         // Validate request
@@ -120,7 +36,8 @@ class ConferenceController extends Controller
             'prices.*.price_type' => 'required|string|max:255',
             'prices.*.price' => 'required|numeric',
             'prices.*.price_description' => 'nullable|string|max:255',
-            'visa_price' => 'nullable|numeric', // Check for visa_price
+            'visa_price' => 'nullable|numeric', 
+            'companion_dinner_price' => 'nullable|numeric',
         ]);
 
         try {
@@ -142,6 +59,7 @@ class ConferenceController extends Controller
             }
 
             $conference->visa_price = $request->input('visa_price'); // Store visa_price
+            $conference->companion_dinner_price = $request->input('companion_dinner_price'); // Store visa_price
 
             // Handle file uploads
             if ($request->hasFile('image')) {
@@ -220,6 +138,8 @@ class ConferenceController extends Controller
             'prices.*.price' => 'required_with:prices|numeric',
             'prices.*.price_description' => 'nullable|string|max:255',
             'visa_price' => 'nullable|numeric', // إضافة تحقق للـ visa_price
+            'companion_dinner_price' => 'nullable|numeric', // إضافة تحقق للـ visa_price
+
         ]);
 
         try {
@@ -251,6 +171,9 @@ class ConferenceController extends Controller
             // تحديث visa_price إذا كان موجودًا
             if ($request->filled('visa_price')) {
                 $conference->visa_price = $request->input('visa_price'); // تحديث visa_price
+            }
+            if ($request->filled('companion_dinner_price')) {
+                $conference->visa_price = $request->input('companion_dinner_price'); // تحديث visa_price
             }
 
             $conference->save();
@@ -351,7 +274,36 @@ class ConferenceController extends Controller
 
 
 
-
+    public function getAllConferencesUpcoming(Request $request)
+    {
+        try {
+            // الحصول على التاريخ الحالي
+            $currentDate = new \DateTime();
+    
+            // جلب جميع المؤتمرات
+            $allConferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])->get();
+    
+            // جلب المؤتمرات القادمة فقط (التي لم ينتهي تاريخها بعد)
+            $upcomingConferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])
+                ->where('end_date', '>=', $currentDate->format('Y-m-d H:i:s'))
+                ->get();
+    
+            // إرجاع النتائج في JSON بحيث يحتوي على جميع المؤتمرات والمؤتمرات القادمة فقط
+            return response()->json([
+                'status' => 'success',
+                // 'all_conferences' => $allConferences,          // جميع المؤتمرات
+                'upcoming_conferences' => $upcomingConferences  // المؤتمرات القادمة فقط
+            ], 200);
+    
+        } catch (\Exception $e) {
+            // إرجاع استجابة الخطأ في حال حدوث مشكلة
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to retrieve conferences: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 
     public function getConferenceById($id)
     {

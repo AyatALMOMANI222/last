@@ -20,8 +20,6 @@ export const StepperAcceptFlightProvider = ({ children }) => {
       url: `http://127.0.0.1:8000/api/companion-flight/${user_id}`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
     });
-    console.log({ response });
-
     setFlightMembers(response);
   };
   const completeStep = (stepIndex) => {

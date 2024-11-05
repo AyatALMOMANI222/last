@@ -28,16 +28,14 @@ const AcceptFlight = ({ member, index }) => {
         url: `http://127.0.0.1:8000/api/available-flights/${member?.flight_id}`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
-        withToast: true,
+        withToast: false,
       });
-      console.log("hedaya", response.data);
       if (Array.isArray(response?.data) && response?.data.length === 0) {
         setNoData(true);
 
         return;
       }
       setAvailableFlights([otherData, ...response?.available_flights] || []);
-      toast.success("The data was updated successfully!");
     } catch (error) {
       toast.error("Failed to fetch available flights");
     }
@@ -149,7 +147,7 @@ const AcceptFlight = ({ member, index }) => {
             onClick={handleSubmit}
             disabled={!selectedFlight}
           >
-            Submit
+            Next
           </button>
         </div>
       </div>

@@ -30,8 +30,8 @@ const VisaPage = () => {
     }
   };
 
-  async function getConferenceById(conferenceId) {
-    const url = `http://localhost:8000/api/con/id/${conferenceId}`;
+  async function getConferenceById() {
+    const url = `http://127.0.0.1:8000/api/con/id/${conferenceId}`;
 
     try {
       const response = await axios.get(url);

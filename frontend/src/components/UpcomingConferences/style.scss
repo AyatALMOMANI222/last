@@ -1,0 +1,119 @@
+.upcoming-conferences-container {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+
+    h2 {
+        color: #333;
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #d9534f;
+        padding-bottom: 0.5rem;
+        display: inline-block;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        margin-top: 20px;
+        font-size: 0.95rem;
+
+        thead {
+            background-color: #333;
+            color: #fff;
+
+            th {
+                padding: 10px;
+                font-weight: 600;
+            }
+        }
+
+        tbody {
+            tr {
+                transition: background-color 0.3s ease;
+
+                &:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+
+                &:hover {
+                    background-color: #f1f1f1;
+                }
+
+                td {
+                    padding: 15px;
+                    vertical-align: middle;
+
+                    &:first-child {
+                        font-weight: 600;
+                        color: #d9534f;
+                    }
+
+                    .btn {
+                        margin: 0 3px;
+                        padding: 5px 10px;
+                        font-size: 0.85rem;
+                        color: #fff;
+                        transition: background-color 0.3s ease;
+                    }
+
+                    .btn-primary {
+                        background-color: #d9534f; // اللون الأحمر
+                        border: none;
+
+                        &:hover {
+                            background-color: #b52e28;
+                        }
+                    }
+
+                    .btn-secondary {
+                        background-color: #6c757d; // اللون الرمادي
+                        border: none;
+
+                        &:hover {
+                            background-color: #5a6268;
+                        }
+                    }
+                }
+            }
+        }
+        .submit-btn {
+            width: 100%;
+            height: 40px;
+            background-color: #ef233c;
+            font-size: 14px;
+      
+            border: 1px solid rgb(222, 222, 222);
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            &:hover {
+              background-color: #ef233c;
+              color: #fff;
+            }
+            &:active {
+              background-color: #000000;
+              color: #fff;
+            }
+          }
+    }
+
+    // استجابة التصميم للشاشات الصغيرة
+    @media (max-width: 768px) {
+        .table {
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
+}

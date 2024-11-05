@@ -6,11 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-   
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::table('conferences', function (Blueprint $table) {
-            $table->decimal('companion_dinner_price', 8, 2)->nullable();
+            $table->decimal('companion_dinner_price', 8, 2)->nullable()->after('conference_scientific_program_pdf')->comment('Price for companion dinner');
         });
     }
     

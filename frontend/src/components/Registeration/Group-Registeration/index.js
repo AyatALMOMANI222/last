@@ -50,6 +50,7 @@ const RegisterGroupPage = () => {
         }
       );
       toast.success("Organization registered successfully!");
+      navigate("/login")
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.error);

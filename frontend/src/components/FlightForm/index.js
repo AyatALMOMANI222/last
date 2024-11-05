@@ -52,7 +52,7 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        toast.success(response?.data?.message);
+        // toast.success(response?.data?.message);
         setOpenForm(false);
         getFlightData();
       })

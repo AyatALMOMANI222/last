@@ -22,7 +22,8 @@ class Conference extends Model
         'second_announcement_pdf',
         'conference_brochure_pdf',
         'conference_scientific_program_pdf',
-        'visa_price'
+        'visa_price',
+        'companion_dinner_price'
     ];
 
     protected $casts = [

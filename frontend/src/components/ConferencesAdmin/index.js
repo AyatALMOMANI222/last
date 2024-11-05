@@ -163,6 +163,8 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
   const [brochure, setBrochure] = useState(null);
   const [scientificProgram, setScientificProgram] = useState(null);
   const [visaCost, setVisaCost] = useState("");
+  const [companionDinnerPrice, setCompanionDinnerPrice] = useState("");
+
   const [entries, setEntries] = useState([
     { id: Date.now(), price_type: "", price: "", description: "" },
   ]);
@@ -252,6 +254,8 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
     formData.append("conference_brochure_pdf", brochure);
     formData.append("conference_scientific_program_pdf", scientificProgram);
     formData.append("visa_price", visaCost || 0);
+    formData.append("companion_dinner_price", companionDinnerPrice || 0);
+
     formData.append("scientific_topics", topics);
 
     formData.append("timestamps", new Date().toISOString());
@@ -364,6 +368,14 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
           placeholder="Enter visa cost"
           inputValue={visaCost}
           setInputValue={setVisaCost}
+          type="number" 
+          required
+        />
+             <Input
+          label="Companion Dinner Cost (USD)"
+          placeholder="Enter companion Dinner Price Cost"
+          inputValue={companionDinnerPrice}
+          setInputValue={setCompanionDinnerPrice}
           type="number" 
           required
         />

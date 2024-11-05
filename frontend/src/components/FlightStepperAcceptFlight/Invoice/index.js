@@ -105,7 +105,6 @@ const Invoice = () => {
               <th>Reserved Seat Cost</th>
               <th>Other Additional Costs</th>
               <th>Total Price</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -131,7 +130,6 @@ const Invoice = () => {
                     ) +
                     Number(flight.otherAdditionalCosts)}
                 </td>
-                <td>{flight.is_free ? "Available" : "Booked"}</td>
               </tr>
             ))}
           </tbody>

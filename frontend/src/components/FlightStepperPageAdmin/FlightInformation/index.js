@@ -107,10 +107,9 @@ const FlightInformation = ({ member, index }) => {
       data: {
         flights: data,
       },
-      showLoader: true,
-      withToast: true,
+      showLoader: false,
+      withToast: false,
     });
-    toast.success("The data was updated successfully!");
 
     console.log({ response });
   };

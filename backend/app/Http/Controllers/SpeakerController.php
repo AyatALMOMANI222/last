@@ -165,7 +165,7 @@ class SpeakerController extends Controller
     }
     
     
-
+    
     // هنا يعدل على user_id ,عملتله check admin خارجي
     public function updateByUser(Request $request)
     {

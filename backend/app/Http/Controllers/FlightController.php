@@ -27,12 +27,12 @@ class FlightController extends Controller
                     'arrivalDate' => 'required|date',
                     'ticket_count' => 'integer|min:1',
                     'passportImage' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-                    'flightNumber' => 'sometimes|string',
-                    'seatNumber' => 'sometimes|string',
-                    'upgradeClass' => 'sometimes|boolean',
-                    'otherRequests' => 'sometimes|string',
-                    'name' => 'sometimes|string',
-                    'specificFlightTime' => 'sometimes|string',
+                    'flightNumber' => 'nullable|sometimes|string',
+                    'seatNumber' => 'nullable|sometimes|string',
+                    'upgradeClass' => 'nullable|sometimes|boolean',
+                    'otherRequests' => 'nullable|sometimes|string',
+                    'name' => 'nullable|sometimes|string',
+                    'specificFlightTime' => 'nullable|sometimes|string',
                 ])->validate();
             }
 

@@ -136,7 +136,7 @@ const FlightInformation = () => {
 
       data: formData,
       onSuccess: () => {
-        toast.success("Flights created successfully!");
+        // toast.success("Flights created successfully!");
       },
       onError: () => {
         toast.error("Failed to create flights");

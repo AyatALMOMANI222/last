@@ -72,6 +72,7 @@ Route::get('/con/status/{status}', [ConferenceController::class, 'getConferenceB
 Route::get('/con', [ConferenceController::class, 'getAllConferences']);
 Route::get('/con/id/{id}', [ConferenceController::class, 'getConferenceById']);
 Route::post('/conferences/{id}', [ConferenceController::class, 'update'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/con/upcoming', [ConferenceController::class, 'getAllConferencesUpcoming'])->middleware(['auth:sanctum', 'admin']);
 
 
 Route::post('/con/img/{conference_id}', [ConferenceImageController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
@@ -86,7 +87,6 @@ Route::delete('/con/stopic/{id}', [ScientificTopicController::class, 'destroy'])
 Route::post('/con/{conference_id}/prices', [PricesController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
 Route::delete('/con/{conference_id}/{price_id}/prices', [PricesController::class, 'deletePriceByConferenceId'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/con/prices', [PricesController::class, 'getPricesByConferenceId']);
-Route::get('/con/up', [ConferenceUserController::class, 'getUpcomingConferencesByUserId'])->middleware('auth:sanctum');
 
 Route::post('/con/scientific-papers/{conferenceId}', [ScientificPaperController::class, 'store']);
 
@@ -201,6 +201,7 @@ Route::put('/additional-options/update-selected-prices/{trip_id}', [AdditionalOp
 // conference-user
 Route::post('/conference-user', [ConferenceUserController::class, 'store'])->middleware(['auth:sanctum','admin']);
 Route::get('/user/{id}/conferences', [ConferenceUserController::class, 'getConferencesByUser'])->middleware(['auth:sanctum','admin']);
+Route::get('/con/up/', [ConferenceUserController::class, 'getUpcomingConferencesByUserId'])->middleware('auth:sanctum');
 
 // DinnerDetail
 Route::post('/dinner-details', [DinnerDetailController::class, 'store'])->middleware(['auth:sanctum','admin']);
@@ -211,9 +212,10 @@ Route::delete('/dinner-details/{id}', [DinnerDetailController::class, 'destroy']
 
 
 // dinner-attendees
-Route::post('/dinner-attendees', [DinnerAttendeeController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/dinner/attendees', [DinnerAttendeeController::class, 'store'])->middleware('auth:sanctum');
 Route::delete('/dinner-attendees/{id}', [DinnerAttendeeController::class, 'destroy'])->middleware('auth:sanctum');
 Route::get('/dinner-attendees', [DinnerAttendeeController::class, 'getAllAttendees'])->middleware(['auth:sanctum','admin']);
+Route::get('/dinner/attendees/{conferenceId}', [DinnerAttendeeController::class, 'getAttendeesByConferenceId'])->middleware(['auth:sanctum','admin']);
 
 
 
@@ -229,6 +231,7 @@ Route::post('/airport-transfer-bookings', [AirportTransferBookingController::cla
 Route::get('/user/airport-transfer-bookings', [AirportTransferBookingController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/admin/all_airport-transfer-bookings', [AirportTransferBookingController::class, 'getAllBooking'])->middleware('auth:sanctum');
 Route::put('/airport-transfer-bookings/{id}', [AirportTransferBookingController::class, 'update'])->middleware('auth:sanctum');
+Route::get('/admin/airport/{conferenceId}', [AirportTransferBookingController::class, 'getBookingByConferenceId'])->middleware(['auth:sanctum','admin']);
 
 // airport-transfer-prices
 Route::post('/airport-transfer-prices', [AirportTransferPriceController::class, 'store'])->middleware(['auth:sanctum','admin']);
@@ -241,9 +244,10 @@ Route::post('/sponsor', [SponsorController::class, 'store']);
 Route::post('/attendances', [AttendanceController::class, 'storeAttendance']);
 // group
 Route::post('/register/group', [GroupRegistrationController::class, 'store']);
-Route::put('/update/Admin/group', [GroupRegistrationController::class, 'updateGroupByAdminByUserId'])->middleware(['auth:sanctum','admin']);
+Route::put('/group/update/admin/{user_id}', [GroupRegistrationController::class, 'updateGroupByAdminByUserId'])->middleware(['auth:sanctum','admin']);
 Route::post('/update/user', [GroupRegistrationController::class, 'updateByUser'])->middleware('auth:sanctum');
 
+Route::get('/group', [GroupRegistrationController::class, 'getRegistrationGroupDataByToken'])->middleware('auth:sanctum');
 
 // ourClients
 Route::post('/clients', [OurClientController::class, 'store']);

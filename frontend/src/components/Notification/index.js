@@ -57,8 +57,11 @@ const NotificationDropdown = () => {
       });
       getAllNotifications();
       console.log(response);
+    
+
     } catch (error) {
       console.error("Error fetching notifications", error);
+
     }
   };
   useEffect(() => {
@@ -137,9 +140,23 @@ const NotificationDropdown = () => {
                   notification?.message?.includes("New visa request from user")
                 ) {
                   navigate(
-                    `/admin/visa2`
+                    `/admin/visa2/${notification?.register_id}`
+                  );
+                }else if (
+                  notification?.message?.includes("New group registration:")
+                ) {
+                  navigate(
+                    `/group/update/admin/${notification?.register_id}`
+                  );
+                  
+                }else if (
+                  notification?.message?.includes("Now you can access the activated file and download the registered names")
+                ) {
+                  navigate(
+                    `/add/excel`
                   );
                 }
+
               }}
             >
               {/* <span className="notification-dot"></span> */}

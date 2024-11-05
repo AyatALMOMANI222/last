@@ -3,21 +3,27 @@ import "./style.scss"; // تأكد من أن لديك تنسيق CSS مناسب
 import Select from "../../CoreComponent/Select";
 import httpService from "../../common/httpService";
 import { toast } from "react-toastify";
-
+import { useParams } from "react-router-dom";
 const UpdateVisaStatus = () => {
+
+
   const [status, setStatus] = useState("pending"); // الحالة الافتراضية
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false); // متغير لتحميل الحالة
 
+  const {registerId} =useParams();
+
+  
   const handleUpdate = async () => {
+    
     setLoading(true); // بدء التحميل
     const token = localStorage.getItem("token"); // الحصول على التوكن من التخزين المحلي
-    //TODO remove static id
+    
     try {
       const response = await httpService({
         method: "POST",
-        url: `http://localhost:8000/api/admin/update-visa/13`,
+        url: `http://127.0.0.1:8000/api/admin/update-visa/${registerId}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -16,6 +16,8 @@ class DinnerAttendee extends Model
         'notes',
         'paid',
         'is_companion_fee_applicable',
+        'companion_price',
+        'conference_id'
     ];
 
     public function speaker()

@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Events\NotificationSent;
 use App\Models\AirportTransferBooking;
+use App\Models\Attendance;
 use App\Models\ConferenceUser;
 use App\Models\Notification;
+use App\Models\Speaker;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -78,21 +81,43 @@ class AirportTransferBookingController extends Controller
         return response()->json($booking, 201);
     }
     
-public function index()
+    public function index()
     {
-        // الحصول على معرف المستخدم من التوكن
-        $userId = Auth::id();
-
-        // استرجاع جميع الحجوزات الخاصة بالمستخدم
-        $bookings = AirportTransferBooking::where('user_id', $userId)->get();
-
-        // تحقق من وجود حجوزات
-        if ($bookings->isEmpty()) {
-            return response()->json(['message' => 'لا توجد حجوزات متاحة.'], 404);
+        try {
+            // الحصول على معرف المستخدم من التوكن
+            $userId = Auth::id();
+    
+            // استرجاع جميع الحجوزات الخاصة بالمستخدم
+            $bookings = AirportTransferBooking::where('user_id', $userId)->get();
+    
+            // تحقق من وجود حجوزات
+            if ($bookings->isEmpty()) {
+                return response()->json(['message' => 'لا توجد حجوزات متاحة.'], 404);
+            }
+    
+            // إضافة معلومات المتحدث أو الحضور لكل حجز
+            foreach ($bookings as $booking) {
+                // جلب معلومات المستخدم المرتبطة بالحجز
+                $user = User::find($booking->user_id);
+    
+                // تحقق من نوع التسجيل للمستخدم
+                if ($user->registration_type === 'speaker') {
+                    $speaker = Speaker::where('user_id', $user->id)->first();
+                    $booking->speaker = $speaker; // إضافة معلومات السبيكر
+                } elseif ($user->registration_type === 'attendance') {
+                    $attendance = Attendance::where('user_id', $user->id)->first();
+                    $booking->attendance = $attendance; // إضافة معلومات الحضور
+                }
+            }
+    
+            return response()->json($bookings, 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
         }
-
-        return response()->json($bookings, 200);
     }
+    
+    
+    
     // دالة لاسترجاع جميع الحجوزات
 public function getAllBooking()
 {
@@ -106,6 +131,24 @@ public function getAllBooking()
 
     return response()->json($bookings, 200);
 }
+public function getBookingByConferenceId($conferenceId)
+{
+    try {
+        // استرجاع الحجوزات بناءً على معرف المؤتمر
+        $bookings = AirportTransferBooking::where('conference_id', $conferenceId)->get();
+
+        // تحقق من وجود حجوزات
+        if ($bookings->isEmpty()) {
+            return response()->json(['message' => 'لا توجد حجوزات متاحة لهذا المؤتمر.'], 404);
+        }
+
+        return response()->json($bookings, 200);
+    } catch (\Exception $e) {
+        // رسالة الخطأ عند حدوث استثناء
+        return response()->json(['message' => 'حدث خطأ أثناء استرجاع الحجوزات.'], 500);
+    }
+}
+
 
 public function update(Request $request, $id)
 {

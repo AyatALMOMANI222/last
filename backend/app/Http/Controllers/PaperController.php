@@ -53,10 +53,10 @@ class PaperController extends Controller
             try {
                 $message = 'Your scientific paper has been successfully submitted. Thank you for your submission.';
                 Notification::route('mail', $validatedData['email'])->notify(new EmailNotification($message));
-                broadcast(new NotificationSent([
-                    'message' => $message,
-                    'email' => $validatedData['email'],
-                ]));
+                // broadcast(new NotificationSent([
+                //     'message' => $message,
+                //     'email' => $validatedData['email'],
+                // ]));
                 return response()->json([
                     'message' => 'Paper created and notification sent successfully!',
                     'data' => $paper,
@@ -70,7 +70,6 @@ class PaperController extends Controller
                     'email_error' => $e->getMessage()
                 ], 201);
             }
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error creating paper',
@@ -96,7 +95,6 @@ class PaperController extends Controller
                 'message' => 'Papers retrieved successfully!',
                 'data' => $papers
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error retrieving papers',
@@ -122,7 +120,6 @@ class PaperController extends Controller
                 'message' => 'Paper retrieved successfully!',
                 'data' => $paper
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error retrieving paper',
@@ -130,22 +127,4 @@ class PaperController extends Controller
             ], 500);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-

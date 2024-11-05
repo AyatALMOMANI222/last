@@ -28,7 +28,7 @@ const StepperAcceptFlightPageContent = () => {
         title: `${member?.passenger_name} Flight Information `,
       })),
       {
-        title: `الفاتورة `,
+        title: `Invoice `,
       },
     ] || [];
 

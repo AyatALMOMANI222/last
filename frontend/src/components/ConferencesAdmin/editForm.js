@@ -168,6 +168,8 @@ const EditConferencesAdmin = ({
   const [secondAnnouncement, setSecondAnnouncement] = useState(null);
   const [brochure, setBrochure] = useState(null);
   const [scientificProgram, setScientificProgram] = useState(null);
+  const [companionDinnerPrice, setCompanionDinnerPrice] = useState("");
+
   const [errors, setErrors] = useState({});
 
   const [entries, setEntries] = useState([
@@ -316,6 +318,8 @@ const EditConferencesAdmin = ({
       formData.append("conference_brochure_pdf", brochure);
       formData.append("conference_scientific_program_pdf", scientificProgram);
       formData.append("scientific_topics", topics);
+      formData.append("companion_dinner_price", companionDinnerPrice );
+
       formData.append("timestamps", new Date().toISOString());
       const token = localStorage.getItem("token");
       axios
@@ -362,7 +366,7 @@ const EditConferencesAdmin = ({
   };
   return (
     <div className="conference-form-admin">
-      <div className="header-conference-form">Edit New Conference</div>
+      <div className="header-conference-form">Edit Conference</div>
       <div className="form-section">
         <Input
           label="Title"
@@ -406,6 +410,14 @@ const EditConferencesAdmin = ({
           type="text"
           required
           errorMsg={errors.location}
+        />
+        <Input
+          label="Companion Dinner Cost (USD)"
+          placeholder="Enter companion Dinner Price Cost"
+          inputValue={companionDinnerPrice}
+          setInputValue={setCompanionDinnerPrice}
+          type="number"
+          required
         />
         {/* <Select
           options={[

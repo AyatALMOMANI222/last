@@ -12,25 +12,27 @@ class EmailNotification extends Notification
 
     protected $message;
 
-  
+
     public function __construct($message)
     {
         $this->message = $message;
     }
 
-  
+
     public function via($notifiable)
     {
         return ['mail'];
     }
 
-   
+
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('إشعار جديد')
-                    ->line($this->message)
-                    ->action('عرض التفاصيل', url('/'))
-                    ->line('شكراً لاستخدامك تطبيقنا!');
+            ->subject('New Notification')
+            ->greeting('Hello!')
+            ->line($this->message)
+            ->line('We appreciate your choice in using our application!')
+            ->salutation('Best Regards,'); // إزالة التوقيع
     }
+    
 }

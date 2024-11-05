@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NotificationSent;
+use App\Models\Conference;
 use App\Models\DinnerAttendee;
 use App\Models\Notification;
 use App\Models\Speaker;
@@ -11,29 +12,27 @@ use Illuminate\Support\Facades\Auth;
 
 class DinnerAttendeeController extends Controller
 {
-  
-    
     public function store(Request $request)
     {
         try {
+            // استخراج user_id من التوكن
+            $userId = Auth::id(); // على افتراض أنك تستخدم Laravel Passport أو Sanctum للمصادقة
+    
+            // البحث عن المتحدث المرتبط بالمستخدم
+            $speaker = Speaker::where('user_id', $userId)->firstOrFail();
+    
+            // إعداد البيانات للتحقق
             $validatedData = $request->validate([
-                'speaker_id' => 'required|exists:speakers,id',
                 'companion_name' => 'nullable|string|max:255',
                 'notes' => 'nullable|string',
                 'paid' => 'boolean',
-                'is_companion_fee_applicable' => 'boolean',
+                'is_companion_fee_applicable' => 'nullable|boolean',
+                'companion_price' => 'nullable|numeric',
+                'conference_id' => 'required|numeric|exists:conferences,id', // التحقق من وجود conference_id المدخل في جدول conferences
             ]);
     
-            // ابحث عن السجل في جدول Speaker باستخدام speaker_id
-            $speaker = Speaker::findOrFail($validatedData['speaker_id']);
-    
-            // تحقق مما إذا كان user_id الخاص بالـ Speaker يتطابق مع المستخدم الحالي
-            if ($speaker->user_id !== Auth::id()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'ليس لديك الإذن لإضافة هذا المشارك.',
-                ], 403); // 403 تعني Forbidden
-            }
+            // إضافة speaker_id إلى البيانات المدخلة
+            $validatedData['speaker_id'] = $speaker->id;
     
             // إنشاء سجل جديد في جدول DinnerAttendee
             DinnerAttendee::create($validatedData);
@@ -41,34 +40,36 @@ class DinnerAttendeeController extends Controller
             // إرسال الإشعار
             $message = 'All information related to the dinner will be confirmed through a message sent by the organizing company to your WhatsApp.';
             $userNotification = Notification::create([
-                'user_id' => $speaker->user_id,  // إرسال الإشعار إلى user_id الخاص بالمتحدث
+                'user_id' => $speaker->user_id,  // إرسال الإشعار إلى user_id الخاص بالـ speaker
                 'message' => $message,
                 'is_read' => false,
-                'register_id' => $speaker->user_id,  // تعيين register_id كـ user_id
+                'register_id' => $speaker->user_id,  // وضع register_id كـ user_id
             ]);
             broadcast(new NotificationSent($userNotification));
     
             // استجابة عند النجاح
             return response()->json([
                 'success' => true,
-                'message' => 'تم إضافة المشارك بنجاح.',
+                'message' => 'The participant has been added successfully.',
             ], 201); // 201 تعني Created
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             // استجابة عند حدوث خطأ في التحقق
             return response()->json([
                 'success' => false,
-                'message' => 'خطأ في التحقق من البيانات: ' . implode(', ', $e->errors()),
+                'message' => 'Validation error: ' . implode(', ', $e->errors()),
             ], 422); // 422 تعني Unprocessable Entity
     
         } catch (\Exception $e) {
             // استجابة عند حدوث خطأ
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ أثناء إضافة المشارك: ' . $e->getMessage(),
+                'message' => 'An error occurred while adding the participant: ' . $e->getMessage(),
             ], 500); // 500 تعني Internal Server Error
         }
     }
+    
+    
     
     
     public function destroy($id)
@@ -109,20 +110,26 @@ class DinnerAttendeeController extends Controller
             ], 500); // 500 تعني Internal Server Error
         }
     }
-    
-    public function getAllAttendees()
+
+
+    public function getAttendeesByConferenceId($conferenceId)
 {
     try {
-        // تحقق مما إذا كان المستخدم مسجل الدخول
-        if (!Auth::id()) {
+        // التحقق من وجود conference_id المدخل في جدول conferences
+        if (!Conference::find($conferenceId)) {
             return response()->json([
                 'success' => false,
-                'message' => 'يجب عليك تسجيل الدخول لرؤية المشاركين.',
-            ], 401); // 401 تعني Unauthorized
+                'message' => 'Invalid conference ID.',
+            ], 422); // 422 تعني Unprocessable Entity
         }
 
-        // جلب جميع سجلات المشاركين
-        $attendees = DinnerAttendee::all();
+        // الحصول على الحضور المرتبط بالـ conference_id
+        // $attendees = DinnerAttendee::where('conference_id', $conferenceId)->get();/
+        $attendees = DinnerAttendee::select('speaker_id', 'conference_id') // جلب speaker_id
+        ->with('speaker') // تحميل بيانات السبيكر
+        ->where('conference_id', $conferenceId)
+        ->get();
+    
 
         // استجابة عند النجاح
         return response()->json([
@@ -134,10 +141,42 @@ class DinnerAttendeeController extends Controller
         // استجابة عند حدوث خطأ
         return response()->json([
             'success' => false,
-            'message' => 'حدث خطأ أثناء جلب المشاركين: ' . $e->getMessage(),
+            'message' => 'An error occurred while fetching attendees: ' . $e->getMessage(),
         ], 500); // 500 تعني Internal Server Error
     }
 }
+
+    public function getAllAttendees()
+    {
+        try {
+            // Check if the user is authenticated
+            if (!Auth::id()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'يجب عليك تسجيل الدخول لرؤية المشاركين.',
+                ], 401); // 401 means Unauthorized
+            }
+    
+            // Fetch all attendees with their associated speaker data
+            $attendees = DinnerAttendee::with('speaker')->get();
+    
+            // Successful response
+            return response()->json([
+                'success' => true,
+                'data' => $attendees,
+            ], 200); // 200 means OK
+    
+        } catch (\Exception $e) {
+            // Error response with a specific message
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ أثناء جلب المشاركين: ' . $e->getMessage(),
+                'error_code' => $e->getCode(), // Optional: Include the error code
+            ], 500); // 500 means Internal Server Error
+        }
+    }
+    
+    
 
     
 }

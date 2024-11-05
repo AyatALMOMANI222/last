@@ -77,6 +77,10 @@ import SponsorSection from "./components/Sponsor/SponsorshipOption";
 import UpdateVisaStatus from "./components/UpdateVisaStatus";
 import AcceptFlight from "./components/FlightStepperAcceptFlight/AcceptFlight";
 import StepperAcceptFlight from "./components/FlightStepperAcceptFlight";
+import NotificationMessage from "./components/GroupNotificationMessage";
+import SpeakerTable from "./components/GalaDinner/AdminDinnerView";
+import BookingsTable2 from "./components/BookingsTable";
+import UpcomingConferences from "./components/UpcomingConferences";
 // import Echo from "laravel-echo";
 // import Pusher from 'pusher-js';
 const App = () => {
@@ -165,6 +169,7 @@ const App = () => {
           element={<AirportTransferPrice />}
         />
         <Route path="/gala" element={<GalaDinner />} />
+        
         <Route path="/gala/dinner" element={<DinnerDetails />} />
 
         <Route path="/paper" element={<AddScientificPaper />} />
@@ -203,7 +208,7 @@ const App = () => {
         <Route path="/speaker/profile" element={<SpeakerProfileForm />} />
         <Route path="/admin/visa" element={<AdminVisa />} />
         <Route path="/add/excel" element={<ExcelUpload />} />
-        <Route path="/group/update/admin" element={<AdminGroupComponent />} />
+        <Route path="/group/update/admin/:register_id" element={<AdminGroupComponent />} />
         <Route path="/flights/users" element={<FlightStepperPage />} />
         <Route path="/flights/admins/:user_id" element={<FlightStepperPageAdmin />} />
         <Route
@@ -212,11 +217,23 @@ const App = () => {
         />
         <Route path="/companion" element={<GetCompanion />} />
 
-        <Route path="/admin/visa2" element={< UpdateVisaStatus />} />
+        <Route path="/admin/visa2/:registerId" element={< UpdateVisaStatus />} />
 
         <Route path="/faq" element={<FAQ />} />
         <Route path="/sponsor/section" element={<SponsorSection />} />
         <Route path={`/accept/flight/:user_id`} element={<StepperAcceptFlight/>} />
+        <Route path="/group/msg" element={<NotificationMessage />} />
+
+
+
+{/* admin table view */}
+
+<Route path="/table/dinner/speaker/:conferenceId" element={<SpeakerTable />} />
+<Route path="/table/booking/airport/:conferenceId" element={<BookingsTable2/>} />
+<Route path="/upcoming/conferences" element={<UpcomingConferences/>} />
+
+
+
 
       </Routes>
       {/* <Footer/> */}
