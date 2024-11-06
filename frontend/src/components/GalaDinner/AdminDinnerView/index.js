@@ -55,7 +55,7 @@ const {conferenceId} =useParams()
           <thead>
             <tr>
               <th>Companion Name</th>
-              <th>Created At</th>
+              {/* <th>Created At</th> */}
               <th>Companion Price</th>
               <th>Actions</th>
             </tr>
@@ -64,7 +64,7 @@ const {conferenceId} =useParams()
             {speakers.map((speakerData) => (
               <tr key={speakerData.id}>
                 <td>{speakerData.companion_name || "N/A"}</td>
-                <td>{new Date(speakerData.created_at).toLocaleString()}</td>
+                {/* <td>{new Date(speakerData.created_at).toLocaleString()}</td> */}
                 <td>{speakerData.companion_price || "N/A"}</td>
                 <td>
                   <button onClick={() => openModal(speakerData.speaker)} className="view-button">
@@ -81,9 +81,9 @@ const {conferenceId} =useParams()
         {selectedSpeaker && (
           <div className="modal-content">
             <h2>Speaker Details</h2>
-            <p><strong>ID:</strong> {selectedSpeaker.id}</p>
+            {/* <p><strong>ID:</strong> {selectedSpeaker.id}</p>
             <p><strong>User ID:</strong> {selectedSpeaker.user_id}</p>
-            <p><strong>Conference ID:</strong> {selectedSpeaker.conference_id}</p>
+            <p><strong>Conference ID:</strong> {selectedSpeaker.conference_id}</p> */}
             <p><strong>Abstract:</strong> {selectedSpeaker.abstract || "N/A"}</p>
             <p><strong>Topics:</strong> {selectedSpeaker.topics || "N/A"}</p>
             <p><strong>Online Participation:</strong> {selectedSpeaker.online_participation ? "Yes" : "No"}</p>
@@ -93,8 +93,7 @@ const {conferenceId} =useParams()
             <p><strong>Dinner Invitation:</strong> {selectedSpeaker.dinner_invitation ? "Yes" : "No"}</p>
             <p><strong>Airport Pickup:</strong> {selectedSpeaker.airport_pickup ? "Yes" : "No"}</p>
             <p><strong>Free Trip:</strong> {selectedSpeaker.free_trip ? "Yes" : "No"}</p>
-            <p><strong>Created At:</strong> {new Date(selectedSpeaker.created_at).toLocaleString()}</p>
-            <p><strong>Updated At:</strong> {new Date(selectedSpeaker.updated_at).toLocaleString()}</p>
+           
             <button onClick={closeModal}>Close</button>
           </div>
         )}

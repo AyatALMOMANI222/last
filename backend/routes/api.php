@@ -4,6 +4,8 @@ use App\Http\Controllers\AcceptedFlightController;
 use App\Http\Controllers\AdditionalOptionsController;
 use App\Http\Controllers\AirportTransferBookingController;
 use App\Http\Controllers\AirportTransferPriceController;
+use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\ApplicantJobController;
 use App\Http\Controllers\AttendanceController;
 use Laravel\Sanctum\Sanctum;
 
@@ -16,7 +18,9 @@ use App\Http\Controllers\ScientificTopicController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvailableFlightController;
+use App\Http\Controllers\AvailableJobController;
 use App\Http\Controllers\ConferenceImageController;
+use App\Http\Controllers\ConferenceSponsorshipOptionController;
 use App\Http\Controllers\ConferenceTripController;
 use App\Http\Controllers\ConferenceUserController;
 use App\Http\Controllers\DinnerAttendeeController;
@@ -27,6 +31,7 @@ use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\GroupRegistrationController;
 use App\Http\Controllers\GroupTripParticipantController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OurClientController;
 use App\Http\Controllers\PaperController;
@@ -35,6 +40,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomPriceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\SponsorController;
+use App\Http\Controllers\SponsorshipOptionController;
 use App\Http\Controllers\TouristSiteController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\TripParticipantController;
@@ -253,3 +259,26 @@ Route::get('/group', [GroupRegistrationController::class, 'getRegistrationGroupD
 Route::post('/clients', [OurClientController::class, 'store']);
 Route::get('/clients', [OurClientController::class, 'index']);
 Route::delete('/clients/{id}', [OurClientController::class, 'destroy']);
+
+Route::post('/job2', [AvailableJobController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/all/job', [AvailableJobController::class, 'getAllJob']);
+Route::delete('/job/{id}', [AvailableJobController::class, 'destroy']);
+Route::put('/job/{id}', [AvailableJobController::class, 'update'])->middleware(['auth:sanctum','admin']);
+
+// applicants
+Route::post('/applicants', [ApplicantController::class, 'store']);
+Route::get('/applicants/{jobId}', [ApplicantJobController::class, 'getApplicantsByJobId']);
+
+
+// msg 
+Route::post('/messages', [MessageController::class, 'store']);
+Route::get('/messages', [MessageController::class, 'getAllMsg'])->middleware(['auth:sanctum','admin']);
+
+// sponsorship-options
+Route::post('/sponsorship-options/{conferenceId}', [SponsorshipOptionController::class, 'store'])->middleware(['auth:sanctum','admin']);
+
+Route::get('/sponsorship-options/{conferenceId}', [SponsorshipOptionController::class, 'getOptionsByConferenceId'])->middleware('auth:sanctum');
+
+
+// table option
+// Route::post('/sponsorship-options/table', [ConferenceSponsorshipOptionController::class, 'store'])->middleware(['auth:sanctum','admin']);

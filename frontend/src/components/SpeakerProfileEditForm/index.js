@@ -243,7 +243,7 @@ console.log(profileDetails.userImage);
           </div>
         </div>
 
-        <button className="register-btn" type="submit">
+        <button className="update-btn" type="submit">
           Update
         </button>
       </form>

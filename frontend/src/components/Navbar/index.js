@@ -17,7 +17,7 @@ const NavBar = () => {
         { label: "Team", url: "/our_team" },
         { label: "Clients", url: "/our_clients" },
         { label: "Gallery", url: "#" },
-        { label: "Careers", url: "#" },
+        { label: "Careers", url: "/job/list" },
         { label: "FAQs", url: "/faq" },
       ],
     },
@@ -89,7 +89,7 @@ const NavBar = () => {
     },
     {
       title:"page",
-      links: [{ label: "Visa", url: "/visa" },{ label: "Airport Transfer", url: "/airport/transfer" }],
+      links: [{ label: "Visa", url: "/visa" },{ label: "Airport Transfer", url: "/airport/transfer" },{ label: "Gala Dinner", url: "/gala/dinner" }],
       
 
     },
@@ -105,6 +105,16 @@ const NavBar = () => {
               { label: "Trips User", url: "/trip/user" },
               { label: "All Trips", url: "/view-user-trips" },
               { label: "Flight Admin", url: "/flights" },
+              { label: "Airport Transfer Price", url: "/airport/transfer/price" },
+              { label: "Gala Dinner", url: "/gala" },
+              { label: "Create Job", url: "/job" },
+              { label: "Messages", url: "/msgs" },
+
+              { label: "Job Applicants", url: "/job/admin" },
+
+              { label: "Sponsor Option Form", url: "/sponsor/option/form" }
+
+
             ],
           },
         ]

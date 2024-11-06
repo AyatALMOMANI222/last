@@ -19,7 +19,7 @@ const ExcelUpload = () => {
     try {
       const response = await httpService({
         method: "GET",
-        url: `http://localhost:8000/api/group`,
+        url: `http://127.0.0.1:8000/api/group`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
       });
       setUserGroupData(response.data);

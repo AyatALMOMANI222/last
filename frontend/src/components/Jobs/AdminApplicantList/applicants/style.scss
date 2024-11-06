@@ -1,0 +1,132 @@
+/* style.scss */
+
+/* إعداد الألوان */
+$colors: (
+  primary: #c82333,
+  secondary: #f7f9fc,
+  text: #333,
+  card-bg: #fff,
+  button-bg: #c82333,
+  button-hover-bg: darken(#c82333, 10%),
+  shadow: rgba(0, 0, 0, 0.1)
+);
+
+$border-radius: 8px;
+
+/* تنسيق الصفحة العامة */
+
+/* عناوين الصفحة */
+h2 {
+  text-align: center;
+  color: map-get($colors, primary);
+  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* قائمة المتقدمين */
+.applicant-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .applicant-card {
+    background-color: map-get($colors, card-bg);
+    border-radius: $border-radius;
+    box-shadow: 0 4px 8px map-get($colors, shadow);
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    text-align: left;
+    transition: transform 0.2s ease-in-out;
+    margin-bottom: 20px;
+    
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    h3 {
+      color: map-get($colors, primary);
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: map-get($colors, text);
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    a.resume-link {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: map-get($colors, button-bg);
+      color: #fff;
+      text-decoration: none;
+      border-radius: $border-radius;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      margin-top: 15px;
+
+      &:hover {
+        background-color: map-get($colors, button-hover-bg);
+      }
+    }
+  }
+
+  /* رسائل الخطأ */
+  .error-message {
+    color: #d9534f;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  /* الحالة إذا لم يوجد متقدمين */
+  p.no-applicants {
+    font-size: 1.2rem;
+    color: map-get($colors, text);
+    font-weight: bold;
+  }
+}
+
+/* استجابة للأجهزة الصغيرة */
+@media (max-width: 768px) {
+  .applicant-list {
+    padding: 15px;
+  }
+
+  .applicant-card {
+    padding: 15px;
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  .resume-link {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  .applicant-card {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .resume-link {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+}

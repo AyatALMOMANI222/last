@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss'; // تأكد من استيراد ملف CSS الخاص بالمكون
 import SponsorshipTable from '../SponsorshipTable';
+import axios from 'axios';
 
 // Component for each sponsorship option
 const SponsorshipOption = ({ title, description, price }) => {
@@ -112,59 +113,28 @@ const BoothCostTable = () => {
 
 // Sponsor Section
 const SponsorSection = () => {
-    const sponsorshipOptions = [
-        {
-            title: 'Scientific Book Program',
-            description: '500 printed copies (23 cm × 17 cm) distributed free to VIP guests, delegates, media, and speakers.',
-            price: 'USD 1500',
-        },
-        {
-            title: 'Website Banner',
-            description: '300 × 300 pixels banner with company logo linked to the sponsor’s website.',
-            price: 'USD 1000',
-        },
-        {
-            title: 'Logo on Floor Plans',
-            description: 'Displayed on 2 floor plans at the exhibition entrance and conference exit.',
-            price: 'USD 500',
-        },
-        {
-            title: 'Delegate Bags',
-            description: '500 bags (for VIP guests, media, and delegates) with printed sponsor logo.',
-            price: 'USD 8000',
-        },
-        {
-            title: 'Lanyards',
-            description: '500 lanyards distributed to all conference participants with the sponsor’s logo.',
-            price: 'USD 1500',
-        },
-        {
-            title: 'Inserts in Delegate Bags',
-            description: '1 booklet/pen and notebook or 1 flyer per bag for 500 bags.',
-            price: 'USD 1000',
-        },
-        {
-            title: 'Exclusive Registration Area',
-            description: 'Company logo displayed in the registration lounge.',
-            price: 'USD 2000',
-        },
-        {
-            title: 'USB Flash Drive Sponsorship',
-            description: 'Sponsor logo printed on the USB drive.',
-            price: 'USD 3500',
-        },
-        {
-            title: 'Exhibition Hall',
-            description: '20 banners (1m × 1.80m) placed in the exhibition area.',
-            price: 'USD 2000',
-        },
-        {
-            title: 'Conference Room Sponsorship',
-            description: '2 sponsor banners in the conference halls next to the stage.',
-            price: 'USD 1000',
-        },
-    ];
-
+    const [options,setOptions]=useState([])
+   
+    const getSponsorshipOptions = async (conferenceId) => {
+        try {
+          const token = localStorage.getItem('token'); // تأكد من وجود التوكن في الـ localStorage
+          const response = await axios.get(`http://127.0.0.1:8000/api/sponsorship-options/1`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+      
+          // التعامل مع البيانات المسترجعة
+          console.log('Sponsorship Options:', response.data);
+          setOptions(response.data)
+        } catch (error) {
+          // التعامل مع الخطأ
+          console.error('Error fetching sponsorship options:', error);
+        }
+      };
+      useEffect(()=>{
+        getSponsorshipOptions()
+      },[])
     // Handle agreement signing
     const handleSignAgreement = () => {
         alert('Agreement signed.');
@@ -181,7 +151,7 @@ const SponsorSection = () => {
         <div className="sponsor-section">
             <h2>Sponsorship Opportunities</h2>
             <div className="sponsorship-options">
-                {sponsorshipOptions.map((option, index) => (
+                {options.map((option, index) => (
                     <SponsorshipOption 
                         key={index} 
                         title={option.title} 

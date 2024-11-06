@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios'; // تأكد من استيراد axios
 import Input from '../../../../CoreComponent/Input'; // تأكد من استيراد مكون Input بشكل صحيح
-
+import MySideDrawer from '../../../../CoreComponent/SideDrawer';
+import CustomFormWrapper from '../../../../CoreComponent/CustomFormWrapper';
+import "./style.scss"
 const AirportTransferPrice = () => {
     const [fromAirportPrice, setFromAirportPrice] = useState('');
     const [toAirportPrice, setToAirportPrice] = useState('');
     const [roundTripPrice, setRoundTripPrice] = useState('');
+    const [isOpen, setIsOpen] = useState(true);
+
     const conferenceId = 1; 
 
     const handleSubmit = async (e) => {
@@ -32,8 +36,16 @@ const token =localStorage.getItem("token")
 
     return (
         <div>
-            <h2>Airport Transfer Price</h2>
-            <form onSubmit={handleSubmit}>
+                  <MySideDrawer isOpen={isOpen} setIsOpen={setIsOpen} >
+                <CustomFormWrapper
+                    title="Airport Transfer Price"
+                    handleSubmit={handleSubmit}
+                    setOpenForm={setIsOpen}
+                    
+                >
+                 
+            {/* <h2>Airport Transfer Price</h2> */}
+            <form onSubmit={handleSubmit} className='price-airport-form'>
                 <Input
                     label="From Airport Price"
                     inputValue={fromAirportPrice}
@@ -61,8 +73,9 @@ const token =localStorage.getItem("token")
                     step="0.01"
                     required
                 />
-                <button type="submit">Submit Prices</button>
             </form>
+            </CustomFormWrapper>
+            </MySideDrawer>
         </div>
     );
 };

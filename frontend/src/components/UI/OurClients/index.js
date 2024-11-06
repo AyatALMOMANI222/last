@@ -8,7 +8,7 @@ const OurClients = () => {
   useEffect(() => {
     // دالة لجلب العملاء
     const fetchClients = () => {
-      axios.get('http://localhost:8000/api/clients')
+      axios.get('http://127.0.0.1:8000/api/clients')
         .then(response => {
           console.log(response.data);
           setClients(response.data); // تحديث حالة العملاء
@@ -28,7 +28,7 @@ const OurClients = () => {
       <div className="clients-skew">
         {clients.map((client) => (
           <div className="clients-logo" key={client.id}>
-            <img src={`http://localhost:8000/storage/${client.image}`} alt="Client Logo" className="client-logo" />
+            <img src={`http://127.0.0.1:8000/storage/${client.image}`} alt="Client Logo" className="client-logo" />
             {/* <p>{client.description}</p> */}
           </div>
         ))}

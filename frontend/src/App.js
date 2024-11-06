@@ -81,6 +81,12 @@ import NotificationMessage from "./components/GroupNotificationMessage";
 import SpeakerTable from "./components/GalaDinner/AdminDinnerView";
 import BookingsTable2 from "./components/BookingsTable";
 import UpcomingConferences from "./components/UpcomingConferences";
+import CreateJob from "./components/Jobs/CreateJob";
+import JobList from "./components/Jobs/GetJobs";
+import JobApplicants from "./components/Jobs/AdminApplicantList";
+import ApplicantsList from "./components/Jobs/AdminApplicantList/applicants/applicants";
+import Messages from "./components/Msg";
+import SponsorshipForm from "./components/Sponsor/AdminSponsorOption";
 // import Echo from "laravel-echo";
 // import Pusher from 'pusher-js';
 const App = () => {
@@ -233,6 +239,18 @@ const App = () => {
 <Route path="/upcoming/conferences" element={<UpcomingConferences/>} />
 
 
+
+<Route path="/job/list" element={<JobList />} />
+
+<Route path="/job" element={<CreateJob />} />
+<Route path="/job/admin" element={<JobApplicants />} />
+
+<Route path="/job/admin/Applicants/:jobId" element={<ApplicantsList />} />
+<Route path="/msgs" element={<Messages/>} />
+
+
+
+<Route path="/sponsor/option/form" element={<SponsorshipForm/>} />
 
 
       </Routes>

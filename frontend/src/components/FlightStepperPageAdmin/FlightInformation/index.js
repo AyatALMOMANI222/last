@@ -102,7 +102,7 @@ const FlightInformation = ({ member, index }) => {
   const handleSave = async (data) => {
     const response = await httpService({
       method: "POST",
-      url: `http://localhost:8000/api/available-flights/all`,
+      url: `http://127.0.0.1:8000/api/available-flights/all`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
       data: {
         flights: data,
@@ -117,7 +117,7 @@ const FlightInformation = ({ member, index }) => {
   const handleSavePrice = async (data) => {
     const response = await httpService({
       method: "POST",
-      url: `http://localhost:8000/api/admin/update-flight`,
+      url: `http://127.0.0.1:8000/api/admin/update-flight`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
       data: {
         flights: data,

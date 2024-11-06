@@ -64,7 +64,7 @@ const AcceptFlight = ({ member, index }) => {
     try {
       await httpService({
         method: "POST",
-        url: `http://localhost:8000/api/accepted-flights/user/all`,
+        url: `http://127.0.0.1:8000/api/accepted-flights/user/all`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
         data: {

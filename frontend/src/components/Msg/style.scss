@@ -1,0 +1,99 @@
+$primary-color: #c82333;
+$background-color: #f7f9fc;
+$text-color: #333;
+$card-bg-color: #fff;
+$border-radius: 8px;
+$shadow-color: rgba(0, 0, 0, 0.1);
+
+.messages-container {
+  background-color: $background-color;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: $border-radius;
+  box-shadow: 0 4px 8px $shadow-color;
+
+  h2 {
+    text-align: center;
+    color: $primary-color;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .error-message {
+    color: $primary-color;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .no-messages {
+    text-align: center;
+    color: $text-color;
+    font-size: 1.2rem;
+  }
+
+  .messages-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .message-card {
+    background-color: $card-bg-color;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 8px $shadow-color;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    h3 {
+      color: $primary-color;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: $text-color;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .timestamp {
+      color: $primary-color;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+  }
+}
+
+/* استجابة للأجهزة الصغيرة */
+@media (max-width: 768px) {
+  .messages-container {
+    padding: 15px;
+
+    h2 {
+      font-size: 1.6rem;
+    }
+
+    .message-card {
+      padding: 15px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  .message-card {
+    padding: 10px;
+  }
+}

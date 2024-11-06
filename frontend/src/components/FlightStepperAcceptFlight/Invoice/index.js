@@ -23,7 +23,7 @@ const Invoice = () => {
   const fetchFlightDetails = async (flightId) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/flight/id/${flightId}`
+        `http://127.0.0.1:8000/api/flight/id/${flightId}`
       );
       const data = await response.json();
 

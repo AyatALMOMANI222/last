@@ -84,6 +84,15 @@ class Conference extends Model
     {
         return $this->hasMany(RoomPrice::class); // علاقة واحد إلى كثير
     }
+    public function sponsorshipOptions()
+    {
+        return $this->hasMany(SponsorshipOption::class);
+    }
+    public function sponsorships()
+    {
+        return $this->hasMany(Sponsorship::class);  // تشير إلى أن المؤتمر يحتوي على عدة رعايات
+    }
+    
         public static function boot()
         {
             parent::boot();

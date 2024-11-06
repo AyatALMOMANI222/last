@@ -52,7 +52,7 @@ const Select = ({
   }, []);
 
   return (
-    <div className="dropdown-container" ref={dropdownRef}>
+    <div className="dropdown-container2" ref={dropdownRef}>
       {label && (
         <div className="label-container">
           <span>{label}</span>

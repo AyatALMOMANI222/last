@@ -4,6 +4,7 @@ import Input from "../../../CoreComponent/Input";
 import DateInput from "../../../CoreComponent/Date";
 import Select from "../../../CoreComponent/Select";
 import "./style.scss";
+import { toast } from "react-toastify";
 
 const GalaDinner = ({ isOpen, setIsOpen }) => {
   // Defining the state variables
@@ -18,17 +19,21 @@ const GalaDinner = ({ isOpen, setIsOpen }) => {
   const [dressCode, setDressCode] = useState("");
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState("");
-
+const token= localStorage.getItem("token")
   const getConference = () => {
-    const url = `http://127.0.0.1:8000/api/con`;
+    const url = `http://127.0.0.1:8000/api/con/upcoming`;
 
     axios
-      .get(url)
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${token}` // مرر الـ token هنا
+      }
+    })
       .then((response) => {
         console.log(response);
-        
+
         setAllConference(
-          response.data.data?.map((item) => {
+          response.data.upcoming_conferences?.map((item) => {
             return { label: item?.title, value: item?.id };
           })
         );

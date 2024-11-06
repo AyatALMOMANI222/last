@@ -1,0 +1,97 @@
+.job-list {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+  
+    h2 {
+      text-align: left;
+      margin-left: 30px;
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+  
+    .error-message {
+      color: #c82333;
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+  
+    .job-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 70%;
+      text-align: left;
+      transition: transform 0.3s, box-shadow 0.3s;
+      margin-bottom: 20px;
+  
+      &:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+  
+      h3 {
+        font-size: 1.4rem;
+        color: #333;
+        margin-bottom: 15px;
+        font-weight: bold;
+      }
+  
+      p {
+        margin: 10px 0;
+        color: #555;
+  
+        strong {
+          font-weight: bold;
+          color: #333;
+        }
+      }
+  
+      .view-applicants-button {
+        background-color: #c82333; /* اللون الأحمر الجميل */
+        color: #fff;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+        font-size: 1rem;
+        transition: background-color 0.3s, transform 0.3s;
+  
+        &:hover {
+          background-color: #c0392b;
+          transform: scale(1.05);
+        }
+      }
+    }
+  
+    .applicant-list {
+      margin-top: 40px;
+      .applicant-card {
+        margin: 10px 0;
+      }
+    }
+  }
+  
+  // Responsive adjustments for smaller screens
+  @media (max-width: 768px) {
+    .job-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .job-card {
+      max-width: 90%;
+    }
+  }
+  
