@@ -82,11 +82,8 @@ class ConferenceUserController extends Controller
             $currentDate = Carbon::now();
     
             // جلب معرفات المؤتمرات المرتبطة بالمستخدم من جدول ConferenceUser
-            $conferenceUsers = ConferenceUser::where('user_id', $userId)->get();
-            $conferenceIds = [];
-            foreach ($conferenceUsers as $conferenceUser) {
-                $conferenceIds[] = $conferenceUser->conference_id;
-            }
+            $conferenceIds = ConferenceUser::where('user_id', $userId)->pluck('conference_id')->toArray();
+
     
             // التحقق من وجود أي معرفات للمؤتمرات
             if (empty($conferenceIds)) {
@@ -106,7 +103,7 @@ class ConferenceUserController extends Controller
                 return response()->json([
                     'message' => 'No upcoming conferences found.',
                     'data' => [],
-                ], 404);
+                ], 200);
             }
     
             // إرجاع رد يحتوي على المؤتمرات القادمة

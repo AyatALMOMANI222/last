@@ -86,7 +86,7 @@ import JobList from "./components/Jobs/GetJobs";
 import JobApplicants from "./components/Jobs/AdminApplicantList";
 import ApplicantsList from "./components/Jobs/AdminApplicantList/applicants/applicants";
 import Messages from "./components/Msg";
-import SponsorshipForm from "./components/Sponsor/AdminSponsorOption";
+// import SponsorshipForm from "./components/Sponsor/AdminSponsorOption";
 // import Echo from "laravel-echo";
 // import Pusher from 'pusher-js';
 const App = () => {
@@ -250,7 +250,7 @@ const App = () => {
 
 
 
-<Route path="/sponsor/option/form" element={<SponsorshipForm/>} />
+{/* <Route path="/sponsor/option/form" element={<SponsorshipForm/>} /> */}
 
 
       </Routes>

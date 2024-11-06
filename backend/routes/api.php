@@ -40,6 +40,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomPriceController;
 use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\SponsorController;
+use App\Http\Controllers\SponsorshipController;
 use App\Http\Controllers\SponsorshipOptionController;
 use App\Http\Controllers\TouristSiteController;
 use App\Http\Controllers\TripController;
@@ -281,4 +282,4 @@ Route::get('/sponsorship-options/{conferenceId}', [SponsorshipOptionController::
 
 
 // table option
-// Route::post('/sponsorship-options/table', [ConferenceSponsorshipOptionController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::post('/sponsorship-options/table', [SponsorshipController::class, 'store'])->middleware(['auth:sanctum','admin']);

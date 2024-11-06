@@ -31,40 +31,40 @@ class Conference extends Model
         'end_date' => 'date',
         'status' => 'string',
     ];
-        public function images()
-        {
-            return $this->hasMany(ConferenceImage::class, 'conference_id');
-        }
-        public function committeeMembers()
-        {
-            return $this->hasMany(CommitteeMember::class);
-        }
-        public function scientificTopics()
-        {
-            return $this->hasMany(ScientificTopic::class);
-        }
-        public function prices()
-        {
-            return $this->hasMany(ConferencePrice::class);
-        }
-        public function papers()
-        {
-            return $this->hasMany(Paper::class);
-        }
-     
-        public function exhibition()
-        {
-            return $this->hasOne(Exhibition::class, 'conference_id');
-        }
-        public function trips()
-        {
-            return $this->belongsToMany(Trip::class, 'conference_trip');
-        }
-        public function users()
-        {
-            return $this->belongsToMany(User::class, 'conference_user', 'conference_id', 'user_id');
-        }
-        public function dinnerDetail()
+    public function images()
+    {
+        return $this->hasMany(ConferenceImage::class, 'conference_id');
+    }
+    public function committeeMembers()
+    {
+        return $this->hasMany(CommitteeMember::class);
+    }
+    public function scientificTopics()
+    {
+        return $this->hasMany(ScientificTopic::class);
+    }
+    public function prices()
+    {
+        return $this->hasMany(ConferencePrice::class);
+    }
+    public function papers()
+    {
+        return $this->hasMany(Paper::class);
+    }
+
+    public function exhibition()
+    {
+        return $this->hasOne(Exhibition::class, 'conference_id');
+    }
+    public function trips()
+    {
+        return $this->belongsToMany(Trip::class, 'conference_trip');
+    }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'conference_user', 'conference_id', 'user_id');
+    }
+    public function dinnerDetail()
     {
         return $this->hasOne(DinnerDetail::class);
     }
@@ -75,7 +75,7 @@ class Conference extends Model
     public function airportTransferPrice()
     {
         return $this->hasOne(AirportTransferPrice::class);
-    }  
+    }
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
@@ -88,23 +88,24 @@ class Conference extends Model
     {
         return $this->hasMany(SponsorshipOption::class);
     }
+    // في نموذج Conference
     public function sponsorships()
     {
-        return $this->hasMany(Sponsorship::class);  // تشير إلى أن المؤتمر يحتوي على عدة رعايات
+        return $this->hasMany(Sponsorship::class);
     }
-    
-        public static function boot()
-        {
-            parent::boot();
-    
-            static::creating(function ($conference) {
-                $conference->created_at = Carbon::now('Asia/Amman');
-                $conference->updated_at = Carbon::now('Asia/Amman');
-            });
-    
-            static::updating(function ($conference) {
-                $conference->updated_at = Carbon::now('Asia/Amman');
-            });
-        }
-    
+
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($conference) {
+            $conference->created_at = Carbon::now('Asia/Amman');
+            $conference->updated_at = Carbon::now('Asia/Amman');
+        });
+
+        static::updating(function ($conference) {
+            $conference->updated_at = Carbon::now('Asia/Amman');
+        });
+    }
 }
