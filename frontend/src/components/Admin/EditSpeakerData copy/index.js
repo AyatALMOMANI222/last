@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Checkbox from "../../../CoreComponent/Checkbox";
 import { useParams } from "react-router-dom";
-import httpService from "../../../../src/common/httpService";
+import httpService from "../../../common/httpService";
 import { toast } from "react-toastify";
 import "./style.scss";
 
@@ -14,7 +14,8 @@ const EditSpeakerData = () => {
   const [airportPickup, setAirportPickup] = useState(true);
   const [freeTrip, setFreeTrip] = useState(true);
   const [isCertificateActive, setIsCertificateActive] = useState(true);
-  const [isVisaPaymentRequired, setIsVisaPaymentRequired] = useState(false);
+  // const [isCostCovered, setIsCostCovered] = useState(false);
+  const [isVisaPaymentRequired, setIsVisaPaymentRequired] = useState(false); // حالة جديدة لـ is_visa_payment_required
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +34,8 @@ const EditSpeakerData = () => {
           airport_pickup: airportPickup ? 1 : 0,
           free_trip: freeTrip ? 1 : 0,
           is_certificate_active: isCertificateActive ? 1 : 0,
-          is_visa_payment_required: isVisaPaymentRequired ? 1 : 0, 
+          is_visa_payment_required: isVisaPaymentRequired ? 1 : 0, // تحويل القيمة إلى 0 أو 1
+
         },
         withToast: true,
         onError: (error) => {
@@ -97,13 +99,18 @@ const EditSpeakerData = () => {
           setCheckboxValue={setIsCertificateActive}
           className="form-checkbox"
         />
-
-        <Checkbox
-          label="Is Visa Payment Required?"
-          checkboxValue={isVisaPaymentRequired}
-          setCheckboxValue={setIsVisaPaymentRequired}
+        {/* <Checkbox
+          label="Is the cost covered?"
+          checkboxValue={isCostCovered}
+          setCheckboxValue={setIsCostCovered}
           className="form-checkbox"
-        />
+        /> */}
+           <Checkbox
+        label="Is Visa Payment Required?"
+        checkboxValue={isVisaPaymentRequired}
+        setCheckboxValue={setIsVisaPaymentRequired}
+        className="form-checkbox"
+      />
       </div>
 
       <button type="submit" className="submit-btn">

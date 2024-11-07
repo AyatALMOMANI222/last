@@ -39,7 +39,7 @@ const CreateJob = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container-create-job">
       <h2>Create Job</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">

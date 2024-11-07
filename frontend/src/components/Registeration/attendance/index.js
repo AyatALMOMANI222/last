@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Input from "../../../CoreComponent/Input";
 import Select from "../../../CoreComponent/Select";
 import axiosInstance from "../../../common/http";
@@ -10,11 +10,12 @@ import SVG from "react-inlinesvg";
 import registerImg from "../../../icons/registerImg.svg";
 import axios from "axios";
 import "./style.scss";
+import DialogMessage from "../../DialogMessage";
 
 const RegisterAttendancePage = () => {
   const navigate = useNavigate();
   const { conferenceId } = useParams(); // هنا نستخدم معرف المؤتمر من المعاملات
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,9 +49,28 @@ const RegisterAttendancePage = () => {
     formData.append("country_of_residence", country.value);
     formData.append("conference_id", conferenceId); // تم التعديل هنا
 
+    // try {
+    //   const response = await axios.post(
+    //     `http://127.0.0.1:8000/api/attendances`,
+    //     formData,
+    //     {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     }
+    //   );
+    //   toast.success("User created successfully!");
+    //   console.log(response);
+
+    // } catch (error) {
+    //   if (error.response) {
+    //     toast.error(error.response.data.error);
+    //   }
+    // }
+
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/attendances`,
+        `http://127.0.0.1:8000/api/users/${conferenceId}`,
         formData,
         {
           headers: {
@@ -58,12 +78,12 @@ const RegisterAttendancePage = () => {
           },
         }
       );
+      setIsDialogOpen(true);
       toast.success("User created successfully!");
-      console.log(response);
-      
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.error);
+      } else {
       }
     }
   };
@@ -162,98 +182,104 @@ const RegisterAttendancePage = () => {
   };
 
   return (
-    <div className="register-page-container">
-      <form onSubmit={handleRegister} className="register-form">
-        <div className="title">
-          <span>Sign Up</span>
-          <span
-            className="sub-title"
-            onClick={() => {
-              navigate("/login");
-            }}
-          >
-            login
-          </span>
-        </div>
+    <Fragment>
+      <DialogMessage
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+      />
+      <div className="register-page-container">
+        <form onSubmit={handleRegister} className="register-form">
+          <div className="title">
+            <span>Sign Up</span>
+            <span
+              className="sub-title"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              login
+            </span>
+          </div>
 
-        <div className="fields-container">
-          <Input
-            label={"Name"}
-            placeholder={"e.g. John Doe"}
-            inputValue={name}
-            setInputValue={setName}
-            required={true}
-            errorMsg={error.name}
-          />
-          <Input
-            label={"Email"}
-            placeholder={"e.g. example@example.com"}
-            inputValue={email}
-            setInputValue={setEmail}
-            required={true}
-            errorMsg={error.email}
-          />
-          <PhoneNumberInput
-            label={"Phone Number"}
-            phone={phone}
-            setPhone={setPhone}
-            required={true}
-            errorMsg={error.phone}
-          />
+          <div className="fields-container">
+            <Input
+              label={"Name"}
+              placeholder={"e.g. John Doe"}
+              inputValue={name}
+              setInputValue={setName}
+              required={true}
+              errorMsg={error.name}
+            />
+            <Input
+              label={"Email"}
+              placeholder={"e.g. example@example.com"}
+              inputValue={email}
+              setInputValue={setEmail}
+              required={true}
+              errorMsg={error.email}
+            />
+            <PhoneNumberInput
+              label={"Phone Number"}
+              phone={phone}
+              setPhone={setPhone}
+              required={true}
+              errorMsg={error.phone}
+            />
 
-          <PhoneNumberInput
-            label={"WhatsApp Number"}
-            phone={whatsApp}
-            setPhone={setWhatsApp}
-            required={true}
-            errorMsg={error.whatsApp}
-          />
+            <PhoneNumberInput
+              label={"WhatsApp Number"}
+              phone={whatsApp}
+              setPhone={setWhatsApp}
+              required={true}
+              errorMsg={error.whatsApp}
+            />
 
-          <Input
-            label={"Specialization"}
-            placeholder={"e.g. Software Engineer"}
-            inputValue={specialization}
-            setInputValue={setSpecialization}
-            required={true}
-            errorMsg={error.specialization}
-          />
+            <Input
+              label={"Specialization"}
+              placeholder={"e.g. Software Engineer"}
+              inputValue={specialization}
+              setInputValue={setSpecialization}
+              required={true}
+              errorMsg={error.specialization}
+            />
 
-          <Select
-            options={nationalitiesOptions}
-            value={selectedNationality}
-            setValue={setSelectedNationality}
-            label="Nationality"
-            errorMsg={error.nationality}
-          />
+            <Select
+              options={nationalitiesOptions}
+              value={selectedNationality}
+              setValue={setSelectedNationality}
+              label="Nationality"
+              errorMsg={error.nationality}
+            />
 
-          <Input
-            label={"Password"}
-            placeholder={"Your password"}
-            inputValue={password}
-            setInputValue={setPassword}
-            required={true}
-            errorMsg={error.password}
-            type="password"
-          />
+            <Input
+              label={"Password"}
+              placeholder={"Your password"}
+              inputValue={password}
+              setInputValue={setPassword}
+              required={true}
+              errorMsg={error.password}
+              type="password"
+            />
 
-          <Select
-            options={countriesOptions}
-            value={country}
-            setValue={setCountry}
-            label="Country"
-            errorMsg={error.country}
-          />
-        </div>
+            <Select
+              options={countriesOptions}
+              value={country}
+              setValue={setCountry}
+              label="Country"
+              errorMsg={error.country}
+            />
+          </div>
 
-        <div className="register-btn-container">
-          <button className="register-btn" type="submit">
-            Register
-          </button>
-        </div>
-      </form>
+          <div className="register-btn-container">
+            <button className="register-btn" type="submit">
+              Register
+            </button>
+          </div>
+        </form>
 
-      <SVG className="register-img" src={registerImg} />
-    </div>
+        <SVG className="register-img" src={registerImg} />
+      </div>
+    </Fragment>
   );
 };
 

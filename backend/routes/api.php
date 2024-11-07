@@ -62,8 +62,8 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 Route::post('/users/{conference_id}', [UserController::class, 'store']);
 // فقط الادمن يعدل على ال status   للمتحدث id 
 Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->middleware(['auth:sanctum', 'admin']);
-Route::get('/users', [UserController::class, 'getAllUsers']);
-Route::get('/users/id', [UserController::class, 'getUserById']);
+Route::get('/users', [UserController::class, 'getAllUsers'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/user', [UserController::class, 'getUserById'])->middleware(['auth:sanctum']);
 
 // notification
 
@@ -249,6 +249,7 @@ Route::post('/sponsor', [SponsorController::class, 'store']);
 
 // attendance
 Route::post('/attendances', [AttendanceController::class, 'storeAttendance']);
+Route::get('/attendances', [AttendanceController::class, 'getAttendanceInfoByToken'])->middleware(['auth:sanctum']);
 // group
 Route::post('/register/group', [GroupRegistrationController::class, 'store']);
 Route::put('/group/update/admin/{user_id}', [GroupRegistrationController::class, 'updateGroupByAdminByUserId'])->middleware(['auth:sanctum','admin']);

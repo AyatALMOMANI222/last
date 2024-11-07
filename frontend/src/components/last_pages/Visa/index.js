@@ -9,8 +9,9 @@ import "./style.scss"; // Importing Sass file for styling
 import httpService from "../../../common/httpService";
 import { getFromLocalStorage } from "../../../common/localStorage";
 import SimpleLabelValue from "../../SimpleLabelValue";
-
+import { useAuth } from "../../../common/AuthContext";
 const VisaPage = () => {
+  const { userId } = useAuth();
   const navigate = useNavigate(); // For navigation later
   const [showVisaForm, setShowVisaForm] = useState(false); // Control the display of the form
   const [passportImage, setPassportImage] = useState(null);
@@ -18,9 +19,7 @@ const VisaPage = () => {
   const [departureDate, setDepartureDate] = useState("");
   const [error, setError] = useState("");
   const [visaPrice, setVisaPrice] = useState(0); // Changed initial state to null to check for data
-
   const [visaData, setVisaData] = useState(null); // Changed initial state to null to check for data
-  const userId = localStorage.getItem("user_id");
   const conferenceId = getFromLocalStorage("myConferencesId");
   const handleUserChoice = (choice) => {
     if (choice === "yes") {
@@ -31,6 +30,7 @@ const VisaPage = () => {
   };
 
   async function getConferenceById() {
+    if (!conferenceId) return;
     const url = `http://127.0.0.1:8000/api/con/id/${conferenceId}`;
 
     try {

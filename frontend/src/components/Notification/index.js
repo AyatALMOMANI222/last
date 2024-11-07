@@ -9,8 +9,10 @@ import { ToastContainer, toast } from "react-toastify"; // استيراد ToastC
 import Echo from "laravel-echo"; // استيراد Echo
 import Pusher from "pusher-js"; // استيراد Pusher
 import "react-toastify/dist/ReactToastify.css"; // استيراد الأنماط
+import { useAuth } from "../../common/AuthContext";
 
 const NotificationDropdown = () => {
+  const { userId } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
@@ -45,7 +47,6 @@ const NotificationDropdown = () => {
   };
 
   const read = async (notiId) => {
-    const userId = localStorage.getItem("user_id");
     try {
       const response = await httpService({
         method: "POST",
@@ -57,11 +58,8 @@ const NotificationDropdown = () => {
       });
       getAllNotifications();
       console.log(response);
-    
-
     } catch (error) {
       console.error("Error fetching notifications", error);
-
     }
   };
   useEffect(() => {
@@ -136,27 +134,28 @@ const NotificationDropdown = () => {
                   navigate(
                     `/edit/speaker/data/${notification?.conference_id}/${notification?.register_id}`
                   );
+                }
+                if (
+                  notification?.message?.includes("New Attendance registration")
+                ) {
+                  navigate(
+                    `/edit/attendance/data/${notification?.conference_id}/${notification?.register_id}`
+                  );
                 } else if (
                   notification?.message?.includes("New visa request from user")
                 ) {
-                  navigate(
-                    `/admin/visa2/${notification?.register_id}`
-                  );
-                }else if (
+                  navigate(`/admin/visa2/${notification?.register_id}`);
+                } else if (
                   notification?.message?.includes("New group registration:")
                 ) {
-                  navigate(
-                    `/group/update/admin/${notification?.register_id}`
-                  );
-                  
-                }else if (
-                  notification?.message?.includes("Now you can access the activated file and download the registered names")
+                  navigate(`/group/update/admin/${notification?.register_id}`);
+                } else if (
+                  notification?.message?.includes(
+                    "Now you can access the activated file and download the registered names"
+                  )
                 ) {
-                  navigate(
-                    `/add/excel`
-                  );
+                  navigate(`/add/excel`);
                 }
-
               }}
             >
               {/* <span className="notification-dot"></span> */}

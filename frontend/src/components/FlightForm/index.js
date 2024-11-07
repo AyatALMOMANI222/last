@@ -6,13 +6,14 @@ import MySideDrawer from "../../CoreComponent/SideDrawer";
 import SimpleLabelValue from "../../components/SimpleLabelValue";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
 import ImageUpload from "../../CoreComponent/ImageUpload";
 import WhatsAppButton from "../WhatsAppButton";
 import MainFlightFormUpdate from "./updateMainFlightForm";
+import { useAuth } from "../../common/AuthContext";
 import "./style.scss";
 
 const MainFlightForm = ({ setOpenForm, getFlightData }) => {
+  const { userId } = useAuth();
   const [arrivalDate, setArrivalDate] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [passportImage, setPassportImage] = useState(null);
@@ -27,7 +28,6 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
   const [ticketCount, setTicketCount] = useState(1);
 
   const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("user_id");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -173,6 +173,7 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
 };
 
 const FlightForm = () => {
+  const { userId } = useAuth();
   const [data, setData] = useState({});
   const [openFlight, setOpenFlight] = useState(false);
   const [openFlightUpdate, setOpenFlightUpdate] = useState(false);
@@ -183,7 +184,6 @@ const FlightForm = () => {
 
   const getFlightData = () => {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("user_id");
 
     axios
       .get("http://127.0.0.1:8000/api/flight", {
@@ -226,7 +226,6 @@ const FlightForm = () => {
             type="button"
             disabled={!Object.keys(data).length}
             onClick={() => {
-              const userId = localStorage.getItem("user_id");
               navigate(`/accept/flight/${userId}`);
             }}
           >

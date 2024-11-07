@@ -224,7 +224,7 @@ public function updateVisaByAdmin(Request $request, $userId)
         $visa = Visa::where('user_id', $userId)->first();
 
         if (!$visa) {
-            return response()->json(['error' => 'Visa not found for this user'], 404);
+            return response()->json(['message' => 'Visa not found for this user'], 401);
         }
 
         // تحديث حالة الفيزا فقط بناءً على الحالة المقدمة
@@ -286,7 +286,7 @@ public function getVisaByAuthUser()
         $visa = Visa::where('user_id', $userId)->first();
 
         if (!$visa) {
-            return response()->json(['error' => 'Visa not found for this user'], 404);
+            return response()->json(['message' => 'Visa not found for this user'], 401);
         }
 
         return response()->json(['visa' => $visa]);

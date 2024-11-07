@@ -4,12 +4,14 @@ import axios from "axios";
 import "./style.scss";
 import DateInput from "../../../CoreComponent/Date";
 import ImageUpload from "../../../CoreComponent/ImageUpload";
-import Input  from "../../../CoreComponent/Input";
+import Input from "../../../CoreComponent/Input";
 import Checkbox from "../../../CoreComponent/Checkbox";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../../../common/AuthContext";
+
 const MainFlightFormUpdate = () => {
-  // State Variables
-  const {id}=useParams();
+  const { id } = useParams();
+  const { userId } = useAuth();
   const [arrivalDate, setArrivalDate] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [passportImage, setPassportImage] = useState(null);
@@ -22,26 +24,25 @@ const MainFlightFormUpdate = () => {
   const [seatNumber, setSeatNumber] = useState("");
   const [upgradeClass, setUpgradeClass] = useState(false);
   const [ticketCount, setTicketCount] = useState(1);
-const [updateDeadLine,setUpdateDeadLine] =useState(null)
+  const [updateDeadLine, setUpdateDeadLine] = useState(null);
   const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("user_id");
-
-
 
   const handleMainFlightSubmit = (e) => {
     e.preventDefault();
-  
+
     // التحقق من الموعد النهائي للتحديث
     const currentDate = new Date();
     const deadlineDate = new Date(updateDeadLine);
-  
+
     if (currentDate > deadlineDate) {
-      toast.error("You cannot update the flight information after the deadline.");
+      toast.error(
+        "You cannot update the flight information after the deadline."
+      );
       return; // منع الإرسال إذا كان الموعد النهائي قد تجاوز
     }
-  
+
     const formData = new FormData();
-  
+
     // Append Main Flight Form Fields
     formData.append("arrival_date", arrivalDate);
     formData.append("departure_date", departureDate);
@@ -59,7 +60,7 @@ const [updateDeadLine,setUpdateDeadLine] =useState(null)
     formData.append("ticket_count", ticketCount);
     formData.append("is_companion", 0);
     formData.append("user_id", userId);
-  
+
     axios
       .post(`http://127.0.0.1:8000/api/user/update-flight/${id}`, formData, {
         headers: {
@@ -76,30 +77,24 @@ const [updateDeadLine,setUpdateDeadLine] =useState(null)
         );
       });
   };
-  
-  const getFlightData =()=>{
-    axios.get(`http://127.0.0.1:8000/api/flight`, {
+
+  const getFlightData = () => {
+    axios
+      .get(`http://127.0.0.1:8000/api/flight`, {
         headers: {
-          Authorization: `Bearer ${token}` // تمرير التوكن باستخدام Bearer
-        }
+          Authorization: `Bearer ${token}`, // تمرير التوكن باستخدام Bearer
+        },
       })
-      .then(response => {
-        
-       
-       
-        setUpdateDeadLine(response.data[0].
-            admin_update_deadline)
-       
+      .then((response) => {
+        setUpdateDeadLine(response.data[0].admin_update_deadline);
       })
-      .catch(error => {
-     
+      .catch((error) => {
         console.error("Error fetching flight data:", error.response);
       });
-      
-  }
- useEffect(()=>{
+  };
+  useEffect(() => {
     getFlightData();
- })
+  });
   return (
     <Fragment>
       <form className="main-flight-form" onSubmit={handleMainFlightSubmit}>
@@ -155,7 +150,6 @@ const [updateDeadLine,setUpdateDeadLine] =useState(null)
           />
           <Input
             label="Other Requests"
-            
             inputValue={otherRequests}
             setInputValue={setOtherRequests}
           />
@@ -164,15 +158,15 @@ const [updateDeadLine,setUpdateDeadLine] =useState(null)
             inputValue={seatNumber}
             setInputValue={setSeatNumber}
           />
-         
-              <Checkbox
-        label="Do you want to upgrade to business class?"
-        checkboxValue={upgradeClass}
-        setCheckboxValue={setUpgradeClass}
-        icon={""}
-        errorMsg={""}
-        className="form-checkbox"
-      />
+
+          <Checkbox
+            label="Do you want to upgrade to business class?"
+            checkboxValue={upgradeClass}
+            setCheckboxValue={setUpgradeClass}
+            icon={""}
+            errorMsg={""}
+            className="form-checkbox"
+          />
           <Input
             label="Number of Tickets to Book"
             type="number"
@@ -181,7 +175,7 @@ const [updateDeadLine,setUpdateDeadLine] =useState(null)
             placeholder="Number of Tickets to Book"
             required={true}
           />
-              {/* <Input
+          {/* <Input
           label="Number of Tickets to Book"
           type="number"
           inputValue={ticketCount}
@@ -192,7 +186,6 @@ const [updateDeadLine,setUpdateDeadLine] =useState(null)
         </div>
 
         <div className="actions-section-container">
-       
           <button className="submit-btn" type="submit">
             Submit
           </button>

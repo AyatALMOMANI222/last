@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SimpleLabelValue from "../../SimpleLabelValue";
-import "./style.scss"; // Add your custom styles here
+import { useAuth } from "../../../common/AuthContext";
+
+import "./style.scss";
 
 const GetCompanion = () => {
   const [companions, setCompanions] = useState([]);
+  const { userId } = useAuth();
 
   const getCompanionData = () => {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("user_id");
 
     axios
       .get(`http://127.0.0.1:8000/api/companion-flight/${userId}`, {
         headers: {
-          Authorization: `Bearer ${token}`, // pass the token
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setCompanions(response.data); // assuming the data is an array
+        setCompanions(response.data);
         console.log(response.data);
       })
       .catch((error) => {
@@ -67,55 +69,114 @@ const GetCompanion = () => {
               <div className="companion-details">
                 <div className="details-header">Flight Details</div>
                 <div className="grid-container">
-                  {companion.passenger_name && companion.passenger_name !== "" && (
-                    <SimpleLabelValue label="Passenger Name" value={companion.passenger_name} />
-                  )}
-                  {companion.flight_number && companion.flight_number !== "" && companion.flight_number !== "0" && (
-                    <SimpleLabelValue label="Flight Number" value={companion.flight_number} />
-                  )}
-                  {companion.departure_airport && companion.departure_airport !== "" && (
-                    <SimpleLabelValue label="Departure Airport" value={companion.departure_airport} />
-                  )}
-                  {companion.arrival_airport && companion.arrival_airport !== "" && (
-                    <SimpleLabelValue label="Arrival Airport" value={companion.arrival_airport} />
-                  )}
-                  {companion.departure_date && companion.departure_date !== "" && (
-                    <SimpleLabelValue label="Departure Date" value={companion.departure_date} />
-                  )}
+                  {companion.passenger_name &&
+                    companion.passenger_name !== "" && (
+                      <SimpleLabelValue
+                        label="Passenger Name"
+                        value={companion.passenger_name}
+                      />
+                    )}
+                  {companion.flight_number &&
+                    companion.flight_number !== "" &&
+                    companion.flight_number !== "0" && (
+                      <SimpleLabelValue
+                        label="Flight Number"
+                        value={companion.flight_number}
+                      />
+                    )}
+                  {companion.departure_airport &&
+                    companion.departure_airport !== "" && (
+                      <SimpleLabelValue
+                        label="Departure Airport"
+                        value={companion.departure_airport}
+                      />
+                    )}
+                  {companion.arrival_airport &&
+                    companion.arrival_airport !== "" && (
+                      <SimpleLabelValue
+                        label="Arrival Airport"
+                        value={companion.arrival_airport}
+                      />
+                    )}
+                  {companion.departure_date &&
+                    companion.departure_date !== "" && (
+                      <SimpleLabelValue
+                        label="Departure Date"
+                        value={companion.departure_date}
+                      />
+                    )}
                   {companion.arrival_date && companion.arrival_date !== "" && (
-                    <SimpleLabelValue label="Arrival Date" value={companion.arrival_date} />
+                    <SimpleLabelValue
+                      label="Arrival Date"
+                      value={companion.arrival_date}
+                    />
                   )}
-                  {companion.upgrade_class && companion.upgrade_class !== " " && companion.upgrade_class !== "0" && (
-                    <SimpleLabelValue label="Upgrade Class" value={companion.upgrade_class} />
-                  )}
-                  {companion.specific_flight_time && companion.specific_flight_time !== "" && companion.specific_flight_time !== "00:00:00" && (
-                    <SimpleLabelValue label="Specific Flight Time" value={companion.specific_flight_time} />
-                  )}
-                  {companion.seat_preference && companion.seat_preference !== "0" && companion.seat_preference !== "0" && (
-                    <SimpleLabelValue label="Seat Preference" value={companion.seat_preference} />
-                  )}
-                  {companion.last_speaker_update_at && companion.last_speaker_update_at !== "" && (
-                    <SimpleLabelValue label="Last Speaker Update" value={companion.last_speaker_update_at} />
-                  )}
-                  {companion.last_admin_update_at && companion.last_admin_update_at !== "" && (
-                    <SimpleLabelValue label="Last Admin Update" value={companion.last_admin_update_at} />
-                  )}
+                  {companion.upgrade_class &&
+                    companion.upgrade_class !== " " &&
+                    companion.upgrade_class !== "0" && (
+                      <SimpleLabelValue
+                        label="Upgrade Class"
+                        value={companion.upgrade_class}
+                      />
+                    )}
+                  {companion.specific_flight_time &&
+                    companion.specific_flight_time !== "" &&
+                    companion.specific_flight_time !== "00:00:00" && (
+                      <SimpleLabelValue
+                        label="Specific Flight Time"
+                        value={companion.specific_flight_time}
+                      />
+                    )}
+                  {companion.seat_preference &&
+                    companion.seat_preference !== "0" &&
+                    companion.seat_preference !== "0" && (
+                      <SimpleLabelValue
+                        label="Seat Preference"
+                        value={companion.seat_preference}
+                      />
+                    )}
+                  {companion.last_speaker_update_at &&
+                    companion.last_speaker_update_at !== "" && (
+                      <SimpleLabelValue
+                        label="Last Speaker Update"
+                        value={companion.last_speaker_update_at}
+                      />
+                    )}
+                  {companion.last_admin_update_at &&
+                    companion.last_admin_update_at !== "" && (
+                      <SimpleLabelValue
+                        label="Last Admin Update"
+                        value={companion.last_admin_update_at}
+                      />
+                    )}
                 </div>
 
                 {/* Pricing Section */}
                 <div className="pricing-section">
-                  {companion.reserved_seat_cost > 0 || companion.business_class_upgrade_cost > 0 || companion.additional_baggage_cost > 0 ? (
+                  {companion.reserved_seat_cost > 0 ||
+                  companion.business_class_upgrade_cost > 0 ||
+                  companion.additional_baggage_cost > 0 ? (
                     <>
                       <div className="details-header">Pricing Details</div>
                       <div className="grid-container">
                         {companion.reserved_seat_cost > 0 && (
-                          <SimpleLabelValue label="Reserved Seat Cost" value={`$${companion.reserved_seat_cost}`} />
+                          <SimpleLabelValue
+                            label="Reserved Seat Cost"
+                            value={`$${companion.reserved_seat_cost}`}
+                          />
                         )}
-                        {companion.business_class_upgrade_cost > 0 && companion.upgrade_class !== "0" &&(
-                          <SimpleLabelValue label="Business Class Upgrade Cost" value={`$${companion.business_class_upgrade_cost}`} />
-                        )}
+                        {companion.business_class_upgrade_cost > 0 &&
+                          companion.upgrade_class !== "0" && (
+                            <SimpleLabelValue
+                              label="Business Class Upgrade Cost"
+                              value={`$${companion.business_class_upgrade_cost}`}
+                            />
+                          )}
                         {companion.additional_baggage_cost > 0 && (
-                          <SimpleLabelValue label="Additional Baggage Cost" value={`$${companion.additional_baggage_cost}`} />
+                          <SimpleLabelValue
+                            label="Additional Baggage Cost"
+                            value={`$${companion.additional_baggage_cost}`}
+                          />
                         )}
                       </div>
                     </>

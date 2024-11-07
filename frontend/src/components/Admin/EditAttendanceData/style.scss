@@ -1,14 +1,13 @@
-
-$primary-color: #ef233c; 
-$hover-color: #d10000; 
+$primary-color: #ef233c;
+$hover-color: #d10000;
 $secondary-color: #f3f3f3;
-$font-family: 'Roboto', sans-serif;
+$font-family: "Roboto", sans-serif;
 $border-radius: 8px;
 $input-border: #ddd;
 $checkbox-border: #888;
 $checkbox-checked-color: $primary-color;
 
-.edit-speaker-form {
+.edit-attendance-form {
   max-width: 600px;
   margin: 0 auto;
   background-color: #fff;
@@ -89,9 +88,8 @@ $checkbox-checked-color: $primary-color;
     }
   }
 
-  // Responsive styles
   @media screen and (max-width: 768px) {
-    .edit-speaker-form {
+    .edit-attendance-form {
       padding: 20px;
     }
 

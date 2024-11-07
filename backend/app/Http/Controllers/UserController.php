@@ -35,22 +35,22 @@ class UserController extends Controller
                 'isAdmin' => 'sometimes|in:true,false',
                 'passenger_name' => 'nullable|string|max:255',
             ]);
-    
+
             // تحقق من وجود conference_id في قاعدة البيانات
             $conferenceExists = Conference::find($conference_id);
             if (!$conferenceExists) {
                 return response()->json(['message' => 'Conference not found.'], 404);
             }
-    
+
             // رفع الصورة إذا كانت موجودة
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('images', 'public');
                 $validatedData['image'] = $path;
             }
-    
+
             // التأكد من أن isAdmin عبارة عن قيمة منطقية
             $validatedData['isAdmin'] = filter_var($request->input('isAdmin', false), FILTER_VALIDATE_BOOLEAN);
-    
+
             // إنشاء المستخدم الجديد باستخدام المدخلات فقط
             $user = User::create(array_filter([
                 'name' => $validatedData['name'] ?? null,
@@ -66,10 +66,10 @@ class UserController extends Controller
                 'country_of_residence' => $validatedData['country_of_residence'] ?? null,
                 'isAdmin' => $validatedData['isAdmin'],
             ]));
-    
+
             // إضافة المستخدم إلى جدول conference_user
             $user->conferences()->attach($conference_id);
-    
+
             // إرسال الإشعار لجميع المدراء
             $admins = User::where('isAdmin', true)->get();
             foreach ($admins as $admin) {
@@ -81,7 +81,7 @@ class UserController extends Controller
                     'message' => 'New speaker registration: ' . $user->name,
                     'is_read' => false,
                 ]);
-    
+
                 // بث الإشعار
                 broadcast(new NotificationSent($notification))->toOthers();
 
@@ -93,10 +93,10 @@ class UserController extends Controller
                 'message' => 'When the admin approves your addition as a speaker for this conference, you will be notified via email and an activation code will be sent for your profile on the website.',
                 'is_read' => false,
             ]);
-            
+
             // بث الإشعار للمستخدم الجديد
             broadcast(new NotificationSent($userNotification));
-    
+
             return response()->json([
                 'message' => 'User created, added to conference, and notifications sent successfully!',
                 "id" => $conference_id
@@ -108,7 +108,7 @@ class UserController extends Controller
             ], 500);
         }
     }
-    
+
 
     public function getUserById()
     {
@@ -118,11 +118,13 @@ class UserController extends Controller
     
             // التحقق من وجود user_id
             if (!$user_id) {
-                return response()->json(['message' => 'Unauthorized'], 401);
+                return response()->json(['message' => 'user id not found'], 401);
             }
     
-            // جلب المستخدم مع المؤتمرات المرتبطة به
-            $user = User::with('conferences')->find($user_id);
+            // جلب المستخدم مع المؤتمرات المرتبطة به التي تنتهي بعد الآن
+            $user = User::with(['conferences' => function($query) {
+                $query->where('end_date', '>', now());
+            }])->find($user_id);
     
             // التحقق من وجود المستخدم
             if (!$user) {
@@ -131,7 +133,6 @@ class UserController extends Controller
     
             return response()->json([
                 'user' => $user,
-                'conferences' => $user->conferences,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -188,16 +189,30 @@ class UserController extends Controller
         }
     }
 
-    public function getAllUsers()
+    public function getAllUsers(Request $request) 
     {
         try {
-            // استرجاع جميع المستخدمين من قاعدة البيانات
-            $users = User::all();
-
-            // إرجاع استجابة JSON
+            $status = $request->input('status');
+            
+            $query = User::with(['conferences' => function ($query) {
+                $query->where('end_date', '>', now());
+            }]);
+    
+            if ($status && $status !== 'all') {
+                $query->where('status', $status);
+            }
+    
+            $users = $query->paginate(10);
+    
             return response()->json([
                 'message' => 'Users retrieved successfully!',
-                'data' => $users,
+                'data' => $users->items(),
+                'pagination' => [
+                    'total' => $users->total(),
+                    'per_page' => $users->perPage(),
+                    'current_page' => $users->currentPage(),
+                    'total_pages' => $users->lastPage(),
+                ],
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -206,4 +221,9 @@ class UserController extends Controller
             ], 500);
         }
     }
+    
+    
+    
 }
+
+

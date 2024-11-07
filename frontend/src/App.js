@@ -86,6 +86,8 @@ import JobList from "./components/Jobs/GetJobs";
 import JobApplicants from "./components/Jobs/AdminApplicantList";
 import ApplicantsList from "./components/Jobs/AdminApplicantList/applicants/applicants";
 import Messages from "./components/Msg";
+import EditAttendanceData from "./components/Admin/EditAttendanceData";
+import PendingUsersTable from "./components/Admin/PendingUsers";
 // import SponsorshipForm from "./components/Sponsor/AdminSponsorOption";
 // import Echo from "laravel-echo";
 // import Pusher from 'pusher-js';
@@ -133,19 +135,21 @@ const App = () => {
         !location.pathname.includes("/registerPage") && <NavBar />}
 
       <Routes className="main">
-      <Route path="/exhibitions" element={<Exhibitions />} />
-      <Route path="/trip/user/:tripId" element={<TripsStepperPage />} />
-      <Route path="/" element={<Dashboard />} />
+        <Route path="/exhibitions" element={<Exhibitions />} />
+        <Route path="/trip/user/:tripId" element={<TripsStepperPage />} />
+        <Route path="/" element={<Dashboard />} />
         <Route
           path="/edit/speaker/data/:conferenceId/:userId"
           element={<EditSpeakerData />}
+        />{" "}
+        <Route
+          path="/edit/attendance/data/:conferenceId/:userId"
+          element={<EditAttendanceData />}
         />
         <Route path="/reservation/form" element={<Reservation />} />
         <Route path="/conferences" element={<ConferencesAdmin />} />
-
         <Route path="/flights" element={<FlightFormAdmin />} />
         <Route path="/flight/form" element={<FlightForm />} />
-
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register/speaker/:id" element={<RegisterPage />} />
         <Route path="/registerPage/:type" element={<SelectConferences />} />
@@ -161,23 +165,19 @@ const App = () => {
           element={<RegisterGroupPage />}
         />
         <Route path="/stepper" element={<ParentComponent />} />
-
         <Route path="register/sponsor" element={<RegisterSponsorPage />} />
         <Route path="/create/trip" element={<ViewTrip />} />
         <Route path="/user" element={<UsersList />} />
         <Route path="/view-user-trips" element={<ViewUserTrips />} />
         {/* //this route for view one trip for user not admin  */}
         <Route path="/view/trip/:id" element={<ViewOneTripUser />} />
-
         <Route path="/airport/transfer" element={<AirportTransfer />} />
         <Route
           path="/airport/transfer/price"
           element={<AirportTransferPrice />}
         />
         <Route path="/gala" element={<GalaDinner />} />
-        
         <Route path="/gala/dinner" element={<DinnerDetails />} />
-
         <Route path="/paper" element={<AddScientificPaper />} />
         <Route path="/visa" element={<VisaPage />} />
         <Route path="/home" element={<HomeR />} />
@@ -202,57 +202,58 @@ const App = () => {
         <Route path="/contact_us" element={<ContactUs />} />
         <Route path="/top_navbar" element={<TopNavbar />} />
         <Route path="/audiovisuals" element={<Audiovisuals />} />
-
         <Route path="/conf" element={<Conference3 />} />
         <Route path="/packages" element={<Packages />} />
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/adventureSection" element={<AdventureSection />} />
         <Route path="/ticket/booking" element={<TicketBooking />} />
         <Route path="/hotel/booking" element={<HotelBooking />} />
-
         <Route path="/transportation" element={<Transportation />} />
         <Route path="/speaker/profile" element={<SpeakerProfileForm />} />
         <Route path="/admin/visa" element={<AdminVisa />} />
         <Route path="/add/excel" element={<ExcelUpload />} />
-        <Route path="/group/update/admin/:register_id" element={<AdminGroupComponent />} />
+        <Route
+          path="/group/update/admin/:register_id"
+          element={<AdminGroupComponent />}
+        />
         <Route path="/flights/users" element={<FlightStepperPage />} />
-        <Route path="/flights/admins/:user_id" element={<FlightStepperPageAdmin />} />
+        <Route
+          path="/flights/admins/:user_id"
+          element={<FlightStepperPageAdmin />}
+        />
         <Route
           path="/user/flight/update/:id"
           element={<MainFlightFormUpdate />}
         />
         <Route path="/companion" element={<GetCompanion />} />
-
-        <Route path="/admin/visa2/:registerId" element={< UpdateVisaStatus />} />
-
+        <Route path="/admin/visa2/:registerId" element={<UpdateVisaStatus />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/sponsor/section" element={<SponsorSection />} />
-        <Route path={`/accept/flight/:user_id`} element={<StepperAcceptFlight/>} />
+        <Route
+          path={`/accept/flight/:user_id`}
+          element={<StepperAcceptFlight />}
+        />
         <Route path="/group/msg" element={<NotificationMessage />} />
-
-
-
-{/* admin table view */}
-
-<Route path="/table/dinner/speaker/:conferenceId" element={<SpeakerTable />} />
-<Route path="/table/booking/airport/:conferenceId" element={<BookingsTable2/>} />
-<Route path="/upcoming/conferences" element={<UpcomingConferences/>} />
-
-
-
-<Route path="/job/list" element={<JobList />} />
-
-<Route path="/job" element={<CreateJob />} />
-<Route path="/job/admin" element={<JobApplicants />} />
-
-<Route path="/job/admin/Applicants/:jobId" element={<ApplicantsList />} />
-<Route path="/msgs" element={<Messages/>} />
-
-
-
-{/* <Route path="/sponsor/option/form" element={<SponsorshipForm/>} /> */}
-
-
+        {/* admin table view */}
+        <Route
+          path="/table/dinner/speaker/:conferenceId"
+          element={<SpeakerTable />}
+        />
+        <Route
+          path="/table/booking/airport/:conferenceId"
+          element={<BookingsTable2 />}
+        />
+        <Route path="/upcoming/conferences" element={<UpcomingConferences />} />
+        <Route path="/job/list" element={<JobList />} />
+        <Route path="/job" element={<CreateJob />} />
+        <Route path="/job/admin" element={<JobApplicants />} />
+        <Route path="/pending/users" element={<PendingUsersTable />} />
+        <Route
+          path="/job/admin/Applicants/:jobId"
+          element={<ApplicantsList />}
+        />
+        <Route path="/msgs" element={<Messages />} />
+        {/* <Route path="/sponsor/option/form" element={<SponsorshipForm/>} /> */}
       </Routes>
       {/* <Footer/> */}
     </div>

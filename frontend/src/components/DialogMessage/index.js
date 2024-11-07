@@ -28,8 +28,8 @@ const DialogMessage = ({isDialogOpen, setIsDialogOpen}) => {
             you by email once the admin approves your registration
           </div>
           <div className="actions-container">
-            <button className="close">Close</button>
-            <button>Ok</button>
+            <button className="close" onClick={()=> setIsDialogOpen(false)}>Close</button>
+            <button onClick={()=> setIsDialogOpen(false)}>Ok</button>
           </div>
         </div>
       </Dialog>

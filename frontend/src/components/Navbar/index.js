@@ -4,10 +4,10 @@ import "./style.scss";
 import NotificationDropdown from "../Notification";
 import ListOption from "../../CoreComponent/ListOptions";
 import { getFromLocalStorage } from "../../common/localStorage";
-
+import { useAuth } from "../../common/AuthContext";
 const NavBar = () => {
   const navigate = useNavigate();
-  const isAdmin = getFromLocalStorage(`isAdmin`);
+  const { isAdmin } = useAuth();
 
   const menuItems = [
     {
@@ -88,10 +88,12 @@ const NavBar = () => {
       ],
     },
     {
-      title:"page",
-      links: [{ label: "Visa", url: "/visa" },{ label: "Airport Transfer", url: "/airport/transfer" },{ label: "Gala Dinner", url: "/gala/dinner" }],
-      
-
+      title: "page",
+      links: [
+        { label: "Visa", url: "/visa" },
+        { label: "Airport Transfer", url: "/airport/transfer" },
+        { label: "Gala Dinner", url: "/gala/dinner" },
+      ],
     },
     ...(isAdmin
       ? [
@@ -105,16 +107,18 @@ const NavBar = () => {
               { label: "Trips User", url: "/trip/user" },
               { label: "All Trips", url: "/view-user-trips" },
               { label: "Flight Admin", url: "/flights" },
-              { label: "Airport Transfer Price", url: "/airport/transfer/price" },
+              {
+                label: "Airport Transfer Price",
+                url: "/airport/transfer/price",
+              },
               { label: "Gala Dinner", url: "/gala" },
               { label: "Create Job", url: "/job" },
               { label: "Messages", url: "/msgs" },
 
               { label: "Job Applicants", url: "/job/admin" },
 
-              { label: "Sponsor Option Form", url: "/sponsor/option/form" }
-
-
+              { label: "Sponsor Option Form", url: "/sponsor/option/form" },
+              { label: "Users", url: "/pending/users" },
             ],
           },
         ]

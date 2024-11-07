@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Input from "../../CoreComponent/Input";
 import axiosInstance from "../../common/http";
 import { useNavigate } from "react-router-dom";
@@ -6,21 +6,15 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SVG from "react-inlinesvg";
 import loginImg from "../../icons/loginImg.svg";
+import { useAuth } from "../../common/AuthContext";
 import "./style.scss";
-import DialogMessage from "../../components/DialogMessage";
-import httpService from "../../common/httpService";
-import {
-  getFromLocalStorage,
-  saveToLocalStorage,
-} from "../../common/localStorage";
 
 const LoginPage = () => {
+  const { login, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [conferencesId, setConferencesId] = useState(null);
-  const [userInfo, setUserInfo] = useState({});
 
   const [error, setError] = useState({
     email: "",
@@ -28,7 +22,7 @@ const LoginPage = () => {
     confirmPassword: "",
   });
 
-  const login = async () => {
+  const submitlLogin = async () => {
     const url = "http://127.0.0.1:8000/api/login";
     const userData = {
       email,
@@ -37,35 +31,11 @@ const LoginPage = () => {
 
     try {
       const response = await axiosInstance.post(url, userData);
-      // console.log("Response Data:", response.data.user); // طباعة البيانات المستلمة
-      // const userInfo =response.data.user
-      console.log('user', response.data.user);
-      
-// setUserInfo(response.data.user)
-    
-// if (response.data && response.data.user) {
-//   setUserInfo(response.data.user); // تعيين الحالة فقط إذا كانت موجودة
-// } else {
-//   console.log("User data not found in response");
-// }
-// console.log(userInfo);
-
       const token = response.data.token;
-      const user = response.data.user;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("user_id", user.id);
-      console.log(token);
-      const isAdmin = getFromLocalStorage(`isAdmin`);
-
-      getUpcomingConferences();
- 
-       if (email === "admin@gmail.com") {
+      login(token);
+      if (isAdmin) {
         navigate("/");
-
-        saveToLocalStorage(`isAdmin`, true);
-      }  else {
-        saveToLocalStorage(`isAdmin`, false);
+      } else {
         navigate("/tour_slider");
       }
     } catch (error) {
@@ -73,23 +43,6 @@ const LoginPage = () => {
       toast.error(error.response?.data?.message);
       console.error("Login error:", error);
     }
-  };
-  const getUpcomingConferences = async () => {
-    const getAuthToken = () => localStorage.getItem("token");
-    const response = await httpService({
-      method: "get",
-      url: "http://127.0.0.1:8000/api/con/up",
-      headers: { Authorization: `Bearer ${getAuthToken()}` },
-      withToast: false,
-      showLoader: false,
-    });
-    const conferencesId = response?.data?.[0]?.id;
-    console.log(response.data[0]);
-    
-    saveToLocalStorage("myConferencesId", conferencesId);
-    // localStorage.getItem('conId',conferencesId )
-    localStorage.setItem('conId', conferencesId); // تخزين قيمة تحت مفتاح conId
-
   };
 
   const handleLogin = (e) => {
@@ -124,7 +77,7 @@ const LoginPage = () => {
         password: "",
         confirmPassword: "",
       });
-      login();
+      submitlLogin();
     }
   };
 

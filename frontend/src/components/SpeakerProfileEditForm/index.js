@@ -9,8 +9,10 @@ import SVG from "react-inlinesvg";
 import httpService from "../../common/httpService";
 import "./style.scss";
 import { backendUrlImages } from "../../constant/config";
-
+import { useAuth } from "../../common/AuthContext";
 const SpeakerProfileForm = () => {
+  const { speakerData, registrationType } = useAuth();
+
   const [speakerInfo, setSpeakerInfo] = useState({});
   const [formFiles, setFormFiles] = useState({
     image: null,
@@ -47,9 +49,8 @@ const SpeakerProfileForm = () => {
         userImage: speaker.image,
         userBio: speaker.biography,
       });
-      console.log(speaker.image
-      );
-      
+      console.log(speaker.image);
+
       setSpeakerInfo(speaker);
       setAttendanceOptions((prev) => ({
         ...prev,
@@ -71,9 +72,11 @@ const SpeakerProfileForm = () => {
 
   useEffect(() => {
     fetchSpeakerInfo();
+    console.log({ speakerData, registrationType });
+    
   }, [fetchSpeakerInfo]);
   useEffect(() => {
-console.log(profileDetails.userImage);
+    console.log(profileDetails.userImage);
   }, [profileDetails]);
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -169,7 +172,6 @@ console.log(profileDetails.userImage);
             }
             className="image-upload"
             placeholder="Presentation File"
-
           />
 
           {attendanceOptions.showOnlineOption && (
