@@ -7,15 +7,23 @@ import {
   getFromLocalStorage,
   saveToLocalStorage,
 } from "../../../common/localStorage";
+import DialogMessage from "../../DialogMessage";
+import { useNavigate } from "react-router-dom";
 
 const AcceptFlight = ({ member, index }) => {
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
-
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const navigate = useNavigate();
   const { currentStep, completeStep, passportImage, flightMembers } =
     useFlightStepperAdmin();
   const otherData = {
     available_id: 0,
     flight_id: member?.flight_id,
+    price: 0,
+    is_free: 0,
+    departure_time: null,
+    departure_date: null,
+    isOther: 1,
   };
   const [availableFlights, setAvailableFlights] = useState([]);
   const [selectedFlight, setSelectedFlight] = useState(null);
@@ -58,25 +66,47 @@ const AcceptFlight = ({ member, index }) => {
     }
     return flightTrips;
   };
+  function checkIsOther(data) {
+    return data.some((item) => item.isOther === 1);
+  }
 
   const submit = async () => {
     const data = getFlights();
-    const getAuthToken = () => localStorage.getItem("token");
+    const isOther = checkIsOther(data);
+    if (!isOther) {
+      const getAuthToken = () => localStorage.getItem("token");
 
-    try {
-      await httpService({
-        method: "POST",
-        url: `${BaseUrl}/accepted-flights/user/all`,
-        headers: { Authorization: `Bearer ${getAuthToken()}` },
-        showLoader: true,
-        data: {
-          flights: data,
-        },
-        withToast: true,
-      });
-      completeStep(currentStep);
-    } catch (error) {
-      console.error("Error submitting form:", error);
+      try {
+        await httpService({
+          method: "POST",
+          url: `${BaseUrl}/accepted-flights/user/all`,
+          headers: { Authorization: `Bearer ${getAuthToken()}` },
+          showLoader: true,
+          data: {
+            flights: data,
+          },
+          withToast: true,
+        });
+        completeStep(currentStep);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+    } else {
+      try {
+        await httpService({
+          method: "POST",
+          url: `${BaseUrl}/accepted-flights/user/all`,
+          headers: { Authorization: `Bearer ${getAuthToken()}` },
+          showLoader: true,
+          data: {
+            flights: data.filter((item) => item.isOther === 1),
+          },
+          withToast: false,
+        });
+        setIsDialogOpen(true);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
     }
   };
 
@@ -105,6 +135,17 @@ const AcceptFlight = ({ member, index }) => {
   }
   return (
     <Fragment>
+      <DialogMessage
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        message="Your additional flight options will be entered shortly. You will be notified once they have been successfully added to your selection."
+        onOk={() => {
+          navigate("/flight/form");
+        }}
+        onClose={() => {
+          navigate("/flight/form");
+        }}
+      />
       <div className="accept-flight-information">
         <div className="title">Available Flights</div>
         <div className="flight-cards-container">

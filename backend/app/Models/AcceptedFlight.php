@@ -23,6 +23,7 @@ class AcceptedFlight extends Model
         'expiration_date',
         'departure_date',
         'departure_time',
+        'isOther',
         
     ];
 

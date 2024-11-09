@@ -1,20 +1,7 @@
 import React from "react";
 import "./style.scss";
 
-const Table = ({
-  headers = [
-    // { key: "name", label: "Name" },
-    // { key: "age", label: "Age" },
-    // { key: "email", label: "Email" },
-  ],
-  data = [
-    // { name: "John Doe", age: 30, email: "john@example.com" },
-    // { name: "Jane Smith", age: 25, email: "jane@example.com" },
-    // { name: "Tom Johnson", age: 35, email: "tom@example.com" },
-    // { name: "Alice Williams", age: 28, email: "alice@example.com" },
-    // { name: "Bob Brown", age: 32, email: "bob@example.com" },
-  ],
-}) => {
+const Table = ({ headers = [], data = [] }) => {
   return (
     <div className="table-container">
       <table className="table">

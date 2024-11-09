@@ -88,6 +88,7 @@ import ApplicantsList from "./components/Jobs/AdminApplicantList/applicants/appl
 import Messages from "./components/Msg";
 import EditAttendanceData from "./components/Admin/EditAttendanceData";
 import PendingUsersTable from "./components/Admin/PendingUsers";
+import EnterNewFlights from "./components/Admin/EnterNewFlights";
 // import AttendanceProfileForm from "./components/attendancesProfileEditForm";
 // import SponsorshipForm from "./components/Sponsor/AdminSponsorOption";
 // import Echo from "laravel-echo";
@@ -219,7 +220,7 @@ const App = () => {
         />
         <Route path="/flights/users" element={<FlightStepperPage />} />
         <Route
-          path="/flights/admins/:user_id"
+          path="/flights/admins/:flight_id"
           element={<FlightStepperPageAdmin />}
         />
         <Route
@@ -249,6 +250,7 @@ const App = () => {
         <Route path="/job" element={<CreateJob />} />
         <Route path="/job/admin" element={<JobApplicants />} />
         <Route path="/pending/users" element={<PendingUsersTable />} />
+        <Route path="/enter/new/flights" element={<EnterNewFlights />} />
         {/* <Route path="/Attendance/profile" element={<AttendanceProfileForm />} /> */}
         <Route
           path="/job/admin/Applicants/:jobId"

@@ -1,0 +1,92 @@
+.flights-container-other {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  // background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+  }
+
+  .add-trip-form {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+
+  .add-trip-btn-container {
+    text-align: right;
+    margin-bottom: 20px;
+  }
+
+  .add-trip-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .add-trip-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .trips-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .trip-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+
+  .trip-card-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+  }
+
+  .delete-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    fill: #ff4d4d;
+    transition: transform 0.2s;
+  }
+
+  .delete-icon:hover {
+    transform: scale(1.2);
+  }
+
+  .trip-form {
+    display: grid;
+    gap: 15px;
+  }
+
+  .free-trip-checkbox {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .free-trip-checkbox label {
+    font-size: 14px;
+    color: #555;
+  }
+}

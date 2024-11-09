@@ -183,6 +183,7 @@ const FlightForm = () => {
   const [openFlightUpdate, setOpenFlightUpdate] = useState(false);
   const [availableFlights, setAvailableFlights] = useState([]);
   const [openIsAvailableFlights, setOpenIsAvailableFlights] = useState(false);
+  const [flight_id, setFlight_id] = useState(0);
   const navigate = useNavigate();
   const [openCompanion, setOpenCompanion] = useState(false);
 
@@ -195,6 +196,9 @@ const FlightForm = () => {
       })
       .then((response) => {
         setData(response.data[0]);
+        console.log(response);
+        
+        setFlight_id(response.data?.[0]?.flight_id)
       })
       .catch((error) => {
         console.error("Error fetching flight data:", error);
@@ -230,7 +234,7 @@ const FlightForm = () => {
             type="button"
             disabled={!Object.keys(data).length}
             onClick={() => {
-              navigate(`/accept/flight/${userId}`);
+              navigate(`/accept/flight/${flight_id}`);
             }}
           >
             Choose Accepted Flight

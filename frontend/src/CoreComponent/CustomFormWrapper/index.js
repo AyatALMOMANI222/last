@@ -9,7 +9,7 @@ const CustomFormWrapper = ({
   noActions = false,
 }) => {
   return (
-    <form className="custom-form-wrapper" onSubmit={handleSubmit}>
+    <div className="custom-form-wrapper">
       <div className="information-header">{title}</div>
       <div className="form-section">{children}</div>
       {!noActions && (
@@ -31,7 +31,7 @@ const CustomFormWrapper = ({
           </button>
         </div>
       )}
-    </form>
+    </div>
   );
 };
 

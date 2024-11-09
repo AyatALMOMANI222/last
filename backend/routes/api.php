@@ -159,6 +159,7 @@ Route::get('/accepted-flights/{flight_id}', [AcceptedFlightController::class, 'g
 Route::post('/accepted-flights/{flight_id}', [AcceptedFlightController::class, 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/ticket/download/{id}', [AcceptedFlightController::class, 'downloadTicket']);
 Route::post('/accepted-flights/user/all', [AcceptedFlightController::class, 'storeAll'])->middleware('auth:sanctum');
+Route::get('/other/accepted-flights', [AcceptedFlightController::class, 'getFlightsWhereIsOther'])->middleware('auth:sanctum', 'admin');
 
 
 Route::post('/reservation', [ReservationsController::class, 'createReservation'])->middleware('auth:sanctum');

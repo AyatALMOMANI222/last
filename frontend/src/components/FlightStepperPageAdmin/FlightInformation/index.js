@@ -43,6 +43,7 @@ const FlightDetails = ({ data }) => {
     </div>
   );
 };
+
 const FlightInformation = ({ member, index }) => {
   const { currentStep, completeStep, passportImage, flightMembers } =
     useFlightStepperAdmin();

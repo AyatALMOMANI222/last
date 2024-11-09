@@ -85,7 +85,7 @@ const FlightFormAdmin = () => {
           <div className="table-actions-container">
             <button
               onClick={() => {
-                navigate(`/flights/admins/${item?.user_id}`);
+                navigate(`/flights/admins/${item?.flight_id}`);
               }}
             >
               Add Trips

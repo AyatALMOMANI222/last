@@ -157,6 +157,13 @@ const NotificationDropdown = () => {
                 ) {
                   navigate(`/add/excel`);
                 }
+                else if (
+                  notification?.message?.includes(
+                    "Check available flights on the website and select your option to proceed."
+                  )
+                ) {
+                  navigate(`/flight/form`);
+                }
               }}
             >
               {/* <span className="notification-dot"></span> */}

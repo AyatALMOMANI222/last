@@ -9,7 +9,7 @@ export const AdminFlightStepperProvider = ({ children }) => {
   const [completedSteps, setCompletedSteps] = useState([]);
   const [passportImage, setPassportImage] = useState(null);
   const [flightMembers, setFlightMembers] = useState([]);
-  const { user_id } = useParams();
+  const { flight_id } = useParams();
   const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const getFlightData = async () => {
@@ -17,7 +17,7 @@ export const AdminFlightStepperProvider = ({ children }) => {
 
     const response = await httpService({
       method: "GET",
-      url: `${BaseUrl}/companion-flight/${user_id}`,
+      url: `${BaseUrl}/companion-flight/${flight_id}`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
     });
     setFlightMembers(response);
