@@ -9,6 +9,7 @@ const ApplicantsList = () => {
   const { jobId } = useParams(); // الحصول على jobId من الرابط
   const [applicants, setApplicants] = useState([]);
   const [applicantError, setApplicantError] = useState(null);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   // Fetch applicants for the selected job
   useEffect(() => {
@@ -17,7 +18,7 @@ const ApplicantsList = () => {
       setApplicantError(null); // Reset any previous error
 
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/applicants/${jobId}`, {
+        const response = await axios.get(`${BaseUrl}/applicants/${jobId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -12,6 +12,8 @@ const AdminGroupComponent = () => {
   const [isLoading, setIsLoading] = useState(false); // إضافة حالة التحميل
   const {register_id} = useParams();
   const token = localStorage.getItem("token");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
 const navigate=useNavigate()
   const handleYesNoClick = (answer) => {
     setIsActive(answer === "yes");
@@ -22,7 +24,7 @@ const navigate=useNavigate()
     setIsLoading(true); // تعيين حالة التحميل إلى true
     try {
       const response = await axios.put(
-        `http://127.0.0.1:8000/api/group/update/admin/${register_id}`,
+        `${BaseUrl}/group/update/admin/${register_id}`,
         {
           is_active: isActive,
           update_deadline: startDate,

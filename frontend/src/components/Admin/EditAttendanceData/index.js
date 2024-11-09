@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import "./style.scss";
 
 const EditAttendanceData = () => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const { conferenceId, userId } = useParams();
   const [registrationFee, setRegistrationFee] = useState(false);
   const [includesConferenceBag, setIncludesConferenceBag] = useState(true);
@@ -22,7 +24,7 @@ const EditAttendanceData = () => {
     try {
       await httpService({
         method: "POST",
-        url: `http://127.0.0.1:8000/api/attendances`,
+        url: `${BaseUrl}/attendances`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
         data: {

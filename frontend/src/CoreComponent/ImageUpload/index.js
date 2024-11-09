@@ -64,6 +64,7 @@ const ImageUpload = ({
           accept={allowedExtensions.map((ext) => `.${ext}`).join(",")}
           onChange={handleChange}
           style={{ display: "none" }}
+          value={""}
         />
         <div className="upload-img-container" onClick={handleClick}>
           <div className="placholder">
@@ -98,7 +99,6 @@ const ImageUpload = ({
           </div>
         )}
       </div>
-   
     </div>
   );
 };

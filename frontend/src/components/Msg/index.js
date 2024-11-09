@@ -6,10 +6,11 @@ const Messages = () => {
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState(null);
   const token = localStorage.getItem("token"); // استبدلها بالتوكن المناسب
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8000/api/messages', {
+      .get(`${BaseUrl}/messages`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

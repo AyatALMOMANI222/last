@@ -8,10 +8,12 @@ const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [openDiscountForm, setOpenDiscountForm] = useState(false);
   const [userId, setUserId] = useState("");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/users");
+        const response = await axios.get(`${BaseUrl}/users`);
         setUsers(response.data.data);
       } catch (error) {}
     };

@@ -9,6 +9,7 @@ export const TripsStepperProvider = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState([]);
   const { tripId } = useParams();
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const completeStep = (stepIndex) => {
     if (!completedSteps.includes(stepIndex)) {
@@ -22,7 +23,7 @@ export const TripsStepperProvider = ({ children }) => {
     try {
       const response = await httpService({
         method: "GET",
-        url: `http://127.0.0.1:8000/api/trip_option/${tripId}`,
+        url: `${BaseUrl}/trip_option/${tripId}`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
 
         showLoader: true,

@@ -4,11 +4,12 @@ import './style.scss';
 
 const OurClients = () => {
   const [clients, setClients] = useState([]); // حالة لتخزين العملاء
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   useEffect(() => {
     // دالة لجلب العملاء
     const fetchClients = () => {
-      axios.get('http://127.0.0.1:8000/api/clients')
+      axios.get(`${BaseUrl}/clients`)
         .then(response => {
           console.log(response.data);
           setClients(response.data); // تحديث حالة العملاء

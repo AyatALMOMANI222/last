@@ -13,7 +13,8 @@ import "./style.scss";
 
 const RegisterOtherPage = () => {
   const navigate = useNavigate();
-  const {  conferenceId } = useParams(); // هنا تحتاج conference_id أيضًا
+  const { conferenceId } = useParams(); // هنا تحتاج conference_id أيضًا
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,27 +36,6 @@ const RegisterOtherPage = () => {
     country: "",
   });
 
- 
-
-  // const handleAttendanceSubmission = async (userId) => {
-  //   const attendanceData = {
-  //     user_id: userId, // المستخدم الذي تم إنشاؤه
-  //     conference_id: conferenceId, // conference_id من params
-  //   };
-
-  //   try {
-  //     const response = await axios.post(
-  //       `http://127.0.0.1:8000/api/attendances`,
-  //       attendanceData
-  //     );
-  //     toast.success("Attendance recorded successfully!"); // رسالة النجاح
-  //   } catch (error) {
-  //     if (error.response) {
-  //       toast.error(error.response.data.error); // رسالة الخطأ
-  //     }
-  //   }
-  // };
-
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("name", name);
@@ -70,7 +50,7 @@ const RegisterOtherPage = () => {
 
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/users/`,
+        `${BaseUrl}/users/`,
         formData,
         {
           headers: {
@@ -82,8 +62,7 @@ const RegisterOtherPage = () => {
 
       // استدعاء دالة تسجيل الحضور بعد إنشاء المستخدم
       // handleAttendanceSubmission(response.data.id); // استخدام id الذي تم إرجاعه من استجابة إنشاء المستخدم
-    }
-     catch (error) {
+    } catch (error) {
       if (error.response) {
         toast.error(error.response.data.error);
       }

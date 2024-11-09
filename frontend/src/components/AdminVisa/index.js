@@ -6,6 +6,8 @@ import Select from "../../CoreComponent/Select";
 import "./style.scss";
 
 const AdminVisa = () => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const [isFree, setIsFree] = useState(false);
   const [visaCost, setVisaCost] = useState("");
   const [status, setStatus] = useState(null); // Change to null for better initial state
@@ -46,14 +48,19 @@ const AdminVisa = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.put("http://127.0.0.1:8000/api/admin/update-visa/43", visaData);
+      const response = await axios.put(
+        `${BaseUrl}/admin/update-visa/43`,
+        visaData
+      );
       console.log(response.data);
       // Optionally reset the form values or show a success message here
     } catch (err) {
       if (err.response) {
         setError(`Error: ${err.response.data.message}`);
       } else {
-        setError("An error occurred while updating the visa. Please try again.");
+        setError(
+          "An error occurred while updating the visa. Please try again."
+        );
       }
       console.error(err);
     } finally {

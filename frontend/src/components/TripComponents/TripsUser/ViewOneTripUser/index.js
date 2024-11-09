@@ -11,12 +11,13 @@ const ViewOneTripUser = () => {
   const [tripData, setTripData] = useState({});
   const getAuthToken = () => localStorage.getItem("token");
   const navigate = useNavigate();
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const getTripById = async () => {
     try {
       const response = await httpService({
         method: "GET",
-        url: `http://127.0.0.1:8000/api/trip_option/${id}`,
+        url: `${BaseUrl}/trip_option/${id}`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
 

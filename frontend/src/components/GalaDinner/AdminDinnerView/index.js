@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import MySideDrawer from "../../../CoreComponent/SideDrawer";
 import { useParams } from "react-router-dom";
 const SpeakerTable = () => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const [speakers, setSpeakers] = useState([]);
   const [selectedSpeaker, setSelectedSpeaker] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -15,7 +17,7 @@ const {conferenceId} =useParams()
   useEffect(() => {
     const fetchSpeakers = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/dinner/attendees/${conferenceId}`, {
+        const response = await axios.get(`${BaseUrl}/dinner/attendees/${conferenceId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

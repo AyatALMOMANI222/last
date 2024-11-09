@@ -12,6 +12,7 @@ const DinnerDetails = () => {
   const [hasGuest, setHasGuest] = useState(false); // State for having a guest
   const [guestName, setGuestName] = useState(""); // State for guest name
   const [companionDinnerPrice, setCompanionDinnerPrice] = useState(""); // State for guest price
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const conferenceId = localStorage.getItem("conId");
 
@@ -22,7 +23,7 @@ const DinnerDetails = () => {
       const token = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/dinners/conference/${conferenceId}`,
+          `${BaseUrl}/dinners/conference/${conferenceId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -44,7 +45,7 @@ const DinnerDetails = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/con/id/${conferenceId}`
+        `${BaseUrl}/con/id/${conferenceId}`
       );
       setCompanionDinnerPrice(response?.data?.companion_dinner_price);
     } catch (error) {
@@ -65,7 +66,7 @@ const DinnerDetails = () => {
   
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/dinner/attendees",
+        `${BaseUrl}/dinner/attendees`,
         data,
         {
           headers: {

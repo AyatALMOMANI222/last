@@ -4,6 +4,8 @@ import Input from "../../CoreComponent/Input";
 import "./style.scss";
 
 const SeatCostForm = ({ setOpen, data }) => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const [seatCost, setSeatCost] = useState("");
   const [upgradeClassCost, setUpgradeClassCost] = useState("");
   const [additionalRequestsCost, setAdditionalRequestsCost] = useState("");
@@ -25,7 +27,7 @@ console.log(data);
       const token = localStorage.getItem("token");
 
       // إرسال الطلب باستخدام axios
-      const response = await axios.put(`http://127.0.0.1:8000/api/admin/update-flight/${data.flight_id}`, formData, {
+      const response = await axios.put(`${BaseUrl}/admin/update-flight/${data.flight_id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`, // تضمين التوكن في الهيدر
           "Content-Type": "application/json", // تأكد من تعيين نوع المحتوى بشكل صحيح

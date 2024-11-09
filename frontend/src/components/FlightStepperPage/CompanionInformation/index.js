@@ -26,6 +26,7 @@ const FlightInformation = () => {
     otherRequests: "",
     upgradeClass: false,
   };
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const { passportImage } = useFlightStepper();
   const [companions, setCompanions] = useState([initialValue]);
@@ -131,7 +132,7 @@ const FlightInformation = () => {
 
     await httpService({
       method: "POST",
-      url: "http://127.0.0.1:8000/api/flights",
+      url: `${BaseUrl}/flights`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
 
       data: formData,

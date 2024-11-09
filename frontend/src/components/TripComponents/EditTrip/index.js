@@ -21,6 +21,7 @@ const EditTrip = ({ isOpen, setIsOpen, tripId }) => {
   const [tripPriceForTwo, setTripPriceForTwo] = useState("");
   const [tripPriceForThreeOrMore, setTripPriceForThreeOrMore] = useState("");
   const [additionalOptions, setAdditionalOptions] = useState([]);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   // Get token from localStorage
   const token = localStorage.getItem("token");
@@ -30,7 +31,7 @@ const EditTrip = ({ isOpen, setIsOpen, tripId }) => {
       if (!tripId) return;
       try {
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/trip/${tripId}`,
+          `${BaseUrl}/trip/${tripId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -76,7 +77,7 @@ const EditTrip = ({ isOpen, setIsOpen, tripId }) => {
 
     try {
       await axios.post(
-        `http://127.0.0.1:8000/api/trips_option/${tripId}`,
+        `${BaseUrl}/trips_option/${tripId}`,
         updatedTripData,
         {
           headers: {

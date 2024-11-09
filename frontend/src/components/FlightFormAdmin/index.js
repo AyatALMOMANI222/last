@@ -13,6 +13,8 @@ import UpdateTicket from "./SetTicket";
 import { useNavigate } from "react-router-dom";
 
 const FlightFormAdmin = () => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const navigate = useNavigate();
   const [flights, setFlights] = useState([]);
   const [companions, setCompanions] = useState([]);
@@ -37,7 +39,7 @@ const FlightFormAdmin = () => {
   const getFlight = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://127.0.0.1:8000/api/user/pag/filter", {
+      .get(`${BaseUrl}/user/pag/filter`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -54,7 +56,7 @@ const FlightFormAdmin = () => {
   const getCompanionFlights = (userId) => {
     const token = localStorage.getItem("token");
     axios
-      .get(`http://127.0.0.1:8000/api/companion-flight/${userId}`, {
+      .get(`${BaseUrl}/companion-flight/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {

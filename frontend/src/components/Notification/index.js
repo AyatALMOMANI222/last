@@ -17,6 +17,7 @@ const NotificationDropdown = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -34,7 +35,7 @@ const NotificationDropdown = () => {
     try {
       const response = await httpService({
         method: "GET",
-        url: `http://127.0.0.1:8000/api/not`,
+        url: `${BaseUrl}/not`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
       });
       const data = response?.data?.filter((item) => {
@@ -50,7 +51,7 @@ const NotificationDropdown = () => {
     try {
       const response = await httpService({
         method: "POST",
-        url: `http://127.0.0.1:8000/api/notifications/${notiId}/read`,
+        url: `${BaseUrl}/notifications/${notiId}/read`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         data: {
           user_id: userId,

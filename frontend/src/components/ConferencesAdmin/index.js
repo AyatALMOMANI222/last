@@ -148,6 +148,8 @@ const PriceForm = ({ entries, setEntries }) => {
 };
 
 const ConferencesAdmin = ({ setIsOpen, getConference }) => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const [committeeMembers, setCommitteeMembers] = useState([
     { id: Date.now(), name: "", image: null },
   ]);
@@ -201,6 +203,8 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
   };
 
   async function addCommitteeMembers(mainId, members) {
+    const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
     const formData = new FormData();
     const token = localStorage.getItem("token");
     members.forEach((member, index) => {
@@ -213,7 +217,7 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/con/committee",
+        `${BaseUrl}/con/committee`,
         formData,
         {
           headers: {
@@ -261,7 +265,7 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
     formData.append("timestamps", new Date().toISOString());
     const token = localStorage.getItem("token");
     axios
-      .post("http://127.0.0.1:8000/api/con", formData, {
+      .post(`${BaseUrl}/con`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

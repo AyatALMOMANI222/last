@@ -7,6 +7,8 @@ import "./style.scss";
 import Pagination from "../../../CoreComponent/Pagination";
 
 const PendingUsersTable = () => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const navigate = useNavigate();
   const [pendingUsers, setPendingUsers] = useState([]);
   const [status, setStatus] = useState(null);
@@ -23,7 +25,7 @@ const PendingUsersTable = () => {
   const getAuthToken = () => localStorage.getItem("token");
 
   const fetchPendingUsers = useCallback(async () => {
-    const url = `http://127.0.0.1:8000/api/users?status=${
+    const url = `${BaseUrl}/users?status=${
       status?.value || "all"
     }&page=${currentPage}`;
 

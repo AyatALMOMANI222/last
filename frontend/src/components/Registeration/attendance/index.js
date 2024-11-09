@@ -24,6 +24,7 @@ const RegisterAttendancePage = () => {
   const [specialization, setSpecialization] = useState("");
   const [selectedNationality, setSelectedNationality] = useState("");
   const [country, setCountry] = useState("");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const [error, setError] = useState({
     name: "",
@@ -49,28 +50,9 @@ const RegisterAttendancePage = () => {
     formData.append("country_of_residence", country.value);
     formData.append("conference_id", conferenceId); // تم التعديل هنا
 
-    // try {
-    //   const response = await axios.post(
-    //     `http://127.0.0.1:8000/api/attendances`,
-    //     formData,
-    //     {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     }
-    //   );
-    //   toast.success("User created successfully!");
-    //   console.log(response);
-
-    // } catch (error) {
-    //   if (error.response) {
-    //     toast.error(error.response.data.error);
-    //   }
-    // }
-
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/users/${conferenceId}`,
+        `${BaseUrl}/users/${conferenceId}`,
         formData,
         {
           headers: {

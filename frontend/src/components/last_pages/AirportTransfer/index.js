@@ -20,6 +20,7 @@ const AirportTransfer = () => {
   const [flightNumber, setFlightNumber] = useState("");
   const [companionName, setCompanionName] = useState("");
   const [hasCompanion, setHasCompanion] = useState(false);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handleSubmit = async (e) => {
     const token = localStorage.getItem("token");
@@ -28,7 +29,7 @@ const AirportTransfer = () => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/airport-transfer-bookings",
+        `${BaseUrl}/airport-transfer-bookings`,
         {
           userId: userId,
           trip_type: tripType,

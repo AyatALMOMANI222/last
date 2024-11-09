@@ -88,6 +88,7 @@ import ApplicantsList from "./components/Jobs/AdminApplicantList/applicants/appl
 import Messages from "./components/Msg";
 import EditAttendanceData from "./components/Admin/EditAttendanceData";
 import PendingUsersTable from "./components/Admin/PendingUsers";
+// import AttendanceProfileForm from "./components/attendancesProfileEditForm";
 // import SponsorshipForm from "./components/Sponsor/AdminSponsorOption";
 // import Echo from "laravel-echo";
 // import Pusher from 'pusher-js';
@@ -248,6 +249,7 @@ const App = () => {
         <Route path="/job" element={<CreateJob />} />
         <Route path="/job/admin" element={<JobApplicants />} />
         <Route path="/pending/users" element={<PendingUsersTable />} />
+        {/* <Route path="/Attendance/profile" element={<AttendanceProfileForm />} /> */}
         <Route
           path="/job/admin/Applicants/:jobId"
           element={<ApplicantsList />}

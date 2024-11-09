@@ -9,6 +9,7 @@ const AirportTransferPrice = () => {
     const [toAirportPrice, setToAirportPrice] = useState('');
     const [roundTripPrice, setRoundTripPrice] = useState('');
     const [isOpen, setIsOpen] = useState(true);
+    const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
     const conferenceId = 1; 
 
@@ -22,7 +23,7 @@ const AirportTransferPrice = () => {
         };
 const token =localStorage.getItem("token")
         try  {
-            const response = await axios.post('http://127.0.0.1:8000/api/airport-transfer-prices', prices, {
+            const response = await axios.post(`${BaseUrl}/airport-transfer-prices`, prices, {
                 headers: {
                     Authorization: `Bearer ${token}`, // إضافة التوكن إلى الهيدر
                 },

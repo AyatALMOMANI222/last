@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import "./style.scss";
 
 const EditSpeakerData = () => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const { conferenceId, userId } = useParams();
   const [specificFlightTime, setSpecificFlightTime] = useState(false);
   const [isOnlineApproved, setIsOnlineApproved] = useState(true);
@@ -23,7 +25,7 @@ const EditSpeakerData = () => {
     try {
       await httpService({
         method: "POST",
-        url: `http://127.0.0.1:8000/api/admin/speakers/${userId}/${conferenceId}`,
+        url: `${BaseUrl}/admin/speakers/${userId}/${conferenceId}`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
         data: {

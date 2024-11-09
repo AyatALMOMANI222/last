@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 const StepperAcceptFlightContext = createContext();
 
 export const StepperAcceptFlightProvider = ({ children }) => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [passportImage, setPassportImage] = useState(null);
@@ -17,7 +19,7 @@ export const StepperAcceptFlightProvider = ({ children }) => {
 
     const response = await httpService({
       method: "GET",
-      url: `http://127.0.0.1:8000/api/companion-flight/${user_id}`,
+      url: `${BaseUrl}/companion-flight/${user_id}`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
     });
     setFlightMembers(response);

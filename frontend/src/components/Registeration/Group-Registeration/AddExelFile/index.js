@@ -12,6 +12,7 @@ const ExcelUpload = () => {
   const [showUploadForm, setShowUploadForm] = useState(true); // إظهار فورم التحميل
   const [isUpdating, setIsUpdating] = useState(false); // حالة التحديث
   const [dataLoaded, setDataLoaded] = useState(false); // حالة تتبع تحميل البيانات
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const getGroupData = async () => {
     const getAuthToken = () => localStorage.getItem("token");
@@ -19,7 +20,7 @@ const ExcelUpload = () => {
     try {
       const response = await httpService({
         method: "GET",
-        url: `http://127.0.0.1:8000/api/group`,
+        url: `${BaseUrl}/group`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
       });
       setUserGroupData(response.data);
@@ -52,7 +53,9 @@ const ExcelUpload = () => {
     const fileExtension = excelFile.name.split(".").pop().toLowerCase();
 
     if (!allowedExtensions.includes(fileExtension)) {
-      toast.error("⚠️ The file you uploaded is not a valid Excel file. Please upload a file of type: xlsx, csv, or xls.");
+      toast.error(
+        "⚠️ The file you uploaded is not a valid Excel file. Please upload a file of type: xlsx, csv, or xls."
+      );
       return;
     }
 
@@ -66,7 +69,7 @@ const ExcelUpload = () => {
     }
 
     try {
-      const url = `http://127.0.0.1:8000/api/update/user`; // استخدام URL ثابت
+      const url = `${BaseUrl}/update/user`; // استخدام URL ثابت
 
       const response = await axios({
         method: "POST",
@@ -95,7 +98,8 @@ const ExcelUpload = () => {
     }
   };
 
-  const isUpdateDeadlinePassed = userGroupData && new Date() > new Date(userGroupData.update_deadline);
+  const isUpdateDeadlinePassed =
+    userGroupData && new Date() > new Date(userGroupData.update_deadline);
 
   return (
     <div className="excel-upload-container">
@@ -121,17 +125,20 @@ const ExcelUpload = () => {
           >
             Download Excel File
           </a> */}
-          <a   href={`${backendUrlImages}/${userGroupData.excel_file}`}
- download className="file-download-link">
-    Download Excel File
-</a>
+          <a
+            href={`${backendUrlImages}/${userGroupData.excel_file}`}
+            download
+            className="file-download-link"
+          >
+            Download Excel File
+          </a>
 
           <p>Update Deadline: {userGroupData.update_deadline}</p>
           {/* إضافة شرط لإخفاء الجملة إذا كان الموعد النهائي قد انقضى */}
           {!isUpdateDeadlinePassed && (
             <p>
-              After this deadline, you won’t be able to modify or send any updated
-              list.
+              After this deadline, you won’t be able to modify or send any
+              updated list.
             </p>
           )}
           {/* إضافة شرط لإخفاء الزر إذا كان الموعد النهائي قد انقضى */}

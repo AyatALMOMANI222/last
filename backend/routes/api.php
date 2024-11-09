@@ -113,7 +113,7 @@ Route::delete('/tourist-sites/{id}', [TouristSiteController::class, 'destroy'])-
 Route::get('/tourist-sites', [TouristSiteController::class, 'index']);
 
 // For API routes in routes/api.php
-Route::post('/papers', [PaperController::class, 'create']);
+Route::post('/papers', [PaperController::class, 'store']);
 Route::get('/papers/con/{conference_id}', [PaperController::class, 'getPapersByConferenceId'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/papers/{paper_id}', [PaperController::class, 'getPaperById']);
 

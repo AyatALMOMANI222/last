@@ -6,6 +6,8 @@ import { useAuth } from "../../../common/AuthContext";
 import "./style.scss";
 
 const GetCompanion = () => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const [companions, setCompanions] = useState([]);
   const { userId } = useAuth();
 
@@ -13,7 +15,7 @@ const GetCompanion = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`http://127.0.0.1:8000/api/companion-flight/${userId}`, {
+      .get(`${BaseUrl}/companion-flight/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

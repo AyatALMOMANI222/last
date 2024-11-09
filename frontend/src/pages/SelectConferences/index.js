@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import './style.scss';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import "./style.scss";
+
 
 const SelectConferences = () => {
   const [allConference, setAllConference] = useState([]);
-  const [conferenceName, setConferenceName] = useState('');
+  const [conferenceName, setConferenceName] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const getConference = () => {
-    const searchQuery = conferenceName ? `?search=${encodeURIComponent(conferenceName)}` : '';
-    const url = `http://127.0.0.1:8000/api/con${searchQuery}`;
-
+    const searchQuery = conferenceName
+      ? `?search=${encodeURIComponent(conferenceName)}`
+      : "";
+    const url = `${BaseUrl}/con${searchQuery}`;
+    console.log(BaseUrl);
     axios
       .get(url)
       .then((response) => {
         setAllConference(response.data.data);
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   useEffect(() => {
@@ -28,15 +31,14 @@ const SelectConferences = () => {
 
   const handleTitleClick = (conferenceId) => {
     const currentPath = location.pathname;
-    console.log({currentPath});
-    if(currentPath ==="/registerPage/attendance"){
+    console.log({ currentPath });
+    if (currentPath === "/registerPage/attendance") {
       console.log("hedaya");
-      
+
       navigate(`/register/attendance/${conferenceId}`);
-    }else if(currentPath ==="/registerPage/speaker"){
+    } else if (currentPath === "/registerPage/speaker") {
       navigate(`/register/speaker/${conferenceId}`);
-    }
-    else if(currentPath ==="/registerPage/group"){
+    } else if (currentPath === "/registerPage/group") {
       navigate(`/register/group/${conferenceId}`);
     }
     // navigate(`${currentPath}/${conferenceId}`);

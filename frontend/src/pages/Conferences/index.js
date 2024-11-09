@@ -25,6 +25,7 @@ const ConferencesPage = () => {
   const [status, setStatus] = useState("upcoming");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -47,7 +48,7 @@ const ConferencesPage = () => {
     const searchQuery = conferenceName
       ? `?search=${encodeURIComponent(conferenceName)}`
       : "";
-    const url = `http://127.0.0.1:8000/api/con${searchQuery}`;
+    const url = `${BaseUrl}/con${searchQuery}`;
 
     httpService({
       method: "GET",

@@ -10,12 +10,11 @@ use App\Notifications\EmailNotification;
 
 class PaperController extends Controller
 {
-    public function create(Request $request)
+    public function store(Request $request, $conferenceId)
     {
         try {
-            // التحقق من صحة البيانات
+            // Validate the incoming request
             $validatedData = $request->validate([
-                'conference_id' => 'required|exists:conferences,id',
                 'author_name' => 'required|string|max:255',
                 'author_title' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
@@ -23,59 +22,51 @@ class PaperController extends Controller
                 'whatsapp' => 'nullable|string|max:20',
                 'country' => 'required|string|max:255',
                 'nationality' => 'required|string|max:255',
-                'password' => 'required|string|max:255', // تأكد من تشفير كلمة السر
-                'file_path' => 'required|file|mimes:pdf|max:2048', // تعديل بناءً على نوع الملفات المطلوبة
-                'status' => 'nullable|in:under_review,accepted,rejected',
+                'password' => 'required|string|max:255',
+                'file_path' => 'nullable|file|mimes:pdf', // validate the file
+                // 'second_announcement_pdf' => 'nullable|file|mimes:pdf', // validate the second file
             ]);
-
-            // معالجة الملف
-            $filePath = $request->file('file_path')->store('scientific_papers', 'public');
-
-            // تشفير كلمة المرور
-            $hashedPassword = bcrypt($validatedData['password']);
-
-            // إنشاء سجل جديد في جدول scientific_papers
-            $paper = Paper::create([
-                'conference_id' => $validatedData['conference_id'],
-                'author_name' => $validatedData['author_name'],
-                'author_title' => $validatedData['author_title'],
-                'email' => $validatedData['email'],
-                'phone' => $validatedData['phone'],
-                'whatsapp' => $validatedData['whatsapp'],
-                'country' => $validatedData['country'],
-                'nationality' => $validatedData['nationality'],
-                'password' => $hashedPassword, // حفظ كلمة السر المشفرة
-                'file_path' => $filePath,
-                'status' => $validatedData['status'] ?? 'under_review',
-            ]);
-
-            // محاولة إرسال إشعار بالبريد الإلكتروني
-            try {
-                $message = 'Your scientific paper has been successfully submitted. Thank you for your submission.';
-                Notification::route('mail', $validatedData['email'])->notify(new EmailNotification($message));
-                // broadcast(new NotificationSent([
-                //     'message' => $message,
-                //     'email' => $validatedData['email'],
-                // ]));
-                return response()->json([
-                    'message' => 'Paper created and notification sent successfully!',
-                    'data' => $paper,
-                    'email_status' => 'Email sent successfully.'
-                ], 201);
-            } catch (\Exception $e) {
-                // في حال فشل إرسال البريد الإلكتروني
-                return response()->json([
-                    'message' => 'Paper created but email notification failed to send.',
-                    'data' => $paper,
-                    'email_error' => $e->getMessage()
-                ], 201);
+    
+            // Create new paper record
+            $scientificPaper = new Paper();
+            $scientificPaper->conference_id = $conferenceId;
+            $scientificPaper->author_name = $validatedData['author_name'];
+            $scientificPaper->author_title = $validatedData['author_title'];
+            $scientificPaper->email = $validatedData['email'];
+            $scientificPaper->phone = $validatedData['phone'];
+            $scientificPaper->whatsapp = $validatedData['whatsapp'] ?? null;
+            $scientificPaper->country = $validatedData['country'];
+            $scientificPaper->nationality = $validatedData['nationality'];
+            $scientificPaper->password = Hash::make($validatedData['password']);
+            $scientificPaper->status = 'under_review';
+    
+            // Handle file upload for file_path
+            if ($request->hasFile('file_path')) {
+                $filePath = $request->file('file_path')->store('papers', 'public'); // Store file in the 'papers' folder
+                $scientificPaper->file_path = $filePath;
             }
-        } catch (\Exception $e) {
+    
+            $scientificPaper->save();
+    
             return response()->json([
-                'message' => 'Error creating paper',
+                'message' => 'Scientific paper added successfully!',
+                'data' => $scientificPaper
+            ], 201);
+    
+        } catch (Exception $e) {
+            Log::error('Error storing scientific paper: ' . $e->getMessage());
+    
+            return response()->json([
+                'message' => 'Failed to add scientific paper',
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+    
+
+    private function storeFile($file, $folder)
+    {
+        return $file->store($folder, 'public');
     }
 
 
@@ -128,3 +119,5 @@ class PaperController extends Controller
         }
     }
 }
+
+

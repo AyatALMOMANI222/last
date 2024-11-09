@@ -29,6 +29,7 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
   const [duration, setDuration] = useState(0);
   const [availableDates, setAvailableDates] = useState("");
   const [tripDetails, setTripDetails] = useState("");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +64,7 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/trips",
+        `${BaseUrl}/trips`,
         formData,
         {
           headers: {

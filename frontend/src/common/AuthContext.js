@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const [userImage, setUserImage] = useState(null);
@@ -12,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [registrationType, setRegistrationType] = useState(null);
   const [isAdmin, setIsAdmin] = useState(null);
   const [speakerData, setSpeakerData] = useState(null);
+  const [attendancesData, setAttendancesData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,17 +28,29 @@ export const AuthProvider = ({ children }) => {
 
   const fetchSpeakerData = async (authToken) => {
     try {
+      const response = await axios.get(`${BaseUrl}/speakers/info`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      setSpeakerData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch speaker data:", error);
+    }
+  };
+
+  const fetchAttendancesData = async (authToken) => {
+    try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/speakers/info",
+        `${BaseUrl}/attendances`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
         }
       );
-      console.log({speaket :response.data});
-      
-      setSpeakerData(response.data);
+      setAttendancesData(response.data);
     } catch (error) {
       console.error("Failed to fetch speaker data:", error);
     }
@@ -44,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserData = async (authToken) => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/user", {
+      const response = await axios.get(`${BaseUrl}/user`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -54,6 +68,8 @@ export const AuthProvider = ({ children }) => {
 
       if (userData?.registration_type === "speaker") {
         await fetchSpeakerData(authToken);
+      } else if (userData?.registration_type === "attendance") {
+        fetchAttendancesData(authToken);
       }
 
       setUserId(userData.id);
@@ -101,9 +117,10 @@ export const AuthProvider = ({ children }) => {
         myConferenceName,
         registrationType,
         isAdmin,
-        speakerData, 
+        speakerData,
+        attendancesData,
         logout,
-        login
+        login,
       }}
     >
       {children}

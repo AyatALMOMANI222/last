@@ -11,21 +11,18 @@ import { backendUrlImages } from "../../constant/config";
 import { useAuth } from "../../common/AuthContext";
 import "./style.scss";
 
-const SpeakerProfileForm = () => {
-  const { speakerData, attendancesData, registrationType } = useAuth();
+const AttendanceProfileForm = () => {
+  const { attendancesData, registrationType } = useAuth();
   const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const [formFiles, setFormFiles] = useState({
     image: null,
-    abstract: null,
-    presentationFile: null,
   });
   const [attendanceOptions, setAttendanceOptions] = useState({
     showOnlineOption: false,
     inPerson: false,
     onlineParticipation: false,
   });
-  const [topics, setTopics] = useState([]);
   const [profileDetails, setProfileDetails] = useState({
     userName: "",
     userImage: "",
@@ -33,20 +30,14 @@ const SpeakerProfileForm = () => {
   });
 
   const initializeProfileDetails = useCallback(() => {
-    if (registrationType === "speaker") {
-      setProfileDetails({
-        userName: speakerData.speaker.name,
-        userImage: speakerData.speaker.image,
-        userBio: speakerData.speaker.biography,
-      });
-    } else if (registrationType === "attendance") {
+    if (registrationType === "attendance") {
       setProfileDetails({
         userName: attendancesData?.attendance.name,
         userImage: attendancesData?.attendance.image,
         userBio: attendancesData?.attendance.biography,
       });
     }
-  }, [registrationType, speakerData, attendancesData]);
+  }, [registrationType, attendancesData]);
 
   useEffect(() => {
     initializeProfileDetails();
@@ -58,17 +49,13 @@ const SpeakerProfileForm = () => {
     Object.entries(formFiles).forEach(([key, value]) => {
       if (value) formData.append(key, value);
     });
-    formData.append("topics", JSON.stringify(topics));
-    formData.append(
-      "online_participation",
-      attendanceOptions.onlineParticipation ? 1 : 0
-    );
+    formData.append("online_participation", attendanceOptions.onlineParticipation ? 1 : 0);
 
     try {
       const token = localStorage.getItem("token");
       await httpService({
         method: "POST",
-        url: `${BaseUrl}/speakers/user/update`,
+        url: `${BaseUrl}/attendances/user/update`,
         headers: { Authorization: `Bearer ${token}` },
         data: formData,
         withToast: true,
@@ -91,33 +78,15 @@ const SpeakerProfileForm = () => {
     toggleAttendanceOptions();
   }, [attendanceOptions.inPerson, attendanceOptions.onlineParticipation]);
 
-  const handleTopicChange = (index, newValue) => {
-    setTopics((prev) =>
-      prev.map((topic, i) => (i === index ? newValue : topic))
-    );
-  };
-
-  const handleRemoveTopic = (index) => {
-    setTopics((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleAddTopic = () => {
-    setTopics((prev) => [...prev, ""]);
-  };
-
-  const handleFileChange = (key) => (file) => {
-    setFormFiles((prev) => ({ ...prev, [key]: file }));
-  };
-
   return (
-    <div className="speaker-profile-section-container">
-      <form onSubmit={handleUpdate} className="speaker-profile-form">
+    <div className="attendance-profile-section-container">
+      <form onSubmit={handleUpdate} className="attendance-profile-form">
         <div className="profile-container-img">
           <div className="profile-section">
             <img
               src={`${backendUrlImages}${profileDetails.userImage}`}
               alt="User Profile"
-              className="profile-image-speakerr"
+              className="profile-image-attendance"
             />
             <div className="profile-details">
               <div className="profile-name">{profileDetails.userName}</div>
@@ -129,28 +98,6 @@ const SpeakerProfileForm = () => {
         </div>
 
         <div className="profile-files">
-          <ImageUpload
-            errorMsg=""
-            required
-            label="Abstract"
-            allowedExtensions={["txt", "pdf", "doc", "docx"]}
-            inputValue={formFiles.abstract}
-            setInputValue={handleFileChange("abstract")}
-            className="image-upload"
-            placeholder="Abstract"
-          />
-
-          <ImageUpload
-            errorMsg=""
-            required
-            label="Presentation File"
-            allowedExtensions={["ppt", "pptx"]}
-            inputValue={formFiles.presentationFile}
-            setInputValue={handleFileChange("presentationFile")}
-            className="image-upload"
-            placeholder="Presentation File"
-          />
-
           {attendanceOptions.showOnlineOption && (
             <div className="attendance-option">
               <h3 className="attendance-title">
@@ -182,44 +129,11 @@ const SpeakerProfileForm = () => {
               </div>
               {attendanceOptions.onlineParticipation && (
                 <div className="notice">
-                  You will be provided with the Zoom link one day before the
-                  event.
+                  You will be provided with the Zoom link one day before the event.
                 </div>
               )}
             </div>
           )}
-
-          <div className="topic-section">
-            <div className="topics-container">
-              <div className="topic-title">Topics</div>
-              <div className="topics-container-inputs">
-                {topics.map((topic, index) => (
-                  <div key={index} className="topic-input-container">
-                    <Input
-                      placeholder="Enter a topic"
-                      inputValue={topic}
-                      setInputValue={(newValue) =>
-                        handleTopicChange(index, newValue)
-                      }
-                      className="topic-input"
-                    />
-                    <SVG
-                      className="delete-icon"
-                      src={deleteIcon}
-                      onClick={() => handleRemoveTopic(index)}
-                    />
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={handleAddTopic}
-                  className="add-topic-btnn"
-                >
-                  Add Topic
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
 
         <button className="update-btn" type="submit">
@@ -230,4 +144,4 @@ const SpeakerProfileForm = () => {
   );
 };
 
-export default SpeakerProfileForm;
+export default AttendanceProfileForm;

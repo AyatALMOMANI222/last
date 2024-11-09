@@ -13,6 +13,8 @@ import { useAuth } from "../../common/AuthContext";
 import "./style.scss";
 
 const MainFlightForm = ({ setOpenForm, getFlightData }) => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const { userId } = useAuth();
   const [arrivalDate, setArrivalDate] = useState("");
   const [departureDate, setDepartureDate] = useState("");
@@ -48,7 +50,7 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
     formData.append("user_id", userId);
 
     axios
-      .post("http://127.0.0.1:8000/api/flights", formData, {
+      .post(`${BaseUrl}/flights`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -173,6 +175,8 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
 };
 
 const FlightForm = () => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const { userId } = useAuth();
   const [data, setData] = useState({});
   const [openFlight, setOpenFlight] = useState(false);
@@ -186,7 +190,7 @@ const FlightForm = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .get("http://127.0.0.1:8000/api/flight", {
+      .get(`${BaseUrl}/flight`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -205,7 +209,7 @@ const FlightForm = () => {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`http://127.0.0.1:8000/api/available-flights/${id}`, {
+      .get(`${BaseUrl}/available-flights/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {

@@ -17,6 +17,7 @@ const RoomForm = ({ openRoom, setOpenRoom }) => {
   const [lateCheckOut, setLateCheckOut] = useState(false);
   const [earlyCheckIn, setEarlyCheckIn] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const options = [
     { value: "Single", label: "Single" },
@@ -66,7 +67,7 @@ const RoomForm = ({ openRoom, setOpenRoom }) => {
   
 
     axios
-      .post("http://127.0.0.1:8000/api/room", formData)
+      .post(`${BaseUrl}/room`, formData)
       .then((response) => {
         // Handle success
         console.log("Room data submitted successfully:", response.data);

@@ -15,12 +15,13 @@ const SponsorshipForm = () => {
   const [error, setError] = useState(null);
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState("");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const token = localStorage.getItem("token");
 
   // Get upcoming conferences
   const getConference = () => {
-    const url = `http://127.0.0.1:8000/api/con/upcoming`;
+    const url = `${BaseUrl}/con/upcoming`;
 
     axios
       .get(url, {
@@ -57,7 +58,7 @@ const SponsorshipForm = () => {
 
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/sponsorship-options/${conferenceId.value}`,
+        `${BaseUrl}/sponsorship-options/${conferenceId.value}`,
         {
           title,
           description,

@@ -9,6 +9,7 @@ import axios from "axios";
 const RegisterGroupPage = () => {
   const navigate = useNavigate();
   const { conferenceId } = useParams();
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const [organizationName, setOrganizationName] = useState(""); // اسم الجمعية أو وزارة الصحة أو الشركة
   const [contactPerson, setContactPerson] = useState("");
@@ -41,7 +42,7 @@ const RegisterGroupPage = () => {
 
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/register/group`,
+        `${BaseUrl}/register/group`,
         formData,
         {
           headers: {

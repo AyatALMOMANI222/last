@@ -7,11 +7,12 @@ const Lastt = () => {
   const [showRoomForm, setShowRoomForm] = useState(true); // Form visibility state
   const fetchRoomPrices = async () => {
     const token = localStorage.getItem("token"); // Retrieve the token
+    const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
     try {
       const response = await httpService({
         method: "GET",
-        url: `http://127.0.0.1:8000/api/room-prices/1`, // Endpoint to get room prices by conference ID
+        url: `${BaseUrl}/room-prices/1`, // Endpoint to get room prices by conference ID
         headers: {
           Authorization: `Bearer ${token}`, // Pass the token
         },

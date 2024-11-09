@@ -114,11 +114,12 @@ const BoothCostTable = () => {
 // Sponsor Section
 const SponsorSection = () => {
     const [options,setOptions]=useState([])
-   
+    const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
     const getSponsorshipOptions = async (conferenceId) => {
         try {
           const token = localStorage.getItem('token'); // تأكد من وجود التوكن في الـ localStorage
-          const response = await axios.get(`http://127.0.0.1:8000/api/sponsorship-options/1`, {
+          const response = await axios.get(`${BaseUrl}/sponsorship-options/1`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

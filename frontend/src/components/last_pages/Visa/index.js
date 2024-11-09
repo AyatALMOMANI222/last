@@ -12,6 +12,8 @@ import SimpleLabelValue from "../../SimpleLabelValue";
 import { useAuth } from "../../../common/AuthContext";
 const VisaPage = () => {
   const { userId } = useAuth();
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const navigate = useNavigate(); // For navigation later
   const [showVisaForm, setShowVisaForm] = useState(false); // Control the display of the form
   const [passportImage, setPassportImage] = useState(null);
@@ -31,7 +33,7 @@ const VisaPage = () => {
 
   async function getConferenceById() {
     if (!conferenceId) return;
-    const url = `http://127.0.0.1:8000/api/con/id/${conferenceId}`;
+    const url = `${BaseUrl}/con/id/${conferenceId}`;
 
     try {
       const response = await axios.get(url);
@@ -65,7 +67,7 @@ const VisaPage = () => {
 
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/visa`,
+        `${BaseUrl}/visa`,
         formData,
         {
           headers: {
@@ -94,7 +96,7 @@ const VisaPage = () => {
     try {
       const data = await httpService({
         method: "GET",
-        url: `http://127.0.0.1:8000/api/visa`,
+        url: `${BaseUrl}/visa`,
         headers: {
           Authorization: `Bearer ${token}`, // Pass the token
         },

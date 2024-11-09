@@ -16,6 +16,7 @@ import httpService from "../../../common/httpService";
 import TicketPricingForm from "../TicketPricingForm";
 
 const FlightDetails = ({ data }) => {
+
   return (
     <div className="view-main-user-flight">
       <SimpleLabelValue
@@ -45,6 +46,7 @@ const FlightDetails = ({ data }) => {
 const FlightInformation = ({ member, index }) => {
   const { currentStep, completeStep, passportImage, flightMembers } =
     useFlightStepperAdmin();
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   // State to manage an array of trips
   const [trips, setTrips] = useState([
@@ -102,7 +104,7 @@ const FlightInformation = ({ member, index }) => {
   const handleSave = async (data) => {
     const response = await httpService({
       method: "POST",
-      url: `http://127.0.0.1:8000/api/available-flights/all`,
+      url: `${BaseUrl}/available-flights/all`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
       data: {
         flights: data,
@@ -117,7 +119,7 @@ const FlightInformation = ({ member, index }) => {
   const handleSavePrice = async (data) => {
     const response = await httpService({
       method: "POST",
-      url: `http://127.0.0.1:8000/api/admin/update-flight`,
+      url: `${BaseUrl}/admin/update-flight`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
       data: {
         flights: data,

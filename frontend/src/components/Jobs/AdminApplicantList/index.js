@@ -9,12 +9,14 @@ const JobApplicants= () => {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
   const [activeJobId, setActiveJobId] = useState(null);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
 const navigate =useNavigate()
   // Fetch jobs on component mount
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/all/job");
+        const response = await axios.get(`${BaseUrl}/all/job`);
         setJobs(response.data.jobs);
       } catch (error) {
         setError("Error fetching jobs: " + (error.response?.data?.message || error.message));

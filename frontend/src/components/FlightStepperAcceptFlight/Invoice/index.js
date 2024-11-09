@@ -3,6 +3,7 @@ import "./style.scss";
 
 const Invoice = () => {
   const [flightTrips, setFlightTrips] = useState([]);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const getFlights = () => {
     const trips = [];
@@ -23,7 +24,7 @@ const Invoice = () => {
   const fetchFlightDetails = async (flightId) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/api/flight/id/${flightId}`
+        `${BaseUrl}/flight/id/${flightId}`
       );
       const data = await response.json();
 

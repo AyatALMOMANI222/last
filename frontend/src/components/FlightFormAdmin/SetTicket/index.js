@@ -7,6 +7,7 @@ import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
 
 const UpdateTicket = ({ data, setOpen }) => {
   const [ticket, setTicket] = useState("");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   console.log(data);
 
@@ -22,7 +23,7 @@ const UpdateTicket = ({ data, setOpen }) => {
     // إرسال البيانات باستخدام axios
     axios
       .put(
-        `http://127.0.0.1:8000/api/admin/update-flight/${flightId}`,
+        `${BaseUrl}/admin/update-flight/${flightId}`,
         formData,
         {
           headers: {

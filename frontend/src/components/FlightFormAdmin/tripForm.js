@@ -6,6 +6,8 @@ import axios from "axios";
 import "./style.scss";
 
 const AddTripForm = ({ data, setOpen }) => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const [departureDate, setDepartureDate] = useState("");
   const [departureTime, setDepartureTime] = useState("");
   const [price, setPrice] = useState("");
@@ -25,7 +27,7 @@ const AddTripForm = ({ data, setOpen }) => {
     };
 
     // إرسال البيانات باستخدام axios
-    axios.post("http://127.0.0.1:8000/api/available-flights", formData, {
+    axios.post(`${BaseUrl}/available-flights`, formData, {
       headers: {
         'Authorization': `Bearer ${token}`, // تضمين التوكن في الهيدر
         'Content-Type': 'application/json'  // تحديد نوع المحتوى

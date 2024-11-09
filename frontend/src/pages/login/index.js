@@ -15,7 +15,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
   const [error, setError] = useState({
     email: "",
     password: "",
@@ -23,7 +23,9 @@ const LoginPage = () => {
   });
 
   const submitlLogin = async () => {
-    const url = "http://127.0.0.1:8000/api/login";
+    const url = `${BaseUrl}/login`;
+    console.log({BaseUrl});
+    
     const userData = {
       email,
       password,

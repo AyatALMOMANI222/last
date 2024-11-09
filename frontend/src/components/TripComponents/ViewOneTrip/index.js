@@ -10,20 +10,19 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
   const [options, setOptions] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const fetchTripData = async (tripId) => {
     if (!tripId) {
       return;
     }
     try {
       const token = localStorage.getItem("token"); // Get the token from localStorage
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/trip/${tripId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Set the Authorization header
-          },
-        }
-      );
+      const response = await axios.get(`${BaseUrl}/trip/${tripId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Set the Authorization header
+        },
+      });
       setOptions(response.data.trip.additional_options);
       setData(response.data?.trip);
     } catch (err) {

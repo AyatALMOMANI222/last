@@ -17,6 +17,7 @@ const RegisterSponsorPage = () => {
   const [whatsApp, setWhatsApp] = useState("");
   const [email, setEmail] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const [error, setError] = useState({
     companyName: "",
@@ -41,7 +42,7 @@ const RegisterSponsorPage = () => {
       // استدعاء HTTP لإنشاء الراعي
       await httpService({
         method: "POST",
-        url: `http://127.0.0.1:8000/api/sponsor`,
+        url: `${BaseUrl}/sponsor`,
         data: sponsorData,
         withToast: true,
       });

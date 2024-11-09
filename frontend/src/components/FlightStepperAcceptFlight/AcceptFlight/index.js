@@ -9,6 +9,8 @@ import {
 } from "../../../common/localStorage";
 
 const AcceptFlight = ({ member, index }) => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const { currentStep, completeStep, passportImage, flightMembers } =
     useFlightStepperAdmin();
   const otherData = {
@@ -25,7 +27,7 @@ const AcceptFlight = ({ member, index }) => {
     try {
       const response = await httpService({
         method: "GET",
-        url: `http://127.0.0.1:8000/api/available-flights/${member?.flight_id}`,
+        url: `${BaseUrl}/available-flights/${member?.flight_id}`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
         withToast: false,
@@ -64,7 +66,7 @@ const AcceptFlight = ({ member, index }) => {
     try {
       await httpService({
         method: "POST",
-        url: `http://127.0.0.1:8000/api/accepted-flights/user/all`,
+        url: `${BaseUrl}/accepted-flights/user/all`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
         data: {

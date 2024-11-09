@@ -19,6 +19,7 @@ const RegisterPage = () => {
 
   const navigate = useNavigate();
   const { id } = useParams();
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -60,7 +61,7 @@ const RegisterPage = () => {
 
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/users/${id}`,
+        `${BaseUrl}/users/${id}`,
         formData,
         {
           headers: {

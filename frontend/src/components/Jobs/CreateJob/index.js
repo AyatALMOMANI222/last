@@ -10,6 +10,7 @@ const CreateJob = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const token = localStorage.getItem("token");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +23,7 @@ const CreateJob = () => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/job2",
+        `${BaseUrl}/job2`,
         jobData,
         {
           headers: {

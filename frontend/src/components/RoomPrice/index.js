@@ -18,7 +18,8 @@ const RoomPriceForm = () => {
   const [tripleCompanionPrice, setTripleCompanionPrice] = useState("");
   const [tripleEarlyCheckInPrice, setTripleEarlyCheckInPrice] = useState("");
   const [tripleLateCheckOutPrice, setTripleLateCheckOutPrice] = useState("");
-  
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const navigate = useNavigate();
 
   const handleRegister2 = async (e) => {
@@ -29,7 +30,7 @@ const RoomPriceForm = () => {
     try {
       const response = await httpService({
         method: "POST",
-        url: "http://127.0.0.1:8000/api/room-prices",
+        url: `${BaseUrl}/room-prices`,
         headers: {
           Authorization: `Bearer ${token}`,
         },

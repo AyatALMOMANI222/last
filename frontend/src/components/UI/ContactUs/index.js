@@ -9,6 +9,7 @@ const ContactUs = () => {
     subject: '',
     message: '',
   });
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
@@ -24,7 +25,7 @@ const ContactUs = () => {
 
     try {
       // إرسال البيانات إلى API باستخدام axios
-      const response = await axios.post('http://127.0.0.1:8000/api/messages', formData);
+      const response = await axios.post(`${BaseUrl}/messages`, formData);
       
       setResponseMessage('Message sent successfully!');
       setIsFormSent(true); // تم إرسال النموذج بنجاح

@@ -10,6 +10,8 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../../../common/AuthContext";
 
 const MainFlightFormUpdate = () => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const { id } = useParams();
   const { userId } = useAuth();
   const [arrivalDate, setArrivalDate] = useState("");
@@ -62,7 +64,7 @@ const MainFlightFormUpdate = () => {
     formData.append("user_id", userId);
 
     axios
-      .post(`http://127.0.0.1:8000/api/user/update-flight/${id}`, formData, {
+      .post(`${BaseUrl}/user/update-flight/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -80,7 +82,7 @@ const MainFlightFormUpdate = () => {
 
   const getFlightData = () => {
     axios
-      .get(`http://127.0.0.1:8000/api/flight`, {
+      .get(`${BaseUrl}/flight`, {
         headers: {
           Authorization: `Bearer ${token}`, // تمرير التوكن باستخدام Bearer
         },

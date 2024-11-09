@@ -10,6 +10,7 @@ const AddOption = ({ isOpen, setIsOpen, tripId }) => {
   const [options, setOptions] = useState([
     { optionName: "", optionDescription: "", price: 0 },
   ]);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handleOptionChange = (index, field, value) => {
     const newOptions = [...options];
@@ -40,7 +41,7 @@ const AddOption = ({ isOpen, setIsOpen, tripId }) => {
 
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/additional-options",
+          `${BaseUrl}/additional-options`,
           optionData,
           {
             headers: {

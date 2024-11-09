@@ -23,9 +23,10 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   const [errorMsg, setErrorMsg] = useState(""); // Manage error messages
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState([]);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const getConference = () => {
-    const url = `http://127.0.0.1:8000/api/con`;
+    const url = `${BaseUrl}/con`;
 
     axios
       .get(url)
@@ -62,7 +63,7 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/exhibitions",
+        `${BaseUrl}/exhibitions`,
         formData,
         {
           headers: {
@@ -174,6 +175,7 @@ const Exhibitions = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [openViewForm, setOpenViewForm] = useState(false);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -187,7 +189,7 @@ const Exhibitions = () => {
   const getExhibitions2 = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/exhibitions",
+        `${BaseUrl}/exhibitions`,
         {
           params: {
             search: exhibitionName,
@@ -206,7 +208,7 @@ const Exhibitions = () => {
     try {
       await httpService({
         method: "GET",
-        url: "http://127.0.0.1:8000/api/exhibitions",
+        url: `${BaseUrl}/exhibitions`,
         params: {
           search: exhibitionName,
           status: status?.value,

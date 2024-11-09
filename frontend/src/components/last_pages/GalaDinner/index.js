@@ -20,8 +20,10 @@ const GalaDinner = ({ isOpen, setIsOpen }) => {
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState("");
 const token= localStorage.getItem("token")
+const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const getConference = () => {
-    const url = `http://127.0.0.1:8000/api/con/upcoming`;
+    const url = `${BaseUrl}/con/upcoming`;
 
     axios
     .get(url, {
@@ -66,7 +68,7 @@ console.log(allConference);
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/dinner-details",
+        `${BaseUrl}/dinner-details`,
         dinnerDetails,
         {
           headers: {

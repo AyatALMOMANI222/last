@@ -7,13 +7,15 @@ import tripImage from "../../../../icons/tripImage.webp";
 const ViewUserTrips = () => {
   const navigate = useNavigate();
   const [allTrips, setAllTrips] = useState([]);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const getAuthToken = () => localStorage.getItem("token");
 
   const getAllTrips = async () => {
     try {
       const response = await httpService({
         method: "GET",
-        url: `http://127.0.0.1:8000/api/all-trip`,
+        url: `${BaseUrl}/all-trip`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         withLoadder: true,
         withToast: false,

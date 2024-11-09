@@ -10,13 +10,14 @@ export const AdminFlightStepperProvider = ({ children }) => {
   const [passportImage, setPassportImage] = useState(null);
   const [flightMembers, setFlightMembers] = useState([]);
   const { user_id } = useParams();
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const getFlightData = async () => {
     const getAuthToken = () => localStorage.getItem("token");
 
     const response = await httpService({
       method: "GET",
-      url: `http://127.0.0.1:8000/api/companion-flight/${user_id}`,
+      url: `${BaseUrl}/companion-flight/${user_id}`,
       headers: { Authorization: `Bearer ${getAuthToken()}` },
     });
     setFlightMembers(response);

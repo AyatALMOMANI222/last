@@ -14,6 +14,7 @@ const AddScientificPaper = () => {
   const [nationality, setNationality] = useState("");
   const [password, setPassword] = useState("");
   const [file, setFile] = useState(null);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -29,7 +30,7 @@ const AddScientificPaper = () => {
     formData.append("file_path", file);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/papers", formData, {
+      const response = await axios.post(`${BaseUrl}papers`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

@@ -18,6 +18,8 @@ const EditExhibitionForm = ({ setIsOpen, getExhibitions, exhibitionData }) => {
   const [errorMsg, setErrorMsg] = useState(""); // Manage error messages
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState([]);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const statusOptions = [
     {
       label: "upcoming",
@@ -29,7 +31,7 @@ const EditExhibitionForm = ({ setIsOpen, getExhibitions, exhibitionData }) => {
     },
   ];
   const getConference = () => {
-    const url = `http://127.0.0.1:8000/api/con`;
+    const url = `${BaseUrl}/con`;
     axios
       .get(url)
       .then((response) => {
@@ -95,7 +97,7 @@ const EditExhibitionForm = ({ setIsOpen, getExhibitions, exhibitionData }) => {
     try {
       //ayat edit this for edit exhibitions not create
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/exhibitions/update/${exhibitionData.id}`,
+        `${BaseUrl}/exhibitions/update/${exhibitionData.id}`,
         formData,
         {
           headers: {

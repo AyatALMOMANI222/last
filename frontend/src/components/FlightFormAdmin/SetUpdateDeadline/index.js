@@ -6,6 +6,7 @@ import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
 
 const UpdateDeadline = ({ data, setOpen }) => {
   const [adminUpdateDeadline, setAdminUpdateDeadline] = useState("");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const flightId = data.flight_id;
   const handleSubmit = () => {
@@ -17,7 +18,7 @@ const UpdateDeadline = ({ data, setOpen }) => {
 
     axios
       .put(
-        `http://127.0.0.1:8000/api/admin/update-flight/${flightId}`,
+        `${BaseUrl}/admin/update-flight/${flightId}`,
         formData,
         {
           headers: {

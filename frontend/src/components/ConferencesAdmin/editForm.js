@@ -154,6 +154,8 @@ const EditConferencesAdmin = ({
   setConference,
   conferenceData,
 }) => {
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+
   const [committeeMembers, setCommitteeMembers] = useState([
     { id: Date.now(), name: "", image: null },
   ]);
@@ -270,15 +272,11 @@ const EditConferencesAdmin = ({
     });
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/con/committee",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post(`${BaseUrl}/con/committee`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setIsOpen(false);
       getConference();
@@ -318,13 +316,13 @@ const EditConferencesAdmin = ({
       formData.append("conference_brochure_pdf", brochure);
       formData.append("conference_scientific_program_pdf", scientificProgram);
       formData.append("scientific_topics", topics);
-      formData.append("companion_dinner_price", companionDinnerPrice );
+      formData.append("companion_dinner_price", companionDinnerPrice);
 
       formData.append("timestamps", new Date().toISOString());
       const token = localStorage.getItem("token");
       axios
         .post(
-          `http://127.0.0.1:8000/api/conferences/${conferenceData?.id}`,
+          `${BaseUrl}/conferences/${conferenceData?.id}`,
           formData,
           {
             headers: {

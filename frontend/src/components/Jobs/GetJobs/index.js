@@ -19,11 +19,12 @@ const JobList = () => {
   const [resume, setResume] = useState("");
   const [activeJobId, setActiveJobId] = useState(null); // حالة الوظيفة النشطة
   const [submittedJobs, setSubmittedJobs] = useState({}); // حالة الوظائف التي تم تقديم طلب لها
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/all/job");
+        const response = await axios.get(`${BaseUrl}/all/job`);
         setJobs(response.data.jobs); // تعيين البيانات في الحالة
         console.log(response.data.jobs);
       } catch (error) {
@@ -58,7 +59,7 @@ const JobList = () => {
 
     // إرسال البيانات إلى API
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/applicants", formData, {
+      const response = await axios.post(`${BaseUrl}/applicants`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

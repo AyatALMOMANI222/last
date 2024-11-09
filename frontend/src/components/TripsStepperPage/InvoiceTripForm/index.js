@@ -14,6 +14,7 @@ const InvoiceTripForm = () => {
   const participantsData = getFromLocalStorage("participants") || [];
   const additionalOptionsData = getFromLocalStorage("AdditionalOptionsData");
   const accommodationData = getFromLocalStorage("AccommodationData");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handleSubmit = () => {
     const token=localStorage.getItem("token")
@@ -37,7 +38,7 @@ const InvoiceTripForm = () => {
     console.log(body);
   
     // الاتصال بالـ API
-    axios.post("http://127.0.0.1:8000/api/trip-participants", body, {
+    axios.post(`${BaseUrl}/trip-participants`, body, {
       headers: {
         Authorization: `Bearer ${token}`, // إضافة التوكن هنا
         "Content-Type": "application/json", // تحديد نوع المحتوى
@@ -81,7 +82,7 @@ const InvoiceTripForm = () => {
     try {
       const response = await httpService({
         method: "GET",
-        url: `http://127.0.0.1:8000/api/trip_option/${tripId}`,
+        url: `${BaseUrl}/trip_option/${tripId}`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
       });
