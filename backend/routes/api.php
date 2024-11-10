@@ -95,7 +95,7 @@ Route::post('/con/{conference_id}/prices', [PricesController::class, 'store'])->
 Route::delete('/con/{conference_id}/{price_id}/prices', [PricesController::class, 'deletePriceByConferenceId'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/con/prices', [PricesController::class, 'getPricesByConferenceId']);
 
-Route::post('/con/scientific-papers/{conferenceId}', [ScientificPaperController::class, 'store']);
+// Route::post('/con/scientific-papers', [ScientificPaperController::class, 'store']);
 
 // exhibitions
 Route::post('/exhibitions', [ExhibitionController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
@@ -113,7 +113,11 @@ Route::delete('/tourist-sites/{id}', [TouristSiteController::class, 'destroy'])-
 Route::get('/tourist-sites', [TouristSiteController::class, 'index']);
 
 // For API routes in routes/api.php
-Route::post('/papers', [PaperController::class, 'store']);
+Route::post('/abstract', [PaperController::class, 'store']);
+Route::put('/abstract/con/{conference_id}/user/{user_id}', [PaperController::class, 'updateByAdmin']);
+// ->middleware(['auth:sanctum', 'admin']);
+
+
 Route::get('/papers/con/{conference_id}', [PaperController::class, 'getPapersByConferenceId'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/papers/{paper_id}', [PaperController::class, 'getPaperById']);
 

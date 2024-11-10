@@ -89,6 +89,12 @@ import Messages from "./components/Msg";
 import EditAttendanceData from "./components/Admin/EditAttendanceData";
 import PendingUsersTable from "./components/Admin/PendingUsers";
 import EnterNewFlights from "./components/Admin/EnterNewFlights";
+import EditAbstractData from "./components/abstract";
+import EventCard from "./components/CardEvent";
+import PastEvent from "./components/Event/Past";
+import UpcomingConferences2 from "./components/Event/upcoming";
+import PaperSubmissionForm from "./components/abstract/abstractUser";
+import OnePage from "./components/OnePageComponent";
 // import AttendanceProfileForm from "./components/attendancesProfileEditForm";
 // import SponsorshipForm from "./components/Sponsor/AdminSponsorOption";
 // import Echo from "laravel-echo";
@@ -257,6 +263,12 @@ const App = () => {
           element={<ApplicantsList />}
         />
         <Route path="/msgs" element={<Messages />} />
+        <Route path="/abs" element={<EditAbstractData />} />
+        <Route path="/past/event" element={<PastEvent />} />
+        <Route path="/up/event" element={<UpcomingConferences2 />} />
+        <Route path="/paper/form" element={< PaperSubmissionForm />} />
+        <Route path="/conference/:conferenceId" element={<OnePage />} />
+
         {/* <Route path="/sponsor/option/form" element={<SponsorshipForm/>} /> */}
       </Routes>
       {/* <Footer/> */}

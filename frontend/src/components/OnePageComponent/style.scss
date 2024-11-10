@@ -1,0 +1,159 @@
+/* متغيرات */
+$primary-color: #007bff;
+$bg-color: #f9f9f9;
+$text-color-dark: #333;
+$text-color-light: #555;
+$text-color-gray: #777;
+$box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+$border-radius: 8px;
+
+/* الحاوية الرئيسية */
+.conference-container6 {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 80%;
+  margin: 0 auto;
+  box-sizing: border-box;
+
+  /* الرأس */
+  .conference-header {
+    text-align: center;
+    margin-bottom: 20px;
+
+    .conference-title {
+      font-size: 2rem;
+      color: $text-color-dark;
+      margin-bottom: 15px;
+    }
+
+    .conference-image {
+      max-width: 60%; /* تصغير الصورة لتناسب المحتوى */
+      height: auto;
+      border-radius: $border-radius;
+      box-shadow: $box-shadow;
+      margin-bottom: 20px;
+      .img{
+        width: 100px;
+        height: 100px;
+      }
+    }
+  }
+
+  /* الوصف */
+  .conference-description {
+    font-size: 1.1rem;
+    color: $text-color-light;
+    margin-bottom: 20px;
+    text-align: justify;
+    line-height: 1.6;
+  }
+
+  /* قسم التفاصيل */
+  .conference-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+
+    .details-item {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.5;
+    }
+  }
+
+  /* قسم المستندات */
+  .conference-documents {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .document-link {
+      font-size: 1.1rem;
+      color: $primary-color;
+      text-decoration: none;
+      border: 1px solid $primary-color;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+
+      &:hover {
+        background-color: $primary-color;
+        color: white;
+      }
+    }
+  }
+
+  /* قسم الأسعار */
+  .conference-prices {
+    margin-bottom: 30px;
+
+    .price-item {
+      padding: 15px;
+      background-color: $bg-color;
+      border-radius: $border-radius;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+  }
+
+  /* قسم الموضوعات العلمية */
+  .conference-scientific-topics {
+    margin-bottom: 30px;
+
+    .topic-item {
+      padding: 15px;
+      background-color: $bg-color;
+      border-radius: $border-radius;
+      box-shadow: $box-shadow;
+      margin-bottom: 20px;
+
+      p {
+        margin: 5px 0;
+      }
+    }
+  }
+
+  /* الفوتر */
+  .conference-footer {
+    text-align: center;
+    font-size: 1rem;
+    color: $text-color-gray;
+  }
+}
+
+/* استعلامات الوسائط للشاشات الأكبر */
+@media (min-width: 768px) {
+  .conference-container6 {
+    max-width: 1200px;
+
+    .conference-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .conference-title {
+        font-size: 2.5rem;
+      }
+
+      .conference-image {
+        max-width: 60%; /* تصغير حجم الصورة أكثر في الشاشات الأكبر */
+      }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .conference-details {
+    flex-direction: row; /* ترتيب العناصر بشكل أفقي في الشاشات الأكبر */
+    justify-content: space-between;
+    gap: 20px;
+
+    .details-item {
+      width: 30%; /* كل عنصر يشغل 30% من العرض */
+    }
+  }
+}

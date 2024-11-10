@@ -307,13 +307,29 @@ class ConferenceController extends Controller
 
     public function getConferenceById($id)
     {
-        $conference = Conference::find($id);
-
-        if (!$conference) {
-            return response()->json(['message' => 'Conference not found'], 404);
+        try {
+            // Fetch the conference data by its ID
+            $conference = Conference::findOrFail($id);
+    
+            // Get related data like scientific topics and prices
+            $scientificTopics = ScientificTopic::where('conference_id', $id)->get();
+            $prices = ConferencePrice::where('conference_id', $id)->get();
+    
+            // Return the conference data with related information
+            return response()->json([
+                'conference' => $conference,
+                'scientific_topics' => $scientificTopics,
+                'prices' => $prices,
+                'image_url' => asset('storage/' . $conference->image), // Include URL to the image if uploaded
+                'first_announcement_pdf_url' => $conference->first_announcement_pdf ? asset('storage/' . $conference->first_announcement_pdf) : null,
+                'second_announcement_pdf_url' => $conference->second_announcement_pdf ? asset('storage/' . $conference->second_announcement_pdf) : null,
+                'conference_brochure_pdf_url' => $conference->conference_brochure_pdf ? asset('storage/' . $conference->conference_brochure_pdf) : null,
+                'conference_scientific_program_pdf_url' => $conference->conference_scientific_program_pdf ? asset('storage/' . $conference->conference_scientific_program_pdf) : null,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to retrieve conference data.', 'error' => $e->getMessage()], 500);
         }
-
-        return response()->json($conference, 200);
     }
+    
 
 }

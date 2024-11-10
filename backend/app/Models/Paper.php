@@ -9,30 +9,34 @@ class Paper extends Model
 {
     use HasFactory;
 
-    protected $table = 'scientific_papers';
+    protected $table = 'papers';
 
 
     protected $fillable = [
         'conference_id',
-        'author_name',
-        'author_title',
-        'email',
-        'phone',
-        'whatsapp',
-        'country',
-        'nationality',
-        'password',
+        'user_id',
+        'title',
+        'abstract',
         'file_path',
         'status',
+        'submitted_at'
     ];
 
     protected $casts = [
+        'submitted_at' => 'datetime',
         'status' => 'string',
     ];
 
- 
+    // تعريف علاقة الورقة العلمية بالمستخدم
+
+
+
     public function conference()
     {
-        return $this->belongsTo(Conference::class);
+        return $this->belongsToMany(Conference::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

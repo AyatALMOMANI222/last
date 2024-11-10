@@ -164,6 +164,15 @@ const NotificationDropdown = () => {
                 ) {
                   navigate(`/flight/form`);
                 }
+                else if (
+                  notification?.message?.includes(
+                    "A new Abstract has been added"
+                  )
+                ) {
+                  navigate(`/abs`);
+                }
+
+
               }}
             >
               {/* <span className="notification-dot"></span> */}

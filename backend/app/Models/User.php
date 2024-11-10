@@ -79,6 +79,10 @@ public function attendances()
     return $this->hasMany(Attendance::class);
 }
 
+public function papers()
+{
+    return $this->hasMany(Paper::class);
+}
     protected $attributes = [
         'isAdmin' => false, 
     ];

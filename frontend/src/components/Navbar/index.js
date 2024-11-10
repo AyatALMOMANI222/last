@@ -47,7 +47,7 @@ const NavBar = () => {
           subLinks: [
             {
               label: "Event",
-              url: "#",
+              url: "up/event",
             },
           ],
         },
@@ -55,7 +55,7 @@ const NavBar = () => {
           label: "Previous Events",
           url: "#",
           subMenu: "previous",
-          subLinks: [{ label: "Gallery", url: "#" }],
+          subLinks: [{ label: "Gallery", url: "/past/event" }],
         },
       ],
     },

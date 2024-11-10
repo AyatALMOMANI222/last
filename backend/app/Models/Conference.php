@@ -49,7 +49,7 @@ class Conference extends Model
     }
     public function papers()
     {
-        return $this->hasMany(Paper::class);
+        return $this->hasOne(Paper::class);
     }
 
     public function exhibition()
