@@ -26,7 +26,6 @@ import AirportTransferPrice from "./components/last_pages/AirportTransfer/Airpot
 import GalaDinner from "./components/last_pages/GalaDinner";
 import AddScientificPaper from "./components/SceintificPaper";
 import VisaPage from "./components/last_pages/Visa";
-import HomeR from "./pages/HomeR";
 import AboutUsEvent from "./components/UI/AboutUs";
 import OurClients from "./components/UI/OurClients";
 import OurTeams from "./components/UI/OurTeam";
@@ -95,6 +94,7 @@ import PastEvent from "./components/Event/Past";
 import UpcomingConferences2 from "./components/Event/upcoming";
 import PaperSubmissionForm from "./components/abstract/abstractUser";
 import OnePage from "./components/OnePageComponent";
+import Home from "./pages/HomeR";
 // import AttendanceProfileForm from "./components/attendancesProfileEditForm";
 // import SponsorshipForm from "./components/Sponsor/AdminSponsorOption";
 // import Echo from "laravel-echo";
@@ -173,7 +173,7 @@ const App = () => {
           element={<RegisterGroupPage />}
         />
         <Route path="/stepper" element={<ParentComponent />} />
-        <Route path="register/sponsor" element={<RegisterSponsorPage />} />
+        <Route path="register/sponsor/:conferenceId" element={<RegisterSponsorPage />} />
         <Route path="/create/trip" element={<ViewTrip />} />
         <Route path="/user" element={<UsersList />} />
         <Route path="/view-user-trips" element={<ViewUserTrips />} />
@@ -188,7 +188,7 @@ const App = () => {
         <Route path="/gala/dinner" element={<DinnerDetails />} />
         <Route path="/paper" element={<AddScientificPaper />} />
         <Route path="/visa" element={<VisaPage />} />
-        <Route path="/home" element={<HomeR />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/about_us" element={<AboutUsEvent />} />
         <Route path="/our_clients" element={<OurClients />} />
         <Route path="/our_team" element={<OurTeams />} />

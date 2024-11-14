@@ -23,6 +23,8 @@ use Illuminate\Validation\ValidationException;
                     'whatsapp_number' => 'nullable|string|max:255',
                     'email' => 'required|email|unique:users,email', // تأكد من أن البريد الإلكتروني فريد
                     // 'conference_id' => 'required|exists:conferences,id',
+                    'password' => 'required|string|min:8',
+
                     'company_name' => 'required|string|max:255',
                     'contact_person' => 'required|string|max:255',
                     'company_address' => 'required|string|max:255',
@@ -34,6 +36,9 @@ use Illuminate\Validation\ValidationException;
                     'whatsapp_number' => $validatedData['whatsapp_number'],
                     'email' => $validatedData['email'],
                     // 'conference_id' => $validatedData['conference_id'],
+                                    'password' => 'required|string|min:8',
+                                    'password' => bcrypt($validatedData['password']),
+
                 ]);
         
                 // إنشاء Sponsor وربطه بالمستخدم

@@ -9,12 +9,13 @@ import SVG from "react-inlinesvg";
 import httpService from "../../common/httpService";
 import { backendUrlImages } from "../../constant/config";
 import { useAuth } from "../../common/AuthContext";
+import { useNavigate } from "react-router-dom";
 import "./style.scss";
 
 const SpeakerProfileForm = () => {
   const { speakerData, attendancesData, registrationType } = useAuth();
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
-
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
+  const navigate = useNavigate();
   const [formFiles, setFormFiles] = useState({
     image: null,
     abstract: null,
@@ -31,6 +32,9 @@ const SpeakerProfileForm = () => {
     userImage: "",
     userBio: "",
   });
+
+  const [arrivalDate, setArrivalDate] = useState("");
+  const [departureDate, setDepartureDate] = useState("");
 
   const initializeProfileDetails = useCallback(() => {
     if (registrationType === "speaker") {
@@ -74,6 +78,7 @@ const SpeakerProfileForm = () => {
         withToast: true,
         showLoader: true,
       });
+      navigate("/visa");
     } catch (error) {
       toast.error("An error occurred while updating.");
     }
@@ -139,7 +144,6 @@ const SpeakerProfileForm = () => {
             className="image-upload"
             placeholder="Abstract"
           />
-
           <ImageUpload
             errorMsg=""
             required
@@ -150,7 +154,20 @@ const SpeakerProfileForm = () => {
             className="image-upload"
             placeholder="Presentation File"
           />
-
+          <Input
+            label="Arrival Date"
+            inputValue={arrivalDate}
+            setInputValue={setArrivalDate}
+            // className="date-input"
+            type="date"
+          />
+          <Input
+            label="Departure Date"
+            inputValue={departureDate}
+            setInputValue={setDepartureDate}
+            // className="date-input"
+            type="date"
+          />
           {attendanceOptions.showOnlineOption && (
             <div className="attendance-option">
               <h3 className="attendance-title">
@@ -188,7 +205,6 @@ const SpeakerProfileForm = () => {
               )}
             </div>
           )}
-
           <div className="topic-section">
             <div className="topics-container">
               <div className="topic-title">Topics</div>

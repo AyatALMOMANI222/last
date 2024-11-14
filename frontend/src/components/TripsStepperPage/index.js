@@ -16,7 +16,7 @@ const TripsStepperPageContent = () => {
     { title: "Accommodation Details" },
     { title: "Participant Details" },
     { title: "Additional Options Details" },
-    { title: "Step 4" },
+    { title: "Invoice" },
   ];
 
   const componentsMap = [
@@ -28,10 +28,10 @@ const TripsStepperPageContent = () => {
 
   useEffect(() => {
     return () => {
-      // removeFromLocalStorage("additionalOptions");
-      // removeFromLocalStorage("AdditionalOptionsData");
-      // removeFromLocalStorage("participants");
-      // removeFromLocalStorage("AccommodationData");
+      removeFromLocalStorage("additionalOptions");
+      removeFromLocalStorage("AdditionalOptionsData");
+      removeFromLocalStorage("participants");
+      removeFromLocalStorage("AccommodationData");
     };
   }, []);
   return (

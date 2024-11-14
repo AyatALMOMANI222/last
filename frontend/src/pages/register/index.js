@@ -203,7 +203,7 @@ const RegisterPage = () => {
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
       />
-      <div className="register-page-container">
+      <div className="register-page-container00">
         <form onSubmit={handleRegister} className="register-form">
           <div className="title">
             <span>Sign Up</span>

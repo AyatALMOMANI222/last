@@ -1,0 +1,106 @@
+.home-page-section {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+
+  .slider {
+    width: 99.9vw;
+    margin-left: calc(-50vw + 50%);
+    .slick-dots {
+      bottom: 10px;
+      li {
+        margin: 0 5px;
+        button {
+          &:before {
+            color: #fff;
+            font-size: 12px;
+            opacity: 0.75;
+          }
+        }
+      }
+      .slick-active button:before {
+        color: #d32f2f;
+      }
+    }
+
+    .slide-image {
+      width: 100%;
+      height: calc(100vh - 68px);
+      object-fit: cover;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .welcome-section {
+    text-align: center;
+    padding: 3rem 0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    h1 {
+      font-size: 2.5rem;
+      color: #d32f2f;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.125rem;
+      color: #555;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  }
+
+  .featured-section {
+    margin-top: 2rem;
+    padding: 3rem 2rem;
+
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      color: #d32f2f;
+      margin-bottom: 2rem;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+
+      .feature {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+        &:hover {
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+          transform: translateY(-5px);
+        }
+
+        .feature-icon {
+          width: 220px;
+          height: 100px;
+          margin-bottom: 1rem;
+          border-radius: 10px;
+        }
+
+        h3 {
+          font-size: 1.5rem;
+          color: #d32f2f;
+          margin-bottom: 0.5rem;
+        }
+
+        .desc {
+          font-size: 1rem;
+          line-height: 1.5;
+          color: #666;
+        }
+      }
+    }
+  }
+}

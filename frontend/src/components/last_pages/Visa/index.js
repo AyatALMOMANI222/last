@@ -12,7 +12,7 @@ import SimpleLabelValue from "../../SimpleLabelValue";
 import { useAuth } from "../../../common/AuthContext";
 const VisaPage = () => {
   const { userId } = useAuth();
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const navigate = useNavigate(); // For navigation later
   const [showVisaForm, setShowVisaForm] = useState(false); // Control the display of the form
@@ -66,16 +66,12 @@ const VisaPage = () => {
     formData.append("departure_date", departureDate);
 
     try {
-      const response = await axios.post(
-        `${BaseUrl}/visa`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`, // Pass token in header
-          },
-        }
-      );
+      const response = await axios.post(`${BaseUrl}/visa`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`, // Pass token in header
+        },
+      });
 
       toast.success("The Data updated Successfully"); // Show success message
 
@@ -208,6 +204,18 @@ const VisaPage = () => {
               />
             )}
             <p>You cannot apply for another visa.</p>
+          </div>
+          <div className="actions-section">
+            <button
+              className="next-button"
+              onClick={() => {
+                navigate("/flight/form")
+                // toast.success("The data was updated successfully!");
+                // fetchRoomPrices();
+              }}
+            >
+              Next
+            </button>
           </div>
         </Fragment>
       )}

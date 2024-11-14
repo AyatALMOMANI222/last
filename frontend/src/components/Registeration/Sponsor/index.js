@@ -10,14 +10,14 @@ import httpService from "../../../common/httpService";
 const RegisterSponsorPage = () => {
   const navigate = useNavigate();
   // const { id } = useParams();
-
+  const [password, setPassword] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [contactPerson, setContactPerson] = useState("");
   const [phone, setPhone] = useState("");
   const [whatsApp, setWhatsApp] = useState("");
   const [email, setEmail] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const [error, setError] = useState({
     companyName: "",
@@ -36,6 +36,7 @@ const RegisterSponsorPage = () => {
       whatsapp_number: whatsApp,
       email: email,
       company_address: companyAddress,
+      password :password
     };
 
     try {
@@ -47,7 +48,8 @@ const RegisterSponsorPage = () => {
         withToast: true,
       });
 
-      toast.success("Company and sponsor registered successfully!");
+      // toast.success("Company and sponsor registered successfully!");
+      navigate("/login")
       // يمكنك توجيه المستخدم إلى صفحة أخرى هنا إذا لزم الأمر
       // navigate('/next-page'); // Uncomment and change to the desired route
     } catch (error) {
@@ -174,6 +176,14 @@ const RegisterSponsorPage = () => {
             setInputValue={setEmail}
             required={true}
             errorMsg={error.email}
+          />
+          <Input
+            label="Password"
+            placeholder="Enter password"
+            inputValue={password}
+            setInputValue={setPassword}
+            type="password"
+            required
           />
           <Input
             label={"Company Address"}

@@ -79,7 +79,7 @@ Route::get('/con/status/{status}', [ConferenceController::class, 'getConferenceB
 Route::get('/con', [ConferenceController::class, 'getAllConferences']);
 Route::get('/con/id/{id}', [ConferenceController::class, 'getConferenceById']);
 Route::post('/conferences/{id}', [ConferenceController::class, 'update'])->middleware(['auth:sanctum', 'admin']);
-Route::get('/con/upcoming', [ConferenceController::class, 'getAllConferencesUpcoming'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/con/upcoming', [ConferenceController::class, 'getAllConferencesUpcoming']);
 
 
 Route::post('/con/img/{conference_id}', [ConferenceImageController::class, 'store'])->middleware(['auth:sanctum', 'admin']);

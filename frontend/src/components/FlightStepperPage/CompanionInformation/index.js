@@ -10,8 +10,10 @@ import { toast } from "react-toastify";
 import { getFromLocalStorage } from "../../../common/localStorage";
 import httpService from "../../../common/httpService";
 import "./style.scss";
+import { useNavigate } from "react-router-dom";
 
 const FlightInformation = () => {
+  const navigate = useNavigate()
   const initialValue = {
     name: "",
     arrivalDate: "",
@@ -138,6 +140,7 @@ const FlightInformation = () => {
       data: formData,
       onSuccess: () => {
         // toast.success("Flights created successfully!");
+        navigate("/reservation/form")
       },
       onError: () => {
         toast.error("Failed to create flights");

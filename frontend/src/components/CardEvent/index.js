@@ -11,10 +11,8 @@ const Card = ({
   buttonText = 'See More',
   galleryButtonText = 'View Gallery',
 }) => {
-  const navigate = useNavigate();
-
   const handleSeeMore = () => {
-    navigate(seeMoreLink); // التنقل إلى المسار الذي تم تمريره عبر props
+    window.open(seeMoreLink, '_blank'); // فتح الرابط الخارجي في نافذة جديدة
   };
 
   return (

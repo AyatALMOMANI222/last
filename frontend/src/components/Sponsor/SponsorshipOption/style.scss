@@ -123,3 +123,58 @@
         }
     }
 }
+.view-floor-plans-btn {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.view-floor-plans-button {
+    background-color: #007BFF;  /* اللون الأزرق */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+.view-floor-plans-button:hover {
+    background-color: #0056b3;  /* تغيير اللون عند التمرير */
+    transform: translateY(-3px);
+}
+
+.view-floor-plans-button:active {
+    background-color: #004085;  /* لون الزر عند الضغط عليه */
+    transform: translateY(0);
+}
+.input-container {
+    margin: 20px 0;
+}
+
+.input-label {
+    font-size: 18px;
+    margin-bottom: 5px;
+    display: block;
+    color: #444;
+}
+
+.input-field {
+    width: 20%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    background-color: #f8f8f8;
+}
+
+.input-field:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+}

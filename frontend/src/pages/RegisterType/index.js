@@ -49,9 +49,8 @@ const RegisterType = () => {
           </div>{" "}
           <div
             className="type"
-            onClick={() => {
-              navigate("/register/sponsor");
-            }}
+            onClick={() => handleNavigate("sponsor")}
+          
           >
             <SVG src={sponsor} height={150} width={150} />
             <span className="titlee">Login As Sponsor/Exhibitor</span>

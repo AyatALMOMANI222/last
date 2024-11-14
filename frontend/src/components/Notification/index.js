@@ -170,8 +170,20 @@ const NotificationDropdown = () => {
                   )
                 ) {
                   navigate(`/abs`);
+                }    else if (
+                  notification?.message?.includes(
+                    "We are pleased to inform you that your profile is now active"
+                  )
+                ) {
+                  navigate(`/speaker/profile`);
                 }
-
+                // else if (
+                //   notification?.message?.includes(
+                //     "New sponsor registration"
+                //   )
+                // ) {
+                //   navigate(`/abs`);
+                // }
 
               }}
             >

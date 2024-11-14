@@ -7,9 +7,13 @@ import "react-toastify/dist/ReactToastify.css";
 import SVG from "react-inlinesvg";
 import loginImg from "../../icons/loginImg.svg";
 import { useAuth } from "../../common/AuthContext";
+import { useLocation } from 'react-router-dom';
+
 import "./style.scss";
 
 const LoginPage = () => {
+  const location = useLocation();
+  const currentRoute = location.pathname;
   const { login, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -36,9 +40,9 @@ const LoginPage = () => {
       const token = response.data.token;
       login(token);
       if (isAdmin) {
-        navigate("/");
-      } else {
-        navigate("/tour_slider");
+        navigate("/home");
+      }  else {
+        navigate("/sponsor/section");
       }
     } catch (error) {
       console.log(error.response?.data?.message);

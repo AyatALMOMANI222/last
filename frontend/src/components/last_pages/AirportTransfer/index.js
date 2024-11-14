@@ -4,12 +4,13 @@ import Input from "../../../CoreComponent/Input";
 import DateInput from "../../../CoreComponent/Date";
 import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
 import axios from "axios";
-import Checkbox from "../../../CoreComponent/Checkbox"; // Import your new Checkbox component
+import Checkbox from "../../../CoreComponent/Checkbox";
 import MySideDrawer from "../../../CoreComponent/SideDrawer";
 import { useAuth } from "../../../common/AuthContext";
-const AirportTransfer = () => {
+import "./style.scss";
+const AirportTransferForm = () => {
   const { userId } = useAuth();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [tripType, setTripType] = useState(
     "One-way trip from the airport to the hotel"
   );
@@ -20,12 +21,11 @@ const AirportTransfer = () => {
   const [flightNumber, setFlightNumber] = useState("");
   const [companionName, setCompanionName] = useState("");
   const [hasCompanion, setHasCompanion] = useState(false);
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const handleSubmit = async (e) => {
-    const token = localStorage.getItem("token");
-
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
     try {
       const response = await axios.post(
@@ -41,9 +41,7 @@ const AirportTransfer = () => {
           companion_name: hasCompanion ? companionName : null,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -56,14 +54,22 @@ const AirportTransfer = () => {
   };
 
   return (
-    <div>
+    <div className="airport-transfer-form">
+      {/* <p> Airport Transfer </p> */}
+      <button
+        className="airport-transfer-button"
+        onClick={() => setIsOpen(true)}
+      >
+        Add Airport Transfer
+      </button>
+
       <MySideDrawer isOpen={isOpen} setIsOpen={setIsOpen}>
         <CustomFormWrapper
           title="Airport Transfer Request"
           handleSubmit={handleSubmit}
           setOpenForm={setIsOpen}
         >
-          <form className="trip-form-container">
+          <form className="airport-transfer-form-container">
             <Select
               options={[
                 {
@@ -79,14 +85,13 @@ const AirportTransfer = () => {
               value={{ value: tripType, label: tripType }}
               setValue={(option) => setTripType(option.value)}
               label="Trip Type"
-              errorMsg={""}
             />
 
             <DateInput
               label="Arrival Date"
               inputValue={arrivalDate}
               setInputValue={setArrivalDate}
-              required={true}
+              required
             />
 
             <Input
@@ -95,7 +100,7 @@ const AirportTransfer = () => {
               setInputValue={setArrivalTime}
               placeholder="Enter Arrival Time"
               type="time"
-              required={true}
+              required
             />
 
             <Input
@@ -119,7 +124,7 @@ const AirportTransfer = () => {
               inputValue={flightNumber}
               setInputValue={setFlightNumber}
               placeholder="Enter Flight Number"
-              required={true}
+              required
             />
 
             <Checkbox
@@ -143,4 +148,4 @@ const AirportTransfer = () => {
   );
 };
 
-export default AirportTransfer;
+export default AirportTransferForm;

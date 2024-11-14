@@ -4,6 +4,7 @@ import SimpleLabelValue from "../../SimpleLabelValue";
 import { toast } from "react-toastify";
 import "./style.scss";
 import httpService from "../../../common/httpService";
+import { useNavigate } from "react-router-dom";
 
 const DISCOUNT = {
   roomType: "single",
@@ -44,6 +45,7 @@ const theDiscountAmount = (prices) => {
 };
 
 const InvoiceForm = () => {
+  const navigate = useNavigate()
   const [data, setData] = useState({ mainRoom: {}, otherRooms: [] });
   const [totalCost, setTotalCost] = useState(0);
   const [prices, setPrices] = useState({});
@@ -187,6 +189,7 @@ const InvoiceForm = () => {
           className="next-button"
           onClick={() => {
             toast.success("The data was updated successfully!");
+            navigate("/view-user-trips")
             fetchRoomPrices();
           }}
         >

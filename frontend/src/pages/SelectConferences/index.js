@@ -40,6 +40,8 @@ const SelectConferences = () => {
       navigate(`/register/speaker/${conferenceId}`);
     } else if (currentPath === "/registerPage/group") {
       navigate(`/register/group/${conferenceId}`);
+    }else if (currentPath === "/registerPage/sponsor") {
+      navigate(`/register/sponsor/${conferenceId}`);
     }
     // navigate(`${currentPath}/${conferenceId}`);
   };

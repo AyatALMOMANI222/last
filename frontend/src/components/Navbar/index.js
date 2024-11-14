@@ -2,12 +2,12 @@ import React, { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
 import NotificationDropdown from "../Notification";
-import ListOption from "../../CoreComponent/ListOptions";
-import { getFromLocalStorage } from "../../common/localStorage";
 import { useAuth } from "../../common/AuthContext";
+
 const NavBar = () => {
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
+  const { registrationType } = useAuth();
 
   const menuItems = [
     {
@@ -79,20 +79,19 @@ const NavBar = () => {
       ],
     },
     {
-      title: "Flight",
-      links: [
-        { label: "Flight", url: "/flight/form" },
-
-        // { label: "Flight Admin", url: "/flights" },
-        // { label: "Users Admin", url: "/user" },
-      ],
-    },
-    {
       title: "page",
       links: [
         { label: "Visa", url: "/visa" },
+        { label: "Flight", url: "/flight/form" },
         { label: "Airport Transfer", url: "/airport/transfer" },
         { label: "Gala Dinner", url: "/gala/dinner" },
+        { label: "Reservation", url: "/reservation/form" },
+        { label: "All Trips", url: "/view-user-trips" },
+        {
+          label: "Airport Transfer Price",
+          url: "/airport/transfer/price",
+        },
+        { label: "Gala Dinner", url: "/gala" },
       ],
     },
     ...(isAdmin
@@ -102,10 +101,7 @@ const NavBar = () => {
             links: [
               { label: "Conferences", url: "/conferences/page" },
               { label: "Exhibitions", url: "/exhibitions" },
-              { label: "Reservation", url: "/reservation/form" },
               { label: "Trips", url: "/create/trip" },
-              { label: "Trips User", url: "/trip/user" },
-              { label: "All Trips", url: "/view-user-trips" },
               { label: "Flight Admin", url: "/flights" },
               {
                 label: "Airport Transfer Price",
@@ -114,9 +110,7 @@ const NavBar = () => {
               { label: "Gala Dinner", url: "/gala" },
               { label: "Create Job", url: "/job" },
               { label: "Messages", url: "/msgs" },
-
               { label: "Job Applicants", url: "/job/admin" },
-
               { label: "Sponsor Option Form", url: "/sponsor/option/form" },
               { label: "Users", url: "/pending/users" },
               { label: "Enter new flights", url: "/enter/new/flights" },
@@ -128,44 +122,51 @@ const NavBar = () => {
       title: "Contact Us",
       links: [{ label: "Contact Us", url: "/contact_us" }],
     },
-    {
+   {
       title: "Profile",
-      links: [{ label: "Profile", url: "/speaker/profile" }],
-    },
+      links: [
+        { label: "Profile", url: "/speaker/profile" }
+      ]
+    }
   ];
 
   const renderMenu = () => {
-    return menuItems.map((menuItem, index) => (
-      <div key={index} className="menu-section">
-        <div className="menu-title">{menuItem.title}</div>
-        <div className="menu-links">
-          {menuItem.links.map((link, linkIndex) => (
-            <div key={linkIndex} className="menu-item">
-              {link.subLinks ? (
-                <div className="has-submenu">
-                  {link.label}
-                  <div className="submenu">
-                    {link.subLinks.map((subLink, subIndex) => (
-                      <div
-                        key={subIndex}
-                        className="submenu-item"
-                        onClick={() => navigate(subLink.url)}
-                      >
-                        {subLink.label}
+    return menuItems.map((menuItem, index) => {
+      if (menuItem) {
+        return (
+          <div key={index} className="menu-section">
+            <div className="menu-title">{menuItem.title}</div>
+            <div className="menu-links">
+              {menuItem.links.map((link, linkIndex) => (
+                <div key={linkIndex} className="menu-item">
+                  {link.subLinks ? (
+                    <div className="has-submenu">
+                      {link.label}
+                      <div className="submenu">
+                        {link.subLinks.map((subLink, subIndex) => (
+                          <div
+                            key={subIndex}
+                            className="submenu-item"
+                            onClick={() => navigate(subLink.url)}
+                          >
+                            {subLink.label}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="option-btn" onClick={() => navigate(link.url)}>
+                      {link.label}
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="option-btn" onClick={() => navigate(link.url)}>
-                  {link.label}
-                </div>
-              )}
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-    ));
+          </div>
+        );
+      }
+      return null;
+    });
   };
 
   return (

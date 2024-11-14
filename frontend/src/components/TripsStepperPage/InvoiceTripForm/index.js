@@ -4,10 +4,11 @@ import { toast } from "react-toastify";
 import SimpleLabelValue from "../../../components/SimpleLabelValue";
 import { getFromLocalStorage } from "../../../common/localStorage";
 import httpService from "../../../common/httpService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./style.scss";
 
 const InvoiceTripForm = () => {
+  const navigate = useNavigate()
   const { tripId } = useParams();
   const [basePrice, setBasePrice] = useState("");
   const [addtionalOptionsPrice, setAddtionalOptionsPrice] = useState(0);
@@ -17,43 +18,44 @@ const InvoiceTripForm = () => {
   const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handleSubmit = () => {
-    const token=localStorage.getItem("token")
-    const participantsList = participantsData?.map((item) => {
-      return {
-        ...item,
-        nationality: item?.nationality?.value,
-        include_accommodation: item?.include_accommodation?.value,
-        is_companion: true,
-      };
-    });
-    const speakerData = { ...accommodationData, is_companion: false };
-    const addtionalOptionsBody = additionalOptionsData.map((item) => item?.id);
+    navigate("/gala/dinner")
+    // const token=localStorage.getItem("token")
+    // const participantsList = participantsData?.map((item) => {
+    //   return {
+    //     ...item,
+    //     nationality: item?.nationality?.value,
+    //     include_accommodation: item?.include_accommodation?.value,
+    //     is_companion: true,
+    //   };
+    // });
+    // const speakerData = { ...accommodationData, is_companion: false };
+    // const addtionalOptionsBody = additionalOptionsData.map((item) => item?.id);
   
-    const body = {
-      trip_id: tripId,
-      options: addtionalOptionsBody,
-      participants: [speakerData, ...participantsList],
-    };
+    // const body = {
+    //   trip_id: tripId,
+    //   options: addtionalOptionsBody,
+    //   participants: [speakerData, ...participantsList],
+    // };
   
-    console.log(body);
+    // console.log(body);
   
-    // الاتصال بالـ API
-    axios.post(`${BaseUrl}/trip-participants`, body, {
-      headers: {
-        Authorization: `Bearer ${token}`, // إضافة التوكن هنا
-        "Content-Type": "application/json", // تحديد نوع المحتوى
-      },
-    })
-      .then((response) => {
-        // التعامل مع الاستجابة هنا
-        console.log(response.data);
-        toast.success("The data was updated successfully!");
-      })
-      .catch((error) => {
-        // التعامل مع الخطأ هنا
-        console.error("There was an error!", error);
-        toast.error("Failed to update the data.");
-      });
+    // // الاتصال بالـ API
+    // axios.post(`${BaseUrl}/trip-participants`, body, {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`, // إضافة التوكن هنا
+    //     "Content-Type": "application/json", // تحديد نوع المحتوى
+    //   },
+    // })
+    //   .then((response) => {
+    //     // التعامل مع الاستجابة هنا
+    //     console.log(response.data);
+    //     toast.success("The data was updated successfully!");
+    //   })
+    //   .catch((error) => {
+    //     // التعامل مع الخطأ هنا
+    //     console.error("There was an error!", error);
+    //     toast.error("Failed to update the data.");
+    //   });
   };
   
 ////////////////////////////////////

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './style.scss';
 import Card from '../../CardEvent';
+import { backendUrlImages } from '../../../constant/config';
 
 const UpcomingConferences2 = () => {
   const [conferences, setConferences] = useState([]);
@@ -38,10 +39,13 @@ const UpcomingConferences2 = () => {
         {conferences.map((conference) => (
           <Card
             key={conference.id}
-            imageUrl={conference.imageUrl || 'default-image.jpg'}
+            // src={`${backendUrlImages}${conference.imageUrl}`}
+            imageUrl={`${backendUrlImages}${conference?.image}`} 
+
             title={conference.title}
             description={conference.description}
-            seeMoreLink={`/conference/${conference.id}`}
+            // seeMoreLink={`/conference/${conference.id}`}
+            seeMoreLink={"https://www.eventscons.com/4th-diet-nutrition-expo-2015/"}
             galleryLink={conference.galleryLink}
             buttonText="Read More"
             galleryButtonText="Explore Gallery"

@@ -39,7 +39,7 @@ const navigate=useNavigate()
       console.log("Response:", response.data);
       toast.success("Group Updated Successfully!");
       
-      navigate("/")
+      navigate("/home")
     } catch (error) {
       console.error("Error updating group:", error);
       toast.error("Failed to Update the Group: " + error);
