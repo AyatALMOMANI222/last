@@ -14,7 +14,7 @@ class SponsorshipOptionController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|string|max:50',
+            'price' => 'required|max:50',
         ]);
 
         $sponsorshipOption = $conference->sponsorshipOptions()->create([

@@ -78,6 +78,10 @@ public function attendances()
 {
     return $this->hasMany(Attendance::class);
 }
+public function sponsorInvoices()
+{
+    return $this->hasMany(SponsorInvoice::class);
+}
 
 public function papers()
 {

@@ -19,6 +19,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvailableFlightController;
 use App\Http\Controllers\AvailableJobController;
+use App\Http\Controllers\BoothCostController;
 use App\Http\Controllers\ConferenceImageController;
 use App\Http\Controllers\ConferenceSponsorshipOptionController;
 use App\Http\Controllers\ConferenceTripController;
@@ -31,6 +32,7 @@ use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\GroupRegistrationController;
 use App\Http\Controllers\GroupTripParticipantController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OurClientController;
@@ -288,4 +290,12 @@ Route::get('/sponsorship-options/{conferenceId}', [SponsorshipOptionController::
 
 
 // table option
-Route::post('/sponsorship-options/table', [SponsorshipController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::post('/sponsorship-options/table/add', [SponsorshipController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/sponsorship-options/table/get/{conferenceId}', [SponsorshipController::class, 'getByConferenceId']);
+Route::post('/size/table/admin', [BoothCostController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/size/table/admin/get/{conferenceId}', [BoothCostController::class, 'getByConferenceId']);
+
+
+
+Route::post('/invoice', [InvoiceController::class, 'createInvoice'])->middleware('auth:sanctum');
+Route::get('/invoice/{conferenceId}', [InvoiceController::class, 'getInvoiceByUserIdAndConferenceId'])->middleware('auth:sanctum');

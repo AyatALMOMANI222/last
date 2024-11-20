@@ -55,6 +55,33 @@ use Illuminate\Http\Request;
                 ], 500); // رمز الحالة 500 يعني "خطأ في الخادم"
             }
         }
+
+        public function getByConferenceId($conferenceId)
+    {
+        try {
+            // استرجاع الرعايات بناءً على الـ conference_id
+            $sponsorships = Sponsorship::where('conference_id', $conferenceId)->get();
+
+            // التحقق من وجود رعايات
+            if ($sponsorships->isEmpty()) {
+                return response()->json([
+                    'message' => 'No sponsorships found for this conference'
+                ], 404); // إذا لم يتم العثور على رعايات
+            }
+
+            // إرجاع الرعايات
+            return response()->json([
+                'message' => 'Sponsorships fetched successfully',
+                'data' => $sponsorships
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Unexpected Error',
+                'message' => $e->getMessage()
+            ], 500); // رمز الحالة 500 يعني "خطأ في الخادم"
+        }
+    }
     }
     
 

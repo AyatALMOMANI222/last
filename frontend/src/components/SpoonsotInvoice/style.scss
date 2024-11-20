@@ -1,0 +1,98 @@
+$primary-color: #0056b3;  // New primary color (darker blue)
+$secondary-color: #f1f1f1;  // Lighter background color
+$card-bg-color: #ffffff;  // White background for card
+$border-color: #e0e0e0;  // Light border color for a softer look
+
+// Main container styling
+.invoiceContainerS {
+  max-width: 1100px;
+  margin: 40px auto;
+  background-color: $card-bg-color;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);  // More prominent hover effect
+  }
+}
+
+// Main title styling
+.invoiceTitle {
+  font-size: 2.5rem;
+  color: $primary-color;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+// Invoice details container
+.invoiceDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+// Row styling
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  padding: 12px 0;
+  border-bottom: 1px solid $border-color;
+  transition: background-color 0.3s ease-in-out;
+
+  &:hover {
+    background-color: $secondary-color;  // Slight hover effect for better interactivity
+  }
+
+  .label {
+    font-weight: 600;
+    color: $primary-color;
+  }
+
+  .value {
+    text-align: right;
+    color: #333;
+  }
+}
+
+// Section headers styling
+.section {
+  margin-bottom: 30px;
+
+  h2 {
+    font-size: 1.6rem;
+    color: $primary-color;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+}
+
+// Loading state styling
+.loading {
+  text-align: center;
+  font-size: 1.6rem;
+  color: $primary-color;
+  font-weight: bold;
+  padding: 50px;
+  letter-spacing: 1px;
+}
+
+// Media queries for responsive design
+@media (max-width: 768px) {
+  .invoiceDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    font-size: 1rem;
+    padding: 10px 0;
+  }
+
+  .section h2 {
+    font-size: 1.3rem;
+  }
+}

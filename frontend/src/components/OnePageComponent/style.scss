@@ -1,159 +1,111 @@
-/* متغيرات */
-$primary-color: #007bff;
-$bg-color: #f9f9f9;
-$text-color-dark: #333;
-$text-color-light: #555;
-$text-color-gray: #777;
-$box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-$border-radius: 8px;
+.sidebar{
+  margin-top: 66px
+}
+.sidebar ul li button {
+  background-color: transparent;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  font-size: 16px;
 
-/* الحاوية الرئيسية */
-.conference-container6 {
-  display: flex;
-  flex-direction: column;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar ul li button:hover {
+  background-color: #f0f0f0;
+}
+
+.sidebar ul li button.active {
+  background-color: #007bff;
+  color: white;
+}
+/* إضافة بعض التنسيق الأساسي لتقسيم الصفحة */
+.conference-page {
+  display: flex; /* استخدام Flexbox لتقسيم الصفحة */
+  height: 100vh; /* جعل الصفحة تأخذ كامل ارتفاع الشاشة */
+}
+
+/* تصميم الشريط الجانبي */
+.sidebar {
+  width: 250px; /* عرض الشريط الجانبي */
+  background-color: #f8f9fa; /* خلفية فاتحة للشريط الجانبي */
+  padding: 20px; /* إضافة بعض الحواف داخل الشريط الجانبي */
+  position: fixed; /* جعل الشريط الجانبي ثابتاً في الجهة اليسرى */
+  height: 100vh; /* الشريط الجانبي يأخذ كامل ارتفاع الشاشة */
+  top: 0;
+  left: 0;
+}
+
+.sidebar ul {
+  list-style-type: none; /* إزالة النقاط من القوائم */
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px; /* إضافة مسافة بين العناصر */
+}
+
+.sidebar ul li button {
+  background-color: transparent;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar ul li button:hover {
+  background-color: #f0f0f0;
+}
+
+.sidebar ul li button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+/* تصميم المحتوى الرئيسي */
+.main-content {
+  margin-left: 250px; /* إزاحة المحتوى الرئيسي ليتناسب مع عرض الشريط الجانبي */
   padding: 20px;
-  max-width: 80%;
+  width: 100%;
+  overflow-y: auto; /* إضافة تمرير عمودي إذا كانت المحتويات طويلة */
+}
+
+/* تصميم أقسام المحتوى داخل الصفحة */
+.hero-section,
+.details-section,
+.topics-section,
+.prices-section,
+.documents-section {
+  margin-bottom: 40px; /* إضافة مسافة بين الأقسام */
+  
+}
+
+/* تصميم قسم التفاصيل */
+.details-section .container,
+.topics-section .container,
+.prices-section .container,
+.documents-section .container {
+  max-width: 1200px; /* تحديد أقصى عرض للمحتوى */
   margin: 0 auto;
-  box-sizing: border-box;
-
-  /* الرأس */
-  .conference-header {
-    text-align: center;
-    margin-bottom: 20px;
-
-    .conference-title {
-      font-size: 2rem;
-      color: $text-color-dark;
-      margin-bottom: 15px;
-    }
-
-    .conference-image {
-      max-width: 60%; /* تصغير الصورة لتناسب المحتوى */
-      height: auto;
-      border-radius: $border-radius;
-      box-shadow: $box-shadow;
-      margin-bottom: 20px;
-      .img{
-        width: 100px;
-        height: 100px;
-      }
-    }
-  }
-
-  /* الوصف */
-  .conference-description {
-    font-size: 1.1rem;
-    color: $text-color-light;
-    margin-bottom: 20px;
-    text-align: justify;
-    line-height: 1.6;
-  }
-
-  /* قسم التفاصيل */
-  .conference-details {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 30px;
-
-    .details-item {
-      font-size: 1rem;
-      color: #444;
-      line-height: 1.5;
-    }
-  }
-
-  /* قسم المستندات */
-  .conference-documents {
-    margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    .document-link {
-      font-size: 1.1rem;
-      color: $primary-color;
-      text-decoration: none;
-      border: 1px solid $primary-color;
-      padding: 10px;
-      border-radius: 5px;
-      text-align: center;
-      transition: background-color 0.3s, color 0.3s;
-
-      &:hover {
-        background-color: $primary-color;
-        color: white;
-      }
-    }
-  }
-
-  /* قسم الأسعار */
-  .conference-prices {
-    margin-bottom: 30px;
-
-    .price-item {
-      padding: 15px;
-      background-color: $bg-color;
-      border-radius: $border-radius;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-    }
-  }
-
-  /* قسم الموضوعات العلمية */
-  .conference-scientific-topics {
-    margin-bottom: 30px;
-
-    .topic-item {
-      padding: 15px;
-      background-color: $bg-color;
-      border-radius: $border-radius;
-      box-shadow: $box-shadow;
-      margin-bottom: 20px;
-
-      p {
-        margin: 5px 0;
-      }
-    }
-  }
-
-  /* الفوتر */
-  .conference-footer {
-    text-align: center;
-    font-size: 1rem;
-    color: $text-color-gray;
-  }
 }
 
-/* استعلامات الوسائط للشاشات الأكبر */
-@media (min-width: 768px) {
-  .conference-container6 {
-    max-width: 1200px;
-
-    .conference-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .conference-title {
-        font-size: 2.5rem;
-      }
-
-      .conference-image {
-        max-width: 60%; /* تصغير حجم الصورة أكثر في الشاشات الأكبر */
-      }
-    }
-  }
+.hero-image {
+  width: 100%; /* تأكيد أن الصورة تأخذ كامل عرض القسم */
+  height: auto;
 }
 
-@media (min-width: 1200px) {
-  .conference-details {
-    flex-direction: row; /* ترتيب العناصر بشكل أفقي في الشاشات الأكبر */
-    justify-content: space-between;
-    gap: 20px;
-
-    .details-item {
-      width: 30%; /* كل عنصر يشغل 30% من العرض */
-    }
-  }
+.hero-overlay {
+  background-color: rgba(0, 0, 0, 0.5); /* خلفية مظللة للنصوص على الصورة */
+  color: white;
+  padding: 20px;
+}
+.second-section{
+  width: calc(100vw - 290px);
+  margin-left:calc(100vw - 290px) ;
+  // width: 100%;
 }

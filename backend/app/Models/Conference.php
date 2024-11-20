@@ -93,8 +93,14 @@ class Conference extends Model
     {
         return $this->hasMany(Sponsorship::class);
     }
-
-
+    public function boothCosts()
+    {
+        return $this->hasMany(BoothCost::class); // تحديد العلاقة بين المؤتمر والأكشاك
+    }
+    public function sponsorInvoices()
+    {
+        return $this->hasMany(SponsorInvoice::class);
+    }
     public static function boot()
     {
         parent::boot();

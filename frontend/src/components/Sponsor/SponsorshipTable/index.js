@@ -1,80 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const SponsorshipTable = () => {
-  const data = [
-    {
-      item: "Diamond",
-      price: "40.000 USD",
-      maxSponsors: 1,
-      boothSize: "24 sqm",
-      bookletAd: "4 Pages",
-      websiteAd: "Home Page Main banner",
-      BagsInserts: "Two Brochures / Pen + 3 Flyers/ Promo materials",
-      backdropLogo: "Yes",
-      nonResidentialReg: 25,
-      residentialReg: 5,
-    },
-    {
-      item: "Titanium",
-      price: "35.000 USD",
-      maxSponsors: 1,
-      boothSize: "21 sqm",
-      bookletAd: "3 Pages",
-      websiteAd: "Home Page",
-      BagsInserts: "One Brochure / Pen + 2 Flyers",
-      backdropLogo: "Yes",
-      nonResidentialReg: 20,
-      residentialReg: 4,
-    },
-    {
-      item: "Platinum",
-      price: "30.000 USD",
-      maxSponsors: 2,
-      boothSize: "18 sqm",
-      bookletAd: "2 Pages",
-      websiteAd: "Registration page",
-      BagsInserts: "One Brochure / Pen + 1 Flyer",
-      backdropLogo: "Yes",
-      nonResidentialReg: 15,
-      residentialReg: 3,
-    },
-    {
-      item: "Gold",
-      price: "22.500 USD",
-      maxSponsors: 3,
-      boothSize: "15 sqm",
-      bookletAd: "1 Page",
-      websiteAd: "Conference Sponsor page",
-      BagsInserts: "One Flyer",
-      backdropLogo: "Yes",
-      nonResidentialReg: 12,
-      residentialReg: 1,
-    },
-    {
-      item: "Silver",
-      price: "15.000 USD",
-      maxSponsors: 4,
-      boothSize: "12 sqm",
-      bookletAd: "1/2 page",
-      websiteAd: "Conference Sponsor page",
-      BagsInserts: "One Brochure Pen + 1Flyer",
-      backdropLogo: "Yes",
-      nonResidentialReg: 8,
-      residentialReg: 0,
-    },
-    {
-      item: "Bronze",
-      price: "10.000 USD",
-      maxSponsors: 6,
-      boothSize: "9 sqm",
-      bookletAd: "",
-      websiteAd: " ",
-      BagsInserts: " ",
-      backdropLogo: "Yes",
-      nonResidentialReg: 4,
-      residentialReg: 1,
-    },
-  ];
+const SponsorshipTable = ({ onSelectedSponsorshipsChange }) => {
+  const [data, setData] = useState([]);
+  const [selectedSponsorshipIds, setSelectedSponsorshipIds] = useState([]); // تم تغيير الاسم هنا
+  const handleCheckboxChange = (id) => {
+    const updatedIds = selectedSponsorshipIds.includes(id)
+      ? selectedSponsorshipIds.filter((prevId) => prevId !== id) // إذا تم إلغاء التحديد
+      : [...selectedSponsorshipIds, id]; // إذا تم تحديد ID
+
+    setSelectedSponsorshipIds(updatedIds); // تحديث state المحلية
+    onSelectedSponsorshipsChange(updatedIds); // استدعاء دالة الأب لتحديث state
+  };
+  useEffect(() => {
+    const BaseUrl = process.env.REACT_APP_BASE_URL;
+
+    axios
+      .get(`${BaseUrl}/sponsorship-options/table/get/1`) // Replace with your API endpoint
+      .then((response) => {
+        setData(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
@@ -105,60 +57,66 @@ const SponsorshipTable = () => {
               <td key={index} style={cellStyle}>
                 {row.price}
                 <br />
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={selectedSponsorshipIds.includes(row.id)} // التحقق من إذا كان الـ ID موجودًا في selectedSponsorshipIds
+                  onChange={() => handleCheckboxChange(row.id)} // التعامل مع التغيير
+                />
               </td>
             ))}
           </tr>
           <tr style={rowStyleEven}>
             <td style={cellStyle}>Maximum Sponsors per category</td>
             {data.map((row, index) => (
-              <td key={index} style={cellStyle}>{row.maxSponsors}</td>
+              <td key={index} style={cellStyle}>{row.max_sponsors}</td>
             ))}
           </tr>
           <tr style={rowStyleOdd}>
             <td style={cellStyle}>Booth Size</td>
             {data.map((row, index) => (
-              <td key={index} style={cellStyle}>{row.boothSize}</td>
+              <td key={index} style={cellStyle}>{row.booklet_ad}</td>
             ))}
           </tr>
           <tr style={rowStyleEven}>
             <td style={cellStyle}>Conference Booklet ad</td>
             {data.map((row, index) => (
-              <td key={index} style={cellStyle}>{row.bookletAd}</td>
+              <td key={index} style={cellStyle}>{row.booklet_ad}</td>
             ))}
           </tr>
           <tr style={rowStyleOdd}>
             <td style={cellStyle}>Website Advertisement</td>
             {data.map((row, index) => (
-              <td key={index} style={cellStyle}>{row.websiteAd}</td>
+              <td key={index} style={cellStyle}>{row.website_ad}</td>
             ))}
           </tr>
           <tr style={rowStyleEven}>
             <td style={cellStyle}>Bags Inserts</td>
             {data.map((row, index) => (
-              <td key={index} style={cellStyle}>{row.BagsInserts}</td>
+              <td key={index} style={cellStyle}>{row.bags_inserts}</td>
             ))}
           </tr>
           <tr style={rowStyleOdd}>
             <td style={cellStyle}>Logo on Backdrop (Main Hall)</td>
             {data.map((row, index) => (
-              <td key={index} style={cellStyle}>{row.backdropLogo}</td>
+              <td key={index} style={cellStyle}>{row.backdrop_logo}</td>
             ))}
           </tr>
           <tr style={rowStyleEven}>
             <td style={cellStyle}>Free Non-Residential Registration</td>
             {data.map((row, index) => (
-              <td key={index} style={cellStyle}>{row.nonResidentialReg}</td>
+              <td key={index} style={cellStyle}>{row.non_residential_reg}</td>
             ))}
           </tr>
           <tr style={rowStyleOdd}>
             <td style={cellStyle}>Free Residential Registration PKG SGL Room/4nights</td>
             {data.map((row, index) => (
-              <td key={index} style={cellStyle}>{row.residentialReg}</td>
+              <td key={index} style={cellStyle}>{row.residential_reg}</td>
             ))}
           </tr>
         </tbody>
       </table>
+
+
     </div>
   );
 };

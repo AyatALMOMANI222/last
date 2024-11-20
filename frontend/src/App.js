@@ -95,6 +95,10 @@ import UpcomingConferences2 from "./components/Event/upcoming";
 import PaperSubmissionForm from "./components/abstract/abstractUser";
 import OnePage from "./components/OnePageComponent";
 import Home from "./pages/HomeR";
+import SponsorshipForm from "./components/Sponsor/AdminOption";
+import SponsorshipTable2 from "./components/Sponsor/SponsorshipTable/PostTable";
+import BoothCostForm from "./components/BoothCostForm";
+import SponsorInvoice from "./components/SpoonsotInvoice";
 // import AttendanceProfileForm from "./components/attendancesProfileEditForm";
 // import SponsorshipForm from "./components/Sponsor/AdminSponsorOption";
 // import Echo from "laravel-echo";
@@ -269,7 +273,11 @@ const App = () => {
         <Route path="/paper/form" element={< PaperSubmissionForm />} />
         <Route path="/conference/:conferenceId" element={<OnePage />} />
 
-        {/* <Route path="/sponsor/option/form" element={<SponsorshipForm/>} /> */}
+        <Route path="/sponsor/option/form" element={<SponsorshipForm/>} />
+        <Route path="/sponsor/admin/add/table" element={<SponsorshipTable2/>} />
+        <Route path="/sponsor/admin/booth/cost" element={<BoothCostForm/>} />
+        <Route path="/sponsor/invoice" element={<SponsorInvoice/>} />
+
       </Routes>
       {/* <Footer/> */}
     </div>
