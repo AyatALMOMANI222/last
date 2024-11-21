@@ -7,6 +7,7 @@ use App\Models\ConferenceUser;
 use App\Models\Notification;
 use App\Models\Sponsor;
 use App\Models\User;
+use App\Notifications\EmailNotification;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -96,38 +97,38 @@ class SponsorController extends Controller
                 'contact_person' => 'required|string|max:255',
                 'company_address' => 'required|string|max:255',
             ]);
-
+    
             // Get the user_id and conference_id from the validated data
             $userId = $validatedData['user_id'];
             $conferenceId = $validatedData['conference_id'];
-
+    
             // Find the user by userId
             $user = User::findOrFail($userId);
-
+    
             // Check if the user is already approved
             if ($user->status == 'approved') {
                 return response()->json(['message' => 'User already approved'], 400);
             }
-
+    
             // Check if the user is already assigned to this conference
             $existingConferenceUser = ConferenceUser::where('user_id', $userId)
                 ->where('conference_id', $conferenceId)
                 ->first();
-
+    
             if ($existingConferenceUser) {
                 return response()->json(['message' => 'User already assigned to this conference.'], 400);
             }
-
+    
             // Associate the user with the conference
             ConferenceUser::create([
                 'user_id' => $userId,
                 'conference_id' => $conferenceId,
             ]);
-
+    
             // Update the user's status to approved
             $user->status = 'approved';
             $user->save();
-
+    
             // Create a new Sponsor for the user
             $user->sponsors()->create([
                 'company_name' => $validatedData['company_name'],
@@ -135,15 +136,26 @@ class SponsorController extends Controller
                 'company_address' => $validatedData['company_address'],
                 'conference_id' => $conferenceId,
             ]);
-
+    
             // Send notification to the user
+            $notificationMessage = 'Your sponsorship has been approved. Thank you for becoming a sponsor for our conference. We look forward to your valuable contribution.';
             $userNotification = Notification::create([
                 'user_id' => $user->id,
-                'message' => 'Your sponsorship has been approved.',
+                'message' => $notificationMessage,
                 'is_read' => false,
             ]);
             broadcast(new NotificationSent($userNotification));
-
+    
+            // Try to send an email notification
+            try {
+                $user->notify(new EmailNotification($notificationMessage));
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Sponsor approved successfully, but email notification failed to send.',
+                    'error' => $e->getMessage(),
+                ], 200);
+            }
+    
             // Notify admins about the sponsor approval
             $admins = User::where('isAdmin', true)->get();
             foreach ($admins as $admin) {
@@ -155,12 +167,13 @@ class SponsorController extends Controller
                 ]);
                 broadcast(new NotificationSent($notification))->toOthers();
             }
-
+    
             return response()->json(['message' => 'Sponsor created and user approved successfully!'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Something went wrong: ' . $e->getMessage()], 500);
         }
     }
+    
 
 
 

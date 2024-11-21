@@ -124,21 +124,6 @@ const ParticipantTripForm = () => {
                 }
               />
 
-              <Select
-                options={[
-                  { value: true, label: "Yes" },
-                  { value: false, label: "No" },
-                ]}
-                value={participant.include_accommodation}
-                setValue={(value) =>
-                  handleInputChange(
-                    participant.id,
-                    "include_accommodation",
-                    value
-                  )
-                }
-                label="Include Accommodation"
-              />
               <DateInput
                 label="Check-In Date"
                 inputValue={participant.check_in_date}

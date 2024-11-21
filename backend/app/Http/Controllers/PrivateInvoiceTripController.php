@@ -41,27 +41,27 @@ class PrivateInvoiceTripController extends Controller
             'data' => $privateInvoiceTrip
         ], 201);
     }
-    public function getInvoiceWithParticipant($participant_id)
+
+
+public function getInvoiceByParticipantId($participant_id)
     {
-        // Perform the query to get the data by joining the tables
-        $invoice = \DB::table('private_invoice_trips');
-
-
-        // If no data is found, return a message
-        if (!$invoice) {
+        // تحقق من وجود الفواتير للمشارك باستخدام الـ participant_id
+        $privateInvoiceTrips = PrivateInvoiceTrip::where('participant_id', $participant_id)->get();
+    
+        // إذا لم يتم العثور على أي فاتورة، أرجع استجابة بأن العنصر غير موجود
+        if ($privateInvoiceTrips->isEmpty()) {
             return response()->json([
                 'success' => false,
-                'message' => 'No invoices found for this user.'
+                'message' => 'No invoices found for this participant.'
             ], 404);
         }
-
-        // Return the data if found
+    
+        // إرجاع الفواتير بنجاح
         return response()->json([
             'success' => true,
-            'data' => $invoice
+            'data' => $privateInvoiceTrips
         ], 200);
     }
-
 
 
 }

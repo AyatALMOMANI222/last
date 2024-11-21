@@ -1,45 +1,43 @@
 /* Reset بعض الأنماط الأساسية */
 
-  
-  /* تصميم الحاوية الرئيسية */
-  .form-container88{
-    width: 80%;
-    max-width: 1200px;
-    margin: 50px auto;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    font-family: 'Arial', sans-serif;
- 
-  }
-  .inp{
+/* تصميم الحاوية الرئيسية */
+.form-container88 {
+  width: 80%;
+  max-width: 1200px;
+  margin: 50px auto;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  font-family: "Arial", sans-serif;
+
+  .inp {
     display: grid;
-    grid-template-columns: repeat(3,20%);
+    grid-template-columns: repeat(3, 20%);
     gap: 30px;
-  justify-content: center;
+    justify-content: center;
   }
-  
+
   h2 {
     text-align: center;
     color: #2c3e50;
     font-size: 2rem;
     margin-bottom: 20px;
   }
-  
+
   /* تصميم العناصر داخل النموذج */
   .form-group {
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
   }
-  
+
   label {
     font-size: 1.1rem;
     color: #34495e;
     margin-bottom: 8px;
   }
-  
+
   /* الحقول النصية */
   input[type="text"],
   input[type="email"],
@@ -55,7 +53,7 @@
     transition: border-color 0.3s ease;
     margin-top: 5px;
   }
-  
+
   input[type="text"]:focus,
   input[type="email"]:focus,
   input[type="date"]:focus,
@@ -64,24 +62,24 @@
   select:focus {
     border-color: #3498db;
   }
-  
+
   /* تصميم حقول الاختيار (Checkbox) */
   .checkbox-group {
     display: flex;
     align-items: center;
     margin: 5px 0;
   }
-  
+
   .checkbox-group input[type="checkbox"] {
     margin-right: 10px;
     cursor: pointer;
   }
-  
+
   .checkbox-group span {
     font-size: 1rem;
     color: #34495e;
   }
-  
+
   /* تصميم الزر (Button) */
   .submit-button {
     padding: 12px 20px;
@@ -94,15 +92,15 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  
+
   .submit-button:hover {
     background-color: #2980b9;
   }
-  
+
   .submit-button:active {
     background-color: #1c6ea4;
   }
-  
+
   /* تخصيص التفاعل مع الحقول */
   input[type="text"],
   input[type="email"],
@@ -112,12 +110,13 @@
   select {
     background-color: #f4f6f9;
   }
-  
+
   /* تخصيص الحواف */
-  input, select {
+  input,
+  select {
     border-radius: 5px;
   }
-  
+
   /* تخصيص عرض الرسائل التفاعلية */
   .alert {
     color: #e74c3c;
@@ -125,11 +124,12 @@
     text-align: center;
     margin-top: 20px;
   }
-  .sel{
+  .sel {
     width: 300px;
     display: flex;
     flex-direction: row;
-    justify-content:space-around;
+    justify-content: space-around;
     margin-left: 200px;
     // gap: 30px;
   }
+}

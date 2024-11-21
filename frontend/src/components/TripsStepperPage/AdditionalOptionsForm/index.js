@@ -72,6 +72,7 @@ const AdditionalOptionsForm = () => {
             icon={null}
           />
         ))}
+        {!options?.length && <div>No Options Available</div>}
       </form>
 
       <div className="actions-section">

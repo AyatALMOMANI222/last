@@ -309,7 +309,7 @@ Route::get('/invoice/{conferenceId}', [InvoiceController::class, 'getInvoiceByUs
 
 
 Route::post('/private-invoice-trips', action: [PrivateInvoiceTripController::class, 'store'])->middleware(['auth:sanctum']);
-Route::get('/invoice/{id}', [PrivateInvoiceTripController::class, 'getInvoiceWithParticipant'])->middleware(['auth:sanctum']);
+Route::get('/invoice/trip/{id}', [PrivateInvoiceTripController::class, 'getInvoiceByParticipantId'])->middleware(['auth:sanctum']);
 // TourismTrip
 Route::post('/submit-tourism-trip', [TourismTripController::class, 'create']);
 
@@ -319,3 +319,8 @@ Route::post('/trans/req', [TransportationRequestController::class, 'store']);
 
 Route::post('/ticket/booking', [TicketBookingController::class, 'store']);
 Route::post('/travel/booking', [TravelFormController::class, 'store']);
+
+
+
+
+Route::get('/trip/participant/get/{userId}', [TripController::class, 'getUserTripOptions']);

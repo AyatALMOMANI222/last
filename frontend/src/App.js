@@ -98,6 +98,7 @@ import Transportation3 from "./components/Transportation";
 import TravelForm from "./components/BookingTicket";
 import TravelForm2 from "./components/BookingTicket";
 import TravelFormHotel from "./components/Hotelbooking";
+import RoomPriceForm from "./components/RoomPrice";
 
 const App = () => {
   const location = useLocation();
@@ -135,9 +136,9 @@ const App = () => {
               <div className="layout-navbar">
                 <NavBar />
               </div>
-              <div className="layout-sidemenu">
+              {/* <div className="layout-sidemenu">
                 <SideMenu />
-              </div>
+              </div> */}
             </Fragment>
           )}
 
@@ -295,6 +296,7 @@ const App = () => {
         <Route path="/trans/form" element={<Transportation3/>} />
         <Route path="/ticket/booking2" element={<TravelForm2/>} />
         <Route path="/travel/hotel" element={<TravelFormHotel/>} />
+        <Route path="/room/price3" element={< RoomPriceForm/>} />
 
           </Routes>
         </div>

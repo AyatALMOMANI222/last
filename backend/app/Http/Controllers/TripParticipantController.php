@@ -90,12 +90,20 @@ class TripParticipantController extends Controller
         if (!$userId) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+        // Check if the user is already registered in this trip
+        $existingParticipant = TripParticipant::where('user_id', $userId)
+            ->where('trip_id', $request->trip_id)
+            ->first();
+
+        if ($existingParticipant) {
+            return response()->json(['error' => 'User is already registered in this trip'], 400);
+        }
 
         try {
             // Validate input
             $validatedData = $request->validate([
                 'trip_id' => 'required|exists:trips,id',
-                'options' => 'required|array',
+                'options' => 'nullable|array',
                 'participants' => 'required|array',
                 'participants.*.is_companion' => 'required|boolean',
                 // 'participants.*.include_accommodation' => 'boolean',
@@ -198,7 +206,6 @@ class TripParticipantController extends Controller
                 'participants' => $participants,
                 'invoice' => $invoiceData
             ], 201);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['error' => $e->validator->errors()], 422);
         } catch (\Exception $e) {
@@ -269,25 +276,10 @@ class TripParticipantController extends Controller
                 'message' => 'Participants updated successfully',
                 'participants' => $participants
             ], 200);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['error' => $e->validator->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-

@@ -25,3 +25,42 @@
     }
   }
 }
+
+.participant-list4 {
+  display: flex;
+  // height: 400px;
+  overflow: overlay;
+  .participant-item {
+    padding: 20px;
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.5rem;
+      color: #333;
+      border-bottom: 2px solid #007bff;
+      display: inline-block;
+      padding-bottom: 4px;
+    }
+
+    h4 {
+      margin: 20px 0 10px;
+      font-size: 1.3rem;
+      color: #007bff;
+    }
+
+    p {
+      margin: 8px 0;
+      line-height: 1.6;
+
+      strong {
+        color: #555;
+      }
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 20px 0;
+    }
+  }
+}

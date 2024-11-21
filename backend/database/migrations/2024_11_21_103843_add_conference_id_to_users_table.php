@@ -11,18 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('available_jobs', function (Blueprint $table) {
-            $table->renameColumn('Events Coordinator', 'events_coordinator'); // تغيير اسم العمود
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('conference_id')->nullable()->after('password');
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('available_jobs', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

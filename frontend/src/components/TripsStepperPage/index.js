@@ -7,6 +7,7 @@ import ParticipantTripForm from "./ParticipantTripForm";
 import AdditionalOptionsForm from "./AdditionalOptionsForm";
 import { removeFromLocalStorage } from "../../common/localStorage";
 import InvoiceTripForm from "./InvoiceTripForm";
+import PayForm from "./PayForm";
 
 const TripsStepperPageContent = () => {
   const { currentStep, completedSteps, setCurrentStep, completeStep } =
@@ -17,6 +18,7 @@ const TripsStepperPageContent = () => {
     { title: "Participant Details" },
     { title: "Additional Options Details" },
     { title: "Invoice" },
+    { title: "Pay Form" },
   ];
 
   const componentsMap = [
@@ -24,6 +26,7 @@ const TripsStepperPageContent = () => {
     <ParticipantTripForm />,
     <AdditionalOptionsForm />,
     <InvoiceTripForm />,
+    <PayForm />,
   ];
 
   useEffect(() => {
@@ -32,8 +35,10 @@ const TripsStepperPageContent = () => {
       removeFromLocalStorage("AdditionalOptionsData");
       removeFromLocalStorage("participants");
       removeFromLocalStorage("AccommodationData");
+      removeFromLocalStorage("invoiceIds");
     };
   }, []);
+  
   return (
     <div className="stepper-page-container">
       <div className="stepper-section">

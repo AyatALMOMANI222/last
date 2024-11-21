@@ -2,23 +2,80 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import SimpleLabelValue from "../../../components/SimpleLabelValue";
-import { getFromLocalStorage } from "../../../common/localStorage";
+import {
+  getFromLocalStorage,
+  saveToLocalStorage,
+} from "../../../common/localStorage";
 import httpService from "../../../common/httpService";
 import { useNavigate, useParams } from "react-router-dom";
 import "./style.scss";
+import Dialog from "../../../CoreComponent/Dialog";
+import { useTripsStepper } from "../StepperContext";
+
+const ParticipantDialog = ({ open, setOpen, data }) => {
+  const { participants, invoice } = data;
+
+  return (
+    <div>
+      <Dialog
+        viewHeader={true}
+        header="Participant Details"
+        open={open}
+        setOpen={setOpen}
+      >
+        <div>
+          <div className="participant-list4">
+            {participants?.map((participant) => (
+              <div className="participant-item" key={participant.id}>
+                <h3>{participant.name}</h3>
+
+                <h4>Invoice</h4>
+                {invoice
+                  ?.filter((inv) => inv.participant_id === participant.id)
+                  ?.map((inv) => (
+                    <div key={inv.participant_id}>
+                      <p>
+                        <strong>Participant Id:</strong> {inv.participant_id}
+                      </p>
+                      <p>
+                        <strong>Base Price:</strong> ${inv.base_price}
+                      </p>
+                      <p>
+                        <strong>Options Price:</strong> ${inv.options_price}
+                      </p>
+                      <p>
+                        <strong>Total Price:</strong> ${inv.total_price}
+                      </p>
+                    </div>
+                  ))}
+              </div>
+            ))}
+          </div>
+          <button>Bay Now</button>
+        </div>
+      </Dialog>
+    </div>
+  );
+};
 
 const InvoiceTripForm = () => {
-  const navigate = useNavigate()
+  const { currentStep, completeStep } = useTripsStepper();
+
+  const navigate = useNavigate();
   const { tripId } = useParams();
   const [basePrice, setBasePrice] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const [addtionalOptionsPrice, setAddtionalOptionsPrice] = useState(0);
   const participantsData = getFromLocalStorage("participants") || [];
   const additionalOptionsData = getFromLocalStorage("AdditionalOptionsData");
   const accommodationData = getFromLocalStorage("AccommodationData");
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
+  const [responseData, setResponseData] = useState({});
 
   const handleSubmit = () => {
-    const token=localStorage.getItem("token")
+    completeStep(currentStep);
+
+    const token = localStorage.getItem("token");
     const participantsList = participantsData?.map((item) => {
       return {
         ...item,
@@ -29,35 +86,38 @@ const InvoiceTripForm = () => {
     });
     const speakerData = { ...accommodationData, is_companion: false };
     const addtionalOptionsBody = additionalOptionsData.map((item) => item?.id);
-  
+
     const body = {
       trip_id: tripId,
       options: addtionalOptionsBody,
       participants: [speakerData, ...participantsList],
     };
-  
-    console.log(body);
-  
-    // الاتصال بالـ API
-    axios.post(`${BaseUrl}/trip-participants`, body, {
-      headers: {
-        Authorization: `Bearer ${token}`, // إضافة التوكن هنا
-        "Content-Type": "application/json", // تحديد نوع المحتوى
-      },
-    })
+
+    axios
+      .post(`${BaseUrl}/trip-participants`, body, {
+        headers: {
+          Authorization: `Bearer ${token}`, // إضافة التوكن هنا
+          "Content-Type": "application/json", // تحديد نوع المحتوى
+        },
+      })
       .then((response) => {
-        // التعامل مع الاستجابة هنا
         console.log(response.data);
+
+        const invoiceIds = response.data?.invoice.map((item) => {
+          return item.participant_id;
+        });
+        completeStep(currentStep);
+        saveToLocalStorage("invoiceIds", invoiceIds);
+
+        // setIsOpen(true);
         toast.success("The data was updated successfully!");
       })
       .catch((error) => {
-        // التعامل مع الخطأ هنا
-        console.error("There was an error!", error);
         toast.error("Failed to update the data.");
       });
   };
-  
-////////////////////////////////////
+
+  ////////////////////////////////////
   const calculateTotalPrice = (options) => {
     return options?.reduce((total, option) => {
       if (option.value) {
@@ -106,6 +166,11 @@ const InvoiceTripForm = () => {
 
   return (
     <div className="invoice-trips-container-stepper">
+      <ParticipantDialog
+        open={isOpen}
+        setOpen={setIsOpen}
+        data={responseData}
+      />
       {accommodationData && (
         <div>
           <div className="header-invoice-trips">Accommodation Details</div>
@@ -113,8 +178,7 @@ const InvoiceTripForm = () => {
           <div className="accommodation-data-container">
             <SimpleLabelValue
               label="Check-in Date"
-              value={accommodationData.check_in_date
-              }
+              value={accommodationData.check_in_date}
             />
             <SimpleLabelValue
               label="Check-out Date"
@@ -129,7 +193,7 @@ const InvoiceTripForm = () => {
               value={accommodationData.nights_count}
             />{" "}
           </div>
-          <div className="cost-container">
+          {/* <div className="cost-container">
             <SimpleLabelValue label="Base Cost" value={basePrice} />
             <SimpleLabelValue
               label="Aditional Options Cost"
@@ -139,7 +203,7 @@ const InvoiceTripForm = () => {
               label="Total Cost"
               value={(basePrice + addtionalOptionsPrice) * Number(accommodationData.nights_count)}
             />
-          </div>
+          </div> */}
         </div>
       )}
 
@@ -181,7 +245,7 @@ const InvoiceTripForm = () => {
                   value={participant.nights_count}
                 />
               </div>
-              <div className="cost-container">
+              {/* <div className="cost-container">
                 <SimpleLabelValue label="Base Cost" value={basePrice} />
                 <SimpleLabelValue
                   label="Aditional Options Cost"
@@ -191,7 +255,7 @@ const InvoiceTripForm = () => {
                   label="Total Cost"
                   value={(basePrice + addtionalOptionsPrice)* Number(participant.nights_count)}
                 />
-              </div>
+              </div> */}
             </div>
           ))}
         </div>

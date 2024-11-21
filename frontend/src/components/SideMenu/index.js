@@ -80,11 +80,11 @@ function SideMenu() {
         { label: "Visa", path: "/visa" },
         { label: "Flight", path: "/flight/form" },
         { label: "Airport Transfer", path: "/airport/transfer" },
-        { label: "Gala Dinner", path: "/gala/dinner" },
         { label: "Reservation", path: "/reservation/form" },
         { label: "All Trips", path: "/view-user-trips" },
         { label: "Airport Transfer Price", path: "/airport/transfer/price" },
-        { label: "Gala Dinner", path: "/gala" },
+        { label: "Gala Dinner", path: "/gala/dinner" },
+        
       ],
     },
     ...(isAdmin
@@ -101,13 +101,16 @@ function SideMenu() {
                 label: "Airport Transfer Price",
                 path: "/airport/transfer/price",
               },
-              { label: "Gala Dinner", path: "/gala" },
+              { label: "Gala Dinner", path: "/gala/dinner" },
+
+             
               { label: "Create Job", path: "/job" },
               { label: "Messages", path: "/msgs" },
               { label: "Job Applicants", path: "/job/admin" },
               { label: "Sponsor Option Form", path: "/sponsor/option/form" },
               { label: "Users", path: "/pending/users" },
               { label: "Enter new flights", path: "/enter/new/flights" },
+              
               {
                 label: "Admin Sponsorship Packages",
                 path: "/sponsor/admin/add/table",

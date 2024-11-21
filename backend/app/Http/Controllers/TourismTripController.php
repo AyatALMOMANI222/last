@@ -67,5 +67,62 @@ class TourismTripController extends Controller
             ], 500);
         }
     }
+    public function getAllTourismTrips(Request $request)
+    {
+        try {
+            // تحقق من وجود معايير البحث
+            $search = $request->input('search');
+    
+            // تحديد عدد العناصر في كل صفحة
+            $perPage = 10; // يمكنك تعديل الرقم حسب الحاجة
+    
+            // استعلام جلب الرحلات السياحية
+            $query = TourismTrip::query();
+    
+            // تطبيق التصفية بالبحث إذا تم تقديمها
+            if ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                      ->orWhere('firstname', 'like', '%' . $search . '%')
+                      ->orWhere('lastname', 'like', '%' . $search . '%');
+            }
+    
+            // تطبيق خاصية التصفح
+            $tourismTrips = $query->paginate($perPage);
+    
+            // قائمة الأنشطة الثابتة
+            $staticActivities = [
+                'Hiking',
+                'Camping',
+                'Photography',
+                'Scuba Diving',
+                'Rock Climbing'
+            ];
+    
+            // تحويل العناصر إلى مجموعة وتطبيق الأنشطة الثابتة
+            $dataWithActivities = collect($tourismTrips->items())->map(function ($trip) use ($staticActivities) {
+                $trip->staticActivities = $staticActivities; // إرفاق الأنشطة الثابتة
+                return $trip;
+            });
+    
+            // إرجاع النتيجة بتنسيق JSON
+            return response()->json([
+                'status' => 'success',
+                'data' => $dataWithActivities,       // العناصر في الصفحة الحالية مع الأنشطة الثابتة
+                'total' => $tourismTrips->total(),   // العدد الإجمالي للعناصر
+                'per_page' => $tourismTrips->perPage(), // عدد العناصر في كل صفحة
+                'current_page' => $tourismTrips->currentPage(), // رقم الصفحة الحالية
+                'total_pages' => $tourismTrips->lastPage(), // العدد الإجمالي للصفحات
+            ], 200);
+        } catch (\Exception $e) {
+            // معالجة الأخطاء
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to retrieve tourism trips: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+    
+    
     
 }

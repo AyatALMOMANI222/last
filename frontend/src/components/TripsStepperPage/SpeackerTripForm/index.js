@@ -12,7 +12,7 @@ import {
 
 const SpeackerTripForm = () => {
   const { currentStep, completeStep } = useTripsStepper();
-  const [includeAccommodation, setIncludeAccommodation] = useState();
+  // const [includeAccommodation, setIncludeAccommodation] = useState(false);
   const [accommodationStars, setAccommodationStars] = useState();
   const [nightsCount, setNightsCount] = useState();
   const [checkInDate, setCheckInDate] = useState("");
@@ -22,9 +22,9 @@ const SpeackerTripForm = () => {
     toast.success("The data was updated successfully!");
 
     const formData = {
-      include_accommodation: includeAccommodation,
+      // include_accommodation: includeAccommodation,
       accommodation_stars: accommodationStars,
-      nights_count: nightsCount ,
+      nights_count: nightsCount,
       check_in_date: checkInDate,
       check_out_date: checkOutDate,
       is_companion: false,
@@ -35,7 +35,7 @@ const SpeackerTripForm = () => {
   useEffect(() => {
     const data = getFromLocalStorage("AccommodationData");
     if (data) {
-      setIncludeAccommodation(data?.include_accommodation);
+      // setIncludeAccommodation(data?.include_accommodation);
       setAccommodationStars(data?.accommodation_stars);
       setNightsCount(data?.nights_count);
       setCheckInDate(data?.check_in_date);
@@ -45,16 +45,6 @@ const SpeackerTripForm = () => {
   return (
     <div>
       <form className="accommodation-form-steeper">
-        <div className="check-in-input-container">
-          <Checkbox
-            label="Include Accommodation"
-            checkboxValue={includeAccommodation}
-            setCheckboxValue={setIncludeAccommodation}
-            icon={""}
-            errorMsg={""}
-            className="form-checkbox"
-          />
-        </div>
         <Input
           label="Accommodation Stars"
           placeholder="Enter star rating (1-5)"

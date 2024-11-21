@@ -16,7 +16,7 @@ class CreateJobsApplicantsAndJobApplicationsTables extends Migration
         // إنشاء جدول الوظائف
         Schema::create('available_jobs', function (Blueprint $table) {
             $table->id();
-            $table->string('Events Coordinator'); // اسم الوظيفة
+            $table->string('events_coordinator'); // اسم الوظيفة
             $table->text('responsibilities')->nullable(); // المسؤوليات
             $table->text('description')->nullable(); // الوصف
             $table->timestamps(); // تاريخ الإنشاء والتحديث

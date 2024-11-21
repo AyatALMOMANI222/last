@@ -63,19 +63,19 @@ const NavBar = () => {
       title: "Travel & Tourism",
       links: [
         { label: "Sights", url: "/tour_slider" },
-        { label: "Packages", url: "/packages" },
-        {
-          label: "Tailor Made",
-          url: "#",
-          subMenu: "tailorMade",
-          subLinks: [
-            { label: "Individuals (Form)", url: "#" },
-            { label: "Groups (Form)", url: "#" },
-          ],
-        },
-        { label: "Ticket Booking", url: "/ticket/booking" },
-        { label: "Hotel Booking", url: "/hotel/booking" },
-        { label: "Transportation", url: "/transportation" },
+        // { label: "Packages", url: "/packages" },
+        // {
+        //   label: "Tailor Made",
+        //   url: "#",
+        //   subMenu: "tailorMade",
+        //   subLinks: [
+        //     { label: "Individuals (Form)", url: "#" },
+        //     { label: "Groups (Form)", url: "#" },
+        //   ],
+        // },
+        // { label: "Ticket Booking", url: "/ticket/booking" },
+        // { label: "Hotel Booking", url: "/hotel/booking" },
+        // { label: "Transportation", url: "/transportation" },
       ],
     },
     {

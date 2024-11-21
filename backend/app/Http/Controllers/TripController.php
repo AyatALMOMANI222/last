@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AdditionalOption;
 use App\Models\Trip;
+use App\Models\TripParticipant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -329,5 +330,44 @@ public function updateTripAndOptions(Request $request, $id)
     }
     
 
-
+    public function getUserTripOptions($userId)
+    {
+        try {
+            // البحث عن trip_id من جدول trip_participants بناءً على user_id
+            $tripId = TripParticipant::where('user_id', $userId)->value('trip_id');
+    
+            // التحقق من أن trip_id موجود
+            if (!$tripId) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'No trip found for this user.',
+                ], 404);
+            }
+    
+            // جلب الخيارات المرتبطة بـ trip_id من جدول additional_options
+            $options = AdditionalOption::where('trip_id', $tripId)->get();
+    
+            // التحقق من وجود الخيارات
+            if ($options->isEmpty()) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'No options found for the given trip.',
+                ], 404);
+            }
+    
+            // إرجاع الخيارات كاستجابة JSON
+            return response()->json([
+                'TripId' => $tripId,
+                'message' => 'Options retrieved successfully.',
+                'data' => $options,
+            ], 200);
+        } catch (\Exception $e) {
+            // إرجاع رسالة الخطأ إذا حدث استثناء
+            return response()->json([
+                'error' => true,
+                'message' => 'An error occurred: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 }

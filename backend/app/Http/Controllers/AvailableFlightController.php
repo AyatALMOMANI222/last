@@ -154,11 +154,11 @@ class AvailableFlightController extends Controller
             $validatedData = $request->validate([
                 'flights' => 'required|array',
                 'flights.*.flight_id' => 'required|exists:flights,flight_id',
-                'flights.*.data' => 'required|array',
-                'flights.*.data.*.departure_date' => 'required|date',
-                'flights.*.data.*.departure_time' => 'required',
-                'flights.*.data.*.price' => 'required|numeric|min:0',
-                'flights.*.data.*.is_free' => 'boolean',
+                'flights.*.data' => 'nullable|array', // جعل data غير إجباري
+                'flights.*.data.*.departure_date' => 'required_if:flights.*.data,!=,null|date', // جعل departure_date إجباري إذا كان هناك data
+                'flights.*.data.*.departure_time' => 'required_if:flights.*.data,!=,null',
+                'flights.*.data.*.price' => 'required_if:flights.*.data,!=,null|numeric|min:0',
+                'flights.*.data.*.is_free' => 'nullable|boolean',
                 'flights.*.main_user_id' => 'nullable|exists:users,id', // Optional main_user_id validation
             ]);
     
@@ -169,20 +169,22 @@ class AvailableFlightController extends Controller
                 $flight = Flight::where('flight_id', $flightData['flight_id'])->first();
     
                 if ($flight) {
-                    foreach ($flightData['data'] as $tripData) {
-                        date_default_timezone_set('Asia/Amman');
+                    if (isset($flightData['data'])) { // تحقق إذا كانت data موجودة
+                        foreach ($flightData['data'] as $tripData) {
+                            date_default_timezone_set('Asia/Amman');
     
-                        // Create an available flight entry
-                        $availableFlight = AvailableFlight::create([
-                            'flight_id' => $flightData['flight_id'],
-                            'departure_date' => $tripData['departure_date'],
-                            'departure_time' => $tripData['departure_time'],
-                            'price' => $tripData['price'],
-                            'is_free' => $tripData['is_free'] ?? false,
-                            'created_at' => now(),
-                        ]);
+                            // Create an available flight entry
+                            $availableFlight = AvailableFlight::create([
+                                'flight_id' => $flightData['flight_id'],
+                                'departure_date' => $tripData['departure_date'],
+                                'departure_time' => $tripData['departure_time'],
+                                'price' => $tripData['price'],
+                                'is_free' => $tripData['is_free'] ?? false,
+                                'created_at' => now(),
+                            ]);
     
-                        $availableFlights[] = $availableFlight;
+                            $availableFlights[] = $availableFlight;
+                        }
                     }
     
                     // Check if main_user_id is provided for sending notification
