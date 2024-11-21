@@ -6,7 +6,7 @@ import { useAuth } from "../../common/AuthContext";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const { isAdmin , logout } = useAuth();
   const { registrationType } = useAuth();
 
   const menuItems = [
@@ -177,7 +177,7 @@ const NavBar = () => {
   return (
     <nav className="new-navbar">
       <div className="navbar-logo">
-        <img className="new-logo" src="/image/newLogo.png" alt="Logo" />
+        {/* <img className="new-logo" src="/image/newLogo.png" alt="Logo" /> */}
       </div>
       <ul className="navbar-links">{renderMenu()}</ul>
       <div className="navbar-auth">
@@ -205,7 +205,8 @@ const NavBar = () => {
           <div
             className="auth-btn register-btn"
             onClick={() => {
-              localStorage.removeItem("token");
+              logout()
+              // localStorage.removeItem("token");
               navigate("login");
             }}
           >

@@ -3,20 +3,22 @@
   justify-content: space-between;
   align-items: center;
   padding: 0px 20px;
-  background-color: #2b2d42;
-  color: #edf2f4;
+  background-color: #ffffff; /* White background */
+  color: #c82333; /* Red text */
   font-family: "Arial", sans-serif;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
   .new-logo {
     height: 50px;
   }
+
   .navbar-logo {
     font-size: 24px;
     font-weight: bold;
     cursor: pointer;
 
     .logo {
-      color: #ef233c;
+      color: #c82333; /* Red color for logo */
     }
   }
 
@@ -34,26 +36,26 @@
         font-weight: 500;
         padding: 8px 12px;
         cursor: pointer;
-        color: #edf2f4;
+        color: #c82333; /* Red text for menu title */
         &:hover {
-          color: #ef233c;
+          color: #d90429; /* Darker red on hover */
         }
       }
 
       .menu-links {
-        max-height: 0; // Initially closed
-        overflow: hidden; // Ensures content is hidden when closed
+        max-height: 0;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         position: absolute;
-        top: 100%; // Aligns the submenu directly under the main title
+        top: 100%;
         left: 0;
-        background-color: #2b2d42;
+        background-color: #ffffff; /* White background for submenu */
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        padding: 0; // Remove padding to prevent issues when closed
+        padding: 0;
         z-index: 1000;
-        transition: max-height 0.5s ease-in-out; // Smooth transition for opening
-        width: 210px; // Set width for the dropdown
+        transition: max-height 0.5s ease-in-out;
+        width: 210px;
 
         overflow: overlay;
         &::-webkit-scrollbar {
@@ -74,9 +76,8 @@
         }
       }
 
-      // Show submenu on hover with smooth transition
       &:hover .menu-links {
-        max-height: 400px; // Adjust to the maximum height for the open state
+        max-height: 400px;
         padding-top: 20px;
         padding-bottom: 20px;
       }
@@ -84,21 +85,21 @@
       .menu-item {
         padding: 5px 10px;
         cursor: pointer;
-        color: #edf2f4;
+        color: #c82333; /* Red text for menu items */
 
         .option-btn {
           text-decoration: none;
           padding: 8px 12px;
           display: block;
           &:hover {
-            background-color: #ef233c;
+            background-color: #c82333; /* Red on hover */
             color: #fff;
           }
         }
 
         .has-submenu {
           &:hover .submenu {
-            max-height: 300px; // Set height for submenu
+            max-height: 300px;
           }
         }
 
@@ -106,7 +107,7 @@
           max-height: 0;
           overflow: hidden;
           transition: max-height 0.5s ease-in-out;
-          background-color: #2b2d42;
+          background-color: #ffffff; /* White background for submenu */
           list-style: none;
           padding: 0;
           position: relative;
@@ -119,7 +120,7 @@
             cursor: pointer;
 
             &:hover {
-              background-color: #ef233c;
+              background-color: #c82333; /* Red background on hover */
               color: #fff;
             }
           }
@@ -134,11 +135,11 @@
     gap: 15px;
 
     svg {
-      fill: #fff;
+      fill: #c82333; /* Red color for icons */
     }
 
     .auth-btn {
-      background-color: #ef233c;
+      background-color: #c82333; /* Red button background */
       color: #fff;
       padding: 8px 12px;
       border-radius: 5px;
@@ -146,18 +147,18 @@
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #d90429;
+        background-color: #d90429; /* Darker red on hover */
       }
     }
 
     .register-btn {
       background-color: transparent;
-      color: #ef233c;
-      border: 1px solid #ef233c;
+      color: #c82333; /* Red text for register button */
+      border: 1px solid #c82333; /* Red border */
 
       &:hover {
-        background-color: #ef233c;
-        color: #fff;
+        background-color: #c82333; /* Red background on hover */
+        color: #fff; /* White text on hover */
       }
     }
   }

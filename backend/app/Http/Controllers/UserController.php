@@ -34,6 +34,10 @@ class UserController extends Controller
                 'country_of_residence' => 'nullable|string|max:255',
                 'isAdmin' => 'sometimes|in:true,false',
                 'passenger_name' => 'nullable|string|max:255',
+
+                'company_name' => 'nullable|string|max:255',
+                'contact_person' => 'nullable|string|max:255',
+                'company_address' => 'nullable|string|max:255',
             ]);
 
             // تحقق من وجود conference_id في قاعدة البيانات
@@ -65,6 +69,9 @@ class UserController extends Controller
                 'nationality' => $validatedData['nationality'] ?? null,
                 'country_of_residence' => $validatedData['country_of_residence'] ?? null,
                 'isAdmin' => $validatedData['isAdmin'],
+                'company_name' => $validatedData['company_name'] ?? null,
+                'contact_person' => $validatedData['contact_person'] ?? null,
+                'company_address' => $validatedData['company_address'] ?? null,
             ]));
 
             // إضافة المستخدم إلى جدول conference_user
@@ -115,22 +122,24 @@ class UserController extends Controller
         try {
             // الحصول على user_id من التوكن
             $user_id = Auth::id();
-    
+
             // التحقق من وجود user_id
             if (!$user_id) {
                 return response()->json(['message' => 'user id not found'], 401);
             }
-    
+
             // جلب المستخدم مع المؤتمرات المرتبطة به التي تنتهي بعد الآن
-            $user = User::with(['conferences' => function($query) {
-                $query->where('end_date', '>', now());
-            }])->find($user_id);
-    
+            $user = User::with([
+                'conferences' => function ($query) {
+                    $query->where('end_date', '>', now());
+                }
+            ])->find($user_id);
+
             // التحقق من وجود المستخدم
             if (!$user) {
                 return response()->json(['message' => 'User not found.'], 404);
             }
-    
+
             return response()->json([
                 'user' => $user,
             ], 200);
@@ -141,7 +150,7 @@ class UserController extends Controller
             ], 500);
         }
     }
-    
+
     public function updateStatus(Request $request, $id)
     {
         try {
@@ -189,21 +198,23 @@ class UserController extends Controller
         }
     }
 
-    public function getAllUsers(Request $request) 
+    public function getAllUsers(Request $request)
     {
         try {
             $status = $request->input('status');
-            
-            $query = User::with(['conferences' => function ($query) {
-                $query->where('end_date', '>', now());
-            }]);
-    
+
+            $query = User::with([
+                'conferences' => function ($query) {
+                    $query->where('end_date', '>', now());
+                }
+            ]);
+
             if ($status && $status !== 'all') {
                 $query->where('status', $status);
             }
-    
+
             $users = $query->paginate(10);
-    
+
             return response()->json([
                 'message' => 'Users retrieved successfully!',
                 'data' => $users->items(),
@@ -221,9 +232,9 @@ class UserController extends Controller
             ], 500);
         }
     }
-    
-    
-    
+
+
+
 }
 
 

@@ -6,10 +6,11 @@ import { toast } from "react-toastify";
 
 import "./style.scss";
 import httpService from "../../../common/httpService";
+import DialogMessage from "../../DialogMessage";
 
 const RegisterSponsorPage = () => {
   const navigate = useNavigate();
-  // const { id } = useParams();
+  const { conferenceId } = useParams();
   const [password, setPassword] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [contactPerson, setContactPerson] = useState("");
@@ -18,6 +19,7 @@ const RegisterSponsorPage = () => {
   const [email, setEmail] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
   const BaseUrl = process.env.REACT_APP_BASE_URL;
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [error, setError] = useState({
     companyName: "",
@@ -36,7 +38,9 @@ const RegisterSponsorPage = () => {
       whatsapp_number: whatsApp,
       email: email,
       company_address: companyAddress,
-      password :password
+      password: password,
+      registration_type: "sponsor",
+      conference_id: conferenceId,
     };
 
     try {
@@ -48,10 +52,7 @@ const RegisterSponsorPage = () => {
         withToast: true,
       });
 
-      // toast.success("Company and sponsor registered successfully!");
-      navigate("/login")
-      // يمكنك توجيه المستخدم إلى صفحة أخرى هنا إذا لزم الأمر
-      // navigate('/next-page'); // Uncomment and change to the desired route
+      setIsDialogOpen(true);
     } catch (error) {
       toast.error("Something went wrong, please try again.");
     }
@@ -132,75 +133,82 @@ const RegisterSponsorPage = () => {
   };
 
   return (
-    <div className="register-page-container">
-      <form onSubmit={handleRegister} className="register-form">
-        <div className="title">
-          <span>Register Company</span>
-        </div>
+    <div>
+      <DialogMessage
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        message={"Thank you for applying to Sponser at the conference. We will notify you by email once the admin approves your registration"}
+      />
+      <div className="register-page-container">
+        <form onSubmit={handleRegister} className="register-form">
+          <div className="title">
+            <span>Register Company</span>
+          </div>
 
-        <div className="fields-container">
-          <Input
-            label={"Company Name"}
-            placeholder={"e.g. ABC Corp"}
-            inputValue={companyName}
-            setInputValue={setCompanyName}
-            required={true}
-            errorMsg={error.companyName}
-          />
-          <Input
-            label={"Contact Person"}
-            placeholder={"e.g. John Doe"}
-            inputValue={contactPerson}
-            setInputValue={setContactPerson}
-            required={true}
-            errorMsg={error.contactPerson}
-          />
-          <PhoneNumberInput
-            label={"Phone Number"}
-            phone={phone}
-            setPhone={setPhone}
-            required={true}
-            errorMsg={error.phone}
-          />
-          <PhoneNumberInput
-            label={"WhatsApp Number"}
-            phone={whatsApp}
-            setPhone={setWhatsApp}
-            required={true}
-            errorMsg={error.whatsApp}
-          />
-          <Input
-            label={"Email"}
-            placeholder={"e.g. example@example.com"}
-            inputValue={email}
-            setInputValue={setEmail}
-            required={true}
-            errorMsg={error.email}
-          />
-          <Input
-            label="Password"
-            placeholder="Enter password"
-            inputValue={password}
-            setInputValue={setPassword}
-            type="password"
-            required
-          />
-          <Input
-            label={"Company Address"}
-            placeholder={"e.g. 1234 Elm St, City, Country"}
-            inputValue={companyAddress}
-            setInputValue={setCompanyAddress}
-            required={true}
-            errorMsg={error.companyAddress}
-          />
-        </div>
+          <div className="fields-container">
+            <Input
+              label={"Company Name"}
+              placeholder={"e.g. ABC Corp"}
+              inputValue={companyName}
+              setInputValue={setCompanyName}
+              required={true}
+              errorMsg={error.companyName}
+            />
+            <Input
+              label={"Contact Person"}
+              placeholder={"e.g. John Doe"}
+              inputValue={contactPerson}
+              setInputValue={setContactPerson}
+              required={true}
+              errorMsg={error.contactPerson}
+            />
+            <PhoneNumberInput
+              label={"Phone Number"}
+              phone={phone}
+              setPhone={setPhone}
+              required={true}
+              errorMsg={error.phone}
+            />
+            <PhoneNumberInput
+              label={"WhatsApp Number"}
+              phone={whatsApp}
+              setPhone={setWhatsApp}
+              required={true}
+              errorMsg={error.whatsApp}
+            />
+            <Input
+              label={"Email"}
+              placeholder={"e.g. example@example.com"}
+              inputValue={email}
+              setInputValue={setEmail}
+              required={true}
+              errorMsg={error.email}
+            />
+            <Input
+              label="Password"
+              placeholder="Enter password"
+              inputValue={password}
+              setInputValue={setPassword}
+              type="password"
+              required
+            />
+            <Input
+              label={"Company Address"}
+              placeholder={"e.g. 1234 Elm St, City, Country"}
+              inputValue={companyAddress}
+              setInputValue={setCompanyAddress}
+              required={true}
+              errorMsg={error.companyAddress}
+            />
+          </div>
 
-        <div className="register-btn-container">
-          <button className="register-btn" type="submit">
-            Register
-          </button>
-        </div>
-      </form>
+          <div className="register-btn-container">
+            <button className="register-btn" type="submit">
+              Register
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

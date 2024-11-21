@@ -1,28 +1,31 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
-  const [token, setToken] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const [userImage, setUserImage] = useState(null);
-  const [myConferenceId, setMyConferenceId] = useState(null);
-  const [myConferenceName, setMyConferenceName] = useState(null);
-  const [registrationType, setRegistrationType] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(null);
-  const [speakerData, setSpeakerData] = useState(null);
-  const [attendancesData, setAttendancesData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [authData, setAuthData] = useState({
+    token: null,
+    userId: null,
+    userImage: null,
+    myConferenceId: null,
+    myConferenceName: null,
+    registrationType: null,
+    isAdmin: null,
+    speakerData: null,
+    attendancesData: null,
+    loading: true,
+  });
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
     if (savedToken) {
-      setToken(savedToken);
+      setAuthData((prevState) => ({ ...prevState, token: savedToken }));
       fetchUserData(savedToken);
     } else {
-      setLoading(false);
+      setAuthData((prevState) => ({ ...prevState, loading: false }));
     }
   }, []);
 
@@ -34,7 +37,10 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      setSpeakerData(response.data);
+      setAuthData((prevState) => ({
+        ...prevState,
+        speakerData: response.data,
+      }));
     } catch (error) {
       console.error("Failed to fetch speaker data:", error);
     }
@@ -42,15 +48,15 @@ export const AuthProvider = ({ children }) => {
 
   const fetchAttendancesData = async (authToken) => {
     try {
-      const response = await axios.get(
-        `${BaseUrl}/attendances`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      setAttendancesData(response.data);
+      const response = await axios.get(`${BaseUrl}/attendances`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setAuthData((prevState) => ({
+        ...prevState,
+        attendancesData: response.data,
+      }));
     } catch (error) {
       console.error("Failed to fetch speaker data:", error);
     }
@@ -65,6 +71,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       const userData = response.data.user;
+      console.log({ userData });
 
       if (userData?.registration_type === "speaker") {
         await fetchSpeakerData(authToken);
@@ -72,53 +79,47 @@ export const AuthProvider = ({ children }) => {
         fetchAttendancesData(authToken);
       }
 
-      setUserId(userData.id);
-      setUserImage(userData.image);
-      setMyConferenceId(userData.conferences?.[0]?.id || null);
-      setMyConferenceName(userData.conferences?.[0]?.title || null);
-      setRegistrationType(userData?.registration_type);
-      setIsAdmin(userData?.isAdmin);
-      setLoading(false);
+      setAuthData((prevState) => ({
+        ...prevState,
+        userId: userData.id,
+        userImage: userData.image,
+        myConferenceId: userData.conferences?.[0]?.id || null,
+        myConferenceName: userData.conferences?.[0]?.title || null,
+        registrationType: userData?.registration_type,
+        isAdmin: userData?.isAdmin,
+        loading: false,
+      }));
     } catch (error) {
       console.error("Failed to fetch user data:", error);
-      setLoading(false);
     }
   };
 
   const login = (newToken) => {
-    setToken(newToken);
+    setAuthData((prevState) => ({ ...prevState, token: newToken }));
     localStorage.setItem("token", newToken);
     fetchUserData(newToken);
   };
 
   const logout = () => {
-    setToken(null);
-    setUserId(null);
-    setUserImage(null);
-    setMyConferenceId(null);
-    setMyConferenceName(null);
-    setRegistrationType(null);
-    setIsAdmin(null);
-    setSpeakerData(null); // Clear speaker data on logout
+    setAuthData({
+      token: null,
+      userId: null,
+      userImage: null,
+      myConferenceId: null,
+      myConferenceName: null,
+      registrationType: null,
+      isAdmin: null,
+      speakerData: null,
+      attendancesData: null,
+      loading: false,
+    });
     localStorage.removeItem("token");
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <AuthContext.Provider
       value={{
-        token,
-        userId,
-        userImage,
-        myConferenceId,
-        myConferenceName,
-        registrationType,
-        isAdmin,
-        speakerData,
-        attendancesData,
+        ...authData,
         logout,
         login,
       }}

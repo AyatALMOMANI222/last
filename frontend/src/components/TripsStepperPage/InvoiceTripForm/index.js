@@ -18,44 +18,43 @@ const InvoiceTripForm = () => {
   const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
   const handleSubmit = () => {
-    navigate("/gala/dinner")
-    // const token=localStorage.getItem("token")
-    // const participantsList = participantsData?.map((item) => {
-    //   return {
-    //     ...item,
-    //     nationality: item?.nationality?.value,
-    //     include_accommodation: item?.include_accommodation?.value,
-    //     is_companion: true,
-    //   };
-    // });
-    // const speakerData = { ...accommodationData, is_companion: false };
-    // const addtionalOptionsBody = additionalOptionsData.map((item) => item?.id);
+    const token=localStorage.getItem("token")
+    const participantsList = participantsData?.map((item) => {
+      return {
+        ...item,
+        nationality: item?.nationality?.value,
+        include_accommodation: item?.include_accommodation?.value,
+        is_companion: true,
+      };
+    });
+    const speakerData = { ...accommodationData, is_companion: false };
+    const addtionalOptionsBody = additionalOptionsData.map((item) => item?.id);
   
-    // const body = {
-    //   trip_id: tripId,
-    //   options: addtionalOptionsBody,
-    //   participants: [speakerData, ...participantsList],
-    // };
+    const body = {
+      trip_id: tripId,
+      options: addtionalOptionsBody,
+      participants: [speakerData, ...participantsList],
+    };
   
-    // console.log(body);
+    console.log(body);
   
-    // // الاتصال بالـ API
-    // axios.post(`${BaseUrl}/trip-participants`, body, {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`, // إضافة التوكن هنا
-    //     "Content-Type": "application/json", // تحديد نوع المحتوى
-    //   },
-    // })
-    //   .then((response) => {
-    //     // التعامل مع الاستجابة هنا
-    //     console.log(response.data);
-    //     toast.success("The data was updated successfully!");
-    //   })
-    //   .catch((error) => {
-    //     // التعامل مع الخطأ هنا
-    //     console.error("There was an error!", error);
-    //     toast.error("Failed to update the data.");
-    //   });
+    // الاتصال بالـ API
+    axios.post(`${BaseUrl}/trip-participants`, body, {
+      headers: {
+        Authorization: `Bearer ${token}`, // إضافة التوكن هنا
+        "Content-Type": "application/json", // تحديد نوع المحتوى
+      },
+    })
+      .then((response) => {
+        // التعامل مع الاستجابة هنا
+        console.log(response.data);
+        toast.success("The data was updated successfully!");
+      })
+      .catch((error) => {
+        // التعامل مع الخطأ هنا
+        console.error("There was an error!", error);
+        toast.error("Failed to update the data.");
+      });
   };
   
 ////////////////////////////////////
@@ -80,6 +79,7 @@ const InvoiceTripForm = () => {
       }
     }
   };
+
   const getTripById = async (tripId) => {
     try {
       const response = await httpService({
@@ -99,6 +99,7 @@ const InvoiceTripForm = () => {
       console.error("Error submitting discount", error);
     }
   };
+
   useEffect(() => {
     getTripById(tripId);
   }, [tripId]);
@@ -112,19 +113,20 @@ const InvoiceTripForm = () => {
           <div className="accommodation-data-container">
             <SimpleLabelValue
               label="Check-in Date"
-              value={accommodationData.checkInDate}
+              value={accommodationData.check_in_date
+              }
             />
             <SimpleLabelValue
               label="Check-out Date"
-              value={accommodationData.checkOutDate}
+              value={accommodationData.check_out_date}
             />
             <SimpleLabelValue
               label="Accommodation Stars"
-              value={accommodationData.accommodationStars}
+              value={accommodationData.accommodation_stars}
             />
             <SimpleLabelValue
               label="Nights Count"
-              value={accommodationData.nightsCount}
+              value={accommodationData.nights_count}
             />{" "}
           </div>
           <div className="cost-container">
@@ -135,7 +137,7 @@ const InvoiceTripForm = () => {
             />
             <SimpleLabelValue
               label="Total Cost"
-              value={basePrice + addtionalOptionsPrice}
+              value={(basePrice + addtionalOptionsPrice) * Number(accommodationData.nights_count)}
             />
           </div>
         </div>
@@ -187,7 +189,7 @@ const InvoiceTripForm = () => {
                 />
                 <SimpleLabelValue
                   label="Total Cost"
-                  value={basePrice + addtionalOptionsPrice}
+                  value={(basePrice + addtionalOptionsPrice)* Number(participant.nights_count)}
                 />
               </div>
             </div>

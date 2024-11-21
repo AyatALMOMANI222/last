@@ -19,7 +19,7 @@ const RegisterPage = () => {
 
   const navigate = useNavigate();
   const { id } = useParams();
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -60,15 +60,11 @@ const RegisterPage = () => {
     formData.append("country_of_residence", country.value);
 
     try {
-      const response = await axios.post(
-        `${BaseUrl}/users/${id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${BaseUrl}/users/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setIsDialogOpen(true);
       toast.success("User created successfully!");
     } catch (error) {
@@ -198,7 +194,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div >
+    <div>
       <DialogMessage
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}

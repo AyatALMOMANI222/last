@@ -3,24 +3,94 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdditionalOption;
+use App\Models\PrivateInvoiceTrip;
 use App\Models\TripOptionsParticipant;
 use App\Models\TripParticipant;
 use App\Models\User;
+use App\Models\Trip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TripParticipantController extends Controller
 {
+    public function calculateOptionsPrice($participantId)
+    {
+        // Fetch the options for the participant from the AdditionalOption table
+        $options = AdditionalOption::whereIn('id', function ($query) use ($participantId) {
+            // Assuming you have a pivot table or a relationship to store the selected options for a participant
+            $query->select('option_id')->from('trip_options_participants')->where('participant_id', $participantId);
+        })->get();
 
+        // Calculate the total price of options
+        $totalOptionsPrice = $options->sum('price'); // Assuming 'price' is the column with the price in the AdditionalOption model
+
+        return $totalOptionsPrice ?: 0; // Return 0 if no options are selected or calculated price is 0
+    }
+
+    public function createInvoice($participantId, $basePrice, $optionsPrice, $totalPrice)
+    {
+        // Create a new PrivateInvoiceTrip for the participant
+        return PrivateInvoiceTrip::create([
+            'participant_id' => $participantId,
+            'base_price' => $basePrice ?? 8,
+            'options_price' => $optionsPrice,
+            'total_price' => $totalPrice,
+            'status' => 'pending'
+        ]);
+    }
+
+
+
+    public function calculateInvoice($tripId, $participants)
+    {
+        $invoiceData = [];
+
+        // Get trip details (e.g., base price)
+        $trip = Trip::findOrFail($tripId);
+
+        // Determine the base price depending on the number of participants
+        $numberOfParticipants = count($participants);
+
+        if ($numberOfParticipants === 1) {
+            $basePrice = $trip->price_per_person;
+        } elseif ($numberOfParticipants === 2) {
+            $basePrice = $trip->price_for_two;
+        } else {
+            $basePrice = $trip->price_for_three_or_more;
+        }
+
+        // Iterate over each participant to calculate their invoice
+        foreach ($participants as $participant) {
+            // Calculate price for accommodation
+
+            // Calculate price for additional options
+            $optionsPrice = $this->calculateOptionsPrice(participantId: $participant->id);
+
+            // Calculate total price (base price * night count + options price + accommodation price)
+            $totalPrice = ($basePrice * $participant->nights_count) + $optionsPrice;
+
+            $participantInvoice = [
+                'participant_id' => $participant->id,
+                'base_price' => $basePrice,
+                'options_price' => $optionsPrice,
+                'total_price' => $totalPrice,
+            ];
+
+            // Store the calculated invoice data
+            $invoiceData[] = $participantInvoice;
+        }
+
+        return $invoiceData;
+    }
 
     public function addParticipant(Request $request)
     {
         $userId = Auth::id();
-    
+
         if (!$userId) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-    
+
         try {
             // Validate input
             $validatedData = $request->validate([
@@ -28,7 +98,7 @@ class TripParticipantController extends Controller
                 'options' => 'required|array',
                 'participants' => 'required|array',
                 'participants.*.is_companion' => 'required|boolean',
-                'participants.*.include_accommodation' => 'boolean',
+                // 'participants.*.include_accommodation' => 'boolean',
                 'participants.*.accommodation_stars' => 'nullable|integer|min:1|max:5',
                 'participants.*.nights_count' => 'nullable|integer|min:1',
                 'participants.*.check_in_date' => 'nullable|date',
@@ -39,13 +109,13 @@ class TripParticipantController extends Controller
                 'participants.*.whatsapp_number' => 'nullable|string',
                 'participants.*.id' => 'nullable|integer'
             ]);
-    
+
             // Get user data from the database
             $user = User::findOrFail($userId);
-    
+
             // Initialize participants array
             $participants = [];
-    
+
             // Add normal user
             $normalUser = [
                 'user_id' => $userId,
@@ -56,34 +126,34 @@ class TripParticipantController extends Controller
                 'phone_number' => $user->phone_number,
                 'whatsapp_number' => $user->whatsapp_number,
                 'is_companion' => false,
-                'include_accommodation' => $validatedData['participants'][0]['include_accommodation'],
+                // 'include_accommodation' => $validatedData['participants'][0]['include_accommodation'],
                 'accommodation_stars' => $validatedData['participants'][0]['accommodation_stars'] ?? null,
                 'nights_count' => $validatedData['participants'][0]['nights_count'],
                 'check_in_date' => $validatedData['participants'][0]['check_in_date'],
                 'check_out_date' => $validatedData['participants'][0]['check_out_date'],
             ];
-    
+
             // Insert normal user and get the inserted participant ID
             $normalParticipant = TripParticipant::create($normalUser);
             $participants[] = $normalParticipant;
-    
+
             // Initialize array for companions
             $companions = [];
-    
+
             // Process companions
             foreach ($validatedData['participants'] as $participantData) {
                 if ($participantData['is_companion'] === true) {
                     // Store companion details from the request
                     $companions[] = [
                         'user_id' => null,
-                        'main_user_id' => $userId,
+                        'main_user_id' => $normalParticipant->id,
                         'trip_id' => $validatedData['trip_id'],
                         'name' => $participantData['name'] ?? $user->name,
                         'nationality' => $participantData['nationality'] ?? $user->nationality,
                         'phone_number' => $participantData['phone_number'] ?? $user->phone_number,
                         'whatsapp_number' => $participantData['whatsapp_number'] ?? $user->whatsapp_number,
                         'is_companion' => true,
-                        'include_accommodation' => $participantData['include_accommodation'],
+                        // 'include_accommodation' => $participantData['include_accommodation'],
                         'accommodation_stars' => $participantData['accommodation_stars'],
                         'nights_count' => $participantData['nights_count'],
                         'check_in_date' => $participantData['check_in_date'],
@@ -91,16 +161,16 @@ class TripParticipantController extends Controller
                     ];
                 }
             }
-    
+
             // Insert companions and collect their IDs
             foreach ($companions as $companion) {
                 $insertedCompanion = TripParticipant::create($companion);
                 $participants[] = $insertedCompanion;
             }
-    
+
             // Get valid option IDs from the additional_options table
             $validOptionIds = AdditionalOption::whereIn('id', $validatedData['options'])->pluck('id')->toArray();
-    
+
             // Store options for each participant
             foreach ($validOptionIds as $optionId) {
                 foreach ($participants as $participant) {
@@ -111,27 +181,40 @@ class TripParticipantController extends Controller
                     ]);
                 }
             }
-    
+
+            // Calculate the invoice for the participants
+            $invoiceData = $this->calculateInvoice($validatedData['trip_id'], $participants);
+
+            foreach ($invoiceData as $invoice) {
+                $this->createInvoice(
+                    $invoice['participant_id'],
+                    $invoice['base_price'],
+                    $invoice['options_price'],
+                    $invoice['total_price'],
+                );
+            }
             return response()->json([
                 'message' => 'Participants added successfully',
-                'participants' => $participants
+                'participants' => $participants,
+                'invoice' => $invoiceData
             ], 201);
-    
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['error' => $e->validator->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-    
+
+
     public function updateParticipant(Request $request)
     {
         $userId = Auth::id();
-    
+
         if (!$userId) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-    
+
         try {
             // Validate input
             $validatedData = $request->validate([
@@ -142,14 +225,14 @@ class TripParticipantController extends Controller
                 'participants.*.nationality' => 'nullable|string',
                 'participants.*.phone_number' => 'nullable|string',
                 'participants.*.whatsapp_number' => 'nullable|string',
-                'participants.*.include_accommodation' => 'boolean',
+                // 'participants.*.include_accommodation' => 'boolean',
                 'participants.*.accommodation_stars' => 'nullable|integer|min:1|max:5',
                 'participants.*.nights_count' => 'nullable|integer|min:1',
                 'participants.*.check_in_date' => 'nullable|date',
                 'participants.*.check_out_date' => 'nullable|date|after_or_equal:participants.*.check_in_date',
                 'options' => 'nullable|array',
             ]);
-    
+
             // Update participants
             $participants = [];
             foreach ($validatedData['participants'] as $participantData) {
@@ -160,16 +243,16 @@ class TripParticipantController extends Controller
                     $participants[] = $participant;
                 }
             }
-    
+
             // Update options if provided
             if (isset($validatedData['options'])) {
                 $validOptionIds = AdditionalOption::whereIn('id', $validatedData['options'])->pluck('id')->toArray();
-    
+
                 // Delete existing options for the participants
                 TripOptionsParticipant::where('trip_id', $validatedData['trip_id'])
                     ->whereIn('participant_id', array_column($participants, 'id'))
                     ->delete();
-    
+
                 // Store new options for each participant
                 foreach ($validOptionIds as $optionId) {
                     foreach ($participants as $participant) {
@@ -181,143 +264,28 @@ class TripParticipantController extends Controller
                     }
                 }
             }
-    
+
             return response()->json([
                 'message' => 'Participants updated successfully',
                 'participants' => $participants
             ], 200);
-    
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['error' => $e->validator->errors()], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-    
-    
-
- 
-
-    
-    
 
 
 
-    // public function storeUserAndParticipant(Request $request)
-    // {
-    //     if (!Auth::id()) {
-    //         return response()->json(['success' => false, 'message' => 'يجب تسجيل الدخول.'], 401);
-    //     }
-    
-    //     $userId = Auth::id();
-    
-    //     $validatedData = $request->validate([
-    //         'trip_id' => 'required|exists:trips,id',
-    //         'name' => 'nullable|string',
-    //         'nationality' => 'nullable|string',
-    //         'phone_number' => 'nullable|string',
-    //         'whatsapp_number' => 'nullable|string',
-    //         'is_companion' => 'boolean',
-    //         'include_accommodation' => 'boolean',
-    //         'accommodation_stars' => 'nullable|integer',
-    //         'nights_count' => 'nullable|integer',
-    //         'check_in_date' => 'nullable|date',
-    //         'check_out_date' => 'nullable|date',
-    //         'companions' => 'array',
-    //         'companions.*.name' => 'required|string',
-    //         'companions.*.nationality' => 'required|string',
-    //         'companions.*.phone_number' => 'required|string',
-    //         'companions.*.whatsapp_number' => 'required|string',
-    //         'companions.*.is_companion' => 'boolean',
-    //         'companions.*.include_accommodation' => 'boolean',
-    //         'companions.*.accommodation_stars' => 'nullable|integer',
-    //         'companions.*.nights_count' => 'nullable|integer',
-    //         'selectedOptions' => 'array',
-    //         'selectedOptions.*.option_id' => 'required|exists:additional_options,id',
-    //         'selectedOptions.*.option_name' => 'required|string',
-    //         'selectedOptions.*.value' => 'boolean',
-    //     ]);
-    
-    //     try {
-    //         // إعداد بيانات المشارك الرئيسي
-    //         $mainParticipantData = [
-    //             'user_id' => $userId,
-    //             'trip_id' => $validatedData['trip_id'],
-    //             'main_user_id' => $validatedData['is_companion'] ? $userId : null,
-    //             'is_companion' => $validatedData['is_companion'] ?? false,
-    //             'include_accommodation' => $validatedData['include_accommodation'],
-    //             'accommodation_stars' => $validatedData['accommodation_stars'],
-    //             'nights_count' => $validatedData['nights_count'],
-    //             'check_in_date' => $validatedData['check_in_date'],
-    //             'check_out_date' => $validatedData['check_out_date'],
-    //         ];
-    
-    //         // إذا كان المستخدم مرافقًا (is_companion == true)، نضيف الحقول التالية
-    //         if ($validatedData['is_companion']) {
-    //             $mainParticipantData['name'] = $validatedData['name'];
-    //             $mainParticipantData['nationality'] = $validatedData['nationality'];
-    //             $mainParticipantData['phone_number'] = $validatedData['phone_number'];
-    //             $mainParticipantData['whatsapp_number'] = $validatedData['whatsapp_number'];
-    //         }
-    
-    //         // إضافة المشارك الرئيسي في جدول trip_participants
-    //         $mainParticipant = TripParticipant::create($mainParticipantData);
-    
-    //         // Array to hold the IDs of companions
-    //         $companionIds = [];
-    
-    //         // إضافة المرافقين (companions) في جدول trip_participants
-    //         foreach ($validatedData['companions'] as $companion) {
-    //             $companionData = [
-    //                 'user_id' => null,
-    //                 'trip_id' => $validatedData['trip_id'],
-    //                 'main_user_id' => $validatedData['is_companion'] ? $userId : $mainParticipant->id,
-    //                 'name' => $companion['name'],
-    //                 'nationality' => $companion['nationality'],
-    //                 'phone_number' => $companion['phone_number'],
-    //                 'whatsapp_number' => $companion['whatsapp_number'],
-    //                 'is_companion' => true,
-    //                 'include_accommodation' => $companion['include_accommodation'],
-    //                 'accommodation_stars' => $companion['accommodation_stars'],
-    //                 'nights_count' => $companion['nights_count'],
-    //                 'check_in_date' => null,
-    //                 'check_out_date' => null,
-    //             ];
-    
-    //             // Create the companion participant and store the ID
-    //             $createdCompanion = TripParticipant::create($companionData);
-    //             $companionIds[] = $createdCompanion->id; // Store the ID of the newly created companion
-    //         }
-    
-    //         // Adding selected options to the trip_options_participants table
-    //         // For main participant
-    //         foreach ($validatedData['selectedOptions'] as $option) {
-    //             TripOptionsParticipant::create([
-    //                 'trip_id' => $validatedData['trip_id'],
-    //                 'option_id' => $option['option_id'],
-    //                 'participant_id' => $mainParticipant->id, // Using the main participant ID
-    //             ]);
-    //         }
-    
-    //         // For companions
-    //         foreach ($companionIds as $companionId) {
-    //             foreach ($validatedData['selectedOptions'] as $option) {
-    //                 TripOptionsParticipant::create([
-    //                     'trip_id' => $validatedData['trip_id'],
-    //                     'option_id' => $option['option_id'],
-    //                     'participant_id' => $companionId, // Using the companion's ID
-    //                 ]);
-    //             }
-    //         }
-    
-    //         // استجابة عند النجاح
-    //         return response()->json(['success' => true, 'message' => 'تم إضافة المشارك والمرافقين بنجاح.', 'companion_ids' => $companionIds], 201);
-    //     } catch (\Exception $e) {
-    //         // استجابة عند حدوث خطأ
-    //         return response()->json(['success' => false, 'message' => 'حدث خطأ أثناء إضافة البيانات: ' . $e->getMessage()], 500);
-    //     }
-    // }
-    
+
+
+
+
+
+
+
 }
 
 

@@ -18,7 +18,8 @@ class Sponsor extends Model
         'company_name',
         'contact_person',
         'company_address',
-        'password'
+        'password',
+        'status'
     ];
 
     // العلاقة مع جدول المستخدمين

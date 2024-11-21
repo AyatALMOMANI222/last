@@ -91,7 +91,7 @@ const AttendanceProfileForm = () => {
             <div className="profile-details">
               <div className="profile-name">{profileDetails.userName}</div>
               <div className="profile-bio">
-                <div>{profileDetails.userBio}</div>
+                <div className="bio">{profileDetails.userBio}</div>
               </div>
             </div>
           </div>

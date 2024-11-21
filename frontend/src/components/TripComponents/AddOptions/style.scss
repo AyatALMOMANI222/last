@@ -1,0 +1,30 @@
+.option-form-container {
+  .add-delete-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 20px;
+    .add {
+      padding: 0px 0px;
+      height: 35px;
+      background-color: rgba(255, 255, 255, 0);
+      border: none;
+      color: #3b3b3b;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      color: green;
+    }
+  }
+  .delete-btn {
+    padding: 0px 0px;
+    height: 35px;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    color: #3b3b3b;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #c82333;
+  }
+}

@@ -7,6 +7,7 @@ use App\Http\Controllers\AirportTransferPriceController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\ApplicantJobController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\PrivateInvoiceTripController;
 use Laravel\Sanctum\Sanctum;
 
 use App\Http\Controllers\CommitteeMemberController;
@@ -44,7 +45,11 @@ use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\SponsorshipController;
 use App\Http\Controllers\SponsorshipOptionController;
+use App\Http\Controllers\TicketBookingController;
+use App\Http\Controllers\TourismTripController;
 use App\Http\Controllers\TouristSiteController;
+use App\Http\Controllers\TransportationRequestController;
+use App\Http\Controllers\TravelFormController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\TripParticipantController;
 use App\Http\Controllers\VisaController;
@@ -186,7 +191,7 @@ Route::get('/room-prices/{conferenceId}', [RoomPriceController::class, 'getPrice
 // trips
 Route::post('/trips', [TripController::class, 'addTrip'])->middleware(['auth:sanctum','admin']);
 Route::post('/add_group-trip', [TripController::class, 'addGroupTrip'])->middleware(['auth:sanctum','admin']);
-Route::get('/all-trip', [TripController::class, 'getAllTrips'])->middleware(['auth:sanctum','admin']);
+Route::get('/all-trip', [TripController::class, 'getAllTrips'])->middleware(['auth:sanctum']);
 Route::get('/trip/{id}', [TripController::class, 'getTripById'])->middleware(['auth:sanctum','admin']);
 Route::post('/update/trips/{id}', [TripController::class, 'updateTripById'])->middleware(['auth:sanctum','admin']);
 Route::post('/trips_option/{id}', [TripController::class, 'updateTripAndOptions'])->middleware(['auth:sanctum','admin']);
@@ -252,6 +257,8 @@ Route::post('/airport-transfer-prices', [AirportTransferPriceController::class, 
 Route::get('/airport-transfer-prices/conference/{conferenceId}', [AirportTransferPriceController::class, 'getPricesByConferenceId'])->middleware('auth:sanctum');
 // Sponsor
 Route::post('/sponsor', [SponsorController::class, 'store']);
+Route::post('/approve/sponsor', [SponsorController::class, 'approveSponsor'])->middleware(['auth:sanctum','admin']);
+
 
 
 // attendance
@@ -299,3 +306,16 @@ Route::get('/size/table/admin/get/{conferenceId}', [BoothCostController::class, 
 
 Route::post('/invoice', [InvoiceController::class, 'createInvoice'])->middleware('auth:sanctum');
 Route::get('/invoice/{conferenceId}', [InvoiceController::class, 'getInvoiceByUserIdAndConferenceId'])->middleware('auth:sanctum');
+
+
+Route::post('/private-invoice-trips', action: [PrivateInvoiceTripController::class, 'store'])->middleware(['auth:sanctum']);
+Route::get('/invoice/{id}', [PrivateInvoiceTripController::class, 'getInvoiceWithParticipant'])->middleware(['auth:sanctum']);
+// TourismTrip
+Route::post('/submit-tourism-trip', [TourismTripController::class, 'create']);
+
+
+// transportation request
+Route::post('/trans/req', [TransportationRequestController::class, 'store']);
+
+Route::post('/ticket/booking', [TicketBookingController::class, 'store']);
+Route::post('/travel/booking', [TravelFormController::class, 'store']);

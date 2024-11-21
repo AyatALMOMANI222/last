@@ -23,10 +23,14 @@ class User extends Authenticatable
         'phone_number',
         'whatsapp_number',
         'specialization',
-        'nationality', 
+        'nationality',
         'country_of_residence',
         'isAdmin',
-        'passenger_name'
+        'passenger_name',
+        'company_name',
+        'contact_person',
+        'company_address',
+        'conference_id'
     ];
 
     protected $hidden = [
@@ -58,36 +62,36 @@ class User extends Authenticatable
     //     return $this->belongsToMany(Conference::class);
     // }
     public function conferences()
-{
-    return $this->belongsToMany(Conference::class, 'conference_user', 'user_id', 'conference_id');
-}
-// علاقة مع جدول DiscountOption
-public function discountOptions()
-{
-    return $this->hasMany(DiscountOption::class);
-}
-public function airportTransferBooking()
-{
-    return $this->hasOne(AirportTransferBooking::class);
-}
-public function sponsors()
-{
-    return $this->hasMany(Sponsor::class);
-}
-public function attendances()
-{
-    return $this->hasMany(Attendance::class);
-}
-public function sponsorInvoices()
-{
-    return $this->hasMany(SponsorInvoice::class);
-}
+    {
+        return $this->belongsToMany(Conference::class, 'conference_user', 'user_id', 'conference_id');
+    }
+    // علاقة مع جدول DiscountOption
+    public function discountOptions()
+    {
+        return $this->hasMany(DiscountOption::class);
+    }
+    public function airportTransferBooking()
+    {
+        return $this->hasOne(AirportTransferBooking::class);
+    }
+    public function sponsors()
+    {
+        return $this->hasMany(Sponsor::class);
+    }
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+    public function sponsorInvoices()
+    {
+        return $this->hasMany(SponsorInvoice::class);
+    }
 
-public function papers()
-{
-    return $this->hasMany(Paper::class);
-}
+    public function papers()
+    {
+        return $this->hasMany(Paper::class);
+    }
     protected $attributes = [
-        'isAdmin' => false, 
+        'isAdmin' => false,
     ];
 }

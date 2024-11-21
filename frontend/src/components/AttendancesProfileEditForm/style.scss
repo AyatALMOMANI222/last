@@ -54,6 +54,14 @@ $transition-speed: 0.3s;
           .profile-bio {
             font-size: 1rem;
             color: darken($font-color, 20%);
+            .bio {
+              padding: 20px;
+              width: 100%;
+              max-width: 500px;
+              margin: 20px auto; 
+              box-sizing: border-box;
+              overflow-wrap: break-word;
+            }
           }
         }
       }

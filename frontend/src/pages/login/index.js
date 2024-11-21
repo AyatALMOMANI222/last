@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../../CoreComponent/Input";
 import axiosInstance from "../../common/http";
 import { useNavigate } from "react-router-dom";
@@ -7,14 +7,14 @@ import "react-toastify/dist/ReactToastify.css";
 import SVG from "react-inlinesvg";
 import loginImg from "../../icons/loginImg.svg";
 import { useAuth } from "../../common/AuthContext";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 import "./style.scss";
 
 const LoginPage = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
-  const { login, isAdmin } = useAuth();
+  const { login, isAdmin, registrationType } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,8 +28,8 @@ const LoginPage = () => {
 
   const submitlLogin = async () => {
     const url = `${BaseUrl}/login`;
-    console.log({BaseUrl});
-    
+    console.log({ BaseUrl });
+
     const userData = {
       email,
       password,
@@ -39,10 +39,21 @@ const LoginPage = () => {
       const response = await axiosInstance.post(url, userData);
       const token = response.data.token;
       login(token);
-      if (isAdmin) {
+      console.log(response?.data?.user?.isAdmin);
+      console.log(response?.data?.user?.registration_type);
+
+      // Wait until isAdmin is updated
+      if (response?.data?.user?.isAdmin) {
         navigate("/home");
-      }  else {
-        navigate("/sponsor/section");
+      } else {
+        if (response?.data?.user?.registration_type === "speaker") {
+          navigate("/speaker/profile");
+        } else if (response?.data?.user?.registration_type === "sponsor") {
+          navigate("/sponsor/section");
+        }else{
+          navigate("/home");
+
+        }
       }
     } catch (error) {
       console.log(error.response?.data?.message);

@@ -1,7 +1,7 @@
-$primary-color:  #ef233c; 
+$primary-color: #ef233c;
 $secondary-color: #fce4e4;
-$accent-color: #c0392b; 
-$font-color: #2c3e50; 
+$accent-color: #c0392b;
+$font-color: #2c3e50;
 $background-color: #fafafa;
 $border-radius: 8px;
 $transition-speed: 0.3s;
@@ -54,6 +54,15 @@ $transition-speed: 0.3s;
           .profile-bio {
             font-size: 1rem;
             color: darken($font-color, 20%);
+
+            .bio {
+              padding: 20px;
+              width: 100%;
+              max-width: 500px;
+              margin: 20px auto; 
+              box-sizing: border-box;
+              overflow-wrap: break-word;
+            }
           }
         }
       }
@@ -142,7 +151,7 @@ $transition-speed: 0.3s;
                 height: 20px;
                 cursor: pointer;
                 transition: transform $transition-speed;
-                
+
                 &:hover {
                   transform: scale(1.2);
                   fill: $accent-color;

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
-import Slider from "../../../Slider";
 import httpService from "../../../../common/httpService";
 import { useNavigate, useParams } from "react-router-dom";
 import { backendUrlImages } from "../../../../constant/config";
@@ -11,7 +10,7 @@ const ViewOneTripUser = () => {
   const [tripData, setTripData] = useState({});
   const getAuthToken = () => localStorage.getItem("token");
   const navigate = useNavigate();
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const getTripById = async () => {
     try {
@@ -20,7 +19,6 @@ const ViewOneTripUser = () => {
         url: `${BaseUrl}/trip_option/${id}`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
-
       });
 
       setTripData(response?.trip);
@@ -32,32 +30,13 @@ const ViewOneTripUser = () => {
   useEffect(() => {
     getTripById();
   }, []);
+
   return (
     <div className="view-one-trip-for-user">
       <div className="slider">
-        <Slider
-          slides={[
-            <img
-              src={`${backendUrlImages}${tripData.image_1}`}
-              alt="Trip Image 1"
-            />,
-            <img
-              src={`${backendUrlImages}${tripData.image_2}`}
-              alt="Trip Image 2"
-            />,
-            <img
-              src={`${backendUrlImages}${tripData.image_3}`}
-              alt="Trip Image 3"
-            />,
-            <img
-              src={`${backendUrlImages}${tripData.image_4}`}
-              alt="Trip Image 4"
-            />,
-            <img
-              src={`${backendUrlImages}${tripData.image_5}`}
-              alt="Trip Image 5"
-            />,
-          ]}
+        <img
+          src={`${backendUrlImages}${tripData.image_1}`}
+          alt="Trip Image 1"
         />
       </div>
       <div>
