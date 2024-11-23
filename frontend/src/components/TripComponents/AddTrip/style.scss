@@ -1,12 +1,17 @@
-.add-option-btn{
+.add-option-btn {
+  padding: 0px 20px;
+  height: 35px;
+  background-color: rgba(255, 255, 255, 0);
+  border: none;
+  color: #3b3b3b;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #ef233c;
+}
 
-    padding: 0px 20px;
-    height: 35px;
-    background-color: rgba(255, 255, 255, 0);
-    border: none;
-    color: #3b3b3b;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 15px;
-    color: #ef233c;
+.trip-form-container7 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }

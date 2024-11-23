@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
 import MySideDrawer from "../../../CoreComponent/SideDrawer";
 import Input from "../../../CoreComponent/Input";
@@ -6,6 +6,8 @@ import Select from "../../../CoreComponent/Select";
 import DateInput from "../../../CoreComponent/Date";
 import ImageUpload from "../../../CoreComponent/ImageUpload"; // Use your ImageUpload component
 import axios from "axios";
+import { toast } from "react-toastify";
+
 import "./style.scss";
 
 const CreateTrip = ({ isOpen, setIsOpen }) => {
@@ -29,8 +31,31 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
   const [duration, setDuration] = useState(0);
   const [availableDates, setAvailableDates] = useState("");
   const [tripDetails, setTripDetails] = useState("");
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
+  const [allConference, setAllConference] = useState([]);
+  const [conferenceId, setConferenceId] = useState(0);
 
+  const getConference = () => {
+    const url = `${BaseUrl}/con`;
+    axios
+      .get(url)
+      .then((response) => {
+        console.log(response.data.data);
+
+        setAllConference(
+          response.data.data?.map((item) => {
+            return {
+              label: item?.title,
+              value: item?.title,
+              id: item?.id,
+            };
+          })
+        );
+      })
+      .catch((error) => {
+        console.log("erooooooor");
+      });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -38,6 +63,8 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
     const formData = new FormData();
 
     // Append all fields to formData
+    formData.append("conference_id", conferenceId.id);
+
     formData.append("trip_type", tripType);
     formData.append("name", name);
     formData.append("description", description);
@@ -63,16 +90,13 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
     formData.append("trip_details", tripDetails);
 
     try {
-      const response = await axios.post(
-        `${BaseUrl}/trips`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      const response = await axios.post(`${BaseUrl}/trips`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("The data was updated successfully!");
+      setIsOpen(false);
     } catch (error) {
       console.error(
         "Error adding trip:",
@@ -80,7 +104,9 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
       );
     }
   };
-
+  useEffect(() => {
+    getConference();
+  }, [isOpen]);
   return (
     <div>
       <MySideDrawer isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -89,7 +115,14 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
           handleSubmit={handleSubmit}
           setOpenForm={setIsOpen}
         >
-          <form className="trip-form-container">
+          <form className="trip-form-container7">
+            <Select
+              options={allConference}
+              value={conferenceId}
+              setValue={(option) => setConferenceId(option)}
+              label="Conference"
+              errorMsg={""}
+            />
             <Select
               options={[
                 { value: "private", label: "Private" },

@@ -38,6 +38,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OurClientController;
 use App\Http\Controllers\PaperController;
+use App\Http\Controllers\ReservationInvoiceController;
 use App\Http\Controllers\ReservationsController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomPriceController;
@@ -323,4 +324,5 @@ Route::post('/travel/booking', [TravelFormController::class, 'store']);
 
 
 
-Route::get('/trip/participant/get/{userId}', [TripController::class, 'getUserTripOptions']);
+Route::get('/trip/participant/get/{userId}', [TripController::class, 'getUserTripOptions'])->middleware(['auth:sanctum','admin']);
+Route::post('/reservation/invoice', [ReservationInvoiceController::class, 'store']);

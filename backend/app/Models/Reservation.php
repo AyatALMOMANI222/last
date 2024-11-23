@@ -15,7 +15,8 @@ class Reservation extends Model
         'companions_count',
         'companions_names',
         'is_delete',
-        'update_deadline'
+        'update_deadline',
+        'conference_id'
 
     ];
 
@@ -27,5 +28,9 @@ class Reservation extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function conference()
+    {
+        return $this->belongsTo(Conference::class);
     }
 }

@@ -1,6 +1,6 @@
 .reservation-form-header-container {
   margin: 20px;
-  height: 30px;
+  height: 90px;
   padding: 20px;
   display: flex;
   flex-direction: row;
@@ -39,6 +39,8 @@
   .title-container {
     font-size: 19px;
     font-weight: 500;
+    white-space: nowrap;
+
     // color: #fff;
   }
 }

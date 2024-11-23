@@ -22,15 +22,14 @@
   }
   .conferences-form-admin-header {
     margin: 20px 0px;
-    height: 40px;
-    padding: 20px;
+    height: 95px;
+    padding: 30px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     border-radius: 10px;
     border: 1px solid rgb(242, 239, 239);
-    // background-color: #4f75ff;
     .inputs-container {
       display: flex;
       flex-direction: row;
@@ -44,6 +43,7 @@
     }
 
     .add-conferences-btn {
+      // margin-top: 20px;
       padding: 0px 20px;
       height: 35px;
       background-color: #fff;
@@ -90,7 +90,7 @@
       border-top-right-radius: 5px;
     }
 
-    .titlee{
+    .titlee {
       font-size: 14px;
       font-weight: 500;
       color: #525252;

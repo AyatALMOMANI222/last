@@ -5,11 +5,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./style.scss";
 import axios from "axios";
+import DialogMessage from "../../DialogMessage";  // استيراد DialogMessage
 
 const RegisterGroupPage = () => {
   const navigate = useNavigate();
   const { conferenceId } = useParams();
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const [organizationName, setOrganizationName] = useState(""); // اسم الجمعية أو وزارة الصحة أو الشركة
   const [contactPerson, setContactPerson] = useState("");
@@ -23,11 +24,13 @@ const RegisterGroupPage = () => {
     contactPerson: "",
     phone: "",
     password: "",
-
     email: "",
     companyAddress: "",
     doctorsRegistered: "", // خطأ محتمل في عدد الأطباء
   });
+
+  // حالة لفتح رسالة الحوار
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -36,9 +39,8 @@ const RegisterGroupPage = () => {
     formData.append("phone", phone);
     formData.append("email", email);
     formData.append("password", password);
-
     formData.append("number_of_doctors", doctorsRegistered); // إضافة عدد الأطباء
-    formData.append("conference_id",conferenceId); // إضافة conference_id إلى البيانات
+    formData.append("conference_id", conferenceId); // إضافة conference_id إلى البيانات
 
     try {
       const response = await axios.post(
@@ -51,7 +53,9 @@ const RegisterGroupPage = () => {
         }
       );
       toast.success("Organization registered successfully!");
-      navigate("/login")
+      setIsDialogOpen(true);  // فتح رسالة الحوار عند التسجيل الناجح
+      setTimeout(() => {
+      }, 3000); // الانتظار 3 ثوانٍ قبل التوجيه
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.error);
@@ -136,6 +140,11 @@ const RegisterGroupPage = () => {
 
   return (
     <div className="group-registration-page-container">
+      <DialogMessage
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        message={"Your organization has been successfully registered! You will be notified via email once the admin approves your registration."}
+      />
       <form onSubmit={handleRegister} className="register-form">
         <div className="title">
           <span>Register Organization</span>
@@ -165,7 +174,6 @@ const RegisterGroupPage = () => {
             required={true}
             errorMsg={error.phone}
           />
-
           <Input
             label={"Email"}
             placeholder={"e.g. example@example.com"}
@@ -183,7 +191,6 @@ const RegisterGroupPage = () => {
             errorMsg={error.password}
             type="password"
           />
-
           <Input
             label={"Number of Registered Doctors"}
             placeholder={"e.g. 50"}

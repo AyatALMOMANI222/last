@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdditionalOption;
+use App\Models\ConferenceTrip;
 use App\Models\Trip;
 use App\Models\TripParticipant;
 use Illuminate\Http\Request;
@@ -10,16 +11,19 @@ use Illuminate\Support\Facades\Auth;
 
 class TripController extends Controller
 {
+
+    
     public function addTrip(Request $request)
     {
         $userId = Auth::id();
         if (!$userId) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
+    
         try {
             // تحقق من صحة المدخلات
             $validatedData = $request->validate([
+                'conference_id' => 'required|exists:conferences,id', // التأكد من وجود conference_id
                 'trip_type' => 'required|in:private,group',
                 'name' => 'nullable|string|max:255',  // اجعل name nullable
                 'images' => 'nullable|array|max:5', // مجموعة من الصور
@@ -28,7 +32,7 @@ class TripController extends Controller
                 'price_for_two' => 'nullable|numeric',
                 'price_for_three_or_more' => 'nullable|numeric',
             ]);
-
+    
             // تخزين الصور
             $imagePaths = [];
             if ($request->has('images')) {
@@ -36,7 +40,7 @@ class TripController extends Controller
                     $imagePaths[] = $image->store('trip_images', 'public');
                 }
             }
-
+    
             // إنشاء الرحلة الجديدة
             $tripData = [
                 'trip_type' => $validatedData['trip_type'],
@@ -50,20 +54,29 @@ class TripController extends Controller
                 'price_for_two' => $validatedData['price_for_two'],
                 'price_for_three_or_more' => $validatedData['price_for_three_or_more'],
             ];
-
+    
             // إضافة الوصف والمعلومات الإضافية إذا كانت موجودة
             if ($request->filled('description')) {
                 $tripData['description'] = $request->description;
             }
-
+    
             if ($request->filled('additional_info')) {
                 $tripData['additional_info'] = $request->additional_info;
             }
-
+    
             // إنشاء الرحلة
             $trip = Trip::create($tripData);
-
-            return response()->json(['message' => 'Trip added successfully', 'trip' => $trip], 201);
+    
+            // إنشاء العلاقة باستخدام نموذج ConferenceTrip
+            $conferenceTrip = new ConferenceTrip();
+            $conferenceTrip->conference_id = $validatedData['conference_id'];
+            $conferenceTrip->trip_id = $trip->id;
+            $conferenceTrip->save();
+    
+            return response()->json([
+                'message' => 'Trip added successfully and linked to conference',
+                'trip' => $trip,
+            ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // إرجاع رسالة الخطأ من عملية التحقق
             return response()->json(['error' => $e->validator->errors()], 422);
@@ -72,7 +85,7 @@ class TripController extends Controller
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-
+    
     public function addGroupTrip(Request $request)
     {
         $userId = Auth::id();

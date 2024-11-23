@@ -13,7 +13,7 @@ import { useAuth } from "../../common/AuthContext";
 import "./style.scss";
 
 const MainFlightForm = ({ setOpenForm, getFlightData }) => {
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const { userId } = useAuth();
   const [arrivalDate, setArrivalDate] = useState("");
@@ -175,7 +175,7 @@ const MainFlightForm = ({ setOpenForm, getFlightData }) => {
 };
 
 const FlightForm = () => {
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const { userId } = useAuth();
   const [data, setData] = useState({});
@@ -197,8 +197,8 @@ const FlightForm = () => {
       .then((response) => {
         setData(response.data[0]);
         console.log(response);
-        
-        setFlight_id(response.data?.[0]?.flight_id)
+
+        setFlight_id(response.data?.[0]?.flight_id);
       })
       .catch((error) => {
         console.error("Error fetching flight data:", error);
@@ -251,18 +251,21 @@ const FlightForm = () => {
       </div>
       {Object.keys(data).length ? (
         <div className="view-flight-details">
-          <SimpleLabelValue label="Arrival Date" value={data.arrival_date} />
+          <SimpleLabelValue
+            label="Arrival Date"
+            value={data.arrival_date || "-"}
+          />
           <SimpleLabelValue
             label="Departure Date"
-            value={data.departure_date}
+            value={data.departure_date || "-"}
           />
           <SimpleLabelValue
             label="Departure Airport"
-            value={data.departure_airport}
+            value={data.departure_airport || "-"}
           />
           <SimpleLabelValue
             label="Arrival Airport"
-            value={data.arrival_airport}
+            value={data.arrival_airport || "-"}
           />
           <SimpleLabelValue
             label="Specific Flight Time"
@@ -270,18 +273,27 @@ const FlightForm = () => {
           />
           <SimpleLabelValue
             label="Flight Time"
-            value={data.specific_flight_time}
+            value={data.specific_flight_time || "-"}
           />
-          <SimpleLabelValue label="Flight Number" value={data.flight_number} />
-          <SimpleLabelValue label="Seat Number" value={data.seat_preference} />
+          <SimpleLabelValue
+            label="Flight Number"
+            value={data.flight_number || "-"}
+          />
+          <SimpleLabelValue
+            label="Seat Number"
+            value={data.seat_preference || "-"}
+          />
           <SimpleLabelValue
             label="Upgrade Class"
             value={data.upgrade_class ? "Yes" : "No"}
           />
-          <SimpleLabelValue label="Ticket Count" value={data.ticket_count} />
+          <SimpleLabelValue
+            label="Ticket Count"
+            value={data.ticket_count || "-"}
+          />
           <SimpleLabelValue
             label="Other Requests"
-            value={data.additional_requests}
+            value={data.additional_requests || "-"}
           />
         </div>
       ) : (

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdditionalOption;
+use App\Models\DiscountOption;
 use App\Models\PrivateInvoiceTrip;
 use App\Models\TripOptionsParticipant;
 use App\Models\TripParticipant;
@@ -13,19 +14,41 @@ use Illuminate\Support\Facades\Auth;
 
 class TripParticipantController extends Controller
 {
-    public function calculateOptionsPrice($participantId)
+    public function calculateOptionsPrice($participantId, $tripId, $index)
     {
+        $userId = Auth::id();
+    
         // Fetch the options for the participant from the AdditionalOption table
         $options = AdditionalOption::whereIn('id', function ($query) use ($participantId) {
-            // Assuming you have a pivot table or a relationship to store the selected options for a participant
-            $query->select('option_id')->from('trip_options_participants')->where('participant_id', $participantId);
+            $query->select('option_id')
+                ->from('trip_options_participants')
+                ->where('participant_id', $participantId);
         })->get();
-
-        // Calculate the total price of options
-        $totalOptionsPrice = $options->sum('price'); // Assuming 'price' is the column with the price in the AdditionalOption model
-
-        return $totalOptionsPrice ?: 0; // Return 0 if no options are selected or calculated price is 0
+    
+        $totalOptionsPrice = 0;
+    
+        foreach ($options as $option) {
+            if ($index === 0) {
+                // Apply discounted logic for index 0
+                $discount = DiscountOption::where('trip_id', $tripId)
+                    ->where('user_id', $userId)
+                    ->where('option_id', $option->id)
+                    ->first();
+    
+                $optionPrice = $discount ? $discount->price : $option->price;
+            } else {
+                // Use original price for all other participants
+                $optionPrice = $option->price;
+            }
+    
+            // Add to total options price
+            $totalOptionsPrice += $optionPrice;
+        }
+    
+        return $totalOptionsPrice;
     }
+    
+
 
     public function createInvoice($participantId, $basePrice, $optionsPrice, $totalPrice)
     {
@@ -60,25 +83,30 @@ class TripParticipantController extends Controller
         }
 
         // Iterate over each participant to calculate their invoice
-        foreach ($participants as $participant) {
+        foreach ($participants as $index => $participant) { // Add $index to track participant position
             // Calculate price for accommodation
-
-            // Calculate price for additional options
-            $optionsPrice = $this->calculateOptionsPrice(participantId: $participant->id);
-
+        
+            // Pass index to calculateOptionsPrice
+            $optionsPrice = $this->calculateOptionsPrice(
+                participantId: $participant->id, 
+                tripId: $tripId, 
+                index: $index
+            );
+        
             // Calculate total price (base price * night count + options price + accommodation price)
             $totalPrice = ($basePrice * $participant->nights_count) + $optionsPrice;
-
+        
             $participantInvoice = [
                 'participant_id' => $participant->id,
                 'base_price' => $basePrice,
                 'options_price' => $optionsPrice,
                 'total_price' => $totalPrice,
             ];
-
+        
             // Store the calculated invoice data
             $invoiceData[] = $participantInvoice;
         }
+        
 
         return $invoiceData;
     }

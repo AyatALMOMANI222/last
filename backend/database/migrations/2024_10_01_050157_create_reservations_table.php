@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('companions_count')->default(0);
             $table->text('companions_names')->nullable(); // تخزين أسماء المرافقين كنص طويل مفصول بفواصل
             $table->boolean('is_delete')->default(false);
+            $table->foreignId('conference_id')->nullable()->constrained('conferences')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

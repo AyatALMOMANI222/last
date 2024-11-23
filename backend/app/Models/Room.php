@@ -88,4 +88,8 @@ class Room extends Model
     {
         return $this->belongsTo(Reservation::class, 'reservation_id');
     }
+    public function reservationInvoices()
+    {
+        return $this->hasMany(ReservationInvoice::class);
+    }
 }

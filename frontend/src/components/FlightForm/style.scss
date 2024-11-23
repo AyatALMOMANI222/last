@@ -27,9 +27,13 @@ $shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
 
   .title-container {
-    font-size: 2rem;
+  
+
+    font-size: 1.6rem;
     font-weight: bold;
-    color: $primary-color; // Updated to red
+    color: #c82333;
+    white-space: nowrap;
+    margin-top: 11px;
   }
 
   .flight-actions {

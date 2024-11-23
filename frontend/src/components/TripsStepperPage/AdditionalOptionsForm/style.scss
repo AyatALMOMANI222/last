@@ -5,3 +5,46 @@
   grid-column-gap: 30px;
   width: 260px;
 }
+
+.discount-note {
+  background-color: #f0f8ff; /* Light blue background */
+  border: 1px solid #87ceeb; /* Sky blue border */
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  font-family: "Arial", sans-serif;
+}
+
+.discount-title {
+  color: #1e90ff; /* Dodger blue */
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.discount-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.discount-item {
+  background-color: #e6f7ff; /* Very light blue */
+  border: 1px solid #b3e5fc; /* Light blue border */
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.discount-item:last-child {
+  margin-bottom: 0;
+}
+
+.discount-price {
+  color: #008000; /* Green for emphasis */
+  font-weight: bold;
+}

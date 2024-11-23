@@ -13,7 +13,7 @@ import UpdateTicket from "./SetTicket";
 import { useNavigate } from "react-router-dom";
 
 const FlightFormAdmin = () => {
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const navigate = useNavigate();
   const [flights, setFlights] = useState([]);
@@ -132,6 +132,7 @@ const FlightFormAdmin = () => {
       <div className="flight-form-admin-header">
         <div className="header">
           <Input
+            label="Passenger Name	"
             placeholder="Search"
             inputValue={travelerName}
             setInputValue={setTravelerName}

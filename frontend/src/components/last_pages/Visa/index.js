@@ -179,7 +179,7 @@ const VisaPage = () => {
 
       {visaData && (
         <Fragment>
-          <h2>Visa Information</h2>
+          <h2 className="title-visa-2">Visa Information</h2>
 
           <div className="visa-info">
             {visaData.arrival_date && (
@@ -203,15 +203,12 @@ const VisaPage = () => {
                 value={visaData.updated_at_by_admin}
               />
             )}
-            <p>You cannot apply for another visa.</p>
           </div>
           <div className="actions-section">
             <button
               className="next-button"
               onClick={() => {
-                navigate("/flight/form")
-                // toast.success("The data was updated successfully!");
-                // fetchRoomPrices();
+                navigate("/flight/form");
               }}
             >
               Next

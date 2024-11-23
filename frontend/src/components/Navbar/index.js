@@ -6,7 +6,7 @@ import { useAuth } from "../../common/AuthContext";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const { isAdmin , logout } = useAuth();
+  const { isAdmin, logout } = useAuth();
   const { registrationType } = useAuth();
 
   const menuItems = [
@@ -114,11 +114,15 @@ const NavBar = () => {
               { label: "Sponsor Option Form", url: "/sponsor/option/form" },
               { label: "Users", url: "/pending/users" },
               { label: "Enter new flights", url: "/enter/new/flights" },
-              { label: "Admin Sponsorship Packages", url: "/sponsor/admin/add/table" },
-              { label: "Admin Sponsorship Option", url: "/sponsor/option/form" },
+              {
+                label: "Admin Sponsorship Packages",
+                url: "/sponsor/admin/add/table",
+              },
+              {
+                label: "Admin Sponsorship Option",
+                url: "/sponsor/option/form",
+              },
               { label: "Admin Booth Cost ", url: "/sponsor/admin/booth/cost" },
-
-
             ],
           },
         ]
@@ -127,12 +131,10 @@ const NavBar = () => {
       title: "Contact Us",
       links: [{ label: "Contact Us", url: "/contact_us" }],
     },
-   {
+    {
       title: "Profile",
-      links: [
-        { label: "Profile", url: "/speaker/profile" }
-      ]
-    }
+      links: [{ label: "Profile", url: "/speaker/profile" }],
+    },
   ];
 
   const renderMenu = () => {
@@ -160,7 +162,10 @@ const NavBar = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="option-btn" onClick={() => navigate(link.url)}>
+                    <div
+                      className="option-btn"
+                      onClick={() => navigate(link.url)}
+                    >
                       {link.label}
                     </div>
                   )}
@@ -179,8 +184,14 @@ const NavBar = () => {
       <div className="navbar-logo">
         {/* <img className="new-logo" src="/image/newLogo.png" alt="Logo" /> */}
       </div>
-      <ul className="navbar-links">{renderMenu()}</ul>
+      {/* <ul className="navbar-links">{renderMenu()}</ul> */}
+
       <div className="navbar-auth">
+        <div className="menuu">
+          <div className="menu-title">{"Home"}</div>
+
+          <div className="menu-title">{"About"}</div>
+        </div>
         <NotificationDropdown />
         {!localStorage.getItem("token") ? (
           <Fragment>
@@ -205,7 +216,7 @@ const NavBar = () => {
           <div
             className="auth-btn register-btn"
             onClick={() => {
-              logout()
+              logout();
               // localStorage.removeItem("token");
               navigate("login");
             }}

@@ -41,7 +41,7 @@ export const TripsStepperProvider = ({ children }) => {
   }, []);
   return (
     <TripsStepperContext.Provider
-      value={{ currentStep, setCurrentStep, completedSteps, completeStep }}
+      value={{ currentStep, setCurrentStep, completedSteps, completeStep , tripId}}
     >
       {children}
     </TripsStepperContext.Provider>

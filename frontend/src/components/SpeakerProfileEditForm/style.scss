@@ -10,26 +10,21 @@ $transition-speed: 0.3s;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
-  background-color: $background-color;
+  padding: 0rem 1rem;
 
   .speaker-profile-form {
     background-color: #fff;
     border-radius: $border-radius;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
+    padding: 1rem 2rem;
     max-width: 700px;
     width: 100%;
     transition: transform $transition-speed ease;
 
-    &:hover {
-      transform: scale(1.01);
-    }
-
     .profile-container-img {
       display: flex;
       align-items: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0rem;
 
       .profile-section {
         display: flex;
@@ -59,7 +54,7 @@ $transition-speed: 0.3s;
               padding: 20px;
               width: 100%;
               max-width: 500px;
-              margin: 20px auto; 
+              margin: 20px auto;
               box-sizing: border-box;
               overflow-wrap: break-word;
             }
@@ -70,7 +65,9 @@ $transition-speed: 0.3s;
 
     .profile-files {
       margin-top: 1rem;
-
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       .image-upload {
         margin-bottom: 1rem;
         .custom-label {
@@ -162,18 +159,22 @@ $transition-speed: 0.3s;
 
           .add-topic-btnn {
             margin-top: 1rem;
-            background-color: $primary-color;
-            color: #fff;
+            background-color: #ffffff00;
             border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: $border-radius;
             cursor: pointer;
-            font-weight: 600;
-            transition: background-color $transition-speed;
+            color: #ef233c;
+            // background-color: $primary-color;
+            // color: #fff;
+            // border: none;
+            // padding: 0.6rem 1.2rem;
+            // border-radius: $border-radius;
+            // cursor: pointer;
+            // font-weight: 600;
+            // transition: background-color $transition-speed;
 
-            &:hover {
-              background-color: darken($primary-color, 10%);
-            }
+            // &:hover {
+            //   background-color: darken($primary-color, 10%);
+            // }
           }
         }
       }

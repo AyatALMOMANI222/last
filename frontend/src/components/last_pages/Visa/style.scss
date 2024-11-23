@@ -65,14 +65,16 @@
   }
 
   .visa-form {
-    margin-top: 20px;
+    margin-top: 0px;
     background-color: white;
-    padding: 30px;
+    padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
     .fields-container {
       margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     .submit-btn {
@@ -94,5 +96,23 @@
       color: red;
       font-weight: bold;
     }
+  }
+  .next-button {
+    background-color: #cc0000;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    margin-top: 30px;
+    &:hover {
+      background-color: #790000;
+    }
+  }
+
+  .title-visa-2 {
+    color: #cc0000;;
   }
 }

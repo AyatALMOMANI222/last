@@ -37,8 +37,14 @@ const PayForm = () => {
   };
 
   useEffect(() => {
-    fetchInvoices();
-  }, []);
+    const timer = setTimeout(() => {
+      fetchInvoices();
+    },5000); // 1 minute = 60000 milliseconds
+  
+    // Clean up the timeout if the component unmounts or if you want to cancel the timeout
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array to run only once when the component mounts
+  
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -68,11 +74,6 @@ const PayForm = () => {
                   <SimpleLabelValue
                     label="Total Price"
                     value={invoice.total_price}
-                    className="invoice-detail"
-                  />
-                  <SimpleLabelValue
-                    label="Status"
-                    value={invoice.status}
                     className="invoice-detail"
                   />
                 </div>

@@ -77,8 +77,8 @@ const ImageUpload = ({
           <SVG
             className="link-icon"
             src={linkIcon}
-            height={20}
-            width={20}
+            height={30}
+            width={30}
             aria-label="Upload File"
           />
         </div>

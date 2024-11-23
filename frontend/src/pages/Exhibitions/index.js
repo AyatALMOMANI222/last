@@ -10,7 +10,7 @@ import Select from "../../CoreComponent/Select";
 import Pagination from "../../CoreComponent/Pagination";
 import ViewFormExhibitions from "./ViewForm";
 import EditExhibitionForm from "./EditForm";
-import httpService from "../../common/httpService"
+import httpService from "../../common/httpService";
 // this form for create ExhibitionForm
 const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   const [title, setTitle] = useState("");
@@ -18,12 +18,12 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [status, setStatus] = useState("upcoming");
+  const [status, setStatus] = useState([]);
   const [exhibitionImages, setExhibitionImages] = useState(null);
   const [errorMsg, setErrorMsg] = useState(""); // Manage error messages
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState([]);
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const getConference = () => {
     const url = `${BaseUrl}/con`;
@@ -62,16 +62,12 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
     formData.append("image", exhibitionImages);
 
     try {
-      const response = await axios.post(
-        `${BaseUrl}/exhibitions`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post(`${BaseUrl}/exhibitions`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setIsOpen(false);
       setTitle("");
       setDescription("");
@@ -105,21 +101,27 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
           setInputValue={setTitle}
           required={true}
           errorMsg={errorMsg}
+          placeholder="Enter Exhibition Title"
         />
+
         <Input
           label="Description"
           inputValue={description}
           setInputValue={setDescription}
           required={false}
           errorMsg={errorMsg}
+          placeholder="Enter a brief description"
         />
+
         <Input
           label="Exhibition Location"
           inputValue={location}
           setInputValue={setLocation}
           required={true}
           errorMsg={errorMsg}
+          placeholder="Enter Exhibition Location"
         />
+
         <DateInput
           label="Start Date"
           inputValue={startDate}
@@ -136,14 +138,19 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
           required={false}
           errorMsg={errorMsg}
         />
-        <Input
+        <Select
           label="Status"
-          inputValue={status}
-          setInputValue={setStatus}
+          value={status}
+          setValue={setStatus}
           required={true}
+          placeholder="Select"
           errorMsg={errorMsg}
-          options={["upcoming", "past"]} // Assuming you want a dropdown or similar
+          options={[
+            { label: "upcoming", value: "upcoming" },
+            { label: "past", value: "past" },
+          ]}
         />
+
         <ImageUpload
           label="Exhibition Images"
           inputValue={exhibitionImages}
@@ -154,7 +161,12 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
       </div>
 
       <div className="actions-section-container">
-        <button className="cancel-btn" onClick={() => {}}>
+        <button
+          className="cancel-btn"
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >
           Cancel
         </button>
         <button className="submit-btn" type="submit">
@@ -175,7 +187,7 @@ const Exhibitions = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [openViewForm, setOpenViewForm] = useState(false);
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -188,16 +200,13 @@ const Exhibitions = () => {
 
   const getExhibitions2 = async () => {
     try {
-      const response = await axios.get(
-        `${BaseUrl}/exhibitions`,
-        {
-          params: {
-            search: exhibitionName,
-            status: status?.value,
-            page: currentPage,
-          },
-        }
-      );
+      const response = await axios.get(`${BaseUrl}/exhibitions`, {
+        params: {
+          search: exhibitionName,
+          status: status?.value,
+          page: currentPage,
+        },
+      });
       setTotalPages(response.data.total_pages);
       setAllExhibitions(response.data.data); // Adjust according to your API response structure
     } catch (err) {

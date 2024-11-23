@@ -50,7 +50,9 @@ const LoginPage = () => {
           navigate("/speaker/profile");
         } else if (response?.data?.user?.registration_type === "sponsor") {
           navigate("/sponsor/section");
-        }else{
+        }else if (response?.data?.user?.registration_type === "group-registration") {
+          navigate("/sponsor/section");
+        } else{
           navigate("/home");
 
         }

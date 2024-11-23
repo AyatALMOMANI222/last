@@ -37,3 +37,35 @@
     color: green;
   }
 }
+.add-room-btn-container77 {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: end;
+  display: flex;
+
+  button {
+    background-color: #d8dae500;
+    color: green;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+}
+.delete-icon-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: end;
+  cursor: pointer;
+}
+
+.room-form-stepper-container {
+  .room-form-stepper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 20px;
+    grid-column-gap: 20px;
+  }
+}

@@ -7,11 +7,14 @@ import {
   saveToLocalStorage,
   getFromLocalStorage,
 } from "../../../common/localStorage";
+import httpService from "../../../common/httpService";
 
 const AdditionalOptionsForm = () => {
-  const { currentStep, completeStep } = useTripsStepper();
+  const { currentStep, completeStep, tripId } = useTripsStepper();
   const [selectedOptions, setSelectedOptions] = useState([]);
   const options = getFromLocalStorage("additionalOptions") || [];
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
+  const [discountedOptions, setDiscountedOptions] = useState([]);
 
   const handleCheckboxChange = (option) => {
     setSelectedOptions((prev) => {
@@ -35,7 +38,37 @@ const AdditionalOptionsForm = () => {
       }
     });
   };
+  const getDiscountOptions = async () => {
+    try {
+      const getAuthToken = () => localStorage.getItem("token");
 
+      const response = await httpService({
+        method: "GET",
+        url: `${BaseUrl}/discount-options/${tripId}`,
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      });
+
+      const discountOptions = response.data;
+      const localOptions = getFromLocalStorage("additionalOptions") || [];
+
+      // Merge base options with discount options
+      const mergedOptions = localOptions.map((option) => {
+        const discount = discountOptions.find((d) => d.option_id === option.id);
+        return {
+          ...option,
+          price: discount?.price || option.price,
+          isDiscounted: discount?.price === "0.00",
+        };
+      });
+
+      setDiscountedOptions(
+        mergedOptions.filter((option) => option.isDiscounted)
+      );
+    } catch (error) {
+      console.error("Error fetching discount options:", error);
+      toast.error("Failed to load discount options.");
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     toast.success("The data was updated successfully!");
@@ -51,9 +84,29 @@ const AdditionalOptionsForm = () => {
       setSelectedOptions([]); // Ensure selectedOptions is always an array
     }
   }, []);
+  useEffect(() => {
+    getDiscountOptions();
+  }, []);
 
   return (
     <div>
+      {discountedOptions.length > 0 && (
+        <div className="discount-note">
+          <p className="discount-title">
+            <strong>Note:</strong> This discount is exclusively available for
+            speakers.
+          </p>
+          <ul className="discount-list">
+            {discountedOptions.map((option) => (
+              <li key={option.id} className="discount-item">
+                {option.option_name} -{" "}
+                <span className="discount-price">Price: $0</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <form
         className="additional-options-stepper-container"
         onSubmit={handleSubmit}

@@ -55,7 +55,7 @@ const TripForm = () => {
   };
 
   return (
-    <div className="form-container88">
+    <div className="form-container889">
       <h2>Trip Booking Form</h2>
       <form onSubmit={handleSubmit}>
         <div className='inp'>

@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
     speakerData: null,
     attendancesData: null,
     loading: true,
+    name: "",
   });
 
   useEffect(() => {
@@ -82,6 +83,7 @@ export const AuthProvider = ({ children }) => {
       setAuthData((prevState) => ({
         ...prevState,
         userId: userData.id,
+        userName: userData.name,
         userImage: userData.image,
         myConferenceId: userData.conferences?.[0]?.id || null,
         myConferenceName: userData.conferences?.[0]?.title || null,
@@ -112,6 +114,7 @@ export const AuthProvider = ({ children }) => {
       speakerData: null,
       attendancesData: null,
       loading: false,
+      name: "",
     });
     localStorage.removeItem("token");
   };

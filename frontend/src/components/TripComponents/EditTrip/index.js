@@ -172,7 +172,6 @@ const EditTrip = ({ isOpen, setIsOpen, tripId }) => {
               required
             />
 
-            <h3>Additional Options</h3>
             {additionalOptions.map((option) => (
               <div key={option.id} className="option-container">
                 <Input

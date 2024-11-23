@@ -10,6 +10,7 @@ import httpService from "../../common/httpService";
 import { backendUrlImages } from "../../constant/config";
 import { useAuth } from "../../common/AuthContext";
 import { useNavigate } from "react-router-dom";
+import DateInput from "../../CoreComponent/Date";
 import "./style.scss";
 
 const SpeakerProfileForm = () => {
@@ -154,14 +155,14 @@ const SpeakerProfileForm = () => {
             className="image-upload"
             placeholder="Presentation File"
           />
-          <Input
+          <DateInput
             label="Arrival Date"
             inputValue={arrivalDate}
             setInputValue={setArrivalDate}
             // className="date-input"
             type="date"
           />
-          <Input
+          <DateInput
             label="Departure Date"
             inputValue={departureDate}
             setInputValue={setDepartureDate}
@@ -231,7 +232,7 @@ const SpeakerProfileForm = () => {
                   onClick={handleAddTopic}
                   className="add-topic-btnn"
                 >
-                  Add Topic
+                 +  Add Topic
                 </button>
               </div>
             </div>

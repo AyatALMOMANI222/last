@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import Stepper from "../../CoreComponent/stepper";
 import ReservationForm from "./ReservationForm/index";
-import "./style.scss";
 import { StepperProvider, useStepper } from "./StepperContext";
 import RoomForm from "./RoomForm";
 import InvoiceForm from "./InvoiceForm";
+import "./style.scss";
 
 export const saveToLocalStorage = (key, value) => {
   try {
@@ -24,6 +24,7 @@ export const getFromLocalStorage = (key) => {
     return null;
   }
 };
+
 export const removeFromLocalStorage = (key) => {
   try {
     localStorage.removeItem(key);
@@ -43,12 +44,14 @@ const ParentComponentContent = () => {
   ];
 
   const componentsMap = [<ReservationForm />, <RoomForm />, <InvoiceForm />];
-useEffect(()=>{
-return()=>{
-  removeFromLocalStorage("mainRoom")
-  removeFromLocalStorage("otherRooms")
-}
-},[])
+
+  useEffect(() => {
+    return () => {
+      removeFromLocalStorage("mainRoom");
+      removeFromLocalStorage("otherRooms");
+    };
+  }, []);
+
   return (
     <div className="stepper-page-container">
       <div className="stepper-section">

@@ -58,19 +58,19 @@ function SideMenu() {
       icon: "✈️",
       children: [
         { label: "Sights", path: "/tour_slider" },
-        { label: "Packages", path: "/packages" },
-        {
-          label: "Tailor Made",
-          path: "#",
-          subMenu: "tailorMade",
-          subLinks: [
-            { label: "Individuals (Form)", path: "#" },
-            { label: "Groups (Form)", path: "#" },
-          ],
-        },
-        { label: "Ticket Booking", path: "/ticket/booking" },
-        { label: "Hotel Booking", path: "/hotel/booking" },
-        { label: "Transportation", path: "/transportation" },
+        // { label: "Packages", path: "/packages" },
+        // {
+        //   label: "Tailor Made",
+        //   path: "#",
+        //   subMenu: "tailorMade",
+        //   subLinks: [
+        //     { label: "Individuals (Form)", path: "#" },
+        //     { label: "Groups (Form)", path: "#" },
+        //   ],
+        // },
+        // { label: "Ticket Booking", path: "/ticket/booking" },
+        // { label: "Hotel Booking", path: "/hotel/booking" },
+        // { label: "Transportation", path: "/transportation" },
       ],
     },
     {

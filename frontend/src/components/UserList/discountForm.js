@@ -17,7 +17,7 @@ const AddDiscountForm = ({ isOpen, setIsOpen, userId }) => {
   const [additionalOptions, setAdditionalOptions] = useState([]);
   const [selectedTripId, setSelectedTripId] = useState(null);
   const [selectedConferenceId, setSelectedConferenceId] = useState(null);
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const getAuthToken = () => localStorage.getItem("token");
 
@@ -47,6 +47,7 @@ const AddDiscountForm = ({ isOpen, setIsOpen, userId }) => {
         url: `${BaseUrl}/conference-trips`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
       });
+      console.log({ response });
 
       const filteredTrips = response.data.filter(
         ({ conference_id }) => conference_id === conferenceId
@@ -91,8 +92,9 @@ const AddDiscountForm = ({ isOpen, setIsOpen, userId }) => {
         option_id: selectedOptionId?.value,
         trip_id: selectedTripId?.value,
         price: discountAmount,
-        show_price: isDiscountVisible,
+        show_price: true,
       };
+      console.log({ discountData });
 
       await httpService({
         method: "POST",
@@ -156,13 +158,13 @@ const AddDiscountForm = ({ isOpen, setIsOpen, userId }) => {
             label="Option"
           />
           <Input
-            label="Discount Value"
+            label="New Value"
             inputValue={discountAmount}
             setInputValue={(value) => setDiscountAmount(parseFloat(value) || 0)}
-            placeholder="Enter discount value"
+            placeholder="new value"
             type="number"
           />
-          <Select
+          {/* <Select
             options={[
               { value: true, label: "Show Discount" },
               { value: false, label: "Hide Discount" },
@@ -173,7 +175,7 @@ const AddDiscountForm = ({ isOpen, setIsOpen, userId }) => {
             }}
             setValue={(option) => setIsDiscountVisible(option.value)}
             label="Show Discount"
-          />
+          /> */}
         </form>
       </CustomFormWrapper>
     </MySideDrawer>

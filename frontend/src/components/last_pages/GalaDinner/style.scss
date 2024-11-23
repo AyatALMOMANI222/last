@@ -80,6 +80,9 @@ $border-radius: 8px;
 @media (max-width: 768px) {
   .trip-form-container {
     padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 
   .form-title {

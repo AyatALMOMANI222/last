@@ -1,31 +1,9 @@
 .airport-transfer-form {
-  display: flex;
-  justify-content: end;
-  flex-direction: row;
-//   align-items: center;
-  padding: 20px;
-  margin: 20px;
-//   height: 30px;
-//   padding: 20px;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   align-items: center;
-  border-radius: 10px;
-  border: 1px solid rgb(242, 239, 239);
-  .airport-transfer-button {
-    padding: 0px 20px;
-    height: 35px;
-    background-color: #fff;
-    border: 1px solid #ef233c;
-    color: #3b3b3b;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 15px;
-  }
 
-  .airport-transfer-button:hover {
-    background-color: #ef233c;
-    color: #fff;
+
+  .airport-transfer-form-container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 }

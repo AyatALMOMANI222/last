@@ -13,33 +13,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
 .layout-page-container {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    "sidemenu navbar"
-    "sidemenu content";
-
-  height: 100vh;
+  display: flex;
+  flex-direction: row;
 }
-
-.layout-navbar {
-  grid-area: navbar;
-  background-color: #f8f9fa;
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.layout-sidemenu {
-  grid-area: sidemenu;
-  margin-right: 20px;
-}
-
-.layout-content {
-  grid-area: content;
-  overflow-y: auto;
+.contentt {
+  width: calc(100% - 250px);
 }

@@ -94,7 +94,7 @@ const AirportTransferForm = () => {
               required
             />
 
-            <Input
+            <DateInput
               label="Arrival Time"
               inputValue={arrivalTime}
               setInputValue={setArrivalTime}
@@ -103,7 +103,7 @@ const AirportTransferForm = () => {
               required
             />
 
-            <Input
+            <DateInput
               label="Departure Date"
               inputValue={departureDate}
               setInputValue={setDepartureDate}
@@ -111,7 +111,7 @@ const AirportTransferForm = () => {
               type="date"
             />
 
-            <Input
+            <DateInput
               label="Departure Time"
               inputValue={departureTime}
               setInputValue={setDepartureTime}
