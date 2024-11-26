@@ -123,6 +123,8 @@ const NavBar = () => {
                 url: "/sponsor/option/form",
               },
               { label: "Admin Booth Cost ", url: "/sponsor/admin/booth/cost" },
+              { label: "Sponsor Invoices ", url: "/admin/invoice/sponsor" },
+
             ],
           },
         ]

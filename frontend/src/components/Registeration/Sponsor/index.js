@@ -137,7 +137,7 @@ const RegisterSponsorPage = () => {
       <DialogMessage
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
-        message={"Thank you for applying to Sponser at the conference. We will notify you by email once the admin approves your registration"}
+        message={"Thank you for applying to Sponser at the conference.You will be contacted directly by the organizing company via email."}
       />
       <div className="register-page-container">
         <form onSubmit={handleRegister} className="register-form">

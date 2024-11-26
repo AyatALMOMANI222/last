@@ -46,6 +46,7 @@ use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\SponsorshipController;
 use App\Http\Controllers\SponsorshipOptionController;
+use App\Http\Controllers\StandardBoothPackageController;
 use App\Http\Controllers\TicketBookingController;
 use App\Http\Controllers\TourismTripController;
 use App\Http\Controllers\TouristSiteController;
@@ -135,6 +136,7 @@ Route::post('/speakers/user/update', [SpeakerController::class, 'updateByUser'])
 Route::put('/speakers/user', [SpeakerController::class, 'updateOnlineParticipation'])->middleware('auth:sanctum');
 Route::post('/speakers/certi/{user_id}', [SpeakerController::class, 'updateCertificateFile'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/speakers/info', [SpeakerController::class, 'getSpeakerInfoByToken'])->middleware('auth:sanctum');
+Route::get('/speakers/all/{conference_id}', [SpeakerController::class, 'getSpeakersByConference']);
 
 
 
@@ -307,6 +309,7 @@ Route::get('/size/table/admin/get/{conferenceId}', [BoothCostController::class, 
 
 Route::post('/invoice', [InvoiceController::class, 'createInvoice'])->middleware('auth:sanctum');
 Route::get('/invoice/{conferenceId}', [InvoiceController::class, 'getInvoiceByUserIdAndConferenceId'])->middleware('auth:sanctum');
+Route::get('/invoice', [InvoiceController::class, 'getAllInvoices'])->middleware(['auth:sanctum','admin']);
 
 
 Route::post('/private-invoice-trips', action: [PrivateInvoiceTripController::class, 'store'])->middleware(['auth:sanctum']);
@@ -325,4 +328,11 @@ Route::post('/travel/booking', [TravelFormController::class, 'store']);
 
 
 Route::get('/trip/participant/get/{userId}', [TripController::class, 'getUserTripOptions'])->middleware(['auth:sanctum','admin']);
-Route::post('/reservation/invoice', [ReservationInvoiceController::class, 'store']);
+Route::post('/reservation/invoice', [ReservationInvoiceController::class, 'store'])->middleware('auth:sanctum');
+
+
+Route::post('/floor/plan', [StandardBoothPackageController::class, 'store'])->middleware(['auth:sanctum','admin']);
+Route::get('/floor/plan/{conferenceId}', [StandardBoothPackageController::class, 'getFloorByConferenceId']);
+
+
+Route::get('/admin/all/excel', [GroupRegistrationController::class, 'getAllActiveRegistrations'])->middleware(['auth:sanctum','admin']);

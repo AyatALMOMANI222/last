@@ -61,7 +61,7 @@ class PaperController extends Controller
                 'status' => $status ?? "under review",
                 'submitted_at' => now(),  // Use the current date and time here
             ]);
-    
+     
             // 4. إرسال إشعار للمسؤولين
             $admins = User::where('isAdmin', true)->get();
             foreach ($admins as $admin) {
@@ -135,19 +135,20 @@ class PaperController extends Controller
         // dd('user_id: ' . $user_id . ', conference_id: ' . $conference_id);
 
         // Check if conference_user record exists and update it
-        $conferenceUser = ConferenceUser::where('user_id', $user_id)
-            ->where('conference_id', $conference_id)
-            ->first();
-
-        if ($conferenceUser) {
-            // Update conference_user with the new visa payment requirement and other fields
-            $conferenceUser->is_visa_payment_required = $request->input('is_visa_payment_required', false);
-            $conferenceUser->save();
-        } else {
-            return response()->json([
-                'error' => 'ConferenceUser record not found for this user and conference.'
-            ], 404);
-        }
+        ConferenceUser::create([
+            'user_id' => $user_id,
+            'conference_id' => $conference_id,
+            'is_visa_payment_required' => false, // أو أي قيمة أخرى حسب الحاجة
+        ]);
+        // if ($conferenceUser) {
+        //     // Update conference_user with the new visa payment requirement and other fields
+        //     $conferenceUser->is_visa_payment_required = $request->input('is_visa_payment_required', false);
+        //     $conferenceUser->save();
+        // } else {
+        //     return response()->json([
+        //         'error' => 'ConferenceUser record not found for this user and conference.'
+        //     ], 404);
+        // }
 
         // Step 1: Update the papers table with the new status for this user and conference
         $paper = Paper::where('user_id', $user_id)
@@ -194,7 +195,7 @@ class PaperController extends Controller
         return response()->json([
             'message' => 'Speaker created successfully, paper status updated, and user status updated to approved.',
             'speaker' => $speaker,
-            'conference_user' => $conferenceUser,
+            // 'conference_user' => $conferenceUser,
             'paper' => $paper,
         ], 201); // Use 201 for created resource
 

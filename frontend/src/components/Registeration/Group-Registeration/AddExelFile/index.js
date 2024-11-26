@@ -133,7 +133,7 @@ const ExcelUpload = () => {
             Download Excel File
           </a>
 
-          <p>Update Deadline: {userGroupData.update_deadline}</p>
+        {userGroupData.update_deadline && <p>Update Deadline: {userGroupData.update_deadline}</p>}
           {/* إضافة شرط لإخفاء الجملة إذا كان الموعد النهائي قد انقضى */}
           {!isUpdateDeadlinePassed && (
             <p>

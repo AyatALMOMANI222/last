@@ -194,9 +194,9 @@ class SpeakerController extends Controller
             $conference = Conference::find($speaker->conference_id);
 
             // التحقق من صحة المؤتمر
-            if (!$conference) {
-                return response()->json(['error' => 'Conference not found'], 404);
-            }
+            // if (!$conference) {
+            //     return response()->json(['error' => 'Conference not found'], 404);
+            // }
 
             // تحقق من أن المشاركة عبر الإنترنت مسموح بها بناءً على حالة الموافقة على المشاركة عبر الإنترنت
             if ($speaker->is_online_approved) {
@@ -289,5 +289,22 @@ class SpeakerController extends Controller
         }
     }
     
-
+  
+    
+ 
+        public function getSpeakersByConference($conferenceId)
+        {
+            // استدعاء دالة الحصول على المتحدثين مع معلومات اليوزر من خلال join
+            $speakers = Speaker::join('users', 'speakers.user_id', '=', 'users.id')  // عمل join مع جدول ال users
+                ->where('speakers.conference_id', $conferenceId) // تحديد المؤتمر باستخدام conference_id
+                ->select('speakers.*', 'users.name', 'users.email', 'users.image')  // اختيار الأعمدة المطلوبة
+                ->get(); // جلب النتائج
+    
+            // إرجاع البيانات على هيئة JSON
+            return response()->json($speakers);
+        }
+    
+    
+    
+    
 }

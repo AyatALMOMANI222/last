@@ -1,0 +1,244 @@
+$primary-color: #007bff;
+$hover-color: #0056b3;
+$danger-color: #f44336;
+$danger-hover: #d32f2f;
+$border-color: #ddd;
+$background-color: #f4f4f4;
+$modal-bg: rgba(0, 0, 0, 0.6);
+$modal-content-bg: #ffffff;
+$font-color: #333;
+$secondary-color: #555;
+$accent-color: #FF5722;
+
+.invoice-container {
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2em;
+  color: $font-color;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.invoice-table th,
+.invoice-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid $border-color;
+}
+
+.invoice-table th {
+  background-color: $background-color;
+}
+
+.view-btn {
+  padding: 8px 15px;
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: $hover-color;
+  }
+}
+
+.invoice-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: $modal-bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: $modal-content-bg;
+  padding: 30px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 700px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  animation: modalIn 0.3s ease-out;
+  position: relative;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  font-size: 1.6em;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+  color: $font-color;
+  border-bottom: 2px solid $border-color;
+  padding-bottom: 10px;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px; /* Adjusts space between paragraphs */
+}
+
+.modal-body p {
+  margin: 0;
+  color: $secondary-color;
+  line-height: 1.6; /* Adds more space between lines for readability */
+}
+
+.modal-body strong {
+  color: $primary-color;
+  font-weight: bold;
+}
+
+.details-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.details-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid $border-color;
+  color: $font-color;
+}
+
+.details-list li:last-child {
+  border-bottom: none;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px 20px;
+  background-color: $danger-color;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: $danger-hover;
+  }
+
+  &:before {
+    content: "";
+    font-size: 1em;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: $danger-color;
+    border: none;
+  }
+}
+
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 15px;
+  margin: 0 5px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.pagination button.active {
+  background-color: $primary-color;
+  color: white;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.per-page-selector {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.per-page-selector label {
+  margin-right: 10px;
+}
+
+.per-page-selector select {
+  padding: 5px;
+  font-size: 1.1em;
+  border-radius: 5px;
+  border: 1px solid $border-color;
+  transition: border 0.3s ease;
+}
+
+.per-page-selector select:hover {
+  border-color: $primary-color;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .view-btn {
+    font-size: 0.9em;
+    padding: 6px 12px;
+  }
+
+  .close-btn {
+    font-size: 1em;
+    padding: 10px 20px;
+  }
+
+  .invoice-table th,
+  .invoice-table td {
+    padding: 8px;
+  }
+
+  .pagination button {
+    font-size: 0.9em;
+    padding: 4px 8px;
+  }
+
+  .per-page-selector {
+    margin-top: 15px;
+  }
+
+  .per-page-selector select {
+    font-size: 0.9em;
+  }
+}

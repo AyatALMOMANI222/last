@@ -99,6 +99,9 @@ import TravelForm from "./components/BookingTicket";
 import TravelForm2 from "./components/BookingTicket";
 import TravelFormHotel from "./components/Hotelbooking";
 import RoomPriceForm from "./components/RoomPrice";
+import InvoicesS from "./components/AdminInvoiceSponsor";
+import TableComponentExcel from "./components/AdminTableExcelGroup";
+import Speakers4 from "./components/SpeakerConf";
 
 const App = () => {
   const location = useLocation();
@@ -299,8 +302,10 @@ const App = () => {
               <Route path="/abs" element={<EditAbstractData />} />
               <Route path="/past/event" element={<PastEvent />} />
               <Route path="/up/event" element={<UpcomingConferences2 />} />
-              <Route path="/paper/form" element={<PaperSubmissionForm />} />
+              <Route path="/paper/form/:conferenceId" element={<PaperSubmissionForm />} />
               <Route path="/conference/:conferenceId" element={<OnePage />} />
+              <Route path="/conference/speaker/:conferenceId" element={<Speakers4 />} />
+
               <Route
                 path="/sponsor/option/form"
                 element={<SponsorshipForm />}
@@ -319,6 +324,9 @@ const App = () => {
               <Route path="/ticket/booking2" element={<TravelForm2 />} />
               <Route path="/travel/hotel" element={<TravelFormHotel />} />
               <Route path="/room/price3" element={<RoomPriceForm />} />
+              <Route path="/admin/invoice/sponsor" element={<InvoicesS/>} />
+              <Route path="/admin/excel/table" element={<TableComponentExcel/>} />
+
             </Routes>
           </div>
         </div>

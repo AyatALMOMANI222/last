@@ -29,7 +29,11 @@ class InvoiceController extends Controller
                 'exhibit_number' => 'nullable|integer', // إضافة رقم المعرض
 
             ]);
-    
+            if ($validated['exhibit_number'] && SponsorInvoice::where('exhibit_number', $validated['exhibit_number'])->exists()) {
+                return response()->json(['message' => 'The exhibit number already exists. Please enter a unique number.'], 422);
+            }
+            
+            
             // استرجاع المؤتمر بناءً على ID المؤتمر
             $conference = Conference::find($validated['conference_id']);
             
@@ -154,78 +158,141 @@ class InvoiceController extends Controller
 
     // }
     public function getInvoiceByUserIdAndConferenceId($conferenceId)
-    {
-        try {
-            // الحصول على user_id من التوكن
-            $userId = Auth::id();  // أو Auth::user()->id في حال كان التوثيق بواسطة Sanatum أو JWT
-    
-            // استرجاع الفواتير بناءً على user_id و conference_id مع تحميل العلاقات الخاصة بالأسعار
-            $invoices = SponsorInvoice::where('user_id', $userId)
-                                      ->where('conference_id', $conferenceId)
-                                      ->with([
-                                          'conference', 
-                                          'boothCosts',  // علاقة تكلفة الأجنحة
-                                          'sponsorshipOptions',  // علاقة الخيارات الترويجية
-                                          'sponsorships'  // علاقة الرعاية
-                                      ])
-                                      ->get();
-    
-            // التحقق إذا كانت هناك فواتير للمستخدم في المؤتمر المحدد
-            if ($invoices->isEmpty()) {
-                return response()->json(['message' => 'No invoices found for this user in the specified conference.'], 404);
-            }
-    
-            // جلب البيانات المرتبطة بكل فاتورة مثل الأسعار
-            $invoiceDetails = $invoices->map(function($invoice) {
-                $totalAmount = 0;
-                $invoiceData = [
-                    'exhibit_number' => $invoice->exhibit_number,
-                    'user_name' => $invoice->user_name,
-                    'conference_id' => $invoice->conference_id,
-                    'conference_name' => $invoice->conference->name,  // افتراض أنك تريد اسم المؤتمر
-                    'booth_costs' => $invoice->boothCosts->map(function($boothCost) {
-                        return [
-                            // 'size' => $boothCost->size,
-                            'cost' => $boothCost->cost,  // تكلفة الجناح
-                        ];
-                    }),
-                    'sponsorship_options' => $invoice->sponsorshipOptions->map(function($sponsorshipOption) {
-                        return [
-                            'title' => $sponsorshipOption->title,  // اسم الخيار الترويجي
-                            'price' => $sponsorshipOption->price,  // السعر المرتبط بالخيار الترويجي
-                        ];
-                    }),
-                    'sponsorships' => $invoice->sponsorships->map(function($sponsorship) {
-                        return [
-                            'item' => $sponsorship->item,  // اسم عنصر الرعاية
-                            'price' => $sponsorship->price,  // السعر المرتبط بالرعاية
-                        ];
-                    }),
-                ];
-    
-                // حساب المجموع الإجمالي بناءً على البيانات المرتبطة
-                $totalAmount += $invoice->boothCosts->sum('cost');  // إضافة التكلفة الإجمالية من الجداول المرتبطة
-                $totalAmount += $invoice->sponsorshipOptions->sum('price');  // إضافة أسعار الخيارات الترويجية
-                $totalAmount += $invoice->sponsorships->sum('price');  // إضافة أسعار الرعاية
-                $invoiceData['total_amount'] = $totalAmount;
-    
-                return $invoiceData;
-            });
-    
-            // إرجاع الفواتير مع التفاصيل المرتبطة
-            return response()->json([
-                'message' => 'Invoices retrieved successfully!',
-                'invoices' => $invoiceDetails
-            ], 200);
-    
-        } catch (Exception $e) {
-            // التعامل مع الأخطاء وإرجاع رسالة مفصلة للمستخدم
-            return response()->json([
-                'message' => 'An error occurred while retrieving the invoices.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-     
+{
+    try {
+        // الحصول على user_id من التوكن
+        $userId = Auth::id(); // أو Auth::user()->id إذا كنت تستخدم JWT
+        
+        // استرجاع الفواتير بناءً على user_id و conference_id
+        $invoices = SponsorInvoice::where('user_id', $userId)
+            ->where('conference_id', $conferenceId)
+            ->get();
 
+        // التحقق إذا كانت هناك فواتير للمستخدم في المؤتمر المحدد
+        if ($invoices->isEmpty()) {
+            return response()->json(['message' => 'No invoices found for this user in the specified conference.'], 404);
+        }
+
+        // تجهيز البيانات مع التفاصيل
+        $invoicesWithDetails = $invoices->map(function ($invoice) {
+            // الحصول على تفاصيل الخيارات المختارة
+            $conferenceSponsorshipDetails = Sponsorship::whereIn('id', json_decode($invoice->conference_sponsorship_option_ids, true))->get(['item', 'price']);
+            $boothCostDetails = BoothCost::whereIn('id', json_decode($invoice->booth_cost_ids, true))->get(['size', 'cost']);
+            $sponsorshipOptionDetails = SponsorshipOption::whereIn('id', json_decode($invoice->sponsorship_option_ids, true))->get(['title', 'price']);
+
+            return [
+                'invoice_id' => $invoice->id,
+                'user_name' => $invoice->user_name,
+                'total_amount' => $invoice->total_amount,
+                'exhibit_number' => $invoice->exhibit_number,
+                'created_at' => $invoice->created_at,
+                'conference_sponsorship_details' => $conferenceSponsorshipDetails,
+                'booth_cost_details' => $boothCostDetails,
+                'sponsorship_option_details' => $sponsorshipOptionDetails,
+            ];
+        });
+
+        // إرجاع البيانات المجهزة
+        return response()->json([
+            'message' => 'Invoices retrieved successfully!',
+            'invoices' => $invoicesWithDetails
+        ], 200);
+
+    } catch (Exception $e) {
+        // التعامل مع الأخطاء وإرجاع رسالة مفصلة للمستخدم
+        return response()->json([
+            'message' => 'An error occurred while retrieving the invoices.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+    // public function getAllInvoices()
+    // {
+    //     try {
+    //         // استرجاع جميع الفواتير مع العلاقات المرتبطة
+    //         $invoices = SponsorInvoice::with([
+    //             'user', // العلاقة مع جدول المستخدمين
+    //             'conference', // العلاقة مع جدول المؤتمرات
+    //         ])->get();
+    
+    //         // تنسيق البيانات وإرجاعها
+    //         return response()->json([
+    //             'message' => 'Invoices retrieved successfully!',
+    //             'invoices' => $invoices,
+    //         ], 200);
+    //     } catch (Exception $e) {
+    //         // التعامل مع الأخطاء
+    //         return response()->json([
+    //             'message' => 'An error occurred while retrieving invoices.',
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+    
+public function getAllInvoices(Request $request)
+{
+    try {
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 10); // تحديد عدد النتائج لكل صفحة
+
+        // استرجاع الفواتير مع pagination
+        $invoices = SponsorInvoice::with(['user', 'conference'])
+            ->when($search, function ($query) use ($search) {
+                $query->where('user_name', 'LIKE', "%{$search}%")
+                    ->orWhereHas('conference', function ($q) use ($search) {
+                        $q->where('title', 'LIKE', "%{$search}%");
+                    });
+            })
+            ->paginate($perPage); // استخدام paginate بدلاً من get
+
+        // تعديل هيكل البيانات إذا لزم
+        $invoicesWithDetails = $invoices->items(); // بدلاً من getCollection()، استخدم items()
+
+        // نقوم بتعديل البيانات لتحتوي على التفاصيل المطلوبة
+        $invoicesWithDetails = array_map(function ($invoice) {
+            $conferenceSponsorshipIds = json_decode($invoice->conference_sponsorship_option_ids, true) ?? [];
+            $boothCostIds = json_decode($invoice->booth_cost_ids, true) ?? [];
+            $sponsorshipOptionIds = json_decode($invoice->sponsorship_option_ids, true) ?? [];
+
+            $conferenceSponsorshipDetails = Sponsorship::whereIn('id', $conferenceSponsorshipIds)->get(['item', 'price']);
+            $boothCostDetails = BoothCost::whereIn('id', $boothCostIds)->get(['size', 'cost']);
+            $sponsorshipOptionDetails = SponsorshipOption::whereIn('id', $sponsorshipOptionIds)->get(['title', 'price']);
+
+            return [
+                'invoice_id' => $invoice->id,
+                'user_name' => $invoice->user_name,
+                'conference_title' => $invoice->conference->title ?? 'N/A',
+                'total_amount' => $invoice->total_amount,
+                'exhibit_number' => $invoice->exhibit_number,
+                'created_at' => $invoice->created_at,
+                'conference_sponsorship_details' => $conferenceSponsorshipDetails,
+                'booth_cost_details' => $boothCostDetails,
+                'sponsorship_option_details' => $sponsorshipOptionDetails,
+            ];
+        }, $invoicesWithDetails); // تعديل البيانات بالـ map
+
+        // إعادة البيانات مع pagination metadata
+        return response()->json([
+            'message' => 'Invoices retrieved successfully!',
+            'invoices' => [
+                'data' => $invoicesWithDetails,
+                'current_page' => $invoices->currentPage(),
+                'last_page' => $invoices->lastPage(),
+                'per_page' => $invoices->perPage(),
+                'total' => $invoices->total(),
+            ],
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'An error occurred while retrieving invoices.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+    
+    
+    
+    
 }

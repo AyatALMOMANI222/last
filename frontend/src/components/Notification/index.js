@@ -149,7 +149,7 @@ const NotificationDropdown = () => {
                 } else if (
                   notification?.message?.includes("New group registration:")
                 ) {
-                  navigate(`/group/update/admin/${notification?.register_id}`);
+                  navigate(`/pending/users`);
                 } else if (
                   notification?.message?.includes(
                     "Now you can access the activated file and download the registered names"
@@ -176,13 +176,20 @@ const NotificationDropdown = () => {
                   )
                 ) {
                   navigate(`/speaker/profile`);
-                }
+                } 
+                // else if (
+                //   notification?.message?.includes(
+                //     "New group registration"
+                //   )
+                // ) {
+                //   navigate(`/group/update/admin/${notification?.register_id}`);
+                // }
                 // else if (
                 //   notification?.message?.includes(
                 //     "New sponsor registration"
                 //   )
                 // ) {
-                //   navigate(`/abs`);
+                //   navigate(`/group/update/admin/${notification?.register_id}`);
                 // }
 
               }}

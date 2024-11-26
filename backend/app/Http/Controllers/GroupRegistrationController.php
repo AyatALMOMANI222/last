@@ -32,8 +32,9 @@ class GroupRegistrationController extends Controller
             $user = User::create([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
-                'phone' => $validatedData['phone'],
+                'phone_number' => $validatedData['phone'],
                 'password' => bcrypt($validatedData['password']), // Hash the password
+                'registration_type' => 'group_registration'
             ]);
     
             // Create a token for the newly registered user (Auto-login)
@@ -352,6 +353,151 @@ class GroupRegistrationController extends Controller
         ], 500);
     }
 }
+
+
+
+
+//     public function getAllActiveRegistrations()
+//     {
+//         try {
+//             // جلب جميع السجلات النشطة مع بيانات المستخدمين
+//             $registrations = GroupRegistration::where('is_active', true)
+//                 ->with('user') // جلب بيانات المستخدم المرتبطة
+//                 ->get()
+//                 ->map(function ($registration) {
+//                     return [
+//                         'user_name' => $registration->user->name ?? null,
+//                         'user_email' => $registration->user->email ?? null,
+//                         'user_phone' => $registration->user->phone ?? null,
+//                         'organization_name' => $registration->organization_name,
+//                         'contact_person' => $registration->contact_person,
+//                         'contact_email' => $registration->contact_email,
+//                         'contact_phone' => $registration->contact_phone,
+//                         'number_of_doctors' => $registration->number_of_doctors,
+//                         'excel_file' => $registration->excel_file,
+//                         'update_deadline' => $registration->update_deadline,
+//                     ];
+//                 });
+
+//             // إرجاع البيانات كـ JSON
+//             return response()->json([
+//                 'message' => 'Active registrations retrieved successfully.',
+//                 'data' => $registrations,
+//             ], 200);
+//         } catch (\Exception $e) {
+//             return response()->json([
+//                 'message' => 'Failed to retrieve active registrations.',
+//                 'error' => $e->getMessage(),
+//             ], 500);
+//         }
+    
+// }
+// public function getAllActiveRegistrations()
+// {
+//     try {
+//         // تحديد عدد السجلات في كل صفحة (مثلاً 10)
+//         $perPage = 10;
+
+//         // جلب السجلات النشطة مع بيانات المستخدمين باستخدام التصفية والصفحات
+//         $registrations = GroupRegistration::where('is_active', true)
+//             ->with('user') // جلب بيانات المستخدم المرتبطة
+//             ->paginate($perPage); // استخدام paginate بدلاً من get
+
+//         // تحويل السجلات إلى هيكل البيانات الذي تريده
+//         $registrations = $registrations->map(function ($registration) {
+//             return [
+//                 'user_name' => $registration->user->name ?? null,
+//                 'user_email' => $registration->user->email ?? null,
+//                 'user_phone' => $registration->user->phone ?? null,
+//                 'organization_name' => $registration->organization_name,
+//                 'contact_person' => $registration->contact_person,
+//                 'contact_email' => $registration->contact_email,
+//                 'contact_phone' => $registration->contact_phone,
+//                 'number_of_doctors' => $registration->number_of_doctors,
+//                 'excel_file' => $registration->excel_file,
+//                 'update_deadline' => $registration->update_deadline,
+//             ];
+//         });
+
+//         // إرجاع البيانات كـ JSON مع معلومات الصفحات
+//         return response()->json([
+//             'message' => 'Active registrations retrieved successfully.',
+//             'data' => $registrations,
+//             'pagination' => [
+//                 'total' => $registrations->total(),
+//                 'per_page' => $registrations->perPage(),
+//                 'current_page' => $registrations->currentPage(),
+//                 'last_page' => $registrations->lastPage(),
+//                 'next_page_url' => $registrations->nextPageUrl(),
+//                 'prev_page_url' => $registrations->previousPageUrl(),
+//             ],
+//         ], 200);
+//     } catch (\Exception $e) {
+//         return response()->json([
+//             'message' => 'Failed to retrieve active registrations.',
+//             'error' => $e->getMessage(),
+//         ], 500);
+//     }
+// }
+
+
+public function getAllActiveRegistrations(Request $request)
+{
+    try {
+        $search = $request->input('search', '');
+        $perPage = $request->input('per_page', 10); // Number of results per page
+
+        // Fetch active registrations with pagination
+        $registrations = GroupRegistration::where('is_active', true)
+            ->with('user') // Fetch the related user data
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('phone', 'LIKE', "%{$search}%");
+                })->orWhere('organization_name', 'LIKE', "%{$search}%")
+                  ->orWhere('contact_person', 'LIKE', "%{$search}%");
+            })
+            ->paginate($perPage);
+
+        // Modify the data to merge fields from both GroupRegistration and User tables
+        $registrationsWithDetails = $registrations->items();
+
+        $registrationsWithDetails = array_map(function ($registration) {
+            return [
+                'user_name' => $registration->user->name ?? 'N/A', // From User table
+                'user_email' => $registration->user->email ?? 'N/A', // From User table
+                'contact_phone' => $registration->user->phone_number ?? 'N/A', // From User table
+                'organization_name' => $registration->user->name ?? 'N/A', // تخزين اسم المستخدم في organization_name
+                'contact_person' => $registration->contact_person,
+                'contact_email' => $registration->contact_email,
+                // 'contact_phone' => $registration->contact_phone,
+                'number_of_doctors' => $registration->number_of_doctors,
+                'excel_file' => $registration->excel_file,
+                'update_deadline' => $registration->update_deadline,
+            ];
+        }, $registrationsWithDetails);
+
+        // Return the data with pagination details
+        return response()->json([
+            'message' => 'Active registrations retrieved successfully.',
+            'registrations' => [
+                'data' => $registrationsWithDetails,
+                'current_page' => $registrations->currentPage(),
+                'last_page' => $registrations->lastPage(),
+                'per_page' => $registrations->perPage(),
+                'total' => $registrations->total(),
+            ],
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to retrieve active registrations.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+
 }
 
 

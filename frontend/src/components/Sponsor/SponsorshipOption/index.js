@@ -4,6 +4,8 @@ import SponsorshipTable from "../SponsorshipTable";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { backendUrlImages } from "../../../constant/config";
+import { useAuth } from "../../../common/AuthContext";
 
 // Component for each sponsorship option
 const SponsorshipOption = ({ id, title, description, price, onSelect }) => {
@@ -31,8 +33,33 @@ const SponsorshipOption = ({ id, title, description, price, onSelect }) => {
   );
 };
 
-const StandardBoothPackage = () => {
-  
+const StandardBoothPackage = ({ onExhibitNumberChange }) => {
+  const [floorPlanUrl, setFloorPlanUrl] = useState(null); // حالة لتخزين الرابط
+  const { myConferenceId} = useAuth();
+  const fetchFloorPlan = async () => {
+ 
+    if (!myConferenceId) return; // لا تستدعي API إذا كان myConferenceId غير متوفر
+
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/floor/plan/${myConferenceId}`
+      );
+      console.log("Floor Plan Data:", response.data.data[0].floor_plan);
+      setFloorPlanUrl(response?.data.data[0].floor_plan);
+    } catch (error) {
+      console.error("Error fetching floor plan:", error);
+      throw error; // يمكنك رمي الخطأ لمعالجته في مكان آخر إذا لزم الأمر
+    }
+  };
+  useEffect(() => {
+    if (myConferenceId) {
+      fetchFloorPlan();
+    }
+ 
+  }, [{ myConferenceId}]);
+  // if (!myConferenceId) {
+  //   return <div>Loading conference data...</div>;
+  // }
   return (
     <div className="booth-package">
       <h2>Standard Booth Package</h2>
@@ -62,14 +89,16 @@ const StandardBoothPackage = () => {
       {/* إدخال رقم المعرض */}
 
       {/* زر لفتح ملف PDF */}
+
       <a
-        href="/Floor Plan -UROLOGICAL.pdf" // التأكد من أن الملف موجود في مجلد public
+        href={floorPlanUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="view-floor-plans-btn"
       >
         <button className="view-floor-plans-button">View Floor Plans</button>
       </a>
+
       <div className="input-container">
         <label htmlFor="exhibitNumber" className="input-label">
           Enter Exhibit Number:
@@ -79,6 +108,7 @@ const StandardBoothPackage = () => {
           id="exhibitNumber"
           placeholder="Enter the exhibit number"
           className="input-field"
+          onChange={(e) => onExhibitNumberChange(e.target.value)} // استدعاء الدالة
         />
       </div>
     </div>
@@ -103,35 +133,41 @@ const SubmitButton = ({ onSubmit }) => {
   );
 };
 
-const BoothCostTable = ({ selectedBoothIds, onSelectBooth }) => {
+const BoothCostTable = ({
+  selectedBoothIds,
+  onSelectBooth,
+  shellSchemeSelected,
+  onShellSchemeChange,
+}) => {
   const [boothData, setBoothData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [shellSchemeSelected, setShellSchemeSelected] = useState(false);
   const BaseUrl = process.env.REACT_APP_BASE_URL;
+  const {myConferenceId} = useAuth();
 
+  const fetchData = async () => {
+    try {
+      if (!myConferenceId) return; // لا تستدعي API إذا كان myConferenceId غير متوفر
+
+      const response = await axios.get(`${BaseUrl}/size/table/admin/get/${myConferenceId}`);
+      const { boothCosts } = response.data;
+      
+      setBoothData(boothCosts);
+      setLoading(false);
+    } catch (err) {
+      setError("Error fetching data. Please try again.");
+      // console.log(`${BaseUrl}/size/table/admin/get/${myConferenceId}`);
+
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BaseUrl}/size/table/admin/get/1`);
-        const { boothCosts } = response.data;
-        setBoothData(boothCosts);
-        setLoading(false);
-      } catch (err) {
-        setError("Error fetching data. Please try again.");
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
- 
+    if (myConferenceId) {
+      fetchData();
+    }
+  }, [myConferenceId]);
 
   // Handle the shell scheme checkbox change
-  const handleShellSchemeChange = (event) => {
-    setShellSchemeSelected(event.target.checked);
-  };
 
   const handleClick = (boothId) => {
     const isSelected = selectedBoothIds.includes(boothId);
@@ -171,8 +207,7 @@ const BoothCostTable = ({ selectedBoothIds, onSelectBooth }) => {
               <td style={cellStyle}>{booth.lunch_invitations}</td>
               <td style={cellStyle}>{booth.name_tags}</td>
               <td style={cellStyle}>
-              
-                  <input
+                <input
                   type="checkbox"
                   checked={selectedBoothIds.includes(booth.id)} // تأكد إذا كان القسم مختارًا
                   onChange={(e) => handleCheckboxChange(e, booth.id)}
@@ -188,7 +223,7 @@ const BoothCostTable = ({ selectedBoothIds, onSelectBooth }) => {
         <input
           type="checkbox"
           checked={shellSchemeSelected}
-          onChange={handleShellSchemeChange}
+          onChange={onShellSchemeChange}
         />
         <span style={{ marginLeft: "10px" }}>
           Additional cost for Shell Scheme Booth (special build-up booth):{" "}
@@ -235,7 +270,14 @@ const SponsorSection = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedSponsorshipIds, setSelectedSponsorshipIds] = useState([]); // لتخزين IDs القادمة من الابن
   const [chosenBooths, setChosenBooths] = useState([]); // حالة الأقسام المختارة
-const navigate =useNavigate()
+  const [exhibitNumber, setExhibitNumber] = useState(""); // لحفظ المدخل
+  const [shellSchemeSelected, setShellSchemeSelected] = useState(false);
+
+  const handleShellSchemeChange = (event) => {
+    setShellSchemeSelected(event.target.checked);
+  };
+
+  const navigate = useNavigate();
   const handleSelectBooth = (boothId, isSelected) => {
     setChosenBooths((prevIds) => {
       if (isSelected) {
@@ -248,6 +290,10 @@ const navigate =useNavigate()
   const handleSelectedSponsorshipsChange = (ids) => {
     setSelectedSponsorshipIds(ids); // تحديث state بناءً على البيانات القادمة من الابن
   };
+  const handleExhibitNumberChange = (number) => {
+    setExhibitNumber(number); // تحديث الحالة
+  };
+
   const openAgreementPopup = () => {
     setIsPopupOpen(true);
   };
@@ -257,13 +303,14 @@ const navigate =useNavigate()
     setIsPopupOpen(false);
     toast.success("Agreement signed successfully!");
   };
-
-
+  const {myConferenceId} = useAuth();
 
   const getSponsorshipOptions = async () => {
+    if (!myConferenceId) return; // لا تستدعي API إذا كان myConferenceId غير متوفر
+
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${BaseUrl}/sponsorship-options/1`, {
+      const response = await axios.get(`${BaseUrl}/sponsorship-options/${myConferenceId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -275,8 +322,11 @@ const navigate =useNavigate()
   };
 
   useEffect(() => {
-    getSponsorshipOptions();
-  }, []);
+    if (myConferenceId) {
+      getSponsorshipOptions();
+    }
+  
+  }, [myConferenceId]);
 
   const handleSelectOption = (id, isSelected) => {
     setSelectedOptionIds((prevIds) => {
@@ -287,16 +337,18 @@ const navigate =useNavigate()
       }
     });
   };
+  const{ token }= useAuth()
   const handleSubmit = async () => {
-    const token = localStorage.getItem("token"); // احصل على التوكن
+    // const token = localStorage.getItem("token"); // احصل على التوكن
     const payload = {
-      user_id: 1, // قم بتغيير القيم وفقًا للبيانات الحقيقية
+      user_id: 138, // قم بتغيير القيم وفقًا للبيانات الحقيقية
       user_name: "John Doe",
       conference_sponsorship_option_ids: selectedSponsorshipIds,
       booth_cost_ids: chosenBooths, // استخدم الأقسام المختارة
       sponsorship_option_ids: selectedOptionIds, // استخدم الخيارات المختارة
       conference_id: 1,
-      additional_cost_for_shell_scheme_booth: true, // إذا كان هناك تكلفة إضافية
+      additional_cost_for_shell_scheme_booth: shellSchemeSelected, // إذا كان هناك تكلفة إضافية
+      exhibit_number: exhibitNumber,
     };
 
     try {
@@ -313,10 +365,13 @@ const navigate =useNavigate()
       toast.success(
         "The options have been successfully registered as a sponsor for this event."
       );
-      navigate("/sponsor/invoice")
+      navigate("/sponsor/invoice");
     } catch (error) {
-      console.error("Error submitting data:", error);
-      toast.error("Failed to submit data. Please try again.");
+
+      toast.error(
+        error.response.data.message ||
+          "Failed to submit data. Please try again."
+      );
     }
   };
 
@@ -335,12 +390,10 @@ const navigate =useNavigate()
           />
         ))}
       </div>
-    
-    
       <SponsorshipTable
         onSelectedSponsorshipsChange={handleSelectedSponsorshipsChange} // تمرير دالة التحديث كـ Prop
       />{" "}
-       {/* <div>
+      {/* <div>
         <h3>Selected Sponsorship IDs in Parent:</h3>
         <ul>
           {selectedSponsorshipIds.map((id) => (
@@ -351,8 +404,10 @@ const navigate =useNavigate()
       <BoothCostTable
         selectedBoothIds={chosenBooths} // تمرير الأقسام المختارة
         onSelectBooth={handleSelectBooth} // تمرير دالة التحديث
+        shellSchemeSelected={shellSchemeSelected}
+        onShellSchemeChange={handleShellSchemeChange}
       />
-      <StandardBoothPackage />
+      <StandardBoothPackage onExhibitNumberChange={handleExhibitNumberChange} />
       <div className="button-container">
         <button onClick={openAgreementPopup}>Sign Agreement</button>
         <SubmitButton onSubmit={handleSubmit} />

@@ -1,98 +1,87 @@
-$primary-color: #0056b3;  // New primary color (darker blue)
-$secondary-color: #f1f1f1;  // Lighter background color
-$card-bg-color: #ffffff;  // White background for card
-$border-color: #e0e0e0;  // Light border color for a softer look
+$primary-color: #1e88e5; // الأزرق الأساسي
+$secondary-color: #f5f7fa; // لون الخلفية الفاتح
+$text-color: #333; // لون النص
+$highlight-color: #ff9800; // لون مميز (برتقالي)
+$border-color: #e0e0e0; // لون الحدود
+$shadow-color: rgba(0, 0, 0, 0.1); // لون الظل
 
-// Main container styling
 .invoiceContainerS {
-  max-width: 1100px;
+  max-width:800px;
   margin: 40px auto;
-  background-color: $card-bg-color;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease-in-out;
+  padding: 25px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px $shadow-color;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);  // More prominent hover effect
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px $shadow-color;
   }
 }
 
-// Main title styling
 .invoiceTitle {
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: $primary-color;
   text-align: center;
-  margin-bottom: 30px;
-  font-weight: 600;
+  margin-bottom: 25px;
+  font-weight: bold;
+  border-bottom: 2px solid red;
+  padding-bottom: 10px;
+  text-transform: uppercase;
 }
 
-// Invoice details container
-.invoiceDetails {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
-  margin-bottom: 30px;
-}
-
-// Row styling
-.row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.2rem;
-  padding: 12px 0;
-  border-bottom: 1px solid $border-color;
-  transition: background-color 0.3s ease-in-out;
-
-  &:hover {
-    background-color: $secondary-color;  // Slight hover effect for better interactivity
-  }
-
-  .label {
-    font-weight: 600;
-    color: $primary-color;
-  }
-
-  .value {
-    text-align: right;
-    color: #333;
-  }
-}
-
-// Section headers styling
 .section {
-  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 20px;
+  background: $secondary-color;
+  border-radius: 8px;
+  border: 1px solid $border-color;
 
   h2 {
     font-size: 1.6rem;
     color: $primary-color;
     margin-bottom: 15px;
-    font-weight: 600;
-  }
-}
-
-// Loading state styling
-.loading {
-  text-align: center;
-  font-size: 1.6rem;
-  color: $primary-color;
-  font-weight: bold;
-  padding: 50px;
-  letter-spacing: 1px;
-}
-
-// Media queries for responsive design
-@media (max-width: 768px) {
-  .invoiceDetails {
-    grid-template-columns: 1fr;
+    text-transform: uppercase;
   }
 
   .row {
-    font-size: 1rem;
-    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid $border-color;
+
+    .label {
+      font-weight: bold;
+      color: $text-color;
+      font-size: 1.1rem;
+    }
+
+    .value {
+      color: $primary-color;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
   }
 
-  .section h2 {
-    font-size: 1.3rem;
+  .row:last-child {
+    border-bottom: none;
   }
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.6rem;
+  color: red;
+  font-weight: bold;
+  margin-top: 50px;
+}
+
+.no-data {
+  text-align: center;
+  font-size: 1.4rem;
+  color: $text-color;
+  margin-top: 30px;
 }

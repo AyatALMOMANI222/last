@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NotificationSent;
 use App\Models\Notification;
 use App\Models\Reservation;
+use App\Models\ReservationInvoice;
 use App\Models\Room;
 use App\Models\RoomPrice;
 use App\Models\User;
@@ -222,6 +223,118 @@ class ReservationsController extends Controller
     }
     
 
+    // public function createReservation(Request $request)
+    // {
+    //     $user_id = Auth::id();
+    
+    //     try {
+    //         // Validate the request data
+    //         $validatedData = $request->validate([
+    //             'conference_id' => 'nullable|exists:conferences,id',
+    //             'companions_count' => 'nullable|integer|min:0',
+    //             'companions_names' => 'nullable|string',
+    //             'update_deadline' => 'nullable|date',
+    //             'rooms' => 'required|array',
+    //             'rooms.*.room_type' => 'required|string',
+    //             'rooms.*.occupant_name' => 'nullable|string',
+    //             'rooms.*.check_in_date' => 'required|date',
+    //             'rooms.*.check_out_date' => 'required|date|after:rooms.*.check_in_date',
+    //             'rooms.*.total_nights' => 'required|integer|min:1',
+    //             'rooms.*.cost' => 'required|numeric|min:0',
+    //             'rooms.*.additional_cost' => 'nullable|numeric|min:0',
+    //             'rooms.*.early_check_in' => 'nullable|boolean',
+    //             'rooms.*.late_check_out' => 'nullable|boolean',
+    //         ]);
+    
+    //         $conference_id = $validatedData['conference_id'] ?? null;
+    
+    //         // Call calculateInvoice method to get the total invoice and room-wise breakdown
+    //         $invoiceDetails = $this->calculateInvoice($validatedData['rooms'], $validatedData['companions_count'] ?? 0, $conference_id);
+    //         $totalInvoice = $invoiceDetails['total_invoice'];
+    //         $roomInvoices = $invoiceDetails['room_invoices'];
+    
+    //         // Create the reservation record
+    //         $reservation = Reservation::create([
+    //             'user_id' => $user_id,
+    //             'conference_id' => $validatedData['conference_id'],
+    //             'room_count' => count($validatedData['rooms']),
+    //             'companions_count' => $validatedData['companions_count'] ?? 0,
+    //             'companions_names' => $validatedData['companions_names'] ?? null,
+    //             'update_deadline' => $validatedData['update_deadline'] ?? Carbon::now()->addDays(30),
+    //             'total_invoice' => $totalInvoice,
+    //         ]);
+    
+    //         // Prepare room data to be saved
+    //         $roomsData = [];
+    //         foreach ($validatedData['rooms'] as $index => $room) {
+    //             $roomsData[] = [
+    //                 'reservation_id' => $reservation->id,
+    //                 'room_type' => $room['room_type'],
+    //                 'occupant_name' => $room['occupant_name'],
+    //                 'special_requests' => $request->input("rooms.$index.special_requests", null),
+    //                 'check_in_date' => $room['check_in_date'],
+    //                 'check_out_date' => $room['check_out_date'],
+    //                 'total_nights' => $room['total_nights'],
+    //                 'cost' => $room['cost'],
+    //                 'additional_cost' => $room['additional_cost'] ?? 0.00,
+    //                 'early_check_in' => $room['early_check_in'] ?? false,
+    //                 'late_check_out' => $room['late_check_out'] ?? false,
+    //                 'update_deadline' => $request->input("rooms.$index.update_deadline", Carbon::now()->addDays(30)),
+    //                 'created_at' => now(),
+    //                 'updated_at' => now(),
+    //             ];
+    //         }
+    
+    //         // Insert room data into the database
+    //         Room::insert($roomsData);
+    
+    //         // Retrieve room IDs
+    //         $rooms = Room::where('reservation_id', $reservation->id)->get();
+    
+    //         // Map the room IDs to the invoice details
+    //         foreach ($roomInvoices as $index => $roomInvoice) {
+    //             $roomInvoice['room_id'] = $rooms[$index]->id;
+    //             $roomInvoices[$index] = $roomInvoice;
+    //         }
+    
+    //         // Return the response with the reservation details and room invoices
+    //         return response()->json([
+    //             'message' => 'Reservation and rooms created successfully.',
+    //             'reservation_id' => $reservation->id,
+    //             'total_invoice' => $totalInvoice,
+    //             'room_invoices' => $roomInvoices, // hedaya
+    //             'rooms' => $roomsData, // Include room details in the response
+    //         ], 201);
+
+
+
+    //         // "room_invoices": [
+    //         //     {
+    //         //         "room_type": "Double",
+    //         //         "base_price": "5.00",
+    //         //         "early_check_in_price": 0,
+    //         //         "late_check_out_price": "5.00",
+    //         //         "total_cost": 15,
+    //         //         "room_id": 49
+    //         //     },
+    //         //     {
+    //         //         "room_type": "Single",
+    //         //         "base_price": "4.00",
+    //         //         "early_check_in_price": "5.00",
+    //         //         "late_check_out_price": 0,
+    //         //         "total_cost": 13,
+    //         //         "room_id": 50
+    //         //     }
+    //         // ],
+    //     } catch (\Exception $e) {
+    //         // Return a failure response if any exception occurs
+    //         return response()->json([
+    //             'message' => 'Failed to create reservation. ' . $e->getMessage(),
+    //         ], 400);
+    //     }
+    // }
+    
+    
     public function createReservation(Request $request)
     {
         $user_id = Auth::id();
@@ -294,6 +407,17 @@ class ReservationsController extends Controller
             foreach ($roomInvoices as $index => $roomInvoice) {
                 $roomInvoice['room_id'] = $rooms[$index]->id;
                 $roomInvoices[$index] = $roomInvoice;
+    
+                // Insert the room invoice details into the reservation_invoices table
+                ReservationInvoice::create([
+                    'room_id' => $roomInvoice['room_id'],
+                    'price' => $roomInvoice['base_price'],
+                    'additional_price' => $roomInvoice['additional_cost'] ?? 0,
+                    'total' => $roomInvoice['total_cost'],
+                    'status' => 'pending', // You can set the default status here or change it dynamically
+                    'late_check_out_price' => $roomInvoice['late_check_out_price'],
+                    'early_check_in_price' => $roomInvoice['early_check_in_price'],
+                ]);
             }
     
             // Return the response with the reservation details and room invoices
@@ -301,30 +425,10 @@ class ReservationsController extends Controller
                 'message' => 'Reservation and rooms created successfully.',
                 'reservation_id' => $reservation->id,
                 'total_invoice' => $totalInvoice,
-                'room_invoices' => $roomInvoices, // hedaya
+                'room_invoices' => $roomInvoices, // Include room invoice details
                 'rooms' => $roomsData, // Include room details in the response
             ], 201);
-
-
-            
-            // "room_invoices": [
-            //     {
-            //         "room_type": "Double",
-            //         "base_price": "5.00",
-            //         "early_check_in_price": 0,
-            //         "late_check_out_price": "5.00",
-            //         "total_cost": 15,
-            //         "room_id": 49
-            //     },
-            //     {
-            //         "room_type": "Single",
-            //         "base_price": "4.00",
-            //         "early_check_in_price": "5.00",
-            //         "late_check_out_price": 0,
-            //         "total_cost": 13,
-            //         "room_id": 50
-            //     }
-            // ],
+    
         } catch (\Exception $e) {
             // Return a failure response if any exception occurs
             return response()->json([
@@ -333,8 +437,6 @@ class ReservationsController extends Controller
         }
     }
     
-    
-
 
 
 

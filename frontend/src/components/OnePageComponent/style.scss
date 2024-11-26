@@ -41,10 +41,35 @@
 .sidebar ul {
   list-style-type: none; /* إزالة النقاط من القوائم */
   padding: 0;
+  height: auto;
+  overflow: overlay;
 }
 
 .sidebar ul li {
   margin-bottom: 10px; /* إضافة مسافة بين العناصر */
+}
+/* تصميم الروابط مثل الأزرار */
+.sidebar ul li a {
+  display: block; /* جعل الرابط يعرض ككتلة ليتحمل عرض كامل */
+  background-color: transparent;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none; /* إزالة التسطير الافتراضي */
+  color: inherit; /* الحفاظ على لون النص الذي قد تم تعيينه في الأزرار */
+}
+
+.sidebar ul li a:hover {
+  background-color: #f0f0f0; /* نفس تأثير التمرير للأزرار */
+}
+
+.sidebar ul li a.active {
+  background-color: #007bff;
+  color: white; /* تغيير اللون عندما يكون الرابط نشطًا */
 }
 
 .sidebar ul li button {
@@ -95,8 +120,8 @@
 }
 
 .hero-image {
-  width: 100%; /* تأكيد أن الصورة تأخذ كامل عرض القسم */
-  height: auto;
+  width: calc(100vw - 240px);
+    height: 350px;
 }
 
 .hero-overlay {
@@ -105,7 +130,11 @@
   padding: 20px;
 }
 .second-section{
-  width: calc(100vw - 290px);
-  margin-left:calc(100vw - 290px) ;
+  width: calc(100vw - 240px);
+  // margin-left:calc(100vw - 290px) ;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 857px;
   // width: 100%;
 }

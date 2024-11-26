@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
+import axios from "axios";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./style.scss";
 import Footer from "../../components/UI/Footer";
+import { toast } from "react-toastify";
+import { backendUrlImages } from "../../constant/config";
+import { useNavigate } from "react-router-dom"; // استيراد useNavigate
 
 const Home = () => {
+  const [allConferences, setAllConferences] = useState([]);
+  const navigate = useNavigate(); // تهيئة الـ navigate
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -14,6 +21,34 @@ const Home = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
+  };
+
+  const getConference = () => {
+    const BaseUrl = process.env.REACT_APP_BASE_URL;
+    const url = `${BaseUrl}/con/upcoming`;
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setAllConferences(response.data.upcoming_conferences);
+      })
+      .catch((error) => {
+        toast.error("Error fetching conferences");
+      });
+  };
+
+  useEffect(() => {
+    getConference();
+  }, []);
+
+  // دالة للانتقال إلى صفحة المؤتمر عند الضغط على الصورة
+  const handleConferenceClick = (conferenceId) => {
+    navigate(`/conference/${conferenceId}`); // التنقل إلى صفحة المؤتمر
   };
 
   return (
@@ -68,12 +103,32 @@ const Home = () => {
             </div>
           </div>
           <div className="feature">
-            <img src="/image/conff66.webp"alt="Media Campaign" className="feature-icon" />
+            <img src="/image/conff66.webp" alt="Media Campaign" className="feature-icon" />
             <h3>Media Campaign</h3>
             <div className="desc">
               Full media campaign management, including press releases and press conferences for maximum visibility.
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Display Upcoming Conferences */}
+      <section className="upcoming-conferences">
+        <h2>Upcoming Conferences</h2>
+        <div className="conference-images">
+          {allConferences.map((conference) => (
+            <div
+              key={conference.id}
+              className="conference-image"
+              onClick={() => handleConferenceClick(conference.id)} // إضافة الحدث هنا
+            >
+              <img
+                src={`${backendUrlImages}${conference.image}`} // تأكد من أن هذا المسار صحيح
+                alt={conference.title}
+                className="conference-thumbnail"
+              />
+            </div>
+          ))}
         </div>
       </section>
 
