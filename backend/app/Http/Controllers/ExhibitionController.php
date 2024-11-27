@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exhibition;
+use App\Models\ExhibitionImage;
 use Illuminate\Http\Request;
 
 class ExhibitionController extends Controller
@@ -15,12 +16,12 @@ class ExhibitionController extends Controller
             'location' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-            'status' => 'required|in:upcoming,past',
-            'conference_id' => 'nullable|exists:conferences,id', // إضافة conference_id هنا
-
+            'images' => 'nullable|array', // استقبال مجموعة من الصور
+            'images.*' => 'file|mimes:jpeg,png,jpg|max:2048', // التحقق من كل صورة
+            'status' => 'nullable|in:upcoming,past',
+            'conference_id' => 'nullable|exists:conferences,id',
         ]);
-
+    
         $exhibition = new Exhibition();
         $exhibition->title = $validatedData['title'];
         $exhibition->description = $validatedData['description'];
@@ -28,21 +29,59 @@ class ExhibitionController extends Controller
         $exhibition->start_date = $validatedData['start_date'];
         $exhibition->end_date = $validatedData['end_date'];
         $exhibition->status = $validatedData['status'];
-        $exhibition->conference_id = $validatedData['conference_id']; // إضافة conference_id هنا
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imagePath = $image->store('exhibition_images', 'public'); // تخزين الصورة في مجلد 'exhibition_images'
-            $exhibition->image = $imagePath;
-        }
-       
+        $exhibition->conference_id = $validatedData['conference_id'];
+    
+        // تخزين المعرض أولاً
         $exhibition->save();
-
+    
+        // التحقق من وجود صور في الطلب
+        if ($request->hasFile('images')) {
+            $images = $request->file('images'); // الحصول على الصور المرفوعة
+            
+            // إدخال كل صورة إلى جدول exhibition_images
+            foreach ($images as $image) {
+                $imagePath = $image->store('exhibition_images', 'public'); // تخزين الصورة
+                
+                // إدخال البيانات في جدول exhibition_images
+                ExhibitionImage::create([
+                    'exhibition_id' => $exhibition->id,
+                    'image' => $imagePath,
+                    'alt_text' => 'default alt text', // يمكنك تغيير النص البديل حسب الحاجة
+                    'uploaded_at' => now(),
+                ]);
+            }
+        }
+    
         return response()->json([
-            'message' => 'Exhibition added successfully!',
+            'message' => 'Exhibition added successfully with images!',
             'data' => $exhibition
         ], 201);
     }
+    
+// دالة لجلب المعارض القادمة
+public function getExhibitionsByType($type)
+{
+    // التحقق من وجود المعلمة type وتعيين القيمة الافتراضية لها إذا لم تكن موجودة
+    if ($type == 'upcoming') {
+        // جلب المعارض القادمة
+        $exhibitions = Exhibition::where('start_date', '>', now())->get();
+        $message = 'Upcoming exhibitions retrieved successfully!';
+    } elseif ($type == 'past') {
+        // جلب المعارض الماضية
+        $exhibitions = Exhibition::where('end_date', '<', now())->get();
+        $message = 'Past exhibitions retrieved successfully!';
+    } else {
+        // إذا كانت المعلمة type غير صحيحة
+        return response()->json([
+            'message' => 'Invalid exhibition type provided. Use "upcoming" or "past".'
+        ], 400);
+    }
+
+    return response()->json([
+        'message' => $message,
+        'data' => $exhibitions
+    ], 200);
+}
 
 
     public function update(Request $request, $id)

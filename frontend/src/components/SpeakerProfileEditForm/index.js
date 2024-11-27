@@ -15,6 +15,7 @@ import "./style.scss";
 
 const SpeakerProfileForm = () => {
   const { speakerData, attendancesData, registrationType } = useAuth();
+  const [speakerInfo ,setSpeakerInfo]=useState()
   const BaseUrl = process.env.REACT_APP_BASE_URL;
   const navigate = useNavigate();
   const [formFiles, setFormFiles] = useState({
@@ -114,6 +115,33 @@ const SpeakerProfileForm = () => {
   const handleFileChange = (key) => (file) => {
     setFormFiles((prev) => ({ ...prev, [key]: file }));
   };
+  const getSpeakerData =()=>{
+
+// فرضًا أن الـ token موجود في `localStorage`
+const token = localStorage.getItem("token");
+
+axios.get("http://127.0.0.1:8000/api/speakers/info", {
+  headers: {
+    Authorization: `Bearer ${token}`, // إضافة الـ token في الـ headers
+  }
+})
+  .then(response => {
+    // التعامل مع البيانات بعد جلبها
+    console.log('Speaker Info:', response.data.speaker);
+    const sp =response.data.speaker
+    setSpeakerInfo(sp)
+    console.log(speakerInfo);
+    
+  })
+  .catch(error => {
+    // التعامل مع الأخطاء في حالة فشل الطلب
+    console.error('Error fetching speaker info:', error);
+  });
+
+  }
+  useEffect(()=>{
+    getSpeakerData()
+  },[])
 
   return (
     <div className="speaker-profile-section-container">

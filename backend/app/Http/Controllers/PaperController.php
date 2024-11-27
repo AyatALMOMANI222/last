@@ -25,7 +25,7 @@ class PaperController extends Controller
                 'file_path' => 'required|file|mimes:pdf,doc,docx|max:10240', // 10MB كحد أقصى للملف
                 'abstract' => 'required|string|max:255',
                 'status' => 'nullable|in:under review,accepted,rejected',
-                'submitted_at' => 'nullable|date', // This can be omitted or kept optional
+                'submitted_at' => 'nullable|date', // يمكن جعله اختياري
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|string|min:8',
@@ -33,9 +33,10 @@ class PaperController extends Controller
                 'whatsapp_number' => 'nullable|string|max:20',
                 'nationality' => 'nullable|string|max:100',
                 'country_of_residence' => 'nullable|string|max:100',
+                'is_visa_payment_required' => 'nullable|boolean', // مطلوب لإضافة إلى الجدول الجديد
             ]);
     
-            // Check if status exists in validated data, if not, default to null
+            // التحقق من حالة `status`
             $status = $validatedData['status'] ?? null;
     
             // 2. تخزين البيانات في جدول `users`
@@ -48,6 +49,8 @@ class PaperController extends Controller
                 'whatsapp_number' => $validatedData['whatsapp_number'],
                 'nationality' => $validatedData['nationality'],
                 'country_of_residence' => $validatedData['country_of_residence'],
+                'conference_id' => $validatedData['conference_id'],
+
                 'isAdmin' => false,
             ]);
     
@@ -59,10 +62,17 @@ class PaperController extends Controller
                 'abstract' => $validatedData['abstract'],
                 'file_path' => $validatedData['file_path'],
                 'status' => $status ?? "under review",
-                'submitted_at' => now(),  // Use the current date and time here
+                'submitted_at' => now(), // استخدام الوقت الحالي
             ]);
-     
-            // 4. إرسال إشعار للمسؤولين
+    
+            // 4. تخزين البيانات في جدول `conference_user`
+            ConferenceUser::create([
+                'user_id' => $user->id,
+                'conference_id' => $validatedData['conference_id'],
+                'is_visa_payment_required' => $validatedData['is_visa_payment_required'] ?? false,
+            ]);
+    
+            // 5. إرسال إشعار للمسؤولين
             $admins = User::where('isAdmin', true)->get();
             foreach ($admins as $admin) {
                 $notification = Notification::create([
@@ -75,7 +85,7 @@ class PaperController extends Controller
                 broadcast(new NotificationSent($notification))->toOthers();
             }
     
-            // 5. إرسال إشعار للمستخدم
+            // 6. إرسال إشعار للمستخدم
             $userNotification = Notification::create([
                 'user_id' => $user->id,
                 'message' => "Your abstract is currently under review by the congress scientific committee. You can log in to your profile at any time to check its status.",
@@ -84,17 +94,17 @@ class PaperController extends Controller
             ]);
             broadcast(new NotificationSent($userNotification));
     
-            // 6. إرسال إشعار عبر البريد الإلكتروني
+            // 7. إرسال إشعار عبر البريد الإلكتروني
             $user->notify(new EmailNotification("Your abstract is currently under review by the congress scientific committee. You can log in to your profile at any time to check its status."));
     
-            // 7. إرجاع استجابة ناجحة
+            // 8. إرجاع استجابة ناجحة
             return response()->json([
-                'message' => 'Paper and user created successfully, and notifications sent.',
+                'message' => 'Paper, user, and conference_user created successfully, and notifications sent.',
                 'paper' => $paper,
                 'user' => $user,
             ], 201);
         } catch (\Exception $e) {
-            // 8. معالجة الأخطاء
+            // 9. معالجة الأخطاء
             return response()->json([
                 'message' => 'There was an error processing your request.',
                 'error' => $e->getMessage(),
@@ -134,21 +144,21 @@ class PaperController extends Controller
         }
         // dd('user_id: ' . $user_id . ', conference_id: ' . $conference_id);
 
-        // Check if conference_user record exists and update it
-        ConferenceUser::create([
-            'user_id' => $user_id,
-            'conference_id' => $conference_id,
-            'is_visa_payment_required' => false, // أو أي قيمة أخرى حسب الحاجة
-        ]);
-        // if ($conferenceUser) {
-        //     // Update conference_user with the new visa payment requirement and other fields
-        //     $conferenceUser->is_visa_payment_required = $request->input('is_visa_payment_required', false);
-        //     $conferenceUser->save();
-        // } else {
-        //     return response()->json([
-        //         'error' => 'ConferenceUser record not found for this user and conference.'
-        //     ], 404);
         // }
+// Check if conference_user record exists and update it
+$conferenceUser = ConferenceUser::where('user_id', $user_id)
+    ->where('conference_id', $conference_id) // Use $conference_id from parameters
+    ->first();
+
+if ($conferenceUser) {
+    // Update conference_user with the new visa payment requirement and other fields
+    $conferenceUser->is_visa_payment_required = $request->input('is_visa_payment_required', false);
+    $conferenceUser->save();
+} else {
+    return response()->json([
+        'error' => 'ConferenceUser record not found for this user and conference.'
+    ], 404);
+}
 
         // Step 1: Update the papers table with the new status for this user and conference
         $paper = Paper::where('user_id', $user_id)
@@ -199,7 +209,7 @@ class PaperController extends Controller
             'paper' => $paper,
         ], 201); // Use 201 for created resource
 
-    }  catch (\Exception $e) {
+     } catch (\Exception $e) {
         // Handle general errors
         return response()->json([
             'error' => 'An unexpected error occurred. Please try again.',

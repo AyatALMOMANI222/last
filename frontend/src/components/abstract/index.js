@@ -6,16 +6,16 @@ import "./style.scss";
 import Checkbox from "../../CoreComponent/Checkbox";
 import httpService from "../../common/httpService";
 import Select from "../../CoreComponent/Select";
-
 const EditAbstractData = () => {
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
+  const {userId,conferenceId}=useParams()
+
   const statusOptions = [
     { value: "accepted", label: "Accepted" },
     { value: "rejected", label: "Rejected" },
   ]
 //   const { conferenceId, userId } = useParams();
-const  conferenceId = 1
-const  userId =68
+
   const [specificFlightTime, setSpecificFlightTime] = useState(false);
   const [isOnlineApproved, setIsOnlineApproved] = useState(true);
   const [ticketStatus, setTicketStatus] = useState("1");

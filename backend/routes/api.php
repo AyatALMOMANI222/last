@@ -336,3 +336,4 @@ Route::get('/floor/plan/{conferenceId}', [StandardBoothPackageController::class,
 
 
 Route::get('/admin/all/excel', [GroupRegistrationController::class, 'getAllActiveRegistrations'])->middleware(['auth:sanctum','admin']);
+Route::get('/exhibitions/{type}', [ExhibitionController::class, 'getExhibitionsByType']);

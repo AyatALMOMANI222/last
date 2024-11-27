@@ -101,7 +101,9 @@ import TravelFormHotel from "./components/Hotelbooking";
 import RoomPriceForm from "./components/RoomPrice";
 import InvoicesS from "./components/AdminInvoiceSponsor";
 import TableComponentExcel from "./components/AdminTableExcelGroup";
-import Speakers4 from "./components/SpeakerConf";
+import Speakers4 from "./components/SpeakerProduct";
+import ViewFormExhibitions from "./pages/Exhibitions/ViewForm";
+// import Speakers4 from "./components/SpeakerConf";
 
 const App = () => {
   const location = useLocation();
@@ -299,13 +301,13 @@ const App = () => {
                 element={<ApplicantsList />}
               />
               <Route path="/msgs" element={<Messages />} />
-              <Route path="/abs" element={<EditAbstractData />} />
+              <Route path="/abs/:userId/:conferenceId" element={<EditAbstractData />} />
               <Route path="/past/event" element={<PastEvent />} />
               <Route path="/up/event" element={<UpcomingConferences2 />} />
               <Route path="/paper/form/:conferenceId" element={<PaperSubmissionForm />} />
               <Route path="/conference/:conferenceId" element={<OnePage />} />
               <Route path="/conference/speaker/:conferenceId" element={<Speakers4 />} />
-
+              {/* /abs/${notification?.register_id}/${notification?.conference_id} */}
               <Route
                 path="/sponsor/option/form"
                 element={<SponsorshipForm />}
@@ -326,6 +328,7 @@ const App = () => {
               <Route path="/room/price3" element={<RoomPriceForm />} />
               <Route path="/admin/invoice/sponsor" element={<InvoicesS/>} />
               <Route path="/admin/excel/table" element={<TableComponentExcel/>} />
+              <Route path="/exhibitions/view" element={<ViewFormExhibitions/>} />
 
             </Routes>
           </div>

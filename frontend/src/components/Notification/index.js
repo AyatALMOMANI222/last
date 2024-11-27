@@ -164,26 +164,21 @@ const NotificationDropdown = () => {
                 ) {
                   navigate(`/flight/form`);
                 }
+          
                 else if (
-                  notification?.message?.includes(
-                    "A new Abstract has been added"
-                  )
-                ) {
-                  navigate(`/abs`);
-                }    else if (
                   notification?.message?.includes(
                     "We are pleased to inform you that your profile is now active"
                   )
                 ) {
                   navigate(`/speaker/profile`);
                 } 
-                // else if (
-                //   notification?.message?.includes(
-                //     "New group registration"
-                //   )
-                // ) {
-                //   navigate(`/group/update/admin/${notification?.register_id}`);
-                // }
+                else if (
+                  notification?.message?.includes(
+                    "A new Abstract has been added "
+                  )
+                ) {
+                  navigate(`/abs/${notification?.register_id}/${notification?.conference_id}`);
+                }
                 // else if (
                 //   notification?.message?.includes(
                 //     "New sponsor registration"
