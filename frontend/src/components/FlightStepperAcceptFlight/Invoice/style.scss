@@ -1,64 +1,87 @@
 .invoice {
-    padding: 20px;
-    // background-color: #ffcccc; // Light red background
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    //   max-width: 1000px;
-    //   margin: 0 auto;
-  
-    &__title {
-      font-size: 1.8rem;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 20px;
-      color: #b30000; // Darker red for the title
-    }
-  
-    &__message {
-      font-size: 1.2rem;
-      text-align: center;
-      color: #7f0000; // Medium red for the message
-    }
-  
-    &__table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-  
-      th,
-      td {
-        padding: 10px 15px;
-        text-align: center;
-        border: 1px solid #dd3333; // Red border for the table
-      }
-  
-      th {
-        background-color: #b30000; // Dark red for the header
-        color: white;
-        font-weight: 600;
-        font-size: 12px;
-        white-space: nowrap;
-      }
-  
-      td {
-        background-color: #fff; // Keep the td background white for contrast
-      }
-  
-      .invoice__row:nth-child(even) {
-        background-color: #ffe6e6; // Light red for even rows
-      }
-  
-      .invoice__row:hover {
-        background-color: #ffcccc; // Hover effect with light red
-      }
-    }
-  
-    &__total {
-      font-size: 1.6rem;
-      font-weight: bold;
-      text-align: right;
-      color: #b30000; // Darker red for the total
-      margin-top: 10px;
-    }
+  font-family: "Arial", sans-serif;
+  max-width: 800px;
+  // margin: 20px auto;
+  // padding: 20px;
+  // background-color: #f9f9f9;
+  border-radius: 8px;
+  // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .invoice__title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
   }
-  
+
+  .invoice__list {
+    // margin-bottom: 20px;
+  }
+
+  .invoice__item {
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .invoice__item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .invoice__flight-id {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #007bff;
+  }
+
+  .invoice__status {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+
+  .invoice__status.pending {
+    background-color: #ffcc00;
+    color: #fff;
+  }
+
+  .invoice__status.paid {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .invoice__details {
+    font-size: 1rem;
+    color: #555;
+  }
+
+  .invoice__total-price {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .invoice__date {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #777;
+  }
+
+  .invoice__no-data {
+    font-size: 1rem;
+    text-align: center;
+    color: #888;
+  }
+
+  .invoice__actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+}

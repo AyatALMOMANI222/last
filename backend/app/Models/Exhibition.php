@@ -19,13 +19,11 @@ class Exhibition extends Model
         'start_date',
         'end_date',
         'image',
-        'status',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
-        'status' => 'string',
     ];
     public function images()
     {

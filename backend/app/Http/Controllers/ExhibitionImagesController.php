@@ -65,7 +65,7 @@ class ExhibitionImagesController extends Controller
             if ($images->isEmpty()) {
                 return response()->json([
                     'message' => 'No images found for this exhibition.'
-                ], 404);
+                ], 200);
             }
 
             return response()->json([
@@ -118,4 +118,70 @@ class ExhibitionImagesController extends Controller
             ], 500);
         }
     }
+
+
+//     public function getAllImages()
+// {
+//     try {
+//         // Try to fetch all images
+//         $images = ExhibitionImage::all(); 
+        
+//         // Check if the result is empty
+//         if ($images->isEmpty()) {
+//             return response()->json([
+//                 'success' => false,
+//                 'message' => 'No images found',
+//             ], 404); // HTTP status 404 for "Not Found"
+//         }
+
+//         // Return success response
+//         return response()->json([
+//             'success' => true,
+//             'data' => $images,
+//         ], 200); // HTTP status 200 for success
+
+//     } catch (\Exception $e) {
+//         // Return error response
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'An error occurred while fetching the images.',
+//             'error' => $e->getMessage(), // Optional: to debug the error
+//         ], 500); // HTTP status 500 for "Internal Server Error"
+//     }
+// }
+public function getAllImages()
+{
+    try {
+        // إجراء Join مع جدول exhibitions للحصول على 'conference_id'، ثم جلب title من جدول conferences
+        $images = ExhibitionImage::join('exhibitions', 'exhibition_images.exhibition_id', '=', 'exhibitions.id')  // تأكد من أن العمود 'exhibition_id' هو العمود الصحيح
+            ->join('conferences', 'exhibitions.conference_id', '=', 'conferences.id')
+            ->select('exhibition_images.*', 'conferences.title as conference_title') // إضافة الـ title من جدول conferences
+            ->paginate(12); // يمكن تعديل العدد وفقاً لاحتياجك
+
+        // تحقق إذا كانت البيانات فارغة
+        if ($images->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No images found',
+            ], 200); // HTTP status 404 for "Not Found"
+        }
+
+        // إرجاع استجابة ناجحة مع البيانات
+        return response()->json([
+            'success' => true,
+            'data' => $images,
+        ], 200); // HTTP status 200 for success
+
+    } catch (\Exception $e) {
+        // في حالة وجود خطأ
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred while fetching the images.',
+            'error' => $e->getMessage(), // اختياري: لمساعدتك في تتبع الأخطاء
+        ], 500); // HTTP status 500 for "Internal Server Error"
+    }
+}
+
+
+
 }

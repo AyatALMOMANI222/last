@@ -7,12 +7,12 @@ import PhoneNumberInput from "../../../CoreComponent/PhoneNumber";
 import Select from "../../../CoreComponent/Select";
 import TextArea from "../../../CoreComponent/TextArea";
 import ImageUpload from "../../../CoreComponent/ImageUpload";
-import { countriesOptions , nationalitiesOptions} from "../../../constant";
-import "./style.scss"
+import { countriesOptions, nationalitiesOptions } from "../../../constant";
+import "./style.scss";
 import { toast } from "react-toastify";
-function PaperSubmissionForm() {
+function PaperSubmissionForm({conferenceId}) {
   const navigate = useNavigate();
-const {conferenceId} =useParams()
+  // const { conferenceId } = useParams(); hedayatodo
   // State for each input field
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,7 +30,7 @@ const {conferenceId} =useParams()
   // // Options for Select components
   // const nationalitiesOptions = [{ value: "Jordanian", label: "Jordanian" }];
   // const countriesOptions = [{ value: "Jordan", label: "Jordan" }];
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,10 +50,12 @@ const {conferenceId} =useParams()
 
     try {
       await axios.post(`${BaseUrl}/abstract`, formData);
-      toast.success("Your abstract has been successfully submitted. Thank you for your contribution!");
+      toast.success(
+        "Your abstract has been successfully submitted. Thank you for your contribution!"
+      );
     } catch (error) {
       console.error("Error submitting form:", error);
-      
+
       setError({
         form: "There was an error submitting your form. Please try again.",
       });
@@ -108,13 +110,13 @@ const {conferenceId} =useParams()
             required={true}
             errorMsg={error.whatsApp}
           />
-      <Select
-              options={countriesOptions}
-              value={country}
-              setValue={setCountry}
-              label="Country"
-              errorMsg={error.country}
-            />
+          <Select
+            options={countriesOptions}
+            value={country}
+            setValue={setCountry}
+            label="Country"
+            errorMsg={error.country}
+          />
           <Input
             className="input-field"
             label="Password"
@@ -125,13 +127,13 @@ const {conferenceId} =useParams()
             errorMsg={error.password}
             type="password"
           />
-              <Select
-              options={nationalitiesOptions}
-              value={selectedNationality}
-              setValue={setSelectedNationality}
-              label="Nationality"
-              errorMsg={error.nationality}
-            />
+          <Select
+            options={nationalitiesOptions}
+            value={selectedNationality}
+            setValue={setSelectedNationality}
+            label="Nationality"
+            errorMsg={error.nationality}
+          />
           <TextArea
             className="textarea-field"
             label="Abstract"

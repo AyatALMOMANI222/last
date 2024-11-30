@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "../../../../CoreComponent/Select";
-
+import { toast } from "react-toastify";
+import Input from "../../../../CoreComponent/Input"; // Assuming Input is imported from the correct path
+import "./style.scss";
 const SponsorshipTable2 = () => {
   const [formData, setFormData] = useState({
     item: "",
@@ -65,10 +67,10 @@ const SponsorshipTable2 = () => {
       setError("Please select a conference");
       return;
     }
-  
+
     setLoading(true);
     setError(null);
-  
+
     // Preparing data to match the comment structure
     const dataToSend = {
       item: formData.item, // Required: Name of the item (e.g., sponsorship package)
@@ -83,7 +85,7 @@ const SponsorshipTable2 = () => {
       residential_reg: formData.residentialReg, // Required: Number of residential registrations
       conference_id: con, // Required: The selected conference ID
     };
-  
+
     axios
       .post(`${BaseUrl}/sponsorship-options/table/add`, dataToSend, {
         headers: {
@@ -91,8 +93,23 @@ const SponsorshipTable2 = () => {
         },
       })
       .then((response) => {
-        console.log("Request successful:", response.data);
+        toast.success("The Data updated Successfully"); // Show success message
         setLoading(false);
+
+        // Reset form data to initial values after successful submission
+        setFormData({
+          item: "",
+          price: "",
+          maxSponsors: "",
+          boothSize: "",
+          bookletAd: "",
+          websiteAd: "",
+          BagsInserts: "",
+          backdropLogo: "",
+          nonResidentialReg: "",
+          residentialReg: "",
+        });
+        setConferenceId(""); // Reset conference selection as well
       })
       .catch((error) => {
         console.error("Request failed:", error);
@@ -100,57 +117,49 @@ const SponsorshipTable2 = () => {
         setError("Error submitting data");
       });
   };
-  
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>Sponsorship Packages</h1>
-      {error && <p style={styles.error}>{error}</p>}
+    <div className="container-sponsorship-packages">
+      <h1 className="title">Sponsorship Packages</h1>
+      {error && <p className="error">{error}</p>}
 
-      <div style={styles.formContainer}>
-        {/* Conference Dropdown */}
-        <div style={styles.inputGroup}>
-          <Select
-            options={allConference}
-            value={conferenceId}
-            setValue={setConferenceId}
-            label="Conference "
-            placeholder="Select..."
-          />
-        </div>
-
-        {/* Sponsorship Form Inputs */}
-        {Object.keys(formData).map((key) => (
-          <div key={key} style={styles.inputGroup}>
-            <label htmlFor={key} style={styles.label}>
-              {key
-                .replace(/([A-Z])/g, " $1")
-                .replace(/^./, (str) => str.toUpperCase())}
-              :
-            </label>
-            <input
-              type={
-                key.includes("price") ||
-                key.includes("Reg") ||
-                key.includes("maxSponsors")
-                  ? "number"
-                  : "text"
-              }
-              id={key}
-              name={key}
-              value={formData[key]}
-              onChange={handleInputChange}
-              style={styles.input}
-              placeholder={`Enter ${key
-                .replace(/([A-Z])/g, " $1")
-                .toLowerCase()}`}
+      <div className="form-container">
+        <div className="sponsorship-packages-section">
+          {/* Conference Dropdown */}
+          <div className="input-group">
+            <Select
+              options={allConference}
+              value={conferenceId}
+              setValue={setConferenceId}
+              label="Conference"
+              placeholder="Select..."
             />
           </div>
-        ))}
 
+          {/* Sponsorship Form Inputs */}
+          {Object.keys(formData).map((key) => (
+            <div key={key} className="input-group">
+              <Input
+                className="input-field"
+                label={key
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())}
+                placeholder={`Enter ${key
+                  .replace(/([A-Z])/g, " $1")
+                  .toLowerCase()}`}
+                inputValue={formData[key]}
+                setInputValue={(value) =>
+                  handleInputChange({ target: { name: key, value } })
+                }
+                required={true}
+                errorMsg={error && error[key]} // Assuming error messages are structured similarly
+              />
+            </div>
+          ))}
+        </div>
         <button
           onClick={handlePostRequest}
-          style={styles.button}
+          className="submit-button"
           disabled={loading}
         >
           {loading ? "Submitting..." : "Submit"}
@@ -158,65 +167,6 @@ const SponsorshipTable2 = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    padding: "40px",
-    fontFamily: "Arial, sans-serif",
-    maxWidth: "600px",
-    margin: "auto",
-    backgroundColor: "#f9f9f9",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    borderRadius: "10px",
-  },
-  title: {
-    textAlign: "center",
-    color: "#B22222",
-    marginBottom: "20px",
-    fontSize: "24px",
-    fontWeight: "bold",
-  },
-  formContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-  },
-  inputGroup: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  label: {
-    fontSize: "14px",
-    color: "#333",
-    marginBottom: "5px",
-    fontWeight: "500",
-  },
-  input: {
-    padding: "10px",
-    fontSize: "14px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    backgroundColor: "#fff",
-    transition: "border-color 0.2s",
-  },
-  error: {
-    color: "#B22222",
-    fontSize: "14px",
-    marginBottom: "10px",
-  },
-  button: {
-    padding: "12px 20px",
-    backgroundColor: "#B22222",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontWeight: "bold",
-    fontSize: "16px",
-    textAlign: "center",
-    transition: "background-color 0.3s",
-  },
 };
 
 export default SponsorshipTable2;

@@ -6,12 +6,12 @@ const Welcome = () => {
   return (
     <div className="welcome-container">
       <div className="welcome-header">
-        <h1>Welcome to the Congress!</h1>
-        <h2>
+        <h3>Welcome to the Congress!</h3>
+        <h4>
           On behalf of the Organizing Committee, we are delighted to invite you to join us at The 
           Pan Arab Society of Urology Congress & the 13th International Congress of The Jordanian 
           Association of Urological Surgeons, which will be held in Amman, Jordan, on 20 - 22 Oct 2022.
-        </h2>
+        </h4>
       </div>
 
       <div className="welcome-content">

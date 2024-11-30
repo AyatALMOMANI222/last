@@ -1,0 +1,112 @@
+/* Variables for consistent styling */
+$gallery-padding: 30px;
+$image-size: 250px; /* Adjust image size */
+$image-border-radius: 10px;
+$hover-scale: 1.1;
+$background-color: #ffffff; /* Clean white background */
+$shadow-color: rgba(0, 0, 0, 0.1); /* Soft shadow */
+$title-font-size: 18px; /* Title font size */
+$title-padding: 10px; /* Padding around the title */
+$overlay-bg-color: rgba(0, 0, 0, 0.6); /* Dark overlay for the title */
+$title-color: white; /* Color of the title */
+$pagination-bg-color: #007bff; /* Pagination button background */
+
+/* Image gallery container styles */
+.image-gallery-container2 {
+  padding: $gallery-padding;
+  background-color: $background-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  border-radius: $image-border-radius;
+  box-shadow: 0 4px 10px $shadow-color;
+  flex-direction: column;
+}
+
+/* Flex container for images */
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center; /* Center images horizontally */
+  margin-bottom: 20px; /* Space for pagination */
+}
+
+/* Individual image wrapper for hover effect */
+.image-item {
+  position: relative;
+  width: $image-size;
+  height: $image-size; /* Maintain square shape */
+  overflow: hidden; /* Prevent overflow of content */
+  border-radius: $image-border-radius;
+  box-shadow: 0 2px 5px $shadow-color;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* Image styles */
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures image covers the area */
+  transition: transform 0.3s ease;
+}
+
+/* Title text over the image */
+.image-title {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%); /* Title hidden above */
+  background-color: $overlay-bg-color;
+  color: $title-color;
+  font-size: $title-font-size;
+  padding: $title-padding;
+  border-radius: 5px;
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transition for the title */
+}
+
+/* Hover effects */
+.image-item:hover .image-title {
+  opacity: 1; /* Show the title */
+  transform: translateX(-50%) translateY(10px); /* Slide title down */
+}
+
+.image-item:hover .gallery-image {
+  transform: scale($hover-scale); /* Smooth zoom effect */
+  box-shadow: 0 6px 15px darken($shadow-color, 10%);
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+
+  button {
+    padding: 10px 20px;
+    background-color: $pagination-bg-color;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+    &:hover {
+      background-color: darken($pagination-bg-color, 10%);
+    }
+
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    font-size: 16px;
+  }
+}

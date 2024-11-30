@@ -1,82 +1,100 @@
+/* style.scss */
+$primary-color: #e74c3c; /* Red color */
+$secondary-color: #2c3e50; /* Dark gray */
+$light-bg-color: #ecf0f1; /* Light gray background */
+$highlight-color: #c0392b; /* Darker red */
+
 .welcome-container {
+  font-family: "Arial", sans-serif;
+  padding: 2rem;
+  background-color: $light-bg-color;
+  color: $secondary-color;
+
+  .welcome-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h3 {
+      color: #c0392b;
+      //   font-size: 3rem;
+      color: $primary-color;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    h4 {
+      //   font-size: 1.5rem;
+      line-height: 1.6;
+      max-width: 80%;
+      margin: 0 auto;
+      color: $secondary-color;
+    }
+  }
+
+  .welcome-content {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px; // تقليل padding
-    background-color: #e9ecef; // خلفية فاتحة
-    color: #333; // نص داكن للقراءة
+    justify-content: space-between;
+    gap: 2rem;
 
-    .welcome-header {
-        text-align: center;
-        margin-bottom: 20px; // تقليل الهامش
-
-        h1 {
-            font-size: 2.5rem; // تقليل حجم العنوان
-            font-weight: bold; // إبقاءه عريضًا
-            color: #d9534f;
-        }
-
-        h2 {
-            font-size: 1.3rem; // تقليل حجم النص الفرعي
-            font-weight: normal;
-            color: #555; // لون أفتح للنص الفرعي
-        }
+    .welcome-image {
+      flex: 1;
+      background-size: cover;
+      background-position: center;
+      height: 350px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
-    .welcome-content {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: flex-start;
-        width: 100%;
-        max-width: 1200px;
+    .welcome-description {
+      flex: 1;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
-        .welcome-image {
-            background-size: cover;
-            background-position: center;
-            width: 35%; // تقليل العرض للصور
-            height: 250px; // تقليل الارتفاع
-            border-radius: 10px;
-            margin-right: 15px; // تقليل المسافة بين الصورة والنص
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // ظل للصورة
+      p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+        color: $secondary-color;
+
+        strong {
+          color: $primary-color;
         }
+      }
 
-        .welcome-description {
-            width: 55%; // زيادة عرض الوصف قليلاً
-            padding: 15px; // تقليل padding
+      p:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 
-            p {
-                margin-bottom: 10px; // تقليل الهامش
-                line-height: 1.4; // تقليل تباعد الأسطر
-                font-size: 1rem; // تقليل حجم الخط
-            }
-        }
+  .topics-section {
+    margin-top: 3rem;
+
+    h3 {
+      font-size: 2rem;
+      color: $primary-color;
+      margin-bottom: 1.5rem;
+      text-align: center;
     }
 
-    .topics-section {
-        margin-top: 30px; // تقليل الهامش العلوي
-        text-align: center;
+    ul {
+      list-style: none;
+      padding: 0;
+      text-align: center;
 
-        h3 {
-            font-size: 2rem; // تقليل حجم عنوان المواضيع
-            margin-bottom: 10px; // تقليل الهامش
-            color: #d9534f; // لون أحمر جميل
+      li {
+        font-size: 1.2rem;
+        color: $secondary-color;
+        margin: 0.8rem 0;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: $highlight-color;
         }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-
-            li {
-                font-size: 1.2rem; // تقليل حجم النص في قائمة المواضيع
-                margin: 5px 0; // تقليل الهامش
-                color: #333; // نص داكن للقراءة
-                transition: color 0.3s; // تأثير الانتقال عند التمرير
-
-                &:hover {
-                    color: #d9534f; // تغيير اللون إلى الأحمر عند التمرير
-                }
-            }
-        }
+      }
     }
+  }
 }

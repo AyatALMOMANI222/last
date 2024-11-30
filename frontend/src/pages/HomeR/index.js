@@ -8,6 +8,7 @@ import Footer from "../../components/UI/Footer";
 import { toast } from "react-toastify";
 import { backendUrlImages } from "../../constant/config";
 import { useNavigate } from "react-router-dom"; // استيراد useNavigate
+import TopNavbar from "../../components/UI/NavigationBar";
 
 const Home = () => {
   const [allConferences, setAllConferences] = useState([]);
@@ -48,13 +49,15 @@ const Home = () => {
 
   // دالة للانتقال إلى صفحة المؤتمر عند الضغط على الصورة
   const handleConferenceClick = (conferenceId) => {
-    navigate(`/conference/${conferenceId}`); // التنقل إلى صفحة المؤتمر
+    navigate(`/conference/details/${conferenceId}`); // التنقل إلى صفحة المؤتمر
   };
 
   return (
     <div className="home-page-section">
+      
       {/* Hero Slider */}
       <div className="slider">
+        
         <Slider {...sliderSettings}>
           <div>
             <img src="/image/conff66.webp" alt="Slide 1" className="slide-image" />
@@ -133,6 +136,8 @@ const Home = () => {
       </section>
 
       <Footer />
+      {/* <TopNavbar/> */}
+
     </div>
   );
 };

@@ -5,28 +5,19 @@ $error-color: #f44336; // أحمر واضح
 $background-color: #f3f4f6; // رمادي فاتح
 $border-color: #e0e0e0;
 $text-color: #333; // رمادي غامق
-$font-family: 'Poppins', sans-serif; // خط حديث وأنيق
+$font-family: "Poppins", sans-serif; // خط حديث وأنيق
 
 @mixin transition($property, $duration: 0.3s, $ease: ease-in-out) {
   transition: $property $duration $ease;
 }
 
-// الحاوية الأساسية للصفحة
 .register-page-container112 {
-  background: linear-gradient(to bottom, lighten($background-color, 10%) 0%, $background-color 30%);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 
   .register-form {
-    background: linear-gradient(135deg, #ffffff, #f7f7f7);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     width: 100%;
-    max-width: 600px;
-    border: 1px solid $border-color;
 
     .title {
       font-size: 28px;
@@ -42,10 +33,10 @@ $font-family: 'Poppins', sans-serif; // خط حديث وأنيق
     }
 
     .fields-container {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 20px;
+      grid-row-gap: 20px;
       .input-field,
       .select-field,
       .textarea-field,
@@ -95,7 +86,7 @@ $font-family: 'Poppins', sans-serif; // خط حديث وأنيق
 
     .register-btn-container {
       display: flex;
-      justify-content: center;
+      justify-content: end;
 
       .register-btn {
         background: linear-gradient(135deg, $primary-color, $secondary-color);
@@ -104,15 +95,20 @@ $font-family: 'Poppins', sans-serif; // خط حديث وأنيق
         font-size: 16px;
         font-weight: bold;
         border: none;
-        border-radius: 10px;
-        margin-top: 8px;
+        border-radius: 5px;
+        width: 200px;
+        margin-top: -38px;
         cursor: pointer;
         box-shadow: 0 4px 10px rgba($primary-color, 0.3);
 
         @include transition(all, 0.4s);
 
         &:hover {
-          background: linear-gradient(135deg, lighten($primary-color, 10%), lighten($secondary-color, 10%));
+          background: linear-gradient(
+            135deg,
+            lighten($primary-color, 10%),
+            lighten($secondary-color, 10%)
+          );
           box-shadow: 0 6px 15px rgba($primary-color, 0.5);
         }
 
@@ -122,9 +118,11 @@ $font-family: 'Poppins', sans-serif; // خط حديث وأنيق
       }
     }
   }
+  .textarea-container .textarea-field-container .textarea-field {
+    height: 100px;
+  }
 }
 
-// الوسائط (Responsive Design)
 @media (max-width: 768px) {
   .register-page-container112 {
     padding: 10px;

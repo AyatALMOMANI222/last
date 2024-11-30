@@ -103,6 +103,11 @@ import InvoicesS from "./components/AdminInvoiceSponsor";
 import TableComponentExcel from "./components/AdminTableExcelGroup";
 import Speakers4 from "./components/SpeakerProduct";
 import ViewFormExhibitions from "./pages/Exhibitions/ViewForm";
+import ConferenceDetails from "./pages/newConferences";
+import AllConferencesPage from "./components/ConferencesPage";
+import ExhibitionsPage from "./components/ExhibitionsPage";
+import ImageGallery from "./components/GalaDinner/Gallery";
+import OneExhibit from "./components/OneExhibit";
 // import Speakers4 from "./components/SpeakerConf";
 
 const App = () => {
@@ -134,9 +139,11 @@ const App = () => {
     <Fragment>
       <ToastContainer />
       <Loader show={showLoader} />
+      
       <div className="layout-page-container">
         {!noNavRoute.includes(location.pathname) &&
           !location.pathname.includes("/registerPage") &&
+          !location.pathname.includes("/conference/details") &&
           !location.pathname.includes("/register/") && (
             <div className="layout-sidemenu">
               <SideMenu />
@@ -149,6 +156,7 @@ const App = () => {
             width:
               !noNavRoute.includes(location.pathname) &&
               !location.pathname.includes("/registerPage") &&
+              !location.pathname.includes("/conference/details") &&
               !location.pathname.includes("/register/")
                 ? "calc(100% - 250px)"
                 : "100%",
@@ -164,6 +172,10 @@ const App = () => {
           <div className="layout-content">
             <Routes className="main">
               <Route path="/exhibitions" element={<Exhibitions />} />
+              <Route
+                path="/conference/details/:conferenceId"
+                element={<ConferenceDetails />}
+              />
               <Route path="/trip/user/:tripId" element={<TripsStepperPage />} />
               <Route path="/" element={<Dashboard />} />
               <Route
@@ -175,7 +187,8 @@ const App = () => {
                 element={<EditAttendanceData />}
               />
               <Route path="/reservation/form" element={<Reservation />} />
-              <Route path="/conferences" element={<ConferencesAdmin />} />
+              <Route path="/conferences" element={<AllConferencesPage />} />
+              <Route path="/page/exhibitions" element={<ExhibitionsPage />} />
               <Route path="/flights" element={<FlightFormAdmin />} />
               <Route path="/flight/form" element={<FlightForm />} />
               <Route path="/login" element={<LoginPage />} />
@@ -301,12 +314,21 @@ const App = () => {
                 element={<ApplicantsList />}
               />
               <Route path="/msgs" element={<Messages />} />
-              <Route path="/abs/:userId/:conferenceId" element={<EditAbstractData />} />
+              <Route
+                path="/abs/:userId/:conferenceId"
+                element={<EditAbstractData />}
+              />
               <Route path="/past/event" element={<PastEvent />} />
               <Route path="/up/event" element={<UpcomingConferences2 />} />
-              <Route path="/paper/form/:conferenceId" element={<PaperSubmissionForm />} />
-              <Route path="/conference/:conferenceId" element={<OnePage />} />
-              <Route path="/conference/speaker/:conferenceId" element={<Speakers4 />} />
+              <Route
+                path="/paper/form/:conferenceId"
+                element={<PaperSubmissionForm />}
+              />
+              <Route path="/conference/details/:conferenceId" element={<OnePage />} />
+              <Route
+                path="/conference/speaker/:conferenceId"
+                element={<Speakers4 />}
+              />
               {/* /abs/${notification?.register_id}/${notification?.conference_id} */}
               <Route
                 path="/sponsor/option/form"
@@ -326,15 +348,29 @@ const App = () => {
               <Route path="/ticket/booking2" element={<TravelForm2 />} />
               <Route path="/travel/hotel" element={<TravelFormHotel />} />
               <Route path="/room/price3" element={<RoomPriceForm />} />
-              <Route path="/admin/invoice/sponsor" element={<InvoicesS/>} />
-              <Route path="/admin/excel/table" element={<TableComponentExcel/>} />
-              <Route path="/exhibitions/view" element={<ViewFormExhibitions/>} />
-
+              <Route path="/admin/invoice/sponsor" element={<InvoicesS />} />
+              <Route
+                path="/admin/excel/table"
+                element={<TableComponentExcel />}
+              />
+              <Route
+                path="/exhibitions/view"
+                element={<ViewFormExhibitions />}
+              />
+                  <Route
+                path="/gallery"
+                element={<ImageGallery />}
+              />
+                     <Route
+                path="/one/exhibits/:exhibitId"
+                element={<OneExhibit/>}
+              />
             </Routes>
           </div>
         </div>
       </div>
     </Fragment>
+    
   );
 };
 

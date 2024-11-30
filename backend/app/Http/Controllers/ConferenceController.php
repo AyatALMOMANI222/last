@@ -47,6 +47,7 @@ class ConferenceController extends Controller
             $conference->start_date = $request->input('start_date');
             $conference->end_date = $request->input('end_date');
             $conference->location = $request->input('location');
+            $conference->companion_dinner_price = $request->input('companion_dinner_price'); // Store visa_price
 
             // Determine the status of the conference
             $currentDate = now(); // Get the current date and time
@@ -59,7 +60,6 @@ class ConferenceController extends Controller
             }
 
             $conference->visa_price = $request->input('visa_price'); // Store visa_price
-            $conference->companion_dinner_price = $request->input('companion_dinner_price'); // Store visa_price
 
             // Handle file uploads
             if ($request->hasFile('image')) {
@@ -113,7 +113,21 @@ class ConferenceController extends Controller
         }
     }
 
-
+    public function index()
+    {
+        try {
+            // جلب جميع المؤتمرات مع العلاقات المرتبطة بها
+            $conferences = Conference::with([
+                'scientificTopics',  // علاقة مع المواضيع العلمية
+                'prices'             // علاقة مع أسعار المؤتمر
+            ])->get();
+    
+            return response()->json(['conferences' => $conferences], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to fetch conferences.', 'error' => $e->getMessage()], 500);
+        }
+    }
+    
     public function update(Request $request, $id)
     {
         // Find the conference by ID
@@ -305,31 +319,63 @@ class ConferenceController extends Controller
     }
     
 
+    // public function getConferenceById($id)
+    // {
+    //     try {
+    //         // Fetch the conference data by its ID
+    //         $conference = Conference::findOrFail($id);
+    
+    //         // Get related data like scientific topics and prices
+    //         $scientificTopics = ScientificTopic::where('conference_id', $id)->get();
+    //         $prices = ConferencePrice::where('conference_id', $id)->get();
+    
+    //         // Return the conference data with related information
+    //         return response()->json([
+    //             'conference' => $conference,
+    //             'scientific_topics' => $scientificTopics,
+    //             'prices' => $prices,
+    //             'image_url' => asset('storage/' . $conference->image), // Include URL to the image if uploaded
+    //             'first_announcement_pdf_url' => $conference->first_announcement_pdf ? asset('storage/' . $conference->first_announcement_pdf) : null,
+    //             'second_announcement_pdf_url' => $conference->second_announcement_pdf ? asset('storage/' . $conference->second_announcement_pdf) : null,
+    //             'conference_brochure_pdf_url' => $conference->conference_brochure_pdf ? asset('storage/' . $conference->conference_brochure_pdf) : null,
+    //             'conference_scientific_program_pdf_url' => $conference->conference_scientific_program_pdf ? asset('storage/' . $conference->conference_scientific_program_pdf) : null,
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['message' => 'Failed to retrieve conference data.', 'error' => $e->getMessage()], 500);
+    //     }
+    // }
+    
+
+
     public function getConferenceById($id)
-    {
-        try {
-            // Fetch the conference data by its ID
-            $conference = Conference::findOrFail($id);
-    
-            // Get related data like scientific topics and prices
-            $scientificTopics = ScientificTopic::where('conference_id', $id)->get();
-            $prices = ConferencePrice::where('conference_id', $id)->get();
-    
-            // Return the conference data with related information
-            return response()->json([
-                'conference' => $conference,
-                'scientific_topics' => $scientificTopics,
-                'prices' => $prices,
-                'image_url' => asset('storage/' . $conference->image), // Include URL to the image if uploaded
-                'first_announcement_pdf_url' => $conference->first_announcement_pdf ? asset('storage/' . $conference->first_announcement_pdf) : null,
-                'second_announcement_pdf_url' => $conference->second_announcement_pdf ? asset('storage/' . $conference->second_announcement_pdf) : null,
-                'conference_brochure_pdf_url' => $conference->conference_brochure_pdf ? asset('storage/' . $conference->conference_brochure_pdf) : null,
-                'conference_scientific_program_pdf_url' => $conference->conference_scientific_program_pdf ? asset('storage/' . $conference->conference_scientific_program_pdf) : null,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to retrieve conference data.', 'error' => $e->getMessage()], 500);
-        }
+{
+    try {
+        // Fetch the conference with related committee members
+        $conference = Conference::with('committeeMembers')
+            ->findOrFail($id);
+
+        // Get related data like scientific topics and prices
+        $scientificTopics = ScientificTopic::where('conference_id', $id)->get();
+        $prices = ConferencePrice::where('conference_id', $id)->get();
+
+        // Return the conference data with related information
+        return response()->json([
+            'conference' => $conference,
+            'scientific_topics' => $scientificTopics,
+            'prices' => $prices,
+            'committee_members' => $conference->committeeMembers, // Include committee members
+            'image_url' => $conference->image ? asset('storage/' . $conference->image) : null,
+            'first_announcement_pdf_url' => $conference->first_announcement_pdf ? asset('storage/' . $conference->first_announcement_pdf) : null,
+            'second_announcement_pdf_url' => $conference->second_announcement_pdf ? asset('storage/' . $conference->second_announcement_pdf) : null,
+            'conference_brochure_pdf_url' => $conference->conference_brochure_pdf ? asset('storage/' . $conference->conference_brochure_pdf) : null,
+            'conference_scientific_program_pdf_url' => $conference->conference_scientific_program_pdf ? asset('storage/' . $conference->conference_scientific_program_pdf) : null,
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to retrieve conference data.',
+            'error' => $e->getMessage()
+        ], 500);
     }
-    
+}
 
 }

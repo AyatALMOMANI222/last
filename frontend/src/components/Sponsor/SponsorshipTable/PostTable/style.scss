@@ -1,0 +1,87 @@
+.container-sponsorship-packages {
+  padding: 40px;
+  font-family: Arial, sans-serif;
+  // max-width: 600px;
+  margin: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  margin: 20px;
+
+  .sponsorship-packages-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+  }
+  .title {
+    font-size: 1.5rem;
+    color: #b91c1c;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; // Slightly larger gap between inputs for a spacious look
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .label {
+    font-size: 16px; // Larger label text for readability
+    color: #333;
+    margin-bottom: 8px; // Slightly more space for clarity
+    font-weight: 500;
+  }
+
+  .input {
+    padding: 12px 15px; // Slightly more padding for comfort
+    font-size: 16px; // Larger font size for readability
+    border-radius: 8px; // Rounded corners for a smoother look
+    border: 1px solid #e63946; // Red border to match the modern red theme
+    background-color: #fff;
+    transition: border-color 0.3s, box-shadow 0.3s; // Smooth transition on hover/focus
+  }
+
+  .input:focus {
+    border-color: #e63946; // Focus state to highlight the field
+    box-shadow: 0 0 8px rgba(230, 57, 71, 0.5); // Adding shadow on focus for emphasis
+  }
+
+  .error {
+    color: #e63946; // Red color for errors to indicate importance
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .submit-button {
+    width: 200px;
+    text-align: end;
+    padding: 12px 20px;
+    background-color: #e63946; // Modern vibrant red
+    color: #fff;
+    border: none;
+    border-radius: 8px; // Rounded corners for the button
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+
+  .submit-button:hover {
+    background-color: #d62828; // Slightly darker red for hover effect
+    transform: translateY(-2px); // Slight lift on hover for a modern touch
+  }
+
+  .submit-button:disabled {
+    background-color: #f1f1f1;
+    color: #ccc;
+    cursor: not-allowed;
+  }
+}

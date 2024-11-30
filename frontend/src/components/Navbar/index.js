@@ -190,9 +190,21 @@ const NavBar = () => {
 
       <div className="navbar-auth">
         <div className="menuu">
-          <div className="menu-title">{"Home"}</div>
+        <div
+        className="menu-title"
+        onClick={() => navigate("/home")}
+        style={{ cursor: "pointer" }}
+      >
+        {"Home"}
+      </div>
+      <div
+        className="menu-title"
+        onClick={() => navigate("/about")}
+        style={{ cursor: "pointer" }}
+      >
+        {"About"}
+      </div>
 
-          <div className="menu-title">{"About"}</div>
         </div>
         <NotificationDropdown />
         {!localStorage.getItem("token") ? (

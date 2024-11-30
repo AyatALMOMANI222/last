@@ -18,8 +18,9 @@ class ExhibitionController extends Controller
             'end_date' => 'nullable|date',
             'images' => 'nullable|array', // استقبال مجموعة من الصور
             'images.*' => 'file|mimes:jpeg,png,jpg|max:2048', // التحقق من كل صورة
-            'status' => 'nullable|in:upcoming,past',
             'conference_id' => 'nullable|exists:conferences,id',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048', // حقل صورة واحدة
+
         ]);
     
         $exhibition = new Exhibition();
@@ -28,9 +29,15 @@ class ExhibitionController extends Controller
         $exhibition->location = $validatedData['location'];
         $exhibition->start_date = $validatedData['start_date'];
         $exhibition->end_date = $validatedData['end_date'];
-        $exhibition->status = $validatedData['status'];
         $exhibition->conference_id = $validatedData['conference_id'];
-    
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('exhibitions', 'public'); // تخزين الصورة في مجلد
+        
+            // تحديث حقل الصورة في جدول exhibitions
+            $exhibition->image = $imagePath;
+            $exhibition->save();
+        }
         // تخزين المعرض أولاً
         $exhibition->save();
     

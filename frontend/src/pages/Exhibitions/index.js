@@ -5,24 +5,181 @@ import { backendUrlImages } from "../../constant/config";
 import ImageUpload from "../../CoreComponent/ImageUpload";
 import DateInput from "../../CoreComponent/Date";
 import axios from "axios";
+import { toast } from "react-toastify";
 import "./style.scss";
 import Select from "../../CoreComponent/Select";
 import Pagination from "../../CoreComponent/Pagination";
 import ViewFormExhibitions from "./ViewForm";
 import EditExhibitionForm from "./EditForm";
 import httpService from "../../common/httpService";
-// this form for create ExhibitionForm
+// const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
+//   const [title, setTitle] = useState("");
+//   const [description, setDescription] = useState("");
+//   const [location, setLocation] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+//   const [exhibitionImages, setExhibitionImages] = useState("");
+//   const [errorMsg, setErrorMsg] = useState(""); // Manage error messages
+//   const [allConference, setAllConference] = useState([]);
+//   const [conferenceId, setConferenceId] = useState([]);
+//   const BaseUrl = process.env.REACT_APP_BASE_URL;
+
+//   const getConference = () => {
+//     const url = `${BaseUrl}/con`;
+
+//     axios
+//       .get(url)
+//       .then((response) => {
+//         setAllConference([
+//           { label: "None", value: null },
+//           ...response.data.data?.map((item) => {
+//             return { label: item?.title, value: item?.id };
+//           }),
+//         ]);
+//         console.log(
+//           response.data.data?.map((item) => {
+//             return { label: item?.title, value: item?.id };
+//           })
+//         );
+//       })
+//       .catch((error) => {});
+//   };
+//   useEffect(() => {
+//     getConference();
+//   }, []);
+//   const handleSubmit = async (e) => {
+//     e.preventDefault(); // Prevent the default form submission
+//     const token = localStorage.getItem("token");
+
+//     const formData = new FormData();
+//     if (conferenceId?.value) {
+//       formData.append("conference_id", conferenceId?.value);
+//     } else {
+//       formData.append("conference_id", "");
+//     }
+//     formData.append("title", title);
+//     formData.append("description", description);
+//     formData.append("location", location);
+//     formData.append("start_date", startDate);
+//     formData.append("end_date", endDate);
+//     formData.append("image", exhibitionImages);
+//     try {
+//       const response = await axios.post(`${BaseUrl}/exhibitions`, formData, {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       toast.success("The Data updated Successfully");
+//       setIsOpen(false);
+//       setTitle("");
+//       setDescription("");
+//       setLocation("");
+//       setStartDate("");
+//       setEndDate("");
+//       setExhibitionImages(null);
+//       getExhibitions();
+//     } catch (error) {
+//       if (error.response) {
+//       } else {
+//         setErrorMsg("An error occurred. Please try again.");
+//       }
+//     }
+//   };
+
+//   return (
+//     <form className="exhibition-form-container" onSubmit={handleSubmit}>
+//       <div className="header-exhibition-form">Add New Exhibition</div>
+//       <div className="form-section">
+//         <Select
+//           options={allConference}
+//           value={conferenceId}
+//           setValue={setConferenceId}
+//           label="Conference Id"
+//           errorMsg={""}
+//         />
+//         <Input
+//           label="Exhibition Title"
+//           inputValue={title}
+//           setInputValue={setTitle}
+//           required={true}
+//           errorMsg={errorMsg}
+//           placeholder="Enter Exhibition Title"
+//         />
+
+//         <Input
+//           label="Description"
+//           inputValue={description}
+//           setInputValue={setDescription}
+//           required={false}
+//           errorMsg={errorMsg}
+//           placeholder="Enter a brief description"
+//         />
+
+//         <Input
+//           label="Exhibition Location"
+//           inputValue={location}
+//           setInputValue={setLocation}
+//           required={true}
+//           errorMsg={errorMsg}
+//           placeholder="Enter Exhibition Location"
+//         />
+
+//         <DateInput
+//           label="Start Date"
+//           inputValue={startDate}
+//           setInputValue={setStartDate}
+//           type="date"
+//           required={true}
+//           errorMsg={errorMsg}
+//         />
+//         <DateInput
+//           label="End Date"
+//           inputValue={endDate}
+//           setInputValue={setEndDate}
+//           type="date"
+//           required={false}
+//           errorMsg={errorMsg}
+//         />
+
+//         <ImageUpload
+//           label="Exhibition Images"
+//           inputValue={exhibitionImages}
+//           setInputValue={setExhibitionImages}
+//           allowedExtensions={["jpg", "jpeg", "png"]}
+//           errorMsg={errorMsg}
+//         />
+//       </div>
+
+//       <div className="actions-section-container">
+//         <button
+//           className="cancel-btn"
+//           onClick={() => {
+//             setIsOpen(false);
+//           }}
+//         >
+//           Cancel
+//         </button>
+//         <button className="submit-btn" type="submit">
+//           Submit
+//         </button>
+//       </div>
+//     </form>
+//   );
+// };
 const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [status, setStatus] = useState([]);
-  const [exhibitionImages, setExhibitionImages] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(""); // Manage error messages
+  const [exhibitionImages, setExhibitionImages] = useState([]); // إدارة الصور كصفيف
+  const [errorMsg, setErrorMsg] = useState("");
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState([]);
+  const [exhibitionImage, setExhibitionImage] = useState("");
+  //
   const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const getConference = () => {
@@ -31,35 +188,56 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
     axios
       .get(url)
       .then((response) => {
-        setAllConference(
-          response.data.data?.map((item) => {
+        setAllConference([
+          { label: "None", value: null },
+          ...response.data.data?.map((item) => {
             return { label: item?.title, value: item?.id };
-          })
-        );
-        console.log(
-          response.data.data?.map((item) => {
-            return { label: item?.title, value: item?.id };
-          })
-        );
+          }),
+        ]);
       })
       .catch((error) => {});
   };
+
   useEffect(() => {
     getConference();
   }, []);
+
+  const handleImageChange = (index, file) => {
+    const updatedImages = [...exhibitionImages];
+    updatedImages[index] = file;
+    setExhibitionImages(updatedImages);
+  };
+
+  const addImageField = () => {
+    setExhibitionImages([...exhibitionImages, null]);
+  };
+
+  const removeImageField = (index) => {
+    const updatedImages = exhibitionImages.filter((_, i) => i !== index);
+    setExhibitionImages(updatedImages);
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
     const token = localStorage.getItem("token");
 
     const formData = new FormData();
-    formData.append("conference_id", conferenceId?.value);
+    if (conferenceId?.value) {
+      formData.append("conference_id", conferenceId?.value);
+    } else {
+      formData.append("conference_id", "");
+    }
     formData.append("title", title);
     formData.append("description", description);
     formData.append("location", location);
     formData.append("start_date", startDate);
     formData.append("end_date", endDate);
-    formData.append("status", status);
-    formData.append("image", exhibitionImages);
+    formData.append("image", exhibitionImage);
+    exhibitionImages.forEach((image, index) => {
+      if (image) {
+        formData.append(`images[${index}]`, image);
+      }
+    });
 
     try {
       const response = await axios.post(`${BaseUrl}/exhibitions`, formData, {
@@ -68,19 +246,18 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      toast.success("The Data updated Successfully");
       setIsOpen(false);
       setTitle("");
       setDescription("");
       setLocation("");
       setStartDate("");
       setEndDate("");
-      setStatus("upcoming");
-      setExhibitionImages(null);
+      setExhibitionImages([]);
+      getExhibitions();
     } catch (error) {
-      if (error.response) {
-      } else {
-        setErrorMsg("An error occurred. Please try again.");
-      }
+      setErrorMsg("An error occurred. Please try again.");
     }
   };
 
@@ -103,7 +280,6 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
           errorMsg={errorMsg}
           placeholder="Enter Exhibition Title"
         />
-
         <Input
           label="Description"
           inputValue={description}
@@ -112,7 +288,13 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
           errorMsg={errorMsg}
           placeholder="Enter a brief description"
         />
-
+        <ImageUpload
+          label="Exhibition Images"
+          inputValue={exhibitionImage}
+          setInputValue={setExhibitionImage}
+          allowedExtensions={["jpg", "jpeg", "png"]}
+          errorMsg={errorMsg}
+        />
         <Input
           label="Exhibition Location"
           inputValue={location}
@@ -121,7 +303,6 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
           errorMsg={errorMsg}
           placeholder="Enter Exhibition Location"
         />
-
         <DateInput
           label="Start Date"
           inputValue={startDate}
@@ -138,26 +319,28 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
           required={false}
           errorMsg={errorMsg}
         />
-        <Select
-          label="Status"
-          value={status}
-          setValue={setStatus}
-          required={true}
-          placeholder="Select"
-          errorMsg={errorMsg}
-          options={[
-            { label: "upcoming", value: "upcoming" },
-            { label: "past", value: "past" },
-          ]}
-        />
 
-        <ImageUpload
-          label="Exhibition Images"
-          inputValue={exhibitionImages}
-          setInputValue={setExhibitionImages}
-          allowedExtensions={["jpg", "jpeg", "png"]}
-          errorMsg={errorMsg}
-        />
+        {exhibitionImages.map((_, index) => (
+          <div key={index} className="image-upload-container">
+            <ImageUpload
+              label={`Exhibition Image ${index + 1}`}
+              inputValue={exhibitionImages[index]}
+              setInputValue={(file) => handleImageChange(index, file)}
+              allowedExtensions={["jpg", "jpeg", "png"]}
+              errorMsg={errorMsg}
+            />
+            <button
+              type="button"
+              className="remove-image-btn"
+              onClick={() => removeImageField(index)}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <button className="submit-btn" type="button"  onClick={addImageField}>
+          Add Image
+        </button>
       </div>
 
       <div className="actions-section-container">
@@ -198,21 +381,6 @@ const Exhibitions = () => {
     setExhibitionData(exhibition);
   };
 
-  const getExhibitions2 = async () => {
-    try {
-      const response = await axios.get(`${BaseUrl}/exhibitions`, {
-        params: {
-          search: exhibitionName,
-          status: status?.value,
-          page: currentPage,
-        },
-      });
-      setTotalPages(response.data.total_pages);
-      setAllExhibitions(response.data.data); // Adjust according to your API response structure
-    } catch (err) {
-      console.error("Error fetching exhibitions:", err);
-    }
-  };
   const getExhibitions = async () => {
     try {
       await httpService({

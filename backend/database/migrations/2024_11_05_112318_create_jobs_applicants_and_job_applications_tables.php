@@ -54,8 +54,9 @@ class CreateJobsApplicantsAndJobApplicationsTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('job_applications');
+        Schema::dropIfExists('applicant_job'); // Drop this first to avoid FK issues
         Schema::dropIfExists('applicants');
-        Schema::dropIfExists('jobs');
+        Schema::dropIfExists('available_jobs');
     }
+    
 }

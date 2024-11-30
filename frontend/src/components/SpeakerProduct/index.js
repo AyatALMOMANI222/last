@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './style.scss';
-import { backendUrlImages } from '../../constant/config';
-import { useParams } from 'react-router-dom';
-const Speakers4 = () => {
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./style.scss";
+import { backendUrlImages } from "../../constant/config";
+import { useParams } from "react-router-dom";
+const Speakers4 = ({ conferenceId }) => {
   const [speakers, setSpeakers] = useState([]);
   const BaseUrl = process.env.REACT_APP_BASE_URL;
-const {conferenceId} =useParams()
   useEffect(() => {
     axios
       .get(`${BaseUrl}/speakers/all/${conferenceId}`)
@@ -14,7 +13,7 @@ const {conferenceId} =useParams()
         setSpeakers(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       });
   }, []);
 

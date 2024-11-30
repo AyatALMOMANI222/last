@@ -16,7 +16,6 @@ import httpService from "../../../common/httpService";
 import TicketPricingForm from "../TicketPricingForm";
 
 const FlightDetails = ({ data }) => {
-
   return (
     <div className="view-main-user-flight">
       <SimpleLabelValue
@@ -28,14 +27,16 @@ const FlightDetails = ({ data }) => {
       <SimpleLabelValue label="Arrival Date" value={data?.arrival_date} />
       <SimpleLabelValue label="Flight Number" value={data?.flight_number} />
       <SimpleLabelValue label="Seat Preference" value={data?.seat_preference} />
-      <SimpleLabelValue label="Upgrade Class" value={data?.upgrade_class} />
+      <SimpleLabelValue
+        label="Upgrade Class"
+        value={data?.upgrade_class ? "yes" : "No"}
+      />
       <SimpleLabelValue label="Ticket Count" value={data?.ticket_count} />
       <SimpleLabelValue
         label="Additional Requests"
         value={data?.additional_requests}
       />
       <SimpleLabelValue label="Passenger Name" value={data?.passenger_name} />
-      <SimpleLabelValue label="Is Free" value={data?.is_free ? "Yes" : "No"} />
       <SimpleLabelValue
         label="Specific Flight Time"
         value={data?.specific_flight_time}
@@ -47,7 +48,7 @@ const FlightDetails = ({ data }) => {
 const FlightInformation = ({ member, index }) => {
   const { currentStep, completeStep, passportImage, flightMembers } =
     useFlightStepperAdmin();
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   // State to manage an array of trips
   const [trips, setTrips] = useState([
@@ -113,8 +114,6 @@ const FlightInformation = ({ member, index }) => {
       showLoader: false,
       withToast: false,
     });
-
-    console.log({ response });
   };
 
   const handleSavePrice = async (data) => {
@@ -246,7 +245,7 @@ const FlightInformation = ({ member, index }) => {
                   type="number"
                   required={true}
                 />
-                <div className="check-in-input-container">
+                {/* <div className="check-in-input-container">
                   <Checkbox
                     label="Is Free?"
                     checkboxValue={trip.is_free}
@@ -258,7 +257,7 @@ const FlightInformation = ({ member, index }) => {
                     icon={""}
                     errorMsg={""}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           ))}

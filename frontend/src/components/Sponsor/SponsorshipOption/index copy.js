@@ -290,7 +290,7 @@ const SponsorSection = () => {
       conference_sponsorship_option_ids: selectedSponsorshipIds,
       booth_cost_ids: chosenBooths,
       sponsorship_option_ids: selectedOptionIds,
-      conference_id: myConferenceId,
+      conference_id: 1,
       additional_cost_for_shell_scheme_booth: shellSchemeSelected,
       exhibit_number: exhibitNumber,
     };

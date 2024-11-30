@@ -242,6 +242,17 @@
     &::-webkit-scrollbar-thumb:hover {
       background: var(--scrollbar-thumb-hover-color);
     }
+    .image-upload-container{
+      .remove-image-btn{
+padding: 5px 10px;
+border: none;
+background-color: #c82333;
+color: white;
+font-weight: 300;
+margin-top: 5px;
+border-radius: 5px;
+}
+    }
   }
   .actions-section-container {
     height: 64px;

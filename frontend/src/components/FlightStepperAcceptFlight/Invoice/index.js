@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
+import httpService from "../../../common/httpService";
+import { toast } from "react-toastify";
 
 const Invoice = () => {
   const [flightTrips, setFlightTrips] = useState([]);
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const [invoices, setInvoices] = useState([]);
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
+  // Fetch flight data from localStorage
   const getFlights = () => {
     const trips = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -21,129 +25,73 @@ const Invoice = () => {
     return trips;
   };
 
-  const fetchFlightDetails = async (flightId) => {
+  // Fetch invoice data from API
+  const getInvoice = async () => {
+    const getAuthToken = () => localStorage.getItem("token");
+    const flights = getFlights();
+    const ids = flights.map((item) => item?.flight_id);
     try {
-      const response = await fetch(
-        `${BaseUrl}/flight/id/${flightId}`
-      );
-      const data = await response.json();
+      const data = await httpService({
+        method: "POST",
+        url: `${BaseUrl}/invoice/flight`,
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+        showLoader: true,
+        data: {
+          flight_id: ids,
+        },
+        withToast: true,
+        onError: (error) => {
+          toast.error("Failed to submit the form: " + error);
+        },
+      });
+      console.log(data?.invoices);
 
-      // Calculate individual costs
-      const baseTicketPrice = parseFloat(data.base_ticket_price || 0);
-      const businessClassUpgradeCost = data.upgrade_class
-        ? parseFloat(data.business_class_upgrade_cost || 0)
-        : 0;
-      const reservedSeatCost = data.seat_preference
-        ? parseFloat(data.reserved_seat_cost || 0)
-        : 0;
-      const otherAdditionalCosts = parseFloat(data.other_additional_costs || 0);
-      const totalCost = data.is_free
-        ? 0
-        : baseTicketPrice +
-          businessClassUpgradeCost +
-          reservedSeatCost +
-          otherAdditionalCosts;
-
-      return {
-        ...data,
-        baseTicketPrice,
-        businessClassUpgradeCost,
-        reservedSeatCost,
-        otherAdditionalCosts,
-        totalCost,
-      };
+      setInvoices(data?.invoices);
     } catch (error) {
-      console.error("Error fetching flight data:", error);
-      return null;
+      console.error("Error submitting form:", error);
     }
   };
 
   useEffect(() => {
-    const loadFlightData = async () => {
-      const flights = getFlights();
-      console.log({ flights });
-
-      const detailedFlights = await Promise.all(
-        flights.map(async (flight) => {
-          const flightDetails = await fetchFlightDetails(flight.flight_id);
-          return { ...flightDetails, ...flight };
-        })
-      );
-      console.log({ detailedFlights });
-
-      setFlightTrips(detailedFlights);
-    };
-
-    loadFlightData();
+    getInvoice();
   }, []);
-
-  const totalPayment = flightTrips.reduce((total, flight) => {
-    console.log(flight.price);
-
-    return (
-      total +
-      (flight.upgrade_class ? flight.businessClassUpgradeCost : 0) +
-      (flight.seat_preference ? flight.reservedSeatCost : 0) +
-      flight.otherAdditionalCosts +
-      Number(flight.price)
-    );
-  }, 0);
 
   return (
     <div className="invoice">
-      <h2 className="invoice__title">Invoice</h2>
-      {flightTrips.length === 0 ? (
-        <p className="invoice__message">No flights available</p>
-      ) : (
-        <table className="invoice__table">
-          <thead>
-            <tr>
-              <th>Flight ID</th>
-              <th>Departure Date</th>
-              <th>Departure Time</th>
-              <th>Base Price</th>
-              <th>Business Class Upgrade</th>
-              <th>Reserved Seat Cost</th>
-              <th>Other Additional Costs</th>
-              <th>Total Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {flightTrips.map((flight, index) => (
-              <tr key={index} className="invoice__row">
-                <td>{flight.flight_id}</td>
-                <td>{flight.departure_date}</td>
-                <td>{flight.specific_flight_time}</td>
-                <td>${flight.price}</td>
-                <td>
-                  ${flight.upgrade_class ? flight.businessClassUpgradeCost : 0}
-                </td>
-                <td>${flight.seat_preference ? flight.reservedSeatCost : 0}</td>
-                <td>${flight.otherAdditionalCosts}</td>
-                <td>
-                  $
-                  {Number(flight.price) +
-                    Number(
-                      flight.upgrade_class ? flight.businessClassUpgradeCost : 0
-                    ) +
-                    Number(
-                      flight.seat_preference ? flight.reservedSeatCost : 0
-                    ) +
-                    Number(flight.otherAdditionalCosts)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      <h3 className="invoice__total">
-        Total: ${totalPayment}
-        {/* Total payment corrected */}
-      </h3>
+      <h2 className="invoice__title">Invoice Details</h2>
+
+      <div className="invoice__list">
+        {invoices?.length > 0 ? (
+          invoices?.map((invoice) => (
+            <div key={invoice.id} className="invoice__item">
+              <div className="invoice__item-header">
+                <h3 className="invoice__flight-id">
+                  Flight ID: {invoice.flight_id}
+                </h3>
+                <span className={`invoice__status ${invoice.status}`}>
+                  {invoice.status}
+                </span>
+              </div>
+              <div className="invoice__details">
+                <p className="invoice__total-price">
+                  Total Price: ${invoice.total_price}
+                </p>
+                <p className="invoice__date">
+                  Created on: {new Date(invoice.created_at).toLocaleString()}
+                </p>
+                <p className="invoice__date">
+                  Last updated: {new Date(invoice.updated_at).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="invoice__no-data">No invoices available.</p>
+        )}
+      </div>
+
       <div className="actions-section">
-        <button className="next-button" onClick={() => {}} disabled={false}>
-          Pay
-        </button>
+        <button className="next-button">Pay</button>
       </div>
     </div>
   );

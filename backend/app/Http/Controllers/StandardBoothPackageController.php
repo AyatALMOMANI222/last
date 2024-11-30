@@ -38,7 +38,8 @@ class StandardBoothPackageController extends Controller
         if ($boothPackages->isEmpty()) {
             return response()->json([
                 'message' => 'No booth packages found for this conference.',
-            ], 404);
+                'data' => [] // إرجاع مصفوفة فارغة
+            ], 200); // استجابة ناجحة
         }
 
         // عرض خطط الأرضية لجميع السجلات

@@ -10,10 +10,14 @@ function SideMenu() {
       label: "Home",
       icon: "🏠",
       children: [
+        { label: "Home", path: "/home" },
+
+        { label: "Conferences", path: "/conferences" },
+        { label: "Exhibitions", path: "/page/exhibitions" },
         { label: "Our Story", path: "/about_us" },
         { label: "Team", path: "/our_team" },
         { label: "Clients", path: "/our_clients" },
-        { label: "Gallery", path: "#" },
+        { label: "Gallery", path: "/gallery" },
         { label: "Careers", path: "/job/list" },
         { label: "FAQs", path: "/faq" },
       ],
@@ -84,7 +88,6 @@ function SideMenu() {
         { label: "All Trips", path: "/view-user-trips" },
         { label: "Airport Transfer Price", path: "/airport/transfer/price" },
         { label: "Gala Dinner", path: "/gala/dinner" },
-        
       ],
     },
     ...(isAdmin
@@ -103,24 +106,32 @@ function SideMenu() {
               },
               { label: "Gala Dinner", path: "/gala/dinner" },
 
-             
               { label: "Create Job", path: "/job" },
               { label: "Messages", path: "/msgs" },
               { label: "Job Applicants", path: "/job/admin" },
-              { label: "Sponsor Option Form", path: "/sponsor/option/form" },
+              { label: "Pending Users", path: "/user" },
               { label: "Users", path: "/pending/users" },
               { label: "Enter new flights", path: "/enter/new/flights" },
-              
+            ],
+          },
+        ]
+      : []),
+    ...(isAdmin
+      ? [
+          {
+            label: "Admin Sponsor",
+            icon: "👨‍💻",
+            children: [
               {
-                label: "Admin Sponsorship Packages",
+                label: "Sponsorship Packages",
                 path: "/sponsor/admin/add/table",
               },
               {
-                label: "Admin Sponsorship Option",
+                label: "Sponsorship Option",
                 path: "/sponsor/option/form",
               },
               {
-                label: "Admin Booth Cost",
+                label: "Booth Cost",
                 path: "/sponsor/admin/booth/cost",
               },
             ],

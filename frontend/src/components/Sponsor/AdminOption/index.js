@@ -15,7 +15,7 @@ const SponsorshipForm = () => {
   const [error, setError] = useState(null);
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState("");
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const token = localStorage.getItem("token");
 
@@ -55,7 +55,7 @@ const SponsorshipForm = () => {
     }
     setLoading(true);
     setError(null);
-
+  
     try {
       const response = await axios.post(
         `${BaseUrl}/sponsorship-options/${conferenceId.value}`,
@@ -70,8 +70,15 @@ const SponsorshipForm = () => {
           },
         }
       );
-
+  
       toast.success("Sponsorship option created successfully");
+  
+      // Reset fields after successful submission
+      setTitle("");
+      setDescription("");
+      setPrice("");
+      setConferenceId(""); // Reset selected conference
+  
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -79,31 +86,28 @@ const SponsorshipForm = () => {
       toast.error("Error submitting data");
     }
   };
+  
 
   return (
     <div className="sponsorship-form-container">
-      <h2>Add a New Sponsorship Option</h2>
-      <Select
-        options={allConference}
-        value={conferenceId}
-        setValue={setConferenceId}
-        label="Conference "
-        placeholder="Select..."
-        
-      />
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleSubmit} className="sponsorship-form">
-        <div className="form-group">
+      <h2 className="add-new-Sponsorship">Add a New Sponsorship Option</h2>
 
+      <form onSubmit={handleSubmit} className="sponsorship-form">
+        <div className="sponsorship-sec">
+          <Select
+            options={allConference}
+            value={conferenceId}
+            setValue={setConferenceId}
+            label="Conference "
+            placeholder="Select..."
+          />
           <Input
-          label="Title"
+            label="Title"
             placeholder="Enter title"
             inputValue={title}
             setInputValue={setTitle}
             required
           />
-        </div>
-        <div className="form-group">
 
           <TextArea
             label="Description"
@@ -113,9 +117,13 @@ const SponsorshipForm = () => {
             type="text"
             required
           />
-        </div>
-        <div className="form-group">
-          <Input label="Price" inputValue={price} setInputValue={setPrice} placeholder="Enter price" required />
+          <Input
+            label="Price"
+            inputValue={price}
+            setInputValue={setPrice}
+            placeholder="Enter price"
+            required
+          />
         </div>
         <button type="submit" disabled={loading} className="submit-btn">
           {loading ? "Submitting..." : "Submit"}

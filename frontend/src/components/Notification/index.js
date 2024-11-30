@@ -17,7 +17,7 @@ const NotificationDropdown = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -156,37 +156,31 @@ const NotificationDropdown = () => {
                   )
                 ) {
                   navigate(`/add/excel`);
-                }
-                else if (
+                } else if (
                   notification?.message?.includes(
                     "Check available flights on the website and select your option to proceed."
                   )
                 ) {
                   navigate(`/flight/form`);
-                }
-          
-                else if (
+                } else if (
                   notification?.message?.includes(
                     "We are pleased to inform you that your profile is now active"
                   )
                 ) {
                   navigate(`/speaker/profile`);
-                } 
-                else if (
+                } else if (
                   notification?.message?.includes(
                     "A new Abstract has been added "
                   )
                 ) {
-                  navigate(`/abs/${notification?.register_id}/${notification?.conference_id}`);
+                  navigate(
+                    `/abs/${notification?.register_id}/${notification?.conference_id}`
+                  );
+                } else if (
+                  notification?.message?.includes("New sponsor registration")
+                ) {
+                  navigate(`/pending/users`);
                 }
-                // else if (
-                //   notification?.message?.includes(
-                //     "New sponsor registration"
-                //   )
-                // ) {
-                //   navigate(`/group/update/admin/${notification?.register_id}`);
-                // }
-
               }}
             >
               {/* <span className="notification-dot"></span> */}

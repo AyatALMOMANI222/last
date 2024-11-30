@@ -69,6 +69,15 @@ const PendingUsersTable = () => {
                 setSponserData(sponsor);
                 setIsDialogOpen(true);
               }
+              else if (user?.registration_type === "group_registration") {
+                console.log({ user });
+                const sponsor = {
+                  user_id: user?.id,
+                  conference_id: user?.conference_id,
+                };
+                navigate(
+                  `/group/update/admin/${user.id}`
+                );              }
             }}
             disabled={user?.status !== "pending"}
           >
