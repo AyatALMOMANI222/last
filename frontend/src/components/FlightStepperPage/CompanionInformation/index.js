@@ -13,7 +13,7 @@ import "./style.scss";
 import { useNavigate } from "react-router-dom";
 
 const FlightInformation = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const initialValue = {
     name: "",
     arrivalDate: "",
@@ -28,7 +28,7 @@ const FlightInformation = () => {
     otherRequests: "",
     upgradeClass: false,
   };
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const { passportImage } = useFlightStepper();
   const [companions, setCompanions] = useState([initialValue]);
@@ -117,7 +117,6 @@ const FlightInformation = () => {
   //   return formData;
   // }
 
-
   const formatFlightDataToFormData = (flights) => {
     const formData = new FormData();
     flights.forEach((flight, index) => {
@@ -140,7 +139,7 @@ const FlightInformation = () => {
       data: formData,
       onSuccess: () => {
         // toast.success("Flights created successfully!");
-        navigate("/reservation/form")
+        navigate("/reservation/form");
       },
       onError: () => {
         toast.error("Failed to create flights");
@@ -158,6 +157,20 @@ const FlightInformation = () => {
     ];
     submitFlightData(data);
   };
+  const isCompanionFormValid = (companion) => {
+    return (
+      companion.name &&
+      companion.arrivalDate &&
+      companion.departureDate &&
+      companion.passportImage &&
+      companion.departureAirport &&
+      companion.returnAirport
+    );
+  };
+
+  const isSubmitDisabled = companions.some(
+    (companion) => !isCompanionFormValid(companion)
+  );
 
   return (
     <div>
@@ -301,12 +314,13 @@ const FlightInformation = () => {
       </div>
       <div className="actions-section">
         <button
-          className="next-button"
+          className={`next-button ${isSubmitDisabled ? "disabled" : ""}`}
           onClick={() => {
             handleSubmit();
           }}
+          disabled={isSubmitDisabled}
         >
-          Next
+          Submit
         </button>
       </div>
     </div>

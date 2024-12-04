@@ -13,12 +13,17 @@ import "./style.scss";
 import { useNavigate } from "react-router-dom";
 
 const FlightInformation = () => {
-  const navigate = useNavigate()
-  const { currentStep, completedSteps, setCurrentStep, completeStep , passportImage, setPassportImage } =
-    useFlightStepper();
+  const navigate = useNavigate();
+  const {
+    currentStep,
+    completedSteps,
+    setCurrentStep,
+    completeStep,
+    passportImage,
+    setPassportImage,
+  } = useFlightStepper();
   const [arrivalDate, setArrivalDate] = useState("");
   const [departureDate, setDepartureDate] = useState("");
-  // const [passportImage, setPassportImage] = useState(null);
   const [departureAirport, setDepartureAirport] = useState("");
   const [returnAirport, setReturnAirport] = useState("");
   const [specificFlightTime, setSpecificFlightTime] = useState(false);
@@ -47,11 +52,11 @@ const FlightInformation = () => {
       ticketCount,
     };
     completeStep(currentStep);
-console.log({passportImage});
+    console.log({ passportImage });
 
     saveToLocalStorage("flightDetails", formData);
-
   };
+
   useEffect(() => {
     const data = getFromLocalStorage("flightDetails");
     if (data) {
@@ -68,6 +73,15 @@ console.log({passportImage});
       setTicketCount(data?.ticketCount);
     }
   }, []);
+
+  // Disable button logic: check if any required field is empty
+  const isSubmitDisabled =
+    !arrivalDate ||
+    !departureDate ||
+    !passportImage ||
+    !departureAirport ||
+    !returnAirport ||
+    ticketCount <= 0;
 
   return (
     <div>
@@ -183,11 +197,11 @@ console.log({passportImage});
 
       <div className="actions-section">
         <button
-          className={`next-button ${false ? "disabled" : ""}`}
+          className={`next-button ${isSubmitDisabled ? "disabled" : ""}`}
           onClick={() => {
             handleSubmit();
           }}
-          disabled={false}
+          disabled={isSubmitDisabled}
         >
           Submit
         </button>

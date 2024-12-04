@@ -104,6 +104,7 @@ class TripController extends Controller
                 'group_price_per_person' => 'required|numeric',
                 'group_price_per_speaker' => 'nullable|numeric',
                 'trip_details' => 'required|string',
+                'group_accompanying_price' => 'nullable|numeric'
             ]);
 
             // إنشاء الرحلة الجديدة
@@ -116,6 +117,7 @@ class TripController extends Controller
                 'group_price_per_person' => $validatedData['group_price_per_person'],
                 'group_price_per_speaker' => $validatedData['group_price_per_speaker'],
                 'trip_details' => $validatedData['trip_details'],
+                'group_accompanying_price'=> $validatedData['group_accompanying_price'],
             ]);
 
             return response()->json(['message' => 'Trip added successfully', 'trip' => $trip], 201);
@@ -125,32 +127,41 @@ class TripController extends Controller
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
-
-    public function getAllTrips(Request $request)
+    public function getGroupTrips($conferenceId)
     {
         try {
-            // استرجاع جميع الرحلات مع إمكانية التصفية
-            $query = Trip::query();
-
-            // تصفية حسب نوع الرحلة إذا تم توفيره
-            if ($request->has('trip_type')) {
-                $query->where('trip_type', $request->input('trip_type'));
-            }
-
-            // تصفية حسب اسم الرحلة إذا تم توفيره
-            if ($request->has('name')) {
-                $query->where('name', 'like', '%' . $request->input('name') . '%');
-            }
-
-            // استرجاع الرحلات
-            $trips = $query->get();
-
+            // استرجاع جميع الرحلات التي نوعها group و conference_id مطابق للمعطى
+            $trips = Trip::where('trip_type', 'group')
+                         ->where('conference_id', $conferenceId) // شرط conference_id
+                         ->get();
+    
             return response()->json(['trips' => $trips], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
+    
 
+    public function getAllTrips(Request $request)
+    {
+        try {
+            // استرجاع جميع الرحلات الخاصة فقط
+            $query = Trip::where('trip_type', 'private');
+    
+            // تصفية حسب اسم الرحلة إذا تم توفيره
+            if ($request->has('name')) {
+                $query->where('name', 'like', '%' . $request->input('name') . '%');
+            }
+    
+            // استرجاع الرحلات
+            $trips = $query->get();
+    
+            return response()->json(['trips' => $trips], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+        }
+    }
+    
     public function getTripById($id)
     {
         try {

@@ -171,9 +171,46 @@ class SpeakerController extends Controller
     }
     
     
-
-
-
+    public function getSpeakerByConferenceId($conference_id)
+    {
+        try {
+            // الحصول على الـ user_id من التوكن
+            $user_id = Auth::id(); // أو إذا كنت تستخدم JWT، يمكنك استخدام JWT facade أو middleware
+    
+            // التحقق إذا كان المستخدم مسجل الدخول
+            if (!$user_id) {
+                return response()->json([
+                    'error' => 'User not authenticated.'
+                ], 401); // Unauthorized
+            }
+    
+            // Find the speaker based on user_id and conference_id
+            $speaker = Speaker::where('user_id', $user_id)
+                              ->where('conference_id', $conference_id)
+                              ->first();
+    
+            // Check if the speaker exists
+            if (!$speaker) {
+                return response()->json([
+                    'error' => 'Speaker not found for this user and conference.'
+                ], 404); // Resource not found
+            }
+    
+            // Return the speaker details
+            return response()->json([
+                'message' => 'Speaker found successfully.',
+                'speaker' => $speaker,
+            ], 200); // Success response
+    
+        } catch (\Exception $e) {
+            // Handle unexpected errors
+            return response()->json([
+                'error' => 'An unexpected error occurred. Please try again.',
+                'details' => $e->getMessage(),
+            ], 500); // Internal server error
+        }
+    }
+    
 
     // هنا ياخذ user_id من التوكن يعدل لنفسه 
     public function updateOnlineParticipation(Request $request)

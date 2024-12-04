@@ -15,11 +15,14 @@ class CreateInvoiceFlightsTable extends Migration
     {
         Schema::create('invoice_flights', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('flight_id')->constrained('flights')->onDelete('cascade');
-            $table->decimal('total_price', 10, 2); // Assuming total price is a decimal
-            $table->string('status'); // You can change this type if needed
+            $table->unsignedBigInteger('flight_id'); // تأكد من أن العمود flight_id من نفس النوع كالعمود id في جدول flights
+            $table->foreign('flight_id')->references('flight_id')->on('flights')->onDelete('cascade'); // القيد الخارجي
+            $table->decimal('total_price', 10, 2); // السعر الإجمالي
+            $table->string('status'); // الحالة
             $table->timestamps();
         });
+        
+        
     }
 
     /**

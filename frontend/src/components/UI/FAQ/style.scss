@@ -1,92 +1,113 @@
-$max-width: 800px; // عرض أقصى للعنصر
-$background-color: #f9f9f9; // لون الخلفية
-$text-color: #333; // لون النص
-$subheading-color: #ef233c; // لون العنوان الفرعي
-$hover-color: #555; // لون عند التمرير
-$padding: 20px; // حشوة
-$margin: 15px; // هامش بين العناصر
-$border-radius: 10px; // نصف قطر الحدود
+$max-width: 800px;
+$background-color: #f9f9f9;
+$text-color: #333;
+$subheading-color: #ef233c;
+$hover-color: #555;
+$padding: 20px;
+$margin: 15px;
+$border-radius: 10px;
 
-.faq-container {
-  max-width: $max-width; 
-  margin: 20px auto; // إضافة هامش أعلى وأسفل 
-  padding: $padding; 
-  font-family: Arial, sans-serif; 
-  background-color: $background-color; 
-  border-radius: $border-radius; 
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); // تحسين ظل الصندوق
+.faq-container-section {
+  height: calc(100vh - 58px);
+  overflow: overlay;
+  overflow-x: hidden;
 
-  h1 {
-    text-align: center; 
-    color: $text-color; 
-    margin-bottom: $margin; // استخدام متغير الهامش
+  &::-webkit-scrollbar {
+    width: 3px;
   }
 
-  h2 {
-    color: $subheading-color; 
-    margin-top: $margin; 
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
   }
 
-  h3 {
-    color: $hover-color; 
-    margin: $margin 0 5px; // استخدام متغير الهامش
-    cursor: pointer; // تغيير شكل المؤشر عند التمرير
-
-    &:hover {
-      text-decoration: underline; // خط تحت العنوان عند التمرير
-    }
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
   }
 
-  p,
-  ul,
-  ol {
-    line-height: 1.6; 
-    margin: $margin 0; // استخدام متغير الهامش
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
   }
 
-  ul,
-  ol {
-    padding-left: 20px; 
-  }
-
-  li {
-    margin-bottom: 5px; 
-  }
-
-  // استعلامات الوسائط لجعل التصميم ريسبونسف
-  @media (max-width: 768px) {
-    padding: 15px; // تقليل الحشوة في الشاشات الصغيرة
+  .faq-container {
+    max-width: $max-width;
+    margin: 20px auto;
+    padding: $padding;
+    font-family: Arial, sans-serif;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
     h1 {
-      font-size: 1.5em; // حجم خط أصغر
+      text-align: center;
+      color: $text-color;
+      margin-bottom: $margin;
     }
 
     h2 {
-      font-size: 1.2em; // حجم خط أصغر
+      color: $subheading-color;
+      margin-top: $margin;
     }
 
     h3 {
-      font-size: 1em; // حجم خط أصغر
-    }
-  }
+      color: $hover-color;
+      margin: $margin 0 5px;
+      cursor: pointer;
 
-  @media (max-width: 480px) {
-    padding: 10px; // تقليل الحشوة أكثر للشاشات الأصغر
-
-    h1 {
-      font-size: 1.2em; // حجم خط أصغر
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
-    h2 {
-      font-size: 1.1em; // حجم خط أصغر
+    p,
+    ul,
+    ol {
+      line-height: 1.6;
+      margin: $margin 0;
     }
 
-    h3 {
-      font-size: 0.9em; // حجم خط أصغر
+    ul,
+    ol {
+      padding-left: 20px;
     }
 
-    p {
-      font-size: 0.9em; // حجم خط أصغر
+    li {
+      margin-bottom: 5px;
+    }
+
+    @media (max-width: 768px) {
+      padding: 15px;
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      h2 {
+        font-size: 1.2em;
+      }
+
+      h3 {
+        font-size: 1em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      padding: 10px;
+
+      h1 {
+        font-size: 1.2em;
+      }
+
+      h2 {
+        font-size: 1.1em;
+      }
+
+      h3 {
+        font-size: 0.9em;
+      }
+
+      p {
+        font-size: 0.9em;
+      }
     }
   }
 }

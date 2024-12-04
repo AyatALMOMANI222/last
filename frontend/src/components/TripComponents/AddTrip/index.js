@@ -36,7 +36,7 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
   const [conferenceId, setConferenceId] = useState(0);
 
   const getConference = () => {
-    const url = `${BaseUrl}/con`;
+    const url = `${BaseUrl}/conferences/all`;
     axios
       .get(url)
       .then((response) => {

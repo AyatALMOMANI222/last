@@ -114,6 +114,8 @@ const NavBar = () => {
               { label: "Sponsor Option Form", url: "/sponsor/option/form" },
               { label: "Users", url: "/pending/users" },
               { label: "Enter new flights", url: "/enter/new/flights" },
+              { label: "Dinner Table Speaker static", url: "/table/dinner/speaker/1" },
+
               {
                 label: "Admin Sponsorship Packages",
                 url: "/sponsor/admin/add/table",

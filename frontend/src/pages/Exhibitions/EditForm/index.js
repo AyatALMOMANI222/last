@@ -31,7 +31,7 @@ const EditExhibitionForm = ({ setIsOpen, getExhibitions, exhibitionData }) => {
     },
   ];
   const getConference = () => {
-    const url = `${BaseUrl}/con`;
+    const url = `${BaseUrl}/conferences/all`;
     axios
       .get(url)
       .then((response) => {

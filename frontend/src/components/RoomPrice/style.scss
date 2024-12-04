@@ -1,0 +1,115 @@
+.prices-form-room {
+  height: calc(100vh - 58px);
+  overflow: overlay;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
+  .room-prices-form {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-container {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+  }
+
+  .form-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .submit-btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
+  .submit-btn {
+    margin-right: 30px;
+    width: 200px;
+    height: 45px;
+    background-color: #cc0000; // Red background
+    color: #fff; // White text color
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    // transition: background-color 0.3s ease, transform 0.2s ease;
+  
+    &:hover {
+      background-color: #cc0000; // Darker red on hover
+    }
+  
+    &:active {
+      background-color: #990000; // Even darker red on active
+      transform: scale(0.98); // Slightly shrink the button on click
+    }
+    &.disabled {
+      background-color: #d6d6d6;
+      color: #a1a1a1;
+      cursor: not-allowed;
+      opacity: 0.7;
+      &:hover {
+        background-color: #d6d6d6;
+      }
+    }
+  }
+
+  .submit-btn:hover {
+    background-color: #3f4e92;
+  }
+
+  .submit-btn:focus {
+    outline: none;
+  }
+
+  @media (max-width: 768px) {
+    .room-prices-form {
+      padding: 20px;
+    }
+
+    .form-container {
+      padding: 20px;
+    }
+
+    .form-title {
+      font-size: 1.4rem;
+    }
+
+    .submit-btn {
+      padding: 10px 20px;
+    }
+  }
+}

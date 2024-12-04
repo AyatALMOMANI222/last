@@ -19,30 +19,29 @@ const GalaDinner = ({ isOpen, setIsOpen }) => {
   const [dressCode, setDressCode] = useState("");
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState("");
-const token= localStorage.getItem("token")
-const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const token = localStorage.getItem("token");
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const getConference = () => {
-    const url = `${BaseUrl}/con/upcoming`;
+    const url = `${BaseUrl}/conferences/all`;
 
     axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${token}` // مرر الـ token هنا
-      }
-    })
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`, // مرر الـ token هنا
+        },
+      })
       .then((response) => {
         console.log(response);
 
         setAllConference(
-          response.data.upcoming_conferences?.map((item) => {
+          response.data.data?.map((item) => {
             return { label: item?.title, value: item?.id };
           })
         );
       })
       .catch((error) => {});
   };
-console.log(allConference);
 
   useEffect(() => {
     getConference();

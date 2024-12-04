@@ -3,6 +3,8 @@ import axios from "axios";
 import Input from "../../CoreComponent/Input";
 import Checkbox from "../../CoreComponent/Checkbox";
 import "./style.scss"; // Import the Sass file
+import { useAuth } from "../../common/AuthContext";
+import { toast } from "react-toastify";
 
 const DinnerDetails = () => {
   const [dinnerDetail, setDinnerDetail] = useState(null);
@@ -14,16 +16,18 @@ const DinnerDetails = () => {
   const [companionDinnerPrice, setCompanionDinnerPrice] = useState(""); // State for guest price
   const BaseUrl = process.env.REACT_APP_BASE_URL;;
 
-  const conferenceId = localStorage.getItem("conId");
 
-  console.log("conferenceId:", conferenceId);
+  const {myConferenceId} = useAuth();
 
-  useEffect(() => {
+
     const fetchDinnerDetails = async () => {
+      if(!myConferenceId){
+        return;
+      }
       const token = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          `${BaseUrl}/dinners/conference/${conferenceId}`,
+          `${BaseUrl}/dinners/conference/${myConferenceId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -37,17 +41,17 @@ const DinnerDetails = () => {
         setLoading(false); // Set loading to false regardless of success or failure
       }
     };
-
+    useEffect(() => {
     fetchDinnerDetails();
-  }, [conferenceId]);
+  }, [myConferenceId]);
 
   const fetchConferenceDetails = async () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        `${BaseUrl}/con/id/${conferenceId}`
+        `${BaseUrl}/con/id/${myConferenceId}`
       );
-      setCompanionDinnerPrice(response?.data?.companion_dinner_price);
+      setCompanionDinnerPrice(response?.data?.conference.companion_dinner_price);
     } catch (error) {
       setError("Error fetching Conference details");
     }
@@ -61,7 +65,7 @@ const DinnerDetails = () => {
     const data = {
       companion_name: guestName,
       companion_price: companionDinnerPrice,
-      conference_id:conferenceId
+      conference_id:myConferenceId
     };
   
     try {
@@ -77,7 +81,8 @@ const DinnerDetails = () => {
       );
   
       console.log("Response:", response.data);
-      alert("Attendance confirmed successfully!");
+      // alert("Attendance confirmed successfully!");
+      toast.success("Attendance confirmed successfully!");
   
     } catch (error) {
       console.error("Error:", error.response ? error.response.data : error.message);
@@ -88,7 +93,7 @@ const DinnerDetails = () => {
   
   useEffect(() => {
     fetchConferenceDetails();
-  }, [conferenceId]);
+  }, [myConferenceId]);
 
   const handleGuestChange = (event) => {
     setHasGuest(event.target.checked); // Toggle guest state

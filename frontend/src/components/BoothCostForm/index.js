@@ -24,7 +24,7 @@ const BoothCostForm = () => {
 
   // Get upcoming conferences
   const getConference = () => {
-    const url = `${BaseUrl}/con/upcoming`;
+    const url = `${BaseUrl}/conferences/all`;
     axios
       .get(url, {
         headers: {
@@ -33,7 +33,7 @@ const BoothCostForm = () => {
       })
       .then((response) => {
         setAllConference(
-          response.data.upcoming_conferences?.map((item) => ({
+          response.data.data?.map((item) => ({
             label: item?.title,
             value: item?.id,
           }))

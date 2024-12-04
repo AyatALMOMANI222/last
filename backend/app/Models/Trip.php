@@ -33,6 +33,7 @@ class Trip extends Model
         'group_price_per_person',
         'group_price_per_speaker',
         'trip_details',
+        'group_accompanying_price'
     ];
 
     // إذا كان لديك تواريخ متاحة وتريد التعامل معها كـ JSON
@@ -61,6 +62,10 @@ public function discountOptions()
 public function tripOptionsParticipants()
 {
     return $this->hasMany(TripOptionsParticipant::class);
+}
+public function groupTripRegistrations()
+{
+    return $this->hasMany(GroupTripRegistration::class);
 }
 
 }

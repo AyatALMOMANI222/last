@@ -1,66 +1,139 @@
-.reservation-form-header-container {
-  margin: 20px;
-  height: 90px;
-  padding: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 10px;
-  border: 1px solid rgb(242, 239, 239);
-  // background-color: #901d00;
-  .reservation-actions {
+.all-reservation-form {
+  height: calc(100vh - 58px);
+  overflow: overlay;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
+
+  .reservation-form-header-container {
+    margin: 20px;
+    height: 90px;
+    padding: 20px;
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    button {
-      padding: 0px 20px;
-      height: 35px;
-      background-color: #fff;
-      border: 1px solid #ef233c;
-      color: #3b3b3b;
-      border-radius: 5px;
-      cursor: pointer;
-      &.disabled-btn {
-        background-color: rgb(214, 214, 214);
-        color: #fff;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid rgb(242, 239, 239);
+    .reservation-actions {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      button {
+        margin-right: 30px;
+        width: 270px;
+        height: 45px;
+        background-color: #cc0000; // Red background
+        color: #fff; // White text color
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        // transition: background-color 0.3s ease, transform 0.2s ease;
+
+        &:hover {
+          background-color: #cc0000; // Darker red on hover
+        }
+
+        &:active {
+          background-color: #990000; // Even darker red on active
+          transform: scale(0.98); // Slightly shrink the button on click
+        }
+        &.disabled {
+          background-color: #d6d6d6;
+          color: #a1a1a1;
+          cursor: not-allowed;
+          opacity: 0.7;
+          &:hover {
+            background-color: #d6d6d6;
+          }
+        }
       }
-      &:hover {
-        background-color: #ef233c;
-        color: #fff;
-      }
-      &:active {
-        background-color: #800000;
-        color: #fff;
-      }
-      font-size: 15px;
+    }
+    .title-container {
+      font-size: 19px;
+      font-weight: 500;
+      white-space: nowrap;
     }
   }
-  .title-container {
-    font-size: 19px;
-    font-weight: 500;
-    white-space: nowrap;
 
-    // color: #fff;
+  .reservation-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .view-reservation-info {
+    width: 70%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 20px;
+    padding: 30px;
+  }
+  .room-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .reservation-card-section {
+    .info-reservation-section {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-row-gap: 20px;
+      grid-column-gap: 20px;
+    }
+    .title-reservation {
+      border: 1px solid #ebecf2;
+      padding: 20px;
+      font-size: 16px;
+      color: #c82333;
+    }
+
+    .room-details {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-row-gap: 20px;
+      grid-column-gap: 20px;
+    }
+    .reservation-invoice {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-row-gap: 20px;
+      grid-column-gap: 20px;
+    }
+    .line {
+      height: 1px;
+      width: 100%;
+      background-color: #ebecf2;
+    }
+  }
+  .reservation-information-btn {
+    &.disabled {
+      background-color: #d6d6d6;
+      color: #a1a1a1;
+      cursor: not-allowed;
+      opacity: 0.7;
+      &:hover {
+        background-color: #d6d6d6;
+      }
+    }
   }
 }
-
-.reservation-form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.view-reservation-info{
-  width: 70%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-row-gap: 20px;
-  padding: 30px;
-}
-.room-form-container{
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-

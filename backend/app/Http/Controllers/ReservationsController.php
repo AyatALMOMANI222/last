@@ -17,136 +17,7 @@ use Illuminate\Support\Facades\Auth;
 class ReservationsController extends Controller
 {
 
-    // private function calculateInvoice(array $rooms, int $companionsCount = 0, $conference_id)
-    // {
-    //     $totalInvoice = 0;
-    //     $roomInvoices = [];
 
-    //     foreach ($rooms as $room) {
-    //         // البحث عن التسعير باستخدام نموذج RoomPrice
-    //         $pricing = RoomPrice::where('room_type', $room['room_type'])
-    //             ->where('conference_id', $conference_id ?? null) // إذا كنت بحاجة لتصفية حسب المؤتمر
-    //             ->first();
-
-    //         if (!$pricing) {
-    //             throw new \Exception("Room type {$room['room_type']} pricing not found.");
-    //         }
-
-    //         // حساب تكلفة الغرفة
-    //         $roomCost = ($pricing->base_price * $room['total_nights']) +
-    //                     ($room['additional_cost'] ?? 0) +
-    //                     (!empty($room['early_check_in']) ? $pricing->early_check_in_price : 0) +
-    //                     (!empty($room['late_check_out']) ? $pricing->late_check_out_price : 0);
-
-    //         $roomInvoices[] = [
-    //             'room_type' => $room['room_type'],
-    //             'cost' => $roomCost
-    //         ];
-
-    //         $totalInvoice += $roomCost;
-    //     }
-
-    //     // حساب تكلفة الصحبة (companions)
-    //     if ($companionsCount > 0) {
-    //         $companionPrice = $pricing->companion_price; // يتم افتراض نفس السعر لجميع الغرف
-    //         $totalInvoice += $companionsCount * $companionPrice;
-    //     }
-
-    //     return [
-    //         'total_invoice' => $totalInvoice,
-    //         'room_invoices' => $roomInvoices
-    //     ];
-    // }
-
-    // public function createReservation(Request $request)
-    // {
-    //     $user_id = Auth::id();
-
-    //     try {
-    //         // تحقق من صحة البيانات
-    //         $validatedData = $request->validate([
-    //             'conference_id' => 'nullable|exists:conferences,id', // تحقق من أن المؤتمر موجود
-    //             'companions_count' => 'nullable|integer|min:0',
-    //             'companions_names' => 'nullable|string',
-    //             'update_deadline' => 'nullable|date',
-    //             'rooms' => 'required|array',
-    //             'rooms.*.room_type' => 'required|string',
-    //             'rooms.*.occupant_name' => 'nullable|string',
-    //             'rooms.*.check_in_date' => 'required|date',
-    //             'rooms.*.check_out_date' => 'required|date|after:rooms.*.check_in_date',
-    //             'rooms.*.total_nights' => 'required|integer|min:1',
-    //             'rooms.*.cost' => 'required|numeric|min:0',
-    //             'rooms.*.additional_cost' => 'nullable|numeric|min:0',
-    //         ]);
-    //         $conference_id = $validatedData['conference_id'] ?? null;
-
-    //         // Get invoice details including room invoices
-    //         $invoiceDetails = $this->calculateInvoice($validatedData['rooms'], $validatedData['companions_count'] ?? 0, $conference_id);
-
-    //         // Create the reservation
-    //         $reservation = Reservation::create([
-    //             'user_id' => $user_id,
-    //             'conference_id' => $validatedData['conference_id'], // إضافة معرف المؤتمر
-    //             'room_count' => count($validatedData['rooms']),
-    //             'companions_count' => $validatedData['companions_count'] ?? 0,
-    //             'companions_names' => $validatedData['companions_names'] ?? null,
-    //             'update_deadline' => $validatedData['update_deadline'] ?? Carbon::now()->addDays(30),
-    //             'total_invoice' => $invoiceDetails['total_invoice'], // Store total invoice
-    //         ]);
-
-    //         // Prepare room data
-    //         $roomsData = [];
-    //         foreach ($validatedData['rooms'] as $index => $room) {
-    //             $roomsData[] = [
-    //                 'reservation_id' => $reservation->id,
-    //                 'room_type' => $room['room_type'],
-    //                 'occupant_name' => $room['occupant_name'],
-    //                 'special_requests' => $request->input("rooms.$index.special_requests", null),
-    //                 'check_in_date' => $room['check_in_date'],
-    //                 'check_out_date' => $room['check_out_date'],
-    //                 'total_nights' => $room['total_nights'],
-    //                 'cost' => $room['cost'],
-    //                 'additional_cost' => $room['additional_cost'] ?? 0.00,
-    //                 'update_deadline' => $request->input("rooms.$index.update_deadline", Carbon::now()->addDays(30)),
-    //                 'created_at' => now(),
-    //                 'updated_at' => now(),
-    //             ];
-    //         }
-
-    //         // Insert room data into the database in bulk
-    //         Room::insert($roomsData);
-
-    //         // Retrieve room IDs after insertion
-    //         $roomIds = Room::whereIn('reservation_id', [$reservation->id])->pluck('id', 'room_type')->toArray();
-
-    //         // Add room_id to room invoices
-    //         $roomInvoices = [];
-    //         foreach ($invoiceDetails['room_invoices'] as $roomInvoice) {
-    //             $roomType = $roomInvoice['room_type'];
-    //             if (isset($roomIds[$roomType])) {
-    //                 $roomInvoices[] = [
-    //                     'room_id' => $roomIds[$roomType],
-    //                     'room_type' => $roomType,
-    //                     'cost' => $roomInvoice['cost'],
-    //                 ];
-    //             }
-    //         }
-
-    //         // Success response with room-level invoice including room_id
-    //         return response()->json([
-    //             'message' => 'Reservation and rooms created successfully.',
-    //             'reservation_id' => $reservation->id,
-    //             'total_invoice' => $invoiceDetails['total_invoice'], // Total invoice for the entire reservation
-    //             'rooms' => $roomsData,
-    //             'room_invoices' => $roomInvoices, // Room invoices with room_id
-    //         ], 201);
-    //     } catch (\Exception $e) {
-    //         // Error response
-    //         return response()->json([
-    //             'message' => 'Failed to create reservation. ' . $e->getMessage(),
-    //         ], 400);
-    //     }
-    // }
 
     protected function getBasePriceForRoomType($roomType)
     {
@@ -170,33 +41,33 @@ class ReservationsController extends Controller
     {
         $totalInvoice = 0;
         $roomInvoices = [];
-    
+
         foreach ($rooms as $room) {
             // Get the base price, late check-out price, and early check-in price for the room type
             $basePrice = $this->getBasePriceForRoomType($room['room_type']);
             $lateCheckOutPrice = $this->getLateCheckOutPriceForRoomType($room['room_type']);
             $earlyCheckInPrice = $this->getEarlyCheckInPriceForRoomType($room['room_type']);
-    
+
             // Calculate the number of nights
             $nights = $room['total_nights'];
-    
+
             // Initialize early check-in and late check-out costs
             $earlyCheckInCost = 0;
             $lateCheckOutCost = 0;
-    
+
             // Check if early check-in applies and add the cost
             if (!empty($room['early_check_in']) && $room['early_check_in'] === true) {
                 $earlyCheckInCost = $earlyCheckInPrice;
             }
-    
+
             // Check if late check-out applies and add the cost
             if (!empty($room['late_check_out']) && $room['late_check_out'] === true) {
                 $lateCheckOutCost = $lateCheckOutPrice;
             }
-    
+
             // Calculate the total room cost
             $roomCost = ($basePrice * $nights) + $earlyCheckInCost + $lateCheckOutCost;
-    
+
             // Add the room invoice to the list
             $roomInvoices[] = [
                 'room_type' => $room['room_type'],
@@ -205,140 +76,28 @@ class ReservationsController extends Controller
                 'late_check_out_price' => $lateCheckOutCost,
                 'total_cost' => $roomCost,
             ];
-    
+
             // Add the room cost to the total invoice
             $totalInvoice += $roomCost;
         }
-    
+
         // If there's a conference and we want to add conference-related costs (optional)
         if ($conference_id) {
             $conferenceCost = 0; // Assume conference cost logic is handled elsewhere if needed
             $totalInvoice += $conferenceCost;
         }
-    
+
         return [
             'total_invoice' => $totalInvoice,
             'room_invoices' => $roomInvoices,
         ];
     }
-    
-
-    // public function createReservation(Request $request)
-    // {
-    //     $user_id = Auth::id();
-    
-    //     try {
-    //         // Validate the request data
-    //         $validatedData = $request->validate([
-    //             'conference_id' => 'nullable|exists:conferences,id',
-    //             'companions_count' => 'nullable|integer|min:0',
-    //             'companions_names' => 'nullable|string',
-    //             'update_deadline' => 'nullable|date',
-    //             'rooms' => 'required|array',
-    //             'rooms.*.room_type' => 'required|string',
-    //             'rooms.*.occupant_name' => 'nullable|string',
-    //             'rooms.*.check_in_date' => 'required|date',
-    //             'rooms.*.check_out_date' => 'required|date|after:rooms.*.check_in_date',
-    //             'rooms.*.total_nights' => 'required|integer|min:1',
-    //             'rooms.*.cost' => 'required|numeric|min:0',
-    //             'rooms.*.additional_cost' => 'nullable|numeric|min:0',
-    //             'rooms.*.early_check_in' => 'nullable|boolean',
-    //             'rooms.*.late_check_out' => 'nullable|boolean',
-    //         ]);
-    
-    //         $conference_id = $validatedData['conference_id'] ?? null;
-    
-    //         // Call calculateInvoice method to get the total invoice and room-wise breakdown
-    //         $invoiceDetails = $this->calculateInvoice($validatedData['rooms'], $validatedData['companions_count'] ?? 0, $conference_id);
-    //         $totalInvoice = $invoiceDetails['total_invoice'];
-    //         $roomInvoices = $invoiceDetails['room_invoices'];
-    
-    //         // Create the reservation record
-    //         $reservation = Reservation::create([
-    //             'user_id' => $user_id,
-    //             'conference_id' => $validatedData['conference_id'],
-    //             'room_count' => count($validatedData['rooms']),
-    //             'companions_count' => $validatedData['companions_count'] ?? 0,
-    //             'companions_names' => $validatedData['companions_names'] ?? null,
-    //             'update_deadline' => $validatedData['update_deadline'] ?? Carbon::now()->addDays(30),
-    //             'total_invoice' => $totalInvoice,
-    //         ]);
-    
-    //         // Prepare room data to be saved
-    //         $roomsData = [];
-    //         foreach ($validatedData['rooms'] as $index => $room) {
-    //             $roomsData[] = [
-    //                 'reservation_id' => $reservation->id,
-    //                 'room_type' => $room['room_type'],
-    //                 'occupant_name' => $room['occupant_name'],
-    //                 'special_requests' => $request->input("rooms.$index.special_requests", null),
-    //                 'check_in_date' => $room['check_in_date'],
-    //                 'check_out_date' => $room['check_out_date'],
-    //                 'total_nights' => $room['total_nights'],
-    //                 'cost' => $room['cost'],
-    //                 'additional_cost' => $room['additional_cost'] ?? 0.00,
-    //                 'early_check_in' => $room['early_check_in'] ?? false,
-    //                 'late_check_out' => $room['late_check_out'] ?? false,
-    //                 'update_deadline' => $request->input("rooms.$index.update_deadline", Carbon::now()->addDays(30)),
-    //                 'created_at' => now(),
-    //                 'updated_at' => now(),
-    //             ];
-    //         }
-    
-    //         // Insert room data into the database
-    //         Room::insert($roomsData);
-    
-    //         // Retrieve room IDs
-    //         $rooms = Room::where('reservation_id', $reservation->id)->get();
-    
-    //         // Map the room IDs to the invoice details
-    //         foreach ($roomInvoices as $index => $roomInvoice) {
-    //             $roomInvoice['room_id'] = $rooms[$index]->id;
-    //             $roomInvoices[$index] = $roomInvoice;
-    //         }
-    
-    //         // Return the response with the reservation details and room invoices
-    //         return response()->json([
-    //             'message' => 'Reservation and rooms created successfully.',
-    //             'reservation_id' => $reservation->id,
-    //             'total_invoice' => $totalInvoice,
-    //             'room_invoices' => $roomInvoices, // hedaya
-    //             'rooms' => $roomsData, // Include room details in the response
-    //         ], 201);
 
 
-
-    //         // "room_invoices": [
-    //         //     {
-    //         //         "room_type": "Double",
-    //         //         "base_price": "5.00",
-    //         //         "early_check_in_price": 0,
-    //         //         "late_check_out_price": "5.00",
-    //         //         "total_cost": 15,
-    //         //         "room_id": 49
-    //         //     },
-    //         //     {
-    //         //         "room_type": "Single",
-    //         //         "base_price": "4.00",
-    //         //         "early_check_in_price": "5.00",
-    //         //         "late_check_out_price": 0,
-    //         //         "total_cost": 13,
-    //         //         "room_id": 50
-    //         //     }
-    //         // ],
-    //     } catch (\Exception $e) {
-    //         // Return a failure response if any exception occurs
-    //         return response()->json([
-    //             'message' => 'Failed to create reservation. ' . $e->getMessage(),
-    //         ], 400);
-    //     }
-    // }
-    
-    
     public function createReservation(Request $request)
     {
         $user_id = Auth::id();
-    
+
         try {
             // Validate the request data
             $validatedData = $request->validate([
@@ -357,14 +116,14 @@ class ReservationsController extends Controller
                 'rooms.*.early_check_in' => 'nullable|boolean',
                 'rooms.*.late_check_out' => 'nullable|boolean',
             ]);
-    
+
             $conference_id = $validatedData['conference_id'] ?? null;
-    
+
             // Call calculateInvoice method to get the total invoice and room-wise breakdown
             $invoiceDetails = $this->calculateInvoice($validatedData['rooms'], $validatedData['companions_count'] ?? 0, $conference_id);
             $totalInvoice = $invoiceDetails['total_invoice'];
             $roomInvoices = $invoiceDetails['room_invoices'];
-    
+
             // Create the reservation record
             $reservation = Reservation::create([
                 'user_id' => $user_id,
@@ -375,7 +134,7 @@ class ReservationsController extends Controller
                 'update_deadline' => $validatedData['update_deadline'] ?? Carbon::now()->addDays(30),
                 'total_invoice' => $totalInvoice,
             ]);
-    
+
             // Prepare room data to be saved
             $roomsData = [];
             foreach ($validatedData['rooms'] as $index => $room) {
@@ -396,18 +155,18 @@ class ReservationsController extends Controller
                     'updated_at' => now(),
                 ];
             }
-    
+
             // Insert room data into the database
             Room::insert($roomsData);
-    
+
             // Retrieve room IDs
             $rooms = Room::where('reservation_id', $reservation->id)->get();
-    
+
             // Map the room IDs to the invoice details
             foreach ($roomInvoices as $index => $roomInvoice) {
                 $roomInvoice['room_id'] = $rooms[$index]->id;
                 $roomInvoices[$index] = $roomInvoice;
-    
+
                 // Insert the room invoice details into the reservation_invoices table
                 ReservationInvoice::create([
                     'room_id' => $roomInvoice['room_id'],
@@ -419,7 +178,7 @@ class ReservationsController extends Controller
                     'early_check_in_price' => $roomInvoice['early_check_in_price'],
                 ]);
             }
-    
+
             // Return the response with the reservation details and room invoices
             return response()->json([
                 'message' => 'Reservation and rooms created successfully.',
@@ -428,7 +187,7 @@ class ReservationsController extends Controller
                 'room_invoices' => $roomInvoices, // Include room invoice details
                 'rooms' => $roomsData, // Include room details in the response
             ], 201);
-    
+
         } catch (\Exception $e) {
             // Return a failure response if any exception occurs
             return response()->json([
@@ -436,7 +195,7 @@ class ReservationsController extends Controller
             ], 400);
         }
     }
-    
+
 
 
 
@@ -628,4 +387,21 @@ class ReservationsController extends Controller
             ], 500);
         }
     }
+    public function getReservationsByUserAndConference($conferenceId)
+    {
+        // جلب user_id من المستخدم المصادق عليه
+        $userId = Auth::id();
+    
+        // جلب الحجوزات بناءً على user_id و conference_id مع إضافة العلاقة مع الغرف والفواتير
+        $reservations = Reservation::where('user_id', $userId)
+            ->where('conference_id', $conferenceId)
+            ->with(['rooms.reservationInvoices'])  // تحميل الفواتير المرتبطة بالغرف
+            ->get();
+    
+        return response()->json([
+            'status' => 'success',
+            'data' => $reservations,
+        ]);
+    }
+    
 }

@@ -11,8 +11,8 @@ const InvoiceForm = () => {
   const navigate = useNavigate();
   const [mainRoom, setMainRoom] = useState(null);
   const [otherRooms, setOtherRooms] = useState([]);
-  const { userName } = useAuth();
-
+  const [reservationDetails, setReservationDetails] = useState(null); // State for invoice details
+  const { userName, myConferenceId } = useAuth();
   const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
@@ -24,27 +24,24 @@ const InvoiceForm = () => {
 
   function convertObject(obj) {
     const rooms = [];
-  
-    // Helper function to format date to "YYYY-MM-DD"
+
     const formatDate = (dateStr) => {
       const date = new Date(dateStr);
       return date.toISOString().split("T")[0]; // Formats the date to YYYY-MM-DD
     };
-  
-    // Push the mainRoom into the rooms array
+
     rooms.push({
-      room_type: obj.mainRoom.roomType.value, // roomType as string
-      occupant_name: "", // Assuming the main room doesn't have an occupant name
+      room_type: obj.mainRoom.roomType.value,
+      occupant_name: "",
       check_in_date: formatDate(obj.mainRoom.checkInDate),
       check_out_date: formatDate(obj.mainRoom.checkOutDate),
-      total_nights: parseInt(obj.mainRoom.totalNights), // Convert totalNights to number
-      cost: 0, // Assuming a static cost for the main room
-      additional_cost: 0, // Assuming a static additional cost
-      late_check_out: obj.lateCheckOut || false, // Use passed in lateCheckOut value or default to false
-      early_check_in: obj.earlyCheckIn || false, // Use passed in earlyCheckIn value or default to false
+      total_nights: parseInt(obj.mainRoom.totalNights),
+      cost: 0,
+      additional_cost: 0,
+      late_check_out: obj.lateCheckOut || false,
+      early_check_in: obj.earlyCheckIn || false,
     });
-  
-    // Loop through otherRooms and push them into the rooms array
+
     obj.otherRooms.forEach((room) => {
       rooms.push({
         room_type: room.roomType.value,
@@ -54,47 +51,42 @@ const InvoiceForm = () => {
         total_nights: parseInt(room.totalNights),
         cost: 0,
         additional_cost: 0,
-        late_check_out: obj.lateCheckOut || false, // Use passed in lateCheckOut value or default to false
-        early_check_in: obj.earlyCheckIn || false, // Use passed in earlyCheckIn value or default to false
+        late_check_out: obj.lateCheckOut || false,
+        early_check_in: obj.earlyCheckIn || false,
       });
     });
-  
+
     return { rooms };
   }
-  
-  const getAuthToken = () => localStorage.getItem("token");
-  const { myConferenceId} = useAuth();
-  console.log(myConferenceId);
 
+  const getAuthToken = () => localStorage.getItem("token");
 
   const submitReservation = async () => {
     const mainRoom = getFromLocalStorage("mainRoom") || {};
     const otherRooms = getFromLocalStorage("otherRooms") || [];
-    console.log({
+
+    const body = convertObject({
       mainRoom: { ...mainRoom, occupant_name: userName },
       otherRooms,
     });
-    console.log(convertObject({
-      mainRoom: { ...mainRoom, occupant_name: userName },
-      otherRooms,
-    }));
-    
-    
+
     try {
-      await httpService({
+      const response = await httpService({
         method: "POST",
         url: `${BaseUrl}/reservation`,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
-        data: convertObject({
-          mainRoom: { ...mainRoom, occupant_name: userName },
-          otherRooms,
-        }),
+        data: { conference_id: myConferenceId, ...body },
         withToast: true,
         onError: (error) => {
           toast.error("Failed to submit the form: " + error);
         },
       });
+
+      if (response) {
+        toast.success("Reservation submitted successfully!");
+        setReservationDetails(response);
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -102,6 +94,35 @@ const InvoiceForm = () => {
 
   return (
     <div className="invoice-container-section">
+      {reservationDetails && (
+        <div className="invoice-details-section">
+          <h3>Invoice Details</h3>
+          <div className="section-1">
+            <SimpleLabelValue
+              label="Reservation ID"
+              value={reservationDetails.reservation_id}
+            />
+            <SimpleLabelValue
+              label="Total Invoice"
+              value={`$${reservationDetails.total_invoice}`}
+            />{" "}
+          </div>
+          <h3>Room Invoices</h3>
+          {reservationDetails.room_invoices.map((room, index) => (
+            <div key={index} className="section-1">
+              <SimpleLabelValue label="Room Type" value={room.room_type} />
+              <SimpleLabelValue
+                label="Base Price"
+                value={`$${room.base_price}`}
+              />
+              <SimpleLabelValue
+                label="Total Cost"
+                value={`$${room.total_cost}`}
+              />
+            </div>
+          ))}
+        </div>
+      )}
       <h3>Main Room</h3>
       <div className="main-room-section">
         <SimpleLabelValue label="Room Type" value={mainRoom?.roomType?.label} />
@@ -168,13 +189,7 @@ const InvoiceForm = () => {
       </div>
 
       <div className="actions-section">
-        <button
-          className="next-button"
-          onClick={() => {
-            toast.success("The data was updated successfully!");
-            submitReservation();
-          }}
-        >
+        <button className="next-button" onClick={submitReservation}>
           Submit
         </button>
       </div>

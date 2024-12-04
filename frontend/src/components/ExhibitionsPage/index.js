@@ -9,7 +9,7 @@ import "./style.scss";
 
 const ExhibitionsPage = () => {
   // States
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [exhibitions, setExhibitions] = useState([]);
   const [filters, setFilters] = useState({ name: "", status: "", page: 1 });
   const [pagination, setPagination] = useState({
@@ -34,6 +34,8 @@ const ExhibitionsPage = () => {
         },
       });
       setExhibitions(data);
+      console.log(exhibitions);
+
       setPagination({
         currentPage: filters.page,
         totalPages: data.total_pages,
@@ -81,28 +83,40 @@ const ExhibitionsPage = () => {
           <p className="error-message">{error}</p>
         ) : exhibitions.length ? (
           <div className="exhibition-cards-container">
-            {exhibitions.map(({ id, title, location, description, image }) => (
-              <div key={id} className="exhibition-card" >
-                <div className="exhibition-card-image">
-                  {image ? (
-                    <img src={`${backendUrlImages}${image}`} alt={title} />
-                  ) : (
-                    <div className="exhibition-placeholder">No Image</div>
-                  )}
+            {exhibitions.map(
+              ({ id, title, location, description, image, conference_id }) => (
+                <div key={id} className="exhibition-card">
+                  <div className="exhibition-card-image">
+                    {image ? (
+                      <img src={`${backendUrlImages}${image}`} alt={title} />
+                    ) : (
+                      <div className="exhibition-placeholder">No Image</div>
+                    )}
+                  </div>
+                  <div className="exhibition-card-details">
+                    <h3 className="exhibition-card-title">{title}</h3>
+                    <p className="exhibition-card-description">{description}</p>
+                    <p className="exhibition-card-location">{location}</p>
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => {
+                        navigate(`/one/exhibits/${id}`);
+                      }}
+                    >
+                      View Gallery
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate(`/register/sponsor/${conference_id}`);
+                      }}
+                    >
+                      Join as Sponsor
+                    </button>
+                  </div>
                 </div>
-                <div className="exhibition-card-details">
-                  <h3 className="exhibition-card-title">{title}</h3>
-                  <p className="exhibition-card-description">{description}</p>
-                  <p className="exhibition-card-location">{location}</p>
-                </div>
-                <div>
-                  <button onClick={()=>{
-                    navigate(`/one/exhibits/${id}`)
-                  }}>View Gallery</button>
-                  <button></button>
-                </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         ) : (
           <p className="no-data">No exhibitions available.</p>

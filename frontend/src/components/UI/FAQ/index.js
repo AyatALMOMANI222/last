@@ -2,6 +2,9 @@ import React from 'react';
 import "./style.scss"
 const FAQ = () => {
   return (
+    <div className='faq-container-section'>
+
+ 
     <div className="faq-container">
       <h1>Frequently Asked Questions (FAQ)</h1>
 
@@ -247,6 +250,7 @@ const FAQ = () => {
           <p>You can download the guides video [Link containing video].</p>
         </div>
       </section>
+    </div>
     </div>
   );
 };

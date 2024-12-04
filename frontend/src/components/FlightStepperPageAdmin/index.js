@@ -6,7 +6,7 @@ import {
   AdminFlightStepperProvider,
   useFlightStepperAdmin,
 } from "./StepperContext";
-import { removeFromLocalStorage } from "../../common/localStorage";
+import { removeFromLocalStorage, removeFromLocalStorageStartWith } from "../../common/localStorage";
 
 const AdminFlightStepperPageContent = () => {
   const {
@@ -29,6 +29,8 @@ const AdminFlightStepperPageContent = () => {
   useEffect(() => {
     return () => {
       removeFromLocalStorage("flightDetails");
+      removeFromLocalStorageStartWith("flightTrips_")
+      removeFromLocalStorageStartWith("ticketPricing_")
     };
   }, []);
 

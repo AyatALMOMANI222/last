@@ -11,14 +11,18 @@ import { backendUrlImages } from "../../constant/config";
 import { useAuth } from "../../common/AuthContext";
 import { useNavigate } from "react-router-dom";
 import DateInput from "../../CoreComponent/Date";
+import Topics from "./topic.js";
 import "./style.scss";
 
 const SpeakerProfileForm = () => {
   const { speakerData, attendancesData, registrationType } = useAuth();
-  const [speakerInfo ,setSpeakerInfo]=useState()
-  const BaseUrl = process.env.REACT_APP_BASE_URL;
-  const navigate = useNavigate();
+  const [speakerInfo, setSpeakerInfo] = useState(null);
   const [formFiles, setFormFiles] = useState({
+    image: null,
+    abstract: null,
+    presentationFile: null,
+  });
+  const [formFiles2, setFormFiles2] = useState({
     image: null,
     abstract: null,
     presentationFile: null,
@@ -34,9 +38,10 @@ const SpeakerProfileForm = () => {
     userImage: "",
     userBio: "",
   });
-
   const [arrivalDate, setArrivalDate] = useState("");
   const [departureDate, setDepartureDate] = useState("");
+  const navigate = useNavigate();
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const initializeProfileDetails = useCallback(() => {
     if (registrationType === "speaker") {
@@ -61,9 +66,9 @@ const SpeakerProfileForm = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    Object.entries(formFiles).forEach(([key, value]) => {
-      if (value) formData.append(key, value);
-    });
+
+    formData.append("abstract", formFiles.abstract);
+    formData.append("presentation_file", formFiles.presentationFile);
     formData.append("topics", JSON.stringify(topics));
     formData.append(
       "online_participation",
@@ -115,162 +120,151 @@ const SpeakerProfileForm = () => {
   const handleFileChange = (key) => (file) => {
     setFormFiles((prev) => ({ ...prev, [key]: file }));
   };
-  const getSpeakerData =()=>{
 
-// فرضًا أن الـ token موجود في `localStorage`
-const token = localStorage.getItem("token");
+  const getSpeakerData = async () => {
+    const token = localStorage.getItem("token");
 
-axios.get("http://127.0.0.1:8000/api/speakers/info", {
-  headers: {
-    Authorization: `Bearer ${token}`, // إضافة الـ token في الـ headers
-  }
-})
-  .then(response => {
-    // التعامل مع البيانات بعد جلبها
-    console.log('Speaker Info:', response.data.speaker);
-    const sp =response.data.speaker
-    setSpeakerInfo(sp)
-    console.log(speakerInfo);
-    
-  })
-  .catch(error => {
-    // التعامل مع الأخطاء في حالة فشل الطلب
-    console.error('Error fetching speaker info:', error);
-  });
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/speakers/info",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log({ hedaya: response.data.speaker });
 
-  }
-  useEffect(()=>{
-    getSpeakerData()
-  },[])
+      setFormFiles2({
+        abstract: response?.data?.speaker?.abstract,
+        image: response?.data?.speaker?.image,
+        presentationFile: response?.data?.speaker?.presentation_file,
+      });
+      setSpeakerInfo(response.data.speaker);
+    } catch (error) {
+      console.error("Error fetching speaker info:", error);
+    }
+  };
+
+  useEffect(() => {
+    getSpeakerData();
+  }, []);
+
+  // Disable button logic
+  const isButtonDisabled =
+    !(formFiles.abstract || formFiles2.abstract) ||
+    !(formFiles.presentationFile || formFiles2.presentationFile) ||
+    !arrivalDate ||
+    !departureDate ||
+    topics.length === 0 ||
+    topics.some((topic) => !topic.trim());
 
   return (
-    <div className="speaker-profile-section-container">
-      <form onSubmit={handleUpdate} className="speaker-profile-form">
-        <div className="profile-container-img">
-          <div className="profile-section">
-            <img
-              src={`${backendUrlImages}${profileDetails.userImage}`}
-              alt="User Profile"
-              className="profile-image-speakerr"
-            />
-            <div className="profile-details">
-              <div className="profile-name">{profileDetails.userName}</div>
-              <div className="profile-bio">
-                <div className="bio">{profileDetails.userBio}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="profile-files">
-          <ImageUpload
-            errorMsg=""
-            required
-            label="Abstract"
-            allowedExtensions={["txt", "pdf", "doc", "docx"]}
-            inputValue={formFiles.abstract}
-            setInputValue={handleFileChange("abstract")}
-            className="image-upload"
-            placeholder="Abstract"
-          />
-          <ImageUpload
-            errorMsg=""
-            required
-            label="Presentation File"
-            allowedExtensions={["ppt", "pptx"]}
-            inputValue={formFiles.presentationFile}
-            setInputValue={handleFileChange("presentationFile")}
-            className="image-upload"
-            placeholder="Presentation File"
-          />
-          <DateInput
-            label="Arrival Date"
-            inputValue={arrivalDate}
-            setInputValue={setArrivalDate}
-            // className="date-input"
-            type="date"
-          />
-          <DateInput
-            label="Departure Date"
-            inputValue={departureDate}
-            setInputValue={setDepartureDate}
-            // className="date-input"
-            type="date"
-          />
-          {attendanceOptions.showOnlineOption && (
-            <div className="attendance-option">
-              <h3 className="attendance-title">
-                How would you like to attend the conference?
-              </h3>
-              <div className="attendance-checkboxes">
-                <Checkbox
-                  label="In-Person"
-                  checkboxValue={attendanceOptions.inPerson}
-                  setCheckboxValue={(value) =>
-                    setAttendanceOptions((prev) => ({
-                      ...prev,
-                      inPerson: value,
-                    }))
-                  }
-                  className="attendance-checkbox"
-                />
-                <Checkbox
-                  label="Online"
-                  checkboxValue={attendanceOptions.onlineParticipation}
-                  setCheckboxValue={(value) =>
-                    setAttendanceOptions((prev) => ({
-                      ...prev,
-                      onlineParticipation: value,
-                    }))
-                  }
-                  className="attendance-checkbox"
-                />
-              </div>
-              {attendanceOptions.onlineParticipation && (
-                <div className="notice">
-                  You will be provided with the Zoom link one day before the
-                  event.
+    <div className="speaker-section-container">
+      <div className="speaker-profile-section-container">
+        <form onSubmit={handleUpdate} className="speaker-profile-form">
+          <div className="profile-container-img">
+            <div className="profile-section">
+              <img
+                src={`${backendUrlImages}${profileDetails.userImage}`}
+                alt="User Profile"
+                className="profile-image-speakerr"
+              />
+              <div className="profile-details">
+                <div className="profile-name">{profileDetails.userName}</div>
+                <div className="profile-bio">
+                  <div className="bio">{profileDetails.userBio}</div>
                 </div>
-              )}
-            </div>
-          )}
-          <div className="topic-section">
-            <div className="topics-container">
-              <div className="topic-title">Topics</div>
-              <div className="topics-container-inputs">
-                {topics.map((topic, index) => (
-                  <div key={index} className="topic-input-container">
-                    <Input
-                      placeholder="Enter a topic"
-                      inputValue={topic}
-                      setInputValue={(newValue) =>
-                        handleTopicChange(index, newValue)
-                      }
-                      className="topic-input"
-                    />
-                    <SVG
-                      className="delete-icon"
-                      src={deleteIcon}
-                      onClick={() => handleRemoveTopic(index)}
-                    />
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={handleAddTopic}
-                  className="add-topic-btnn"
-                >
-                 +  Add Topic
-                </button>
               </div>
             </div>
           </div>
-        </div>
 
-        <button className="update-btn" type="submit">
-          Update
-        </button>
-      </form>
+          <div className="profile-files">
+            <ImageUpload
+              required
+              label="Abstract"
+              allowedExtensions={["txt", "pdf", "doc", "docx"]}
+              inputValue={formFiles.abstract}
+              existingFile={formFiles2.abstract}
+              setInputValue={handleFileChange("abstract")}
+              className="image-upload"
+              placeholder="Abstract"
+            />
+            <ImageUpload
+              required
+              label="Presentation File"
+              allowedExtensions={["ppt", "pptx"]}
+              inputValue={formFiles.presentationFile}
+              existingFile={formFiles2.presentationFile}
+              setInputValue={handleFileChange("presentationFile")}
+              className="image-upload"
+              placeholder="Presentation File"
+            />
+            <DateInput
+              label="Arrival Date"
+              inputValue={arrivalDate}
+              setInputValue={setArrivalDate}
+              type="date"
+            />
+            <DateInput
+              label="Departure Date"
+              inputValue={departureDate}
+              setInputValue={setDepartureDate}
+              type="date"
+            />
+            {attendanceOptions.showOnlineOption && (
+              <div className="attendance-option">
+                <h3 className="attendance-title">
+                  How would you like to attend the conference?
+                </h3>
+                <div className="attendance-checkboxes">
+                  <Checkbox
+                    label="In-Person"
+                    checkboxValue={attendanceOptions.inPerson}
+                    setCheckboxValue={(value) =>
+                      setAttendanceOptions((prev) => ({
+                        ...prev,
+                        inPerson: value,
+                      }))
+                    }
+                    className="attendance-checkbox"
+                  />
+                  <Checkbox
+                    label="Online"
+                    checkboxValue={attendanceOptions.onlineParticipation}
+                    setCheckboxValue={(value) =>
+                      setAttendanceOptions((prev) => ({
+                        ...prev,
+                        onlineParticipation: value,
+                      }))
+                    }
+                    className="attendance-checkbox"
+                  />
+                </div>
+                {attendanceOptions.onlineParticipation && (
+                  <div className="notice">
+                    You will be provided with the Zoom link one day before the
+                    event.
+                  </div>
+                )}
+              </div>
+            )}
+            <Topics
+              topics={topics}
+              handleTopicChange={handleTopicChange}
+              handleRemoveTopic={handleRemoveTopic}
+              handleAddTopic={handleAddTopic}
+            />
+          </div>
+
+          <button
+            className={`update-btn ${isButtonDisabled ? "disabled" : ""}`}
+            disabled={isButtonDisabled}
+          >
+            Update Profile
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

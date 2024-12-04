@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use App\Events\NotificationSent;
+use App\Notifications\EmailNotification;
 
 use function Laravel\Prompts\error;
 
@@ -103,6 +104,8 @@ class UserController extends Controller
 
             // بث الإشعار للمستخدم الجديد
             broadcast(new NotificationSent($userNotification));
+            $user->notify(new EmailNotification('Thank you for registering for the conference. Your profile will be reviewed shortly.'));
+    
 
             return response()->json([
                 'message' => 'User created, added to conference, and notifications sent successfully!',

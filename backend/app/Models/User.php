@@ -86,11 +86,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(SponsorInvoice::class);
     }
-
+    // علاقة المستخدم مع التسجيلات في الرحلات الجماعية
+    public function groupTripRegistrations()
+    {
+        return $this->hasMany(GroupTripRegistration::class);
+    }
     public function papers()
     {
         return $this->hasMany(Paper::class);
     }
+
     protected $attributes = [
         'isAdmin' => false,
     ];

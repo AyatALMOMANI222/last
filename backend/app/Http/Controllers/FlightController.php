@@ -170,7 +170,7 @@ class FlightController extends Controller
                 // Set additional fields
                 $flight->flight_number = $flightData['flightNumber'];
                 $flight->seat_preference = $flightData['seatNumber'];
-                $flight->upgrade_class = $flightData['upgradeClass'];
+                $flight->upgrade_class = $flightData['upgradeClass'] || false;
                 $flight->additional_requests = $flightData['otherRequests'];
 
                 // Save the passport image if present

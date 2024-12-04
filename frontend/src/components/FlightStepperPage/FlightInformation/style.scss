@@ -1,10 +1,41 @@
-.flight-information-steeper-page{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-row-gap: 20px;
-    grid-column-gap: 30px;
-    .check-in-input-container {
-        margin-top: 25px;
-      }
+.flight-information-steeper-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-row-gap: 20px;
+  grid-column-gap: 30px;
+  .check-in-input-container {
+    margin-top: 25px;
+  }
 
+  .next-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+  
+    &:hover {
+      background-color: #0056b3;
+    }
+  
+    &:focus {
+      outline: none;
+    }
+  
+    &.disabled {
+      background-color: #d6d6d6;
+      color: #a1a1a1;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  
+    &:active {
+      background-color: #004085;
+    }
+  }
+  
 }

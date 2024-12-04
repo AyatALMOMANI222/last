@@ -34,6 +34,7 @@ use App\Http\Controllers\ExhibitionImagesController;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\GroupRegistrationController;
 use App\Http\Controllers\GroupTripParticipantController;
+use App\Http\Controllers\GroupTripRegistrationController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
@@ -87,6 +88,7 @@ Route::post('users/whatsapp-not', [WhatsAppController::class, 'sendWhatsAppNotif
 Route::post('/con', [ConferenceController::class, 'store']);
 Route::get('/con/status/{status}', [ConferenceController::class, 'getConferenceByStatus']);
 Route::get('/con', [ConferenceController::class, 'getAllConferences']);
+Route::get('/conferences/all', [ConferenceController::class, 'getAllConferencesALL']);
 Route::get('/con/id/{id}', [ConferenceController::class, 'getConferenceById']);
 Route::post('/conferences/{id}', [ConferenceController::class, 'update'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/con/upcoming', [ConferenceController::class, 'getAllConferencesUpcoming']);
@@ -138,6 +140,7 @@ Route::put('/speakers/user', [SpeakerController::class, 'updateOnlineParticipati
 Route::post('/speakers/certi/{user_id}', [SpeakerController::class, 'updateCertificateFile'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/speakers/info', [SpeakerController::class, 'getSpeakerInfoByToken'])->middleware('auth:sanctum');
 Route::get('/speakers/all/{conference_id}', [SpeakerController::class, 'getSpeakersByConference']);
+Route::get('/speakers/{conference_id}', [SpeakerController::class, 'getSpeakerByConferenceId'])->middleware('auth:sanctum');
 
 
 
@@ -183,6 +186,7 @@ Route::put('/reservation/{id}', [ReservationsController::class, 'updateReservati
 Route::get('/reservation', [ReservationsController::class, 'getReservationsByUserId'])->middleware('auth:sanctum');
 Route::get('/all_reservation', [ReservationsController::class, 'getAllReservations'])->middleware(['auth:sanctum', 'admin']);
 Route::put('/reservations/{id}/update-deadline', [ReservationsController::class, 'updateDeadlineByAdmin'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/reservations/rooms/{conferenceId}', [ReservationsController::class, 'getReservationsByUserAndConference'])->middleware('auth:sanctum');
 
 
 Route::post('/room', [RoomController::class, 'store'])->middleware('auth:sanctum');
@@ -200,7 +204,11 @@ Route::get('/trip/{id}', [TripController::class, 'getTripById'])->middleware(['a
 Route::post('/update/trips/{id}', [TripController::class, 'updateTripById'])->middleware(['auth:sanctum', 'admin']);
 Route::post('/trips_option/{id}', [TripController::class, 'updateTripAndOptions'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/trip_option/{id}', [TripController::class, 'getTripByIdWithOptions']);
+Route::get('/group/trip/{conferenceId}', [TripController::class, 'getGroupTrips'])->middleware(['auth:sanctum']);
 
+
+
+Route::post('/group/trip/registrations', [GroupTripRegistrationController::class, 'store'])->middleware('auth:sanctum');
 
 // trip-participants
 Route::post('/trip-participants', [TripParticipantController::class, 'addParticipant'])->middleware('auth:sanctum');

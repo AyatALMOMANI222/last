@@ -50,7 +50,7 @@
 
     .subtitle {
       color: #d32f2f; /* اللون الأحمر السكني */
-      font-size: 3vw; /* حجم النص بالوحدات النسبية */
+      font-size: 2vw; /* حجم النص بالوحدات النسبية */
       margin-bottom: 15px; /* تقليل المسافة */
       font-weight: 600; /* تقليل الوزن قليلاً */
       text-align: center; /* محاذاة للنص في المنتصف */
@@ -60,18 +60,21 @@
       list-style-type: none; /* إزالة النقاط */
       padding-left: 0; /* إزالة التباعد */
       color: #212121; /* لون النص */
-      font-size: 2vw; /* حجم النص بالوحدات النسبية */
       margin-bottom: 30px;
 
       li {
-        margin-bottom: 10px; /* زيادة المسافة بين العناصر */
         position: relative; /* لمزيد من التحكم */
         padding-left: 20px; /* تباعد داخلي على اليسار */
         transition: all 0.3s; /* تأثير التحريك */
+        padding: 20px;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: normal;
+        font-family: "Arial";
 
         &:hover {
           color: #d32f2f; /* تغيير لون النص عند التمرير */
-          transform: scale(1.05); /* تكبير عند التمرير */
+          // transform: scale(1.05); /* تكبير عند التمرير */
           cursor: pointer; /* تغيير شكل المؤشر */
         }
       }
@@ -79,9 +82,10 @@
 
     .description {
       color: #444; /* لون النص */
-      font-size: 2vw; /* حجم النص بالوحدات النسبية */
-      line-height: 1.6; /* تحسين تباعد الأسطر */
-      margin-top: 15px; /* مسافة أعلى */
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: normal;
+      font-family: "Arial";
     }
   }
 

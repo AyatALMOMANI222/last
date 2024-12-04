@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./style.scss";
+import { useAuth } from "../../common/AuthContext";
 
 function SideMenu() {
   const [activeMenu, setActiveMenu] = useState(null); // To track the expanded menu
-  const isAdmin = true;
+  const { isAdmin, registrationType } = useAuth();
+  const isSpeaker = registrationType === "speaker";
+  const isAttendance = registrationType === "attendance";
+  const isSponsor = registrationType === "sponsor";
+  const isGroup = registrationType === "group_registration";
+
+  console.log({ isAdmin, registrationType });
+
   const menuItems = [
     {
       label: "Home",
       icon: "🏠",
       children: [
         { label: "Home", path: "/home" },
-
         { label: "Conferences", path: "/conferences" },
         { label: "Exhibitions", path: "/page/exhibitions" },
         { label: "Our Story", path: "/about_us" },
@@ -77,19 +84,28 @@ function SideMenu() {
         // { label: "Transportation", path: "/transportation" },
       ],
     },
-    {
-      label: "Page",
-      icon: "📄",
-      children: [
-        { label: "Visa", path: "/visa" },
-        { label: "Flight", path: "/flight/form" },
-        { label: "Airport Transfer", path: "/airport/transfer" },
-        { label: "Reservation", path: "/reservation/form" },
-        { label: "All Trips", path: "/view-user-trips" },
-        { label: "Airport Transfer Price", path: "/airport/transfer/price" },
-        { label: "Gala Dinner", path: "/gala/dinner" },
-      ],
-    },
+
+    ...(isSpeaker && !isAdmin || isAttendance  && !isAdmin 
+      ? [
+          {
+            label: "Page",
+            icon: "📄",
+            children: [
+              { label: "Visa", path: "/visa" },
+              { label: "Flight", path: "/flight/form" },
+              { label: "Airport Transfer", path: "/airport/transfer" },
+              { label: "Reservation", path: "/reservation/form" },
+              { label: "All Trips", path: "/view-user-trips" },
+              {
+                label: "Airport Transfer Price",
+                path: "/airport/transfer/price",
+              },
+              { label: "Gala Dinner", path: "/gala/dinner" },
+            ],
+          },
+        ]
+      : []),
+
     ...(isAdmin
       ? [
           {
@@ -105,13 +121,16 @@ function SideMenu() {
                 path: "/airport/transfer/price",
               },
               { label: "Gala Dinner", path: "/gala/dinner" },
-
               { label: "Create Job", path: "/job" },
               { label: "Messages", path: "/msgs" },
               { label: "Job Applicants", path: "/job/admin" },
               { label: "Pending Users", path: "/user" },
               { label: "Users", path: "/pending/users" },
+              { label: "Romm Prices", path: "/room/prices" },
               { label: "Enter new flights", path: "/enter/new/flights" },
+              { label: "Group Registeration Table", path: "/admin/excel/table" },
+              { label: "Dinner Table Speaker static", path: "/table/dinner/speaker/1" },
+
             ],
           },
         ]
@@ -134,6 +153,10 @@ function SideMenu() {
                 label: "Booth Cost",
                 path: "/sponsor/admin/booth/cost",
               },
+              {
+                label: "Upload Floor Plan",
+                path: "/admin/upload/floor",
+              },
             ],
           },
         ]
@@ -143,11 +166,15 @@ function SideMenu() {
       icon: "📞",
       children: [{ label: "Contact Us", path: "/contact_us" }],
     },
-    {
-      label: "Profile",
-      icon: "👤",
-      children: [{ label: "Profile", path: "/speaker/profile" }],
-    },
+    ...(isSpeaker && !isAdmin
+      ? [
+          {
+            label: "Profile",
+            icon: "👤",
+            children: [{ label: "Profile", path: "/speaker/profile" }],
+          },
+        ]
+      : []),
   ];
 
   const toggleMenu = (index) => {

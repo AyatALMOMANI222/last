@@ -53,7 +53,6 @@ import RegisterSponsorPage from "./components/Registeration/Sponsor";
 import RegisterAttendancePage from "./components/Registeration/attendance";
 import AdminVisa from "./components/AdminVisa";
 import FAQ from "./components/UI/FAQ";
-import Dashboard from "./components/dashboard";
 import ExcelUpload from "./components/Registeration/Group-Registeration/AddExelFile";
 import AdminGroupComponent from "./components/Registeration/Group-Registeration/AdminUpdate";
 import RegisterGroupPage from "./components/Registeration/Group-Registeration";
@@ -90,7 +89,6 @@ import SponsorshipForm from "./components/Sponsor/AdminOption";
 import SponsorshipTable2 from "./components/Sponsor/SponsorshipTable/PostTable";
 import BoothCostForm from "./components/BoothCostForm";
 import SponsorInvoice from "./components/SpoonsotInvoice";
-import "./style.scss";
 import NavBar from "./components/Navbar";
 import SideMenu from "./components/SideMenu";
 import TripForm from "./components/Tourism";
@@ -109,6 +107,9 @@ import ExhibitionsPage from "./components/ExhibitionsPage";
 import ImageGallery from "./components/GalaDinner/Gallery";
 import OneExhibit from "./components/OneExhibit";
 // import Speakers4 from "./components/SpeakerConf";
+import "./style.scss";
+import FloorPlanUploader from "./components/FloorPlann";
+import GroupTripRegistration from "./components/GroupTripRegistration";
 
 const App = () => {
   const location = useLocation();
@@ -139,7 +140,7 @@ const App = () => {
     <Fragment>
       <ToastContainer />
       <Loader show={showLoader} />
-      
+
       <div className="layout-page-container">
         {!noNavRoute.includes(location.pathname) &&
           !location.pathname.includes("/registerPage") &&
@@ -177,7 +178,6 @@ const App = () => {
                 element={<ConferenceDetails />}
               />
               <Route path="/trip/user/:tripId" element={<TripsStepperPage />} />
-              <Route path="/" element={<Dashboard />} />
               <Route
                 path="/edit/speaker/data/:conferenceId/:userId"
                 element={<EditSpeakerData />}
@@ -324,7 +324,10 @@ const App = () => {
                 path="/paper/form/:conferenceId"
                 element={<PaperSubmissionForm />}
               />
-              <Route path="/conference/details/:conferenceId" element={<OnePage />} />
+              <Route
+                path="/conference/details/:conferenceId"
+                element={<OnePage />}
+              />
               <Route
                 path="/conference/speaker/:conferenceId"
                 element={<Speakers4 />}
@@ -347,8 +350,10 @@ const App = () => {
               <Route path="/trans/form" element={<Transportation3 />} />
               <Route path="/ticket/booking2" element={<TravelForm2 />} />
               <Route path="/travel/hotel" element={<TravelFormHotel />} />
-              <Route path="/room/price3" element={<RoomPriceForm />} />
+              <Route path="/room/prices" element={<RoomPriceForm />} />
               <Route path="/admin/invoice/sponsor" element={<InvoicesS />} />
+              <Route path="/admin/upload/floor" element={< FloorPlanUploader />} />
+
               <Route
                 path="/admin/excel/table"
                 element={<TableComponentExcel />}
@@ -357,20 +362,14 @@ const App = () => {
                 path="/exhibitions/view"
                 element={<ViewFormExhibitions />}
               />
-                  <Route
-                path="/gallery"
-                element={<ImageGallery />}
-              />
-                     <Route
-                path="/one/exhibits/:exhibitId"
-                element={<OneExhibit/>}
-              />
+              <Route path="/gallery" element={<ImageGallery />} />
+              <Route path="/one/exhibits/:exhibitId" element={<OneExhibit />} />
+              <Route path="/group-trip/user/:tripId" element={<GroupTripRegistration />} />
             </Routes>
           </div>
         </div>
       </div>
     </Fragment>
-    
   );
 };
 

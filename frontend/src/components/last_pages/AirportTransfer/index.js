@@ -1,27 +1,53 @@
 import React, { useState } from "react";
+import axios from "axios";
 import Select from "../../../CoreComponent/Select";
 import Input from "../../../CoreComponent/Input";
 import DateInput from "../../../CoreComponent/Date";
-import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
-import axios from "axios";
 import Checkbox from "../../../CoreComponent/Checkbox";
-import MySideDrawer from "../../../CoreComponent/SideDrawer";
 import { useAuth } from "../../../common/AuthContext";
+import { toast } from "react-toastify";
 import "./style.scss";
+
+const TripTypeOptions = [
+  {
+    value: "One-way trip from the airport to the hotel",
+    label: "One-way trip from the airport to the hotel",
+  },
+  {
+    value: "One-way trip from the hotel to the airport",
+    label: "One-way trip from the hotel to the airport",
+  },
+  { value: "Round trip", label: "Round trip" },
+];
+
 const AirportTransferForm = () => {
   const { userId } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
-  const [tripType, setTripType] = useState(
-    "One-way trip from the airport to the hotel"
-  );
-  const [arrivalDate, setArrivalDate] = useState("");
-  const [arrivalTime, setArrivalTime] = useState("");
-  const [departureDate, setDepartureDate] = useState("");
-  const [departureTime, setDepartureTime] = useState("");
-  const [flightNumber, setFlightNumber] = useState("");
-  const [companionName, setCompanionName] = useState("");
-  const [hasCompanion, setHasCompanion] = useState(false);
+  const [formData, setFormData] = useState({
+    tripType: "",
+    arrivalDate: "",
+    arrivalTime: "",
+    departureDate: "",
+    departureTime: "",
+    flightNumber: "",
+    companionName: "",
+    hasCompanion: false,
+  });
+
+  const {
+    tripType,
+    arrivalDate,
+    arrivalTime,
+    departureDate,
+    departureTime,
+    flightNumber,
+    companionName,
+    hasCompanion,
+  } = formData;
   const BaseUrl = process.env.REACT_APP_BASE_URL;
+
+  const handleChange = (field) => (value) => {
+    setFormData((prevData) => ({ ...prevData, [field]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +57,7 @@ const AirportTransferForm = () => {
       const response = await axios.post(
         `${BaseUrl}/airport-transfer-bookings`,
         {
-          userId: userId,
+          userId,
           trip_type: tripType,
           arrival_date: arrivalDate,
           arrival_time: arrivalTime,
@@ -40,110 +66,92 @@ const AirportTransferForm = () => {
           flight_number: flightNumber,
           companion_name: hasCompanion ? companionName : null,
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      alert("Request submitted successfully.");
-      console.log(response.data);
+      toast.success("Request submitted successfully.");
     } catch (error) {
-      alert("An error occurred while submitting the request.");
-      console.log(error);
+      toast.error("An error occurred while submitting the request.");
     }
   };
 
   return (
-    <div className="airport-transfer-form">
-      {/* <p> Airport Transfer </p> */}
-      <button
-        className="airport-transfer-button"
-        onClick={() => setIsOpen(true)}
-      >
-        Add Airport Transfer
-      </button>
-
-      <MySideDrawer isOpen={isOpen} setIsOpen={setIsOpen}>
-        <CustomFormWrapper
-          title="Airport Transfer Request"
-          handleSubmit={handleSubmit}
-          setOpenForm={setIsOpen}
+    <div className="airport-transfer-form-section">
+      <div className="airport-transfer-form">
+        <form
+          className="airport-transfer-form-container"
+          onSubmit={handleSubmit}
         >
-          <form className="airport-transfer-form-container">
-            <Select
-              options={[
-                {
-                  value: "One-way trip from the airport to the hotel",
-                  label: "One-way trip from the airport to the hotel",
-                },
-                {
-                  value: "One-way trip from the hotel to the airport",
-                  label: "One-way trip from the hotel to the airport",
-                },
-                { value: "Round trip", label: "Round trip" },
-              ]}
-              value={{ value: tripType, label: tripType }}
-              setValue={(option) => setTripType(option.value)}
-              label="Trip Type"
-            />
+          <h3>Airport Transfer Request</h3>
 
-            <DateInput
-              label="Arrival Date"
-              inputValue={arrivalDate}
-              setInputValue={setArrivalDate}
-              required
-            />
+          <Select
+            options={TripTypeOptions}
+            value={{ value: tripType, label: tripType }}
+            setValue={(option) => handleChange("tripType")(option.value)}
+            label="Trip Type"
+          />
 
-            <DateInput
-              label="Arrival Time"
-              inputValue={arrivalTime}
-              setInputValue={setArrivalTime}
-              placeholder="Enter Arrival Time"
-              type="time"
-              required
-            />
+          <DateInput
+            label="Arrival Date"
+            inputValue={arrivalDate}
+            setInputValue={handleChange("arrivalDate")}
+            required
+          />
 
-            <DateInput
-              label="Departure Date"
-              inputValue={departureDate}
-              setInputValue={setDepartureDate}
-              placeholder="Enter Departure Date"
-              type="date"
-            />
+          <DateInput
+            label="Arrival Time"
+            inputValue={arrivalTime}
+            setInputValue={handleChange("arrivalTime")}
+            placeholder="Enter Arrival Time"
+            type="time"
+            required
+          />
 
-            <DateInput
-              label="Departure Time"
-              inputValue={departureTime}
-              setInputValue={setDepartureTime}
-              placeholder="Enter Departure Time"
-              type="time"
-            />
+          <DateInput
+            label="Departure Date"
+            inputValue={departureDate}
+            setInputValue={handleChange("departureDate")}
+            placeholder="Enter Departure Date"
+            type="date"
+          />
 
+          <DateInput
+            label="Departure Time"
+            inputValue={departureTime}
+            setInputValue={handleChange("departureTime")}
+            placeholder="Enter Departure Time"
+            type="time"
+          />
+
+          <Input
+            label="Flight Number"
+            inputValue={flightNumber}
+            setInputValue={handleChange("flightNumber")}
+            placeholder="Enter Flight Number"
+            required
+          />
+
+          <Checkbox
+            label="Do you have a companion?"
+            checkboxValue={hasCompanion}
+            setCheckboxValue={handleChange("hasCompanion")}
+          />
+
+          {hasCompanion && (
             <Input
-              label="Flight Number"
-              inputValue={flightNumber}
-              setInputValue={setFlightNumber}
-              placeholder="Enter Flight Number"
-              required
+              label="Companion Name"
+              inputValue={companionName}
+              setInputValue={handleChange("companionName")}
+              placeholder="Enter Companion's Name"
             />
+          )}
 
-            <Checkbox
-              label="Do you have a companion?"
-              checkboxValue={hasCompanion}
-              setCheckboxValue={setHasCompanion}
-            />
-
-            {hasCompanion && (
-              <Input
-                label="Companion Name"
-                inputValue={companionName}
-                setInputValue={setCompanionName}
-                placeholder="Enter Companion's Name"
-              />
-            )}
-          </form>
-        </CustomFormWrapper>
-      </MySideDrawer>
+          <div className="form-action">
+            <button type="submit" className="submit-btn">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>{" "}
     </div>
   );
 };

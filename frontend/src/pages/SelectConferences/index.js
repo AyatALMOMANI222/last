@@ -15,7 +15,7 @@ const SelectConferences = () => {
     const searchQuery = conferenceName
       ? `?search=${encodeURIComponent(conferenceName)}`
       : "";
-    const url = `${BaseUrl}/con${searchQuery}`;
+    const url = `${BaseUrl}/conferences/all`;
     console.log(BaseUrl);
     axios
       .get(url)

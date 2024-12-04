@@ -7,12 +7,11 @@ import "./style.scss";
 import Footer from "../../components/UI/Footer";
 import { toast } from "react-toastify";
 import { backendUrlImages } from "../../constant/config";
-import { useNavigate } from "react-router-dom"; // استيراد useNavigate
-import TopNavbar from "../../components/UI/NavigationBar";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [allConferences, setAllConferences] = useState([]);
-  const navigate = useNavigate(); // تهيئة الـ navigate
+  const navigate = useNavigate();
 
   const sliderSettings = {
     dots: true,
@@ -47,29 +46,42 @@ const Home = () => {
     getConference();
   }, []);
 
-  // دالة للانتقال إلى صفحة المؤتمر عند الضغط على الصورة
   const handleConferenceClick = (conferenceId) => {
-    navigate(`/conference/details/${conferenceId}`); // التنقل إلى صفحة المؤتمر
+    navigate(`/conference/details/${conferenceId}`);
   };
 
   return (
     <div className="home-page-section">
-      
       {/* Hero Slider */}
       <div className="slider">
-        
         <Slider {...sliderSettings}>
           <div>
-            <img src="/image/conff66.webp" alt="Slide 1" className="slide-image" />
+            <img
+              src="/image/conff66.webp"
+              alt="Slide 1"
+              className="slide-image"
+            />
           </div>
           <div>
-            <img src="/image/conff.webp" alt="Slide 2" className="slide-image" />
+            <img
+              src="/image/conff.webp"
+              alt="Slide 2"
+              className="slide-image"
+            />
           </div>
           <div>
-            <img src="/image/conf7.webp" alt="Slide 3" className="slide-image" />
+            <img
+              src="/image/conf7.webp"
+              alt="Slide 3"
+              className="slide-image"
+            />
           </div>
           <div>
-            <img src="/image/confg.jpeg" alt="Slide 4" className="slide-image" />
+            <img
+              src="/image/confg.jpeg"
+              alt="Slide 4"
+              className="slide-image"
+            />
           </div>
         </Slider>
       </div>
@@ -77,7 +89,10 @@ const Home = () => {
       {/* Welcome Section */}
       <section className="welcome-section">
         <h1>Welcome to Our Website</h1>
-        <p>Discover amazing content and experience top-quality services tailored to your needs.</p>
+        <p>
+          Discover amazing content and experience top-quality services tailored
+          to your needs.
+        </p>
       </section>
 
       {/* Featured Services Section */}
@@ -85,31 +100,51 @@ const Home = () => {
         <h2>Our Services</h2>
         <div className="features">
           <div className="feature">
-            <img src="/image/conff66.webp" alt="Conferences" className="feature-icon" />
+            <img
+              src="/image/conff66.webp"
+              alt="Conferences"
+              className="feature-icon"
+            />
             <h3>Conferences</h3>
             <div className="desc">
-              Conferences provide opportunities for networking, socializing, and hearing the latest industry trends.
+              Conferences provide opportunities for networking, socializing, and
+              hearing the latest industry trends.
             </div>
           </div>
           <div className="feature">
-            <img src="/image/conff66.webp" alt="Exhibitions" className="feature-icon" />
+            <img
+              src="/image/conff66.webp"
+              alt="Exhibitions"
+              className="feature-icon"
+            />
             <h3>Exhibitions</h3>
             <div className="desc">
-              Specialized in organizing Medical, Tourism, and Scientific Exhibitions to showcase advancements.
+              Specialized in organizing Medical, Tourism, and Scientific
+              Exhibitions to showcase advancements.
             </div>
           </div>
           <div className="feature">
-            <img src="/image/conff66.webp" alt="Planning" className="feature-icon" />
+            <img
+              src="/image/conff66.webp"
+              alt="Planning"
+              className="feature-icon"
+            />
             <h3>Planning</h3>
             <div className="desc">
-              We provide high-quality planning services tailored to meet your needs with excellence.
+              We provide high-quality planning services tailored to meet your
+              needs with excellence.
             </div>
           </div>
           <div className="feature">
-            <img src="/image/conff66.webp" alt="Media Campaign" className="feature-icon" />
+            <img
+              src="/image/conff66.webp"
+              alt="Media Campaign"
+              className="feature-icon"
+            />
             <h3>Media Campaign</h3>
             <div className="desc">
-              Full media campaign management, including press releases and press conferences for maximum visibility.
+              Full media campaign management, including press releases and press
+              conferences for maximum visibility.
             </div>
           </div>
         </div>
@@ -123,10 +158,10 @@ const Home = () => {
             <div
               key={conference.id}
               className="conference-image"
-              onClick={() => handleConferenceClick(conference.id)} // إضافة الحدث هنا
+              onClick={() => handleConferenceClick(conference.id)}
             >
               <img
-                src={`${backendUrlImages}${conference.image}`} // تأكد من أن هذا المسار صحيح
+                src={`${backendUrlImages}${conference.image}`}
                 alt={conference.title}
                 className="conference-thumbnail"
               />
@@ -136,8 +171,6 @@ const Home = () => {
       </section>
 
       <Footer />
-      {/* <TopNavbar/> */}
-
     </div>
   );
 };

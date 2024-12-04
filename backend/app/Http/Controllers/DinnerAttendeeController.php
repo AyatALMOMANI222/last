@@ -7,6 +7,7 @@ use App\Models\Conference;
 use App\Models\DinnerAttendee;
 use App\Models\Notification;
 use App\Models\Speaker;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -112,37 +113,74 @@ class DinnerAttendeeController extends Controller
     }
 
 
+    // public function getAttendeesByConferenceId($conferenceId)
+    // {
+    //     try {
+    //         // التحقق من وجود conference_id المدخل في جدول conferences
+    //         if (!Conference::find($conferenceId)) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Invalid conference ID.',
+    //             ], 422); // 422 تعني Unprocessable Entity
+    //         }
+    
+    //         // الحصول على الحضور المرتبط بالـ conference_id
+    //         $attendees = DinnerAttendee::with('speaker') // تحميل بيانات السبيكر
+    //             ->where('conference_id', $conferenceId)
+    //             ->get(['speaker_id', 'conference_id', 'companion_name', 'companion_price']); // جلب speaker_id و companion_name و companion_price
+    
+    //         // استجابة عند النجاح
+    //         return response()->json([
+    //             'success' => true,
+    //             'data' => $attendees,
+    //         ], 200); // 200 تعني OK
+    
+    //     } catch (\Exception $e) {
+    //         // استجابة عند حدوث خطأ
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'An error occurred while fetching attendees: ' . $e->getMessage(),
+    //         ], 500); // 500 تعني Internal Server Error
+    //     }
+    // }
     public function getAttendeesByConferenceId($conferenceId)
-    {
-        try {
-            // التحقق من وجود conference_id المدخل في جدول conferences
-            if (!Conference::find($conferenceId)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid conference ID.',
-                ], 422); // 422 تعني Unprocessable Entity
-            }
-    
-            // الحصول على الحضور المرتبط بالـ conference_id
-            $attendees = DinnerAttendee::with('speaker') // تحميل بيانات السبيكر
-                ->where('conference_id', $conferenceId)
-                ->get(['speaker_id', 'conference_id', 'companion_name', 'companion_price']); // جلب speaker_id و companion_name و companion_price
-    
-            // استجابة عند النجاح
-            return response()->json([
-                'success' => true,
-                'data' => $attendees,
-            ], 200); // 200 تعني OK
-    
-        } catch (\Exception $e) {
-            // استجابة عند حدوث خطأ
+{
+    try {
+        // التحقق من وجود conference_id المدخل في جدول conferences
+        if (!Conference::find($conferenceId)) {
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while fetching attendees: ' . $e->getMessage(),
-            ], 500); // 500 تعني Internal Server Error
+                'message' => 'Invalid conference ID.',
+            ], 422); // 422 تعني Unprocessable Entity
         }
+
+        // الحصول على الحضور المرتبط بالـ conference_id
+        $attendees = DinnerAttendee::with('speaker') // تحميل بيانات السبيكر
+            ->where('conference_id', $conferenceId)
+            ->get(['speaker_id', 'conference_id', 'companion_name', 'companion_price']); // جلب speaker_id و companion_name و companion_price
+
+        // إضافة بيانات المستخدم المرتبطة بكل سبيكر
+        $attendees->each(function ($attendee) {
+            if ($attendee->speaker) {
+                $attendee->user = User::find($attendee->speaker->user_id); // جلب بيانات المستخدم باستخدام user_id
+            }
+        });
+
+        // استجابة عند النجاح
+        return response()->json([
+            'success' => true,
+            'data' => $attendees,
+        ], 200); // 200 تعني OK
+
+    } catch (\Exception $e) {
+        // استجابة عند حدوث خطأ
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred while fetching attendees: ' . $e->getMessage(),
+        ], 500); // 500 تعني Internal Server Error
     }
-    
+}
+
 
     public function getAllAttendees()
     {

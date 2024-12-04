@@ -1,81 +1,61 @@
-// TourSlider.js
-import React, { useState, useEffect } from "react";
-import destinations from "./destinations";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./style.scss"; // تأكد من إضافة ملف CSS للتنسيق
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import destinations from "./destinations";
+import "./style.scss";
+
+// Slick slider settings
+const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 3000,
+  arrows: true,
+};
 
 const TourSlider = () => {
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(
-    Array(destinations.length).fill(0)
-  );
   const navigate = useNavigate();
-  const changeSlide = (direction, index) => {
-    setCurrentSlideIndex((prevIndex) => {
-      const newIndex = [...prevIndex];
-      newIndex[index] =
-        (newIndex[index] + direction + destinations[index].images.length) %
-        destinations[index].images.length;
-      return newIndex;
-    });
-  };
 
-  // إضافة دالة لتغيير الشريحة تلقائيًا
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlideIndex((prevIndex) => {
-        const newIndex = [...prevIndex];
-        return newIndex.map(
-          (index, i) => (index + 1) % destinations[i].images.length
-        );
-      });
-    }, 3000); // تغيير الشريحة كل 3 ثوانٍ
+  const DestinationCard = ({ destination }) => (
+    <div className="destination">
+      <div className="slider-container">
+        <Slider {...sliderSettings}>
+          {destination.images.map((img, imgIndex) => (
+            <div key={imgIndex} className="slide">
+              <img src={img} alt={destination.title} />
+            </div>
+          ))}
+        </Slider>
+        <DestinationInfo destination={destination} />
+      </div>
+    </div>
+  );
 
-    return () => clearInterval(interval); // تنظيف الـ interval عند فك التركيب
-  }, []);
+  const DestinationInfo = ({ destination }) => (
+    <div className="destination-info">
+      <h1>{destination.title}</h1>
+      <p>{destination.description}</p>
+      <div className="button-container3">
+        <button
+          className="book-now-button"
+          onClick={() => navigate("/registerType")}
+        >
+          Book Now
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="tour-slider">
       <h1>Tourist Attractions in Jordan</h1>
       {destinations.map((destination, index) => (
-        <div key={index} className="destination">
-          <div className="slider-container">
-            <div className="slider">
-              <div
-                className="slides"
-                style={{
-                  transform: `translateX(-${currentSlideIndex[index] * 100}%)`,
-                }}
-              >
-                {destination.images.map((img, imgIndex) => (
-                  <div key={imgIndex} className="slide">
-                    <img src={img} alt={destination.title} />
-                  </div>
-                ))}
-              </div>
-              <button className="prev" onClick={() => changeSlide(-1, index)}>
-                ❮
-              </button>
-              <button className="next" onClick={() => changeSlide(1, index)}>
-                ❯
-              </button>
-            </div>
-            <div className="destination-info">
-              <h1>{destination.title}</h1>
-              <p>{destination.description}</p>
-              <div className="button-container3">
-                <button
-                  className="book-now-button"
-                  onClick={() => {
-                    navigate("/registerType");
-                  }}
-                >
-                  Book Now
-                </button>
-                {/* <button className="get-package-button">Get Package</button> */}
-              </div>
-            </div>
-          </div>
-        </div>
+        <DestinationCard key={index} destination={destination} />
       ))}
     </div>
   );

@@ -38,8 +38,9 @@ const ContactUs = () => {
   };
 
   return (
+    <div className="contact-us-section">
     <div className="contact-us-container">
-      <h2>Write a message</h2>
+    <h2>Write a message</h2>
       <p>If you got any questions, please do not hesitate to send us a message. We reply within 24 hours!</p>
 
       {!isFormSent ? (
@@ -105,8 +106,9 @@ const ContactUs = () => {
         <p>info@eventscons.com</p>
         <p>www.eventscons.com</p>
       </div>
-    </div>
-  );
+      </div>
+      </div>
+    );
 };
 
 export default ContactUs;
