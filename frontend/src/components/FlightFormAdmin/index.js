@@ -22,8 +22,8 @@ const FlightFormAdmin = () => {
     { key: "user_name", label: "Passenger Name" },
     { key: "departure_airport", label: "Departure Airport" },
     { key: "arrival_airport", label: "Arrival Airport" },
-    { key: "departure_date", label: "Departure Date" },
-    { key: "arrival_date", label: "Arrival Date" },
+    // { key: "departure_date", label: "Departure Date" },
+    // { key: "arrival_date", label: "Arrival Date" },
     { key: "actions", label: "Actions" },
   ];
 
@@ -100,7 +100,7 @@ const FlightFormAdmin = () => {
             </button>
             <button
               className="get-companion-btn"
-              onClick={() => getCompanionFlights(item.user_id)}
+              onClick={() => getCompanionFlights(item.flight_id)}
             >
               View Companion
             </button>

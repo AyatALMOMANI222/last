@@ -1,0 +1,76 @@
+.pay-form-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+
+  .pay-form-invoice-details {
+    margin-bottom: 20px;
+
+    h3 {
+      font-size: 1.5rem;
+      color: #333333;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 5px;
+    }
+  }
+
+  .pay-form-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    background-color: #fafafa;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .label {
+      font-size: 0.9rem;
+      color: #666666;
+    }
+
+    .value {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #333333;
+    }
+  }
+
+  .pay-form-actions {
+    display: flex;
+    justify-content: center;
+
+    .pay-form-next-button {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+
+      &:active {
+        background-color: #004085;
+      }
+
+      &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

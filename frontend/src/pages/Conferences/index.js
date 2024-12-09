@@ -13,8 +13,12 @@ import Select from "../../CoreComponent/Select";
 import Pagination from "../../CoreComponent/Pagination";
 import EditConferencesAdmin from "../../components/ConferencesAdmin/editForm";
 import httpService from "../../common/httpService";
+import AirportTransferPrice from "../../components/last_pages/AirportTransfer/AirpotPrice";
+import { useNavigate } from "react-router-dom";
 const ConferencesPage = () => {
+  const navigate = useNavigate();
   const [selectedConferenceId, setSelectedConferenceId] = useState(null);
+  let conferenceId = 0;
   const [isViewDrawerOpen, setIsViewDrawerOpen] = useState(false);
   const [conferenceData, setConferenceData] = useState({});
   const [conferenceName, setConferenceName] = useState("");
@@ -25,8 +29,8 @@ const ConferencesPage = () => {
   const [status, setStatus] = useState("upcoming");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
-
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
+  const [isOpenPrice, setIsOpenPrice] = useState(false);
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -34,7 +38,12 @@ const ConferencesPage = () => {
     setSelectedConference(conference);
     setIsViewDrawerOpen(true);
   };
-
+  const handlePriceClick = (conference) => {
+    setSelectedConference(conference);
+    setTimeout(() => {
+      setIsOpenPrice(true);
+    }, [10]);
+  };
   const handleEditClick = (conferenceId, conference) => {
     setSelectedConferenceId(conferenceId);
     setConferenceData(conference);
@@ -114,8 +123,7 @@ const ConferencesPage = () => {
                   src={`${backendUrlImages}${conference.image}`}
                   alt={conference.title}
                   onError={(e) => {
-                  
-                    e.target.src =require( "./image.jpg");
+                    e.target.src = require("./image.jpg");
                   }}
                 />
 
@@ -132,6 +140,7 @@ const ConferencesPage = () => {
                     >
                       View
                     </button>
+
                     <button
                       className="edit"
                       onClick={() => handleEditClick(conference.id, conference)}
@@ -139,6 +148,24 @@ const ConferencesPage = () => {
                       Edit
                     </button>
                   </div>
+                </div>
+                <div className="actions-btns2">
+                  <button
+                    className="view"
+                    onClick={() => {
+                      handlePriceClick(conference);
+                    }}
+                  >
+                    Airport Transfer Price
+                  </button>
+                  <button
+                    className="view"
+                    onClick={() => {
+                      navigate(`/table/dinner/speaker/${conference.id}`);
+                    }}
+                  >
+                    Dinner details
+                  </button>
                 </div>
               </div>
             </Fragment>
@@ -308,6 +335,11 @@ const ConferencesPage = () => {
           </div>
         </div>
       </MySideDrawer>
+      <AirportTransferPrice
+        isOpen={isOpenPrice}
+        setIsOpen={setIsOpenPrice}
+        selectedConference={selectedConference}
+      />
     </div>
   );
 };

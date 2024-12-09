@@ -73,6 +73,12 @@
     color: #007bff;
     margin-top: 20px;
   }
+
+  .invoice-details {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+  }
 }
 .lessta {
   display: grid;

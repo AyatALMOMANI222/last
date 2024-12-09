@@ -1,22 +1,51 @@
-.all-users-table{
-    height: 100vh;
-    overflow-y: overlay;
-    padding: 20px;
-    &::-webkit-scrollbar {
-        width: 6px;
-      }
-    
-      &::-webkit-scrollbar-track {
-        background: var(--scrollbar-track-color);
-      }
-    
-      &::-webkit-scrollbar-thumb {
-        background: var(--scrollbar-thumb-color);
-        border-radius: 50px;
-      }
-    
-      &::-webkit-scrollbar-thumb:hover {
-        background: var(--scrollbar-thumb-hover-color);
-      }
+.all-users-table {
+  height: 100vh;
+  overflow-y: overlay;
+  padding: 20px;
+  height: calc(100vh - 121px);
 
+  overflow: overlay;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
+
+  .link-button {
+    display: inline-block;
+    color: #c82333;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 12px;
+    border: 0px solid #c82333;
+    background-color: #ffffff00;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .link-button:hover {
+    background-color: #c82333;
+    color: white;
+  }
+
+  .link-button:focus {
+    outline: none;
+  }
+
+  .link-button:active {
+    background-color: #7c0814;
+  }
 }

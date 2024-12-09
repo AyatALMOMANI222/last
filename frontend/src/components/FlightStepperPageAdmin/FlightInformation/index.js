@@ -14,6 +14,7 @@ import SimpleLabelValue from "../../SimpleLabelValue";
 import "./style.scss";
 import httpService from "../../../common/httpService";
 import TicketPricingForm from "../TicketPricingForm";
+import { useNavigate } from "react-router-dom";
 
 const FlightDetails = ({ data }) => {
   return (
@@ -49,7 +50,7 @@ const FlightInformation = ({ member, index }) => {
   const { currentStep, completeStep, passportImage, flightMembers } =
     useFlightStepperAdmin();
   const BaseUrl = process.env.REACT_APP_BASE_URL;
-
+  const navigate = useNavigate();
   // State to manage an array of trips
   const [trips, setTrips] = useState([
     {
@@ -114,6 +115,7 @@ const FlightInformation = ({ member, index }) => {
       showLoader: false,
       withToast: false,
     });
+    navigate("/flights")
   };
 
   const handleSavePrice = async (data) => {

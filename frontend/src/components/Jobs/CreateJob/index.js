@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Input from "../../../CoreComponent/Input";
 import "./style.scss"; // تأكد من استيراد ملف SCSS
+import TextArea from "../../../CoreComponent/TextArea";
 
 const CreateJob = () => {
   const [eventsCoordinator, setEventsCoordinator] = useState("");
@@ -53,7 +54,7 @@ const CreateJob = () => {
           />
         </div>
         <div className="form-group">
-          <Input
+          <TextArea
             label="Responsibilities"
             type="text"
             placeholder="Enter responsibilities"
@@ -62,7 +63,7 @@ const CreateJob = () => {
           />
         </div>
         <div className="form-group">
-          <Input
+          <TextArea
             label="Description"
             className ="desc"
             type="text"

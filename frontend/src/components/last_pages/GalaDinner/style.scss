@@ -1,12 +1,30 @@
-// ألوان أساسية
 $primary-color: #d32f2f; // أحمر جميل
 $secondary-color: #f2f2f2; // رمادي فاتح (سكني)
 $text-color: #333; // رمادي غامق / أسود تقريبي
 $border-radius: 8px;
+.dinner-container5 {
+  max-height: calc(100vh - 57px);
+  overflow: overlay;
 
-// تنسيق عام للحاوية
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
+}
 .trip-form-container5 {
-  background-color: $secondary-color;
+  // background-color: $secondary-color;
   max-width: 600px;
   margin: 10px auto;
   padding: 20px;

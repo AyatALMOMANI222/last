@@ -82,6 +82,7 @@ const GalaDinner = ({ isOpen, setIsOpen }) => {
   };
 
   return (
+    <div className="dinner-container5">
     <form className="trip-form-container5" onSubmit={handleSubmit}>
       <h2 className="form-title">Gala Dinner Details</h2>
       <Select
@@ -163,6 +164,8 @@ const GalaDinner = ({ isOpen, setIsOpen }) => {
         </button>
       </div>
     </form>
+    </div>
+
   );
 };
 

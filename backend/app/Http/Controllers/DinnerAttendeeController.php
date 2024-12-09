@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NotificationSent;
 use App\Models\Conference;
 use App\Models\DinnerAttendee;
+use App\Models\DinnerAttendeesInvoice;
 use App\Models\Notification;
 use App\Models\Speaker;
 use App\Models\User;
@@ -35,8 +36,24 @@ class DinnerAttendeeController extends Controller
             // إضافة speaker_id إلى البيانات المدخلة
             $validatedData['speaker_id'] = $speaker->id;
     
+            // الحصول على companion_dinner_price من جدول conferences باستخدام conference_id
+            $conference = Conference::findOrFail($validatedData['conference_id']);
+            $companionDinnerPrice = $conference->companion_dinner_price;
+    
+            // إضافة companion_dinner_price إلى البيانات المدخلة
+            $validatedData['companion_dinner_price'] = $companionDinnerPrice;
+    
             // إنشاء سجل جديد في جدول DinnerAttendee
-            DinnerAttendee::create($validatedData);
+            $dinnerAttendee = DinnerAttendee::create($validatedData);
+    
+            // إنشاء سجل جديد في جدول DinnerAttendeesInvoice
+            $invoiceData = [
+                'price' => $companionDinnerPrice,
+                'status' => 'pending',  // يمكنك تعديل حالة الفاتورة هنا بناءً على الحاجة
+                'dinner_attendees_id' => $dinnerAttendee->id,  // ربط الفاتورة بحضور العشاء
+            ];
+    
+            DinnerAttendeesInvoice::create($invoiceData);
     
             // إرسال الإشعار
             $message = 'All information related to the dinner will be confirmed through a message sent by the organizing company to your WhatsApp.';
@@ -52,6 +69,7 @@ class DinnerAttendeeController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'The participant has been added successfully.',
+                'companion_dinner_price' => $companionDinnerPrice, // إرسال companion_dinner_price في الاستجابة
             ], 201); // 201 تعني Created
     
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -66,6 +84,79 @@ class DinnerAttendeeController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while adding the participant: ' . $e->getMessage(),
+            ], 500); // 500 تعني Internal Server Error
+        }
+    }
+    public function getDinnerInfoFromToken()
+    {
+        try {
+            // استرجاع userId من التوكن
+            $userId = Auth::id(); // أو يمكنك استخراج userId من التوكن مباشرة
+    
+            // 1. الحصول على speaker_id من جدول 'speakers' بناءً على user_id
+            $speaker = Speaker::where('user_id', $userId)->first();
+    
+            if (!$speaker) {
+                // إذا لم يتم العثور على المتحدث
+                return response()->json(['error' => 'Speaker not found for this user. Please make sure the user is registered as a speaker.'], 404);
+            }
+    
+            // 2. الحصول على بيانات DinnerAttendee باستخدام speaker_id
+            $dinnerAttendee = DinnerAttendee::where('speaker_id', $speaker->id)->first();
+    
+            if (!$dinnerAttendee) {
+                // إذا لم يتم العثور على بيانات الحضور للعشاء
+                return response()->json(['error' => 'No dinner attendee record found for this speaker.'], 404);
+            }
+    
+            // 3. الحصول على بيانات الفاتورة من جدول 'dinner_attendees_invoice' باستخدام dinner_attendees_id
+            $invoice =DinnerAttendeesInvoice::where('dinner_attendees_id', $dinnerAttendee->id)->first();
+    
+            if (!$invoice) {
+                // إذا لم يتم العثور على الفاتورة
+                return response()->json(['error' => 'No invoice found for this dinner attendee.'], 404);
+            }
+    
+            // إذا تم العثور على جميع البيانات، إرجاع النتائج
+            return response()->json([
+                'speaker' => $speaker,
+                'dinner_attendee' => $dinnerAttendee,
+                'invoice' => $invoice
+            ]);
+    
+        } catch (\Exception $e) {
+            // إذا حدث خطأ غير متوقع، إرجاع رسالة خطأ مع تفاصيل الاستثناء
+            return response()->json(['error' => 'An unexpected error occurred: ' . $e->getMessage()], 500);
+        }
+    }
+    
+    
+
+    public function getDinnerAttendeesBySpeakerId($speakerId)
+    {
+        try {
+            // البحث عن قائمة الحضور العشاء باستخدام speaker_id
+            $dinnerAttendees = DinnerAttendee::where('speaker_id', $speakerId)->get();
+    
+            // التحقق إذا كانت هناك سجلات أم لا
+            if ($dinnerAttendees->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No dinner attendees found for this speaker.',
+                ], 404); // 404 تعني Not Found
+            }
+    
+            // إرسال الاستجابة مع قائمة الحضور العشاء
+            return response()->json([
+                'success' => true,
+                'data' => $dinnerAttendees,
+            ], 200); // 200 تعني OK
+    
+        } catch (\Exception $e) {
+            // استجابة عند حدوث خطأ
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred: ' . $e->getMessage(),
             ], 500); // 500 تعني Internal Server Error
         }
     }

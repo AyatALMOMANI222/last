@@ -6,134 +6,116 @@ import "./style.scss";
 import { backendUrlImages } from "../../../../constant/config";
 import tripImage from "../../../../icons/tripImage.webp";
 import { useAuth } from "../../../../common/AuthContext";
+
 const ViewUserTrips = () => {
   const navigate = useNavigate();
   const [allTrips, setAllTrips] = useState([]);
-  const [speakerTrip, setSpeakerData] = useState({});
   const [hasFreeTrip, setHasFreeTrip] = useState(false);
-  const [selectedTripType, setSelectedTripType] = useState('private'); // حالة لتحديد نوع الرحلة
+  const [selectedTripType, setSelectedTripType] = useState("private");
   const { myConferenceId } = useAuth();
 
   const token = localStorage.getItem("token");
   const BaseUrl = process.env.REACT_APP_BASE_URL;
 
-  const getSpeakerInfo = () => {
-    axios
-      .get(`${BaseUrl}/speakers/${myConferenceId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        // Handle the success response
-        console.log("Success:", response.data);
-        setSpeakerData(response.data.speaker);
-        // يمكنك التعامل مع البيانات هنا، مثل عرضها في واجهة المستخدم
-        const speakerData = response.data.speaker;
-        setHasFreeTrip(speakerData.free_trip);
-        console.log("Speaker Details:", speakerData, hasFreeTrip);
-      })
-      .catch((error) => {
-        // Handle the error response
-        if (error.response) {
-          // Response was received from the server but it returned an error status
-          console.error("Error:", error.response.data);
-          console.error("Status Code:", error.response.status);
+  const getSpeakerInfo = async () => {
+    try {
+      const response = await axios.get(
+        `${BaseUrl}/speakers/${myConferenceId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
+      const speakerData = response.data.speaker;
+      console.log({ speakerData });
+      setHasFreeTrip(speakerData.free_trip);
+    } catch (error) {
+      console.error(
+        "Failed to fetch speaker info:",
+        error.response?.data || error.message
+      );
+    }
   };
 
-  const getAuthToken = () => localStorage.getItem("token");
-
-  const getAllTrips = async () => {
+  const fetchTrips = async () => {
     try {
       const response = await httpService({
         method: "GET",
         url: `${BaseUrl}/all-trip`,
-        headers: { Authorization: `Bearer ${getAuthToken()}` },
-        withLoadder: true,
-        withToast: false,
+        params: { trip_type: selectedTripType },
+        headers: { Authorization: `Bearer ${token}` },
+        showLoader: true,
+        withToast: true,
       });
-
-      console.log(response?.trips);
-      setAllTrips(response?.trips);
+      setAllTrips(response?.trips || []);
     } catch (error) {
-      console.error("Error fetching conferences", error);
+      console.error("Failed to fetch trips:", error.message);
     }
   };
-
-  function getGroupTrip(conferenceId) {
-    axios
-      .get(`${BaseUrl}/group/trip/${myConferenceId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log(response.data); // طباعة البيانات
-        setAllTrips(response.data.trips); // تحديث الـ state مع البيانات التي تم جلبها
-      })
-      .catch((error) => {
-        console.error("There was an error!", error); // معالجة الخطأ
-      });
-  }
 
   useEffect(() => {
-    getAllTrips(); // استدعاء الدالة الخاصة بجلب كل الرحلات عند تحميل الصفحة
+    fetchTrips();
     getSpeakerInfo();
-  }, []);
-
-  // دالة لتحديد نوع الرحلة بناءً على الضغط على الأزرار
-  const handleTripTypeChange = (type) => {
-    setSelectedTripType(type); // تعيين نوع الرحلة
-    if (type === "group") {
-      getGroupTrip(myConferenceId); // جلب بيانات رحلات المجموعة
-    } else {
-      getAllTrips(); // جلب بيانات جميع الرحلات
-    }
-  };
+  }, [selectedTripType]);
 
   return (
     <div className="trips-page">
       <div className="trips-users-container">
         <div className="trips-types-btn">
-          {hasFreeTrip === 1 && (
-            <button onClick={() => handleTripTypeChange("group")}>Group Trips</button>
+          {hasFreeTrip && (
+            <button
+              className={`trip-type-btn ${
+                selectedTripType === "group" ? "active" : ""
+              }`}
+              onClick={() => setSelectedTripType("group")}
+            >
+              Group Trips
+            </button>
           )}
-          <button onClick={() => handleTripTypeChange("private")}>Private Trips</button>
+          <button
+            className={`trip-type-btn ${
+              selectedTripType === "private" ? "active" : ""
+            }`}
+            onClick={() => setSelectedTripType("private")}
+          >
+            Private Trips
+          </button>
         </div>
       </div>
 
       <div className="trip-cards">
-        {allTrips?.map((trip) => (
-          <div className="trip-card" key={trip.id}>
-            <img
-              src={`${backendUrlImages}${trip.image_1}`}
-              onError={(e) => {
-                e.currentTarget.src = tripImage;
-              }}
-              className="trip-image"
-              alt="Trip Image"
-            />
+        {allTrips.length > 0  ? (
+          allTrips.map((trip) => (
+            <div className="trip-card" key={trip.id}>
+              <img
+                src={`${backendUrlImages}${trip.image_1}`}
+                onError={(e) => {
+                  e.currentTarget.src = tripImage;
+                }}
+                className="trip-image"
+                alt="Trip"
+              />
 
-            <div className="trip-info">
-              <div className="main-info">
-                <div className="name">{trip.name}</div>
-                <div className="desc">{trip.description}</div>
-              </div>
-              <div className="actions-btns">
-                <button
-                  className="view"
-                  onClick={() => {
-                    navigate(`/view/trip/${trip?.id}`);
-                  }}
-                >
-                  Register for a Trip
-                </button>
+              <div className="trip-info">
+                <div className="main-info">
+                  <div className="name">{trip.name}</div>
+                  <div className="desc">{trip.description}</div>
+                </div>
+                <div className="actions-btns">
+                  <button
+                    className="view"
+                    onClick={() => navigate(`/view/trip/${trip.id}`)}
+                  >
+                    Register for a Trip
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="no-trips-message">No trips available for this type.</p>
+        )}
       </div>
     </div>
   );

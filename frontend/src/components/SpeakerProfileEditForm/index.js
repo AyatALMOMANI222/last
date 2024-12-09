@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import Input from "../../CoreComponent/Input";
 import Checkbox from "../../CoreComponent/Checkbox";
 import ImageUpload from "../../CoreComponent/ImageUpload";
-import deleteIcon from "../../icons/deleteIcon.svg";
-import SVG from "react-inlinesvg";
 import httpService from "../../common/httpService";
 import { backendUrlImages } from "../../constant/config";
 import { useAuth } from "../../common/AuthContext";
@@ -50,14 +47,8 @@ const SpeakerProfileForm = () => {
         userImage: speakerData.speaker.image,
         userBio: speakerData.speaker.biography,
       });
-    } else if (registrationType === "attendance") {
-      setProfileDetails({
-        userName: attendancesData?.attendance.name,
-        userImage: attendancesData?.attendance.image,
-        userBio: attendancesData?.attendance.biography,
-      });
     }
-  }, [registrationType, speakerData, attendancesData]);
+  }, [registrationType, speakerData]);
 
   useEffect(() => {
     initializeProfileDetails();

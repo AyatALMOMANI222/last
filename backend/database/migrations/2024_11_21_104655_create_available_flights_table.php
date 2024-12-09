@@ -15,6 +15,7 @@ class CreateAvailableFlightsTable extends Migration
         // عند القبول يتم التسجيل التكت بهذا الجدول
         Schema::create('available_flights', function (Blueprint $table) {
             $table->id('available_id');  // معرّف الرحلة المتاحة (Primary Key)
+            
             $table->foreignId('flight_id')->constrained('flights', 'flight_id')->onDelete('cascade');  // معرّف الرحلة من جدول الرحلات (Foreign Key)
 
             $table->date('departure_date');  // تاريخ الرحلة

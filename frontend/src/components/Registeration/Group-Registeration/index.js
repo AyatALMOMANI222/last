@@ -139,7 +139,7 @@ const RegisterGroupPage = () => {
   };
 
   return (
-    <div className="group-registration-page-container">
+    <div className="group-registration-page-container789">
       <DialogMessage
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}

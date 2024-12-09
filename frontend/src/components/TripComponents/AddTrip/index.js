@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
 import MySideDrawer from "../../../CoreComponent/SideDrawer";
 import Input from "../../../CoreComponent/Input";
 import Select from "../../../CoreComponent/Select";
 import DateInput from "../../../CoreComponent/Date";
-import ImageUpload from "../../../CoreComponent/ImageUpload"; // Use your ImageUpload component
+import ImageUpload from "../../../CoreComponent/ImageUpload";
 import axios from "axios";
 import { toast } from "react-toastify";
-
 import "./style.scss";
 
-const CreateTrip = ({ isOpen, setIsOpen }) => {
+const CreateTrip = ({ isOpen, setIsOpen, fetchTrips }) => {
   // State for trip parameters
   const [tripType, setTripType] = useState("private");
   const [name, setName] = useState("");
@@ -18,9 +17,6 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
   const [additionalInfo, setAdditionalInfo] = useState("");
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
-  const [image3, setImage3] = useState(null);
-  const [image4, setImage4] = useState(null);
-  const [image5, setImage5] = useState(null);
   const [pricePerPerson, setPricePerPerson] = useState(0);
   const [priceForTwo, setPriceForTwo] = useState(0);
   const [priceForThreeOrMore, setPriceForThreeOrMore] = useState(0);
@@ -73,9 +69,9 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
     // Append images individually
     formData.append("images[0]", image1 || null);
     formData.append("images[1]", image2 || null);
-    formData.append("images[2]", image3 || null);
-    formData.append("images[3]", image4 || null);
-    formData.append("images[4]", image5 || null);
+    formData.append("images[2]", image2 || null);
+    formData.append("images[3]", image2 || null);
+    formData.append("images[4]", image2 || null);
 
     formData.append("price_per_person", pricePerPerson);
     formData.append("price_for_two", priceForTwo);
@@ -97,6 +93,7 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
       });
       toast.success("The data was updated successfully!");
       setIsOpen(false);
+      fetchTrips();
     } catch (error) {
       console.error(
         "Error adding trip:",
@@ -107,6 +104,10 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
   useEffect(() => {
     getConference();
   }, [isOpen]);
+
+  useEffect(() => {
+    console.log(tripType);
+  }, [tripType]);
   return (
     <div>
       <MySideDrawer isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -152,7 +153,6 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
               placeholder="Enter additional info"
             />
 
-            {/* Using the ImageUpload component for image uploads */}
             <ImageUpload
               label="Image 1"
               allowedExtensions={["jpg", "png", "jpeg"]}
@@ -165,74 +165,68 @@ const CreateTrip = ({ isOpen, setIsOpen }) => {
               inputValue={image2}
               setInputValue={setImage2}
             />
-            <ImageUpload
-              label="Image 3"
-              allowedExtensions={["jpg", "png", "jpeg"]}
-              inputValue={image3}
-              setInputValue={setImage3}
-            />
-            <ImageUpload
-              label="Image 4"
-              allowedExtensions={["jpg", "png", "jpeg"]}
-              inputValue={image4}
-              setInputValue={setImage4}
-            />
-            <ImageUpload
-              label="Image 5"
-              allowedExtensions={["jpg", "png", "jpeg"]}
-              inputValue={image5}
-              setInputValue={setImage5}
-            />
 
-            <Input
-              label="Price per Person"
-              inputValue={pricePerPerson}
-              setInputValue={(value) =>
-                setPricePerPerson(parseFloat(value) || 0)
-              }
-              placeholder="Enter price per person"
-              type="number"
-            />
-            <Input
-              label="Price for Two"
-              inputValue={priceForTwo}
-              setInputValue={(value) => setPriceForTwo(parseFloat(value) || 0)}
-              placeholder="Enter price for two"
-              type="number"
-            />
-            <Input
-              label="Price for Three or More"
-              inputValue={priceForThreeOrMore}
-              setInputValue={(value) =>
-                setPriceForThreeOrMore(parseFloat(value) || 0)
-              }
-              placeholder="Enter price for three or more"
-              type="number"
-            />
+            {tripType === "private" && (
+              <Fragment>
+                <Input
+                  label="Price per Person"
+                  inputValue={pricePerPerson}
+                  setInputValue={(value) =>
+                    setPricePerPerson(parseFloat(value) || 0)
+                  }
+                  placeholder="Enter price per person"
+                  type="number"
+                />
+                <Input
+                  label="Price for Two"
+                  inputValue={priceForTwo}
+                  setInputValue={(value) =>
+                    setPriceForTwo(parseFloat(value) || 0)
+                  }
+                  placeholder="Enter price for two"
+                  type="number"
+                />
+                <Input
+                  label="Price for Three or More"
+                  inputValue={priceForThreeOrMore}
+                  setInputValue={(value) =>
+                    setPriceForThreeOrMore(parseFloat(value) || 0)
+                  }
+                  placeholder="Enter price for three or more"
+                  type="number"
+                />
+              </Fragment>
+            )}
+
             <Input
               label="Inclusions"
               inputValue={inclusions}
               setInputValue={setInclusions}
               placeholder="Enter inclusions"
             />
-            <Input
-              label="Group Price per Person"
-              inputValue={groupPricePerPerson}
-              setInputValue={(value) =>
-                setGroupPricePerPerson(parseFloat(value) || 0)
-              }
-              placeholder="Enter group price per person"
-              type="number"
-            />
-            <Input
-              label="Group Price per Speaker"
-              inputValue={groupPricePerSpeaker}
-              setInputValue={(value) =>
-                setGroupPricePerSpeaker(parseFloat(value) || 0)
-              }
-              placeholder="Enter group price per speaker"
-              type="number"
-            />
+            {tripType === "group" && (
+              <Fragment>
+                {" "}
+                <Input
+                  label="Price per Person"
+                  inputValue={groupPricePerPerson}
+                  setInputValue={(value) =>
+                    setGroupPricePerPerson(parseFloat(value) || 0)
+                  }
+                  placeholder="Enter group price per person"
+                  type="number"
+                />
+                <Input
+                  label="Price per Speaker"
+                  inputValue={groupPricePerSpeaker}
+                  setInputValue={(value) =>
+                    setGroupPricePerSpeaker(parseFloat(value) || 0)
+                  }
+                  placeholder="Enter group price per speaker"
+                  type="number"
+                />
+              </Fragment>
+            )}
             <Input
               label="Location"
               inputValue={location}

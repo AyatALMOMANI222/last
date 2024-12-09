@@ -85,7 +85,7 @@ function SideMenu() {
       ],
     },
 
-    ...(isSpeaker && !isAdmin || isAttendance  && !isAdmin 
+    ...((isSpeaker && !isAdmin) || (isAttendance && !isAdmin)
       ? [
           {
             label: "Page",
@@ -96,11 +96,9 @@ function SideMenu() {
               { label: "Airport Transfer", path: "/airport/transfer" },
               { label: "Reservation", path: "/reservation/form" },
               { label: "All Trips", path: "/view-user-trips" },
-              {
-                label: "Airport Transfer Price",
-                path: "/airport/transfer/price",
-              },
-              { label: "Gala Dinner", path: "/gala/dinner" },
+              isSpeaker && !isAdmin
+                ? { label: "Gala Dinner", path: "/gala/dinner" }
+                : {},
             ],
           },
         ]
@@ -116,21 +114,27 @@ function SideMenu() {
               { label: "Exhibitions", path: "/exhibitions" },
               { label: "Trips", path: "/create/trip" },
               { label: "Flight Admin", path: "/flights" },
-              {
-                label: "Airport Transfer Price",
-                path: "/airport/transfer/price",
-              },
-              { label: "Gala Dinner", path: "/gala/dinner" },
+
+              { label: "Gala Dinner", path: "/gala" },
               { label: "Create Job", path: "/job" },
               { label: "Messages", path: "/msgs" },
               { label: "Job Applicants", path: "/job/admin" },
-              { label: "Pending Users", path: "/user" },
+              { label: "Users Discount", path: "/user" },
               { label: "Users", path: "/pending/users" },
-              { label: "Romm Prices", path: "/room/prices" },
+              { label: "Room Prices", path: "/room/prices" },
               { label: "Enter new flights", path: "/enter/new/flights" },
-              { label: "Group Registeration Table", path: "/admin/excel/table" },
-              { label: "Dinner Table Speaker static", path: "/table/dinner/speaker/1" },
-
+              {
+                label: "Group Registeration Table",
+                path: "/admin/excel/table",
+              },
+              {
+                label: "Dinner Table Speaker static",
+                path: "/table/dinner/speaker/1",
+              },
+              {
+                label: "Add Clients",
+                path: "/add/client",
+              },
             ],
           },
         ]

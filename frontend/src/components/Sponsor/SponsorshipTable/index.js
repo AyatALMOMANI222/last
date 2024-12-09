@@ -38,10 +38,10 @@ const SponsorshipTable = ({ onSelectedSponsorshipsChange }) => {
   }
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1 style={{ textAlign: "center", color: "#B22222" }}>
+    {data.length>0 &&  <h1 style={{ textAlign: "center", color: "#B22222" }}>
         Sponsorship Packages
-      </h1>
-      <table
+      </h1>}
+    { data.length>0 && <table
         style={{
           width: "100%",
           borderCollapse: "collapse",
@@ -142,7 +142,7 @@ const SponsorshipTable = ({ onSelectedSponsorshipsChange }) => {
             ))}
           </tr>
         </tbody>
-      </table>
+      </table>}
     </div>
   );
 };

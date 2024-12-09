@@ -5,6 +5,7 @@ import { StepperProvider, useStepper } from "./StepperContext";
 import RoomForm from "./RoomForm";
 import InvoiceForm from "./InvoiceForm";
 import "./style.scss";
+import PayForm from "./PayForm";
 
 export const saveToLocalStorage = (key, value) => {
   try {
@@ -40,10 +41,16 @@ const ParentComponentContent = () => {
   const stepperInfo = [
     { title: "Speaker Reservation" },
     { title: "Reservation Of Companions" },
+    { title: "Reservation Details" },
     { title: "Invoice" },
   ];
 
-  const componentsMap = [<ReservationForm />, <RoomForm />, <InvoiceForm />];
+  const componentsMap = [
+    <ReservationForm />,
+    <RoomForm />,
+    <InvoiceForm />,
+    <PayForm />,
+  ];
 
   useEffect(() => {
     return () => {

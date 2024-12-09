@@ -117,10 +117,12 @@ const SponsorshipTable2 = () => {
         setError("Error submitting data");
       });
   };
+  const isFormEmpty = Object.values(formData).every((value) => value === "");
 
   return (
     <div className="container-sponsorship-packages">
-      <h1 className="title">Sponsorship Packages</h1>
+      {!isFormEmpty && <h1 className="title">Sponsorship Packages</h1>}
+
       {error && <p className="error">{error}</p>}
 
       <div className="form-container">

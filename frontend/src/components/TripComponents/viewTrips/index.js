@@ -45,7 +45,7 @@ const ViewTrip = () => {
 
     const params = {};
     if (tripType) {
-      params.trip_type = tripType;
+      params.trip_type = tripType?.value;
     }
     if (tripName) {
       params.name = tripName;
@@ -139,7 +139,7 @@ const ViewTrip = () => {
         </button>
       </div>
 
-      <CreateTrip isOpen={isAddTrip} setIsOpen={setAddTrip} />
+      <CreateTrip isOpen={isAddTrip} setIsOpen={setAddTrip} fetchTrips={fetchTrips} />
       <AddOption isOpen={isAddPrice} setIsOpen={setAddPrice} tripId={tripId} />
       <ViewOneTrip
         isOpen={viewOneTrip}

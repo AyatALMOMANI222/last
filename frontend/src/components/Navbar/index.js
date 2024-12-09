@@ -87,10 +87,7 @@ const NavBar = () => {
         { label: "Gala Dinner", url: "/gala/dinner" },
         { label: "Reservation", url: "/reservation/form" },
         { label: "All Trips", url: "/view-user-trips" },
-        {
-          label: "Airport Transfer Price",
-          url: "/airport/transfer/price",
-        },
+
         { label: "Gala Dinner", url: "/gala" },
       ],
     },
@@ -103,10 +100,6 @@ const NavBar = () => {
               { label: "Exhibitions", url: "/exhibitions" },
               { label: "Trips", url: "/create/trip" },
               { label: "Flight Admin", url: "/flights" },
-              {
-                label: "Airport Transfer Price",
-                url: "/airport/transfer/price",
-              },
               { label: "Gala Dinner", url: "/gala" },
               { label: "Create Job", url: "/job" },
               { label: "Messages", url: "/msgs" },
@@ -114,7 +107,10 @@ const NavBar = () => {
               { label: "Sponsor Option Form", url: "/sponsor/option/form" },
               { label: "Users", url: "/pending/users" },
               { label: "Enter new flights", url: "/enter/new/flights" },
-              { label: "Dinner Table Speaker static", url: "/table/dinner/speaker/1" },
+              {
+                label: "Dinner Table Speaker static",
+                url: "/table/dinner/speaker/1",
+              },
 
               {
                 label: "Admin Sponsorship Packages",
@@ -126,7 +122,6 @@ const NavBar = () => {
               },
               { label: "Admin Booth Cost ", url: "/sponsor/admin/booth/cost" },
               { label: "Sponsor Invoices ", url: "/admin/invoice/sponsor" },
-
             ],
           },
         ]
@@ -192,21 +187,20 @@ const NavBar = () => {
 
       <div className="navbar-auth">
         <div className="menuu">
-        <div
-        className="menu-title"
-        onClick={() => navigate("/home")}
-        style={{ cursor: "pointer" }}
-      >
-        {"Home"}
-      </div>
-      <div
-        className="menu-title"
-        onClick={() => navigate("/about")}
-        style={{ cursor: "pointer" }}
-      >
-        {"About"}
-      </div>
-
+          <div
+            className="menu-title"
+            onClick={() => navigate("/home")}
+            style={{ cursor: "pointer" }}
+          >
+            {"Home"}
+          </div>
+          <div
+            className="menu-title"
+            onClick={() => navigate("/about")}
+            style={{ cursor: "pointer" }}
+          >
+            {"About"}
+          </div>
         </div>
         <NotificationDropdown />
         {!localStorage.getItem("token") ? (

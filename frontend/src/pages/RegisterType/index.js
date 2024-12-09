@@ -62,7 +62,7 @@ const RegisterType = () => {
           <div
             className="type"
             onClick={() => {
-              navigate("/register/other");
+              navigate("/other");
             }}
           >
             <SVG src={group} height={150} width={150} />

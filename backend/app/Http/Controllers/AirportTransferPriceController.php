@@ -13,7 +13,7 @@ class AirportTransferPriceController extends Controller
     {
         try {
             $request->validate([
-                'conference_id' => 'required|exists:conferences,id', // يجب أن يكون موجودًا في جدول المؤتمرات
+                'conference_id' => 'required|exists:conferences,id|unique:airport_transfer_prices,conference_id', // Ensure conference_id is unique in airport_transfer_prices table
                 'from_airport_price' => 'nullable|numeric',
                 'to_airport_price' => 'nullable|numeric',
                 'round_trip_price' => 'nullable|numeric',
@@ -37,6 +37,7 @@ class AirportTransferPriceController extends Controller
             ], 500); 
         }
     }
+    
     public function getPricesByConferenceId($conferenceId)
 {
     try {

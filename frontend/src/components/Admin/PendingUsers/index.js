@@ -54,8 +54,10 @@ const PendingUsersTable = () => {
                   `/edit/speaker/data/${user.conferences?.[0]?.id}/${user.id}`
                 );
               } else if (user?.registration_type === "attendance") {
+                // console.log({user});
+
                 navigate(
-                  `/edit/attendance/data/${user.conferences?.[0]?.id}/${user.id}`
+                  `/edit/attendance/data/${user.conference_id}/${user.id}`
                 );
               } else if (user?.registration_type === "sponsor") {
                 console.log({ user });
@@ -68,16 +70,13 @@ const PendingUsersTable = () => {
                 };
                 setSponserData(sponsor);
                 setIsDialogOpen(true);
+              } else if (user?.registration_type === "group_registration") {
+                navigate(`/group/update/admin/${user.id}`);
+              } else if (!user?.registration_type) {
+                console.log("yyyyyyyyyyyy");
+                navigate(`/adminForm/${user.id}`);
+
               }
-              else if (user?.registration_type === "group_registration") {
-                console.log({ user });
-                const sponsor = {
-                  user_id: user?.id,
-                  conference_id: user?.conference_id,
-                };
-                navigate(
-                  `/group/update/admin/${user.id}`
-                );              }
             }}
             disabled={user?.status !== "pending"}
           >

@@ -58,6 +58,7 @@ const RegisterPage = () => {
     formData.append("specialization", specialization);
     formData.append("nationality", selectedNationality.value);
     formData.append("country_of_residence", country.value);
+    formData.append("conference_id", id);
 
     try {
       const response = await axios.post(`${BaseUrl}/users/${id}`, formData, {

@@ -1,0 +1,120 @@
+// @use "../../Global/style.scss";
+
+.register-page-container3 {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #d3d3d31d;
+  .register-img {
+    position: relative;
+    top: -72px;
+  }
+  .register-form {
+    width: 100%;
+    margin-top: 2%;
+
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 22px;
+      text-align: left;
+      padding: 0px 30px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      color: #ef233c;
+      margin-bottom: 15px;
+      margin-top: 15px;
+      .sub-title {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 22px;
+        text-align: left;
+        padding: 0px 20px;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+
+    .note {
+      padding: 15px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 20px;
+      text-align: left;
+    }
+    .fields-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-column-gap: 20px;
+      padding: 0px 30px;
+      width: 60%;
+
+      .image-container {
+        height: 80px;
+      }
+    }
+  }
+
+  .input-container,
+  .phone-input-container,
+  .dropdown-container {
+    height: 84px !important;
+  }
+  .textarea-container {
+    height: 120px;
+  }
+
+  .register-btn-container {
+    display: flex;
+    flex-direction: row;
+    padding-left: 30px;
+
+    .register-btn {
+      cursor: pointer;
+      width: 200px;
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #ffffff;
+      background-color: #ef233c;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+      margin-top: 10px;
+    }
+
+    .register-btn:hover {
+      background-color: #407cffbd;
+      color: #ffffff;
+    }
+    .register-btn:active {
+      background-color: #104bcd;
+      color: #ffffff;
+    }
+  }
+
+  .login-span {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 50px;
+    text-align: left;
+    padding: 0px 20px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .register-page-container {
+    align-items: start;
+
+    .register-form {
+      margin-top: 40%;
+      box-shadow: none;
+    }
+  }
+}

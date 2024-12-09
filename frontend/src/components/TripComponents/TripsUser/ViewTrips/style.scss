@@ -25,10 +25,6 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-
-  
-
-
   }
 
   .trip-cards {
@@ -43,7 +39,7 @@
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       width: 202px;
-      height: 290px;
+      max-height: 290px;
 
       .trip-image {
         width: 100%;
@@ -99,7 +95,7 @@
 
   .trips-users-container {
     margin: 20px 0px;
-    height: 30px;
+    padding: 20px;
     padding: 20px;
     display: flex;
     flex-direction: row;
@@ -151,7 +147,7 @@
         color: #fff;
       }
       &:active {
-     background-color:#c82333;
+        background-color: #c82333;
         color: #fff;
       }
     }

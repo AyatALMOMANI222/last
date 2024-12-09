@@ -1,12 +1,28 @@
 .pending-users-container {
-  background-color: #f1f1f170;
-  padding: 20px;
+
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 1200px;
-  margin: 20px auto;
+  height: calc(100vh - 60px);
+  padding: 20px;
+  overflow: overlay;
 
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
   .pending-users-container h2 {
     font-size: 24px;
     font-weight: 600;

@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     console.log({ authData });
   }, [authData]);
+
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
     if (savedToken) {

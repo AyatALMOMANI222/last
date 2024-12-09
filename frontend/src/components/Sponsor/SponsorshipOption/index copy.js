@@ -320,7 +320,8 @@ const SponsorSection = () => {
 
   return (
     <div className="sponsor-section">
-      <h2>Sponsorship Opportunities</h2>
+    {options.length > 0 &&  <h2>Sponsorship Opportunities</h2> } 
+    
       <div className="sponsorship-options">
         {options.map((option) => (
           <SponsorshipOption

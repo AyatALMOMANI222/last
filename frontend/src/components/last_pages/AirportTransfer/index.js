@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from "../../../CoreComponent/Select";
 import Input from "../../../CoreComponent/Input";
@@ -7,6 +7,7 @@ import Checkbox from "../../../CoreComponent/Checkbox";
 import { useAuth } from "../../../common/AuthContext";
 import { toast } from "react-toastify";
 import "./style.scss";
+import Dialog from "../../../CoreComponent/Dialog";
 
 const TripTypeOptions = [
   {
@@ -33,6 +34,10 @@ const AirportTransferForm = () => {
     hasCompanion: false,
   });
 
+  const [invoiceData, setInvoiceData] = useState(null);
+  const [open, setOpen] = useState(null);
+  const [bookingData, setBookingData] = useState(null);
+
   const {
     tripType,
     arrivalDate,
@@ -43,6 +48,7 @@ const AirportTransferForm = () => {
     companionName,
     hasCompanion,
   } = formData;
+
   const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const handleChange = (field) => (value) => {
@@ -68,35 +74,64 @@ const AirportTransferForm = () => {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+
+      const invoice = response.data.invoice; // Assuming invoice is part of the response
+      setInvoiceData(invoice); // Store the invoice data
+      setOpen(true);
       toast.success("Request submitted successfully.");
     } catch (error) {
       toast.error("An error occurred while submitting the request.");
     }
   };
+  const getBooking = () => {
+    const token = localStorage.getItem("token")
+    axios
+      .get('http://127.0.0.1:8000/api/user/airport-transfer-bookings', {
+        headers: {
+          Authorization: `Bearer ${token}`, // تمرير التوكن في الهيدر
+        },
+      })
+      .then((response) => {
+        // وضع البيانات في الحالة
+         setBookingData(response.data);
+      
+         
+         
+      })
+      .catch((err) => {
+        // التعامل مع الأخطاء وتحديث حالة الخطأ
+        // setError(err.response ? err.response.data : err.message);
+      });
+  };
+  useEffect(()=>{
+    getBooking();
+  },[])
 
   return (
     <div className="airport-transfer-form-section">
+    {!bookingData || bookingData.length === 0  ? (
       <div className="airport-transfer-form">
         <form
           className="airport-transfer-form-container"
           onSubmit={handleSubmit}
         >
           <h3>Airport Transfer Request</h3>
-
+  
           <Select
             options={TripTypeOptions}
             value={{ value: tripType, label: tripType }}
             setValue={(option) => handleChange("tripType")(option.value)}
             label="Trip Type"
           />
-
+  
           <DateInput
             label="Arrival Date"
             inputValue={arrivalDate}
             setInputValue={handleChange("arrivalDate")}
             required
           />
-
+  
           <DateInput
             label="Arrival Time"
             inputValue={arrivalTime}
@@ -105,7 +140,7 @@ const AirportTransferForm = () => {
             type="time"
             required
           />
-
+  
           <DateInput
             label="Departure Date"
             inputValue={departureDate}
@@ -113,7 +148,7 @@ const AirportTransferForm = () => {
             placeholder="Enter Departure Date"
             type="date"
           />
-
+  
           <DateInput
             label="Departure Time"
             inputValue={departureTime}
@@ -121,7 +156,7 @@ const AirportTransferForm = () => {
             placeholder="Enter Departure Time"
             type="time"
           />
-
+  
           <Input
             label="Flight Number"
             inputValue={flightNumber}
@@ -129,13 +164,13 @@ const AirportTransferForm = () => {
             placeholder="Enter Flight Number"
             required
           />
-
+  
           <Checkbox
             label="Do you have a companion?"
             checkboxValue={hasCompanion}
             setCheckboxValue={handleChange("hasCompanion")}
           />
-
+  
           {hasCompanion && (
             <Input
               label="Companion Name"
@@ -144,15 +179,63 @@ const AirportTransferForm = () => {
               placeholder="Enter Companion's Name"
             />
           )}
-
+  
           <div className="form-action">
             <button type="submit" className="submit-btn">
               Submit
             </button>
           </div>
         </form>
-      </div>{" "}
-    </div>
+        <Dialog
+          viewHeader={true}
+          header="Invoice"
+          open={open}
+          setOpen={setOpen}
+          children={
+            invoiceData && (
+              <div className="invoice-section">
+                <p>Price: ${invoiceData}</p>
+                <button className="pay-btn">Pay Now</button>
+              </div>
+            )
+          }
+        />
+      </div>
+    ) : (
+      <div className="booking-data">
+        {bookingData?.map((booking) => (
+          <div key={booking.id} className="booking-card">
+            <div className="booking-details">
+              <h4>Booking Details</h4>
+              <p><strong>Trip Type:</strong> {booking.trip_type}</p>
+              <p><strong>Arrival Date:</strong> {booking.arrival_date}</p>
+              <p><strong>Arrival Time:</strong> {booking.arrival_time}</p>
+              <p><strong>Departure Date:</strong> {booking.departure_date}</p>
+              <p><strong>Departure Time:</strong> {booking.departure_time}</p>
+              <p><strong>Flight Number:</strong> {booking.flight_number}</p>
+              {/* {booking.speaker && (
+                <p><strong>Speaker: </strong>{booking.speaker.accommodation_status ? "Yes" : "No"}</p>
+              )} */}
+            </div>
+  
+            <div className="invoice-details">
+              <h4>Invoice</h4>
+              {booking.invoice ? (
+                <>
+                  <p><strong>Total Price:</strong> ${booking.invoice.total_price}</p>
+                  <p><strong>Status:</strong> {booking.invoice.status}</p>
+                  <button className="pay-btn">Pay Now</button>
+                </>
+              ) : (
+                <p>No invoice available</p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+  
   );
 };
 

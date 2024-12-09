@@ -1,69 +1,42 @@
 .speaker-table {
-    margin: 20px;
-  
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
+  margin: 20px;
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 10px;
+      border: 1px solid #ddd;
       text-align: center;
     }
-  
-    table {
-      width: 100%;
-      border-collapse: collapse;
-  
-      th, td {
-        padding: 10px;
-        border: 1px solid #ddd;
-        text-align: center;
-      }
-  
-      th {
-        background-color: #f4f4f4;
-      }
-  
-      tr:hover {
-        background-color: #f1f1f1;
-      }
-      .view-button {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        width: 30%;
-  
-        &:hover {
-          background-color: #c82333;
-        }
-      }
+
+    th {
+      background-color: #f4f4f4;
     }
-  
 
-  
-    .modal-content {
-      padding: 20px;
-      background-color: white;
-      border-radius: 8px;
-  
-      h2 {
-        margin-bottom: 15px;
-      }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .view-button {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 30%;
 
-      button  {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-  width: 30%;
-        &:hover {
-          background-color: #c82333;
-        }
+      &:hover {
+        background-color: #c82333;
       }
     }
   }
-  
-  // يمكنك إضافة المزيد من الأنماط حسب الحاجة لجعل التصميم أكثر جمالًا
-  
+}

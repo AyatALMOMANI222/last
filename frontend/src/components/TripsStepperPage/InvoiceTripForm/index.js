@@ -12,7 +12,7 @@ import "./style.scss";
 import { useTripsStepper } from "../StepperContext";
 
 const InvoiceTripForm = () => {
-  const { currentStep, completeStep } = useTripsStepper();
+  const { currentStep, completeStep, invoice, setInvoice } = useTripsStepper();
   const navigate = useNavigate();
   const { tripId } = useParams();
   const participantsData = getFromLocalStorage("participants") || [];
@@ -49,11 +49,10 @@ const InvoiceTripForm = () => {
         },
       })
       .then((response) => {
-        console.log(response.data);
-
         const invoiceIds = response.data?.invoice.map((item) => {
           return item.participant_id;
         });
+        setInvoice(response.data?.invoice);
         saveToLocalStorage("invoiceIds", invoiceIds);
         setTimeout(() => {
           completeStep(currentStep);
@@ -61,7 +60,11 @@ const InvoiceTripForm = () => {
 
         toast.success("The data was updated successfully!");
       })
-      .catch((error) => {});
+      .catch((error) => {
+        setInvoice([]);
+        toast.error("User is already registered in this trip");
+        navigate("/view-user-trips");
+      });
   };
 
   return (

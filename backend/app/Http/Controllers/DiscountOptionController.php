@@ -39,25 +39,25 @@ class DiscountOptionController extends Controller
     {
         // الحصول على user_id من التوكن
         $userId = Auth::id();
-    
+
         // الحصول على خيارات الخصم بناءً على user_id و trip_id
         $discountOptions = DiscountOption::where('user_id', $userId)
-                                          ->where('trip_id', $tripId)
-                                          ->get();
-    
+            ->where('trip_id', $tripId)
+            ->get();
+
         // التحقق مما إذا كانت هناك خيارات خصم
         if ($discountOptions->isEmpty()) {
             return response()->json([
                 'message' => 'No discount options found for the provided user and trip.',
-            ], 404);
+            ], 200);
         }
-    
+
         // إرجاع الخيارات بنجاح
         return response()->json([
             'message' => 'Discount options retrieved successfully.',
             'data' => $discountOptions,
         ], 200);
     }
-    
+
 
 }

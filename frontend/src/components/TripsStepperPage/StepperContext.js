@@ -7,9 +7,10 @@ const TripsStepperContext = createContext();
 
 export const TripsStepperProvider = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [invoice, setInvoice] = useState([]);
   const [completedSteps, setCompletedSteps] = useState([]);
   const { tripId } = useParams();
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const completeStep = (stepIndex) => {
     if (!completedSteps.includes(stepIndex)) {
@@ -41,7 +42,15 @@ export const TripsStepperProvider = ({ children }) => {
   }, []);
   return (
     <TripsStepperContext.Provider
-      value={{ currentStep, setCurrentStep, completedSteps, completeStep , tripId}}
+      value={{
+        currentStep,
+        setCurrentStep,
+        completedSteps,
+        completeStep,
+        tripId,
+        invoice,
+        setInvoice,
+      }}
     >
       {children}
     </TripsStepperContext.Provider>

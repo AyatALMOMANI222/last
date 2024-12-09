@@ -36,4 +36,9 @@ class AirportTransferBooking extends Model
     {
         return $this->belongsTo(User::class);
     }
+        // Define the relationship with the AirportTransferInvoice model
+        public function airportTransferInvoices()
+        {
+            return $this->hasMany(AirportTransferInvoice::class);
+        }
 }

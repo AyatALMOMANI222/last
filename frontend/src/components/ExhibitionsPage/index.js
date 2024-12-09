@@ -68,7 +68,7 @@ const ExhibitionsPage = () => {
               setInputValue={(value) => handleFilterChange("name", value)}
               label="Exhibition Name"
             />
-            <Select
+            {/* <Select
               options={[
                 { value: "upcoming", label: "Upcoming" },
                 { value: "past", label: "Past" },
@@ -76,7 +76,7 @@ const ExhibitionsPage = () => {
               value={filters.status}
               setValue={(value) => handleFilterChange("status", value)}
               label="Status"
-            />
+            /> */}
           </div>
         </header>
         {error ? (
@@ -99,14 +99,14 @@ const ExhibitionsPage = () => {
                     <p className="exhibition-card-location">{location}</p>
                   </div>
                   <div>
-                    <button
+                    <button className="btn"
                       onClick={() => {
                         navigate(`/one/exhibits/${id}`);
                       }}
                     >
                       View Gallery
                     </button>
-                    <button
+                    <button className="btn"
                       onClick={() => {
                         navigate(`/register/sponsor/${conference_id}`);
                       }}

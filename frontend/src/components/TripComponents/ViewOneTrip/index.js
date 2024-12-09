@@ -4,14 +4,10 @@ import MySideDrawer from "../../../CoreComponent/SideDrawer";
 import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
 import SimpleLabelValue from "../../../components/SimpleLabelValue";
 import "./style.scss";
-import { backendUrlImages } from "../../../constant/config";
 const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
   const [data, setData] = useState(null);
   const [options, setOptions] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
-
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
   const fetchTripData = async (tripId) => {
     if (!tripId) {
       return;
@@ -25,11 +21,7 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
       });
       setOptions(response.data.trip.additional_options);
       setData(response.data?.trip);
-    } catch (err) {
-      setError("Error fetching trip data");
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) {}
   };
   useEffect(() => {
     tripId && fetchTripData(tripId);
@@ -39,11 +31,7 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
     return (
       <div>
         <MySideDrawer isOpen={isOpen} setIsOpen={setIsOpen}>
-          <CustomFormWrapper
-            title="Create a New Trip"
-            //   handleSubmit={handleSubmit}
-            setOpenForm={setIsOpen}
-          >
+          <CustomFormWrapper title="Create a New Trip" setOpenForm={setIsOpen}>
             <div className="view-one-trip-container">
               <SimpleLabelValue label="Name" value={data?.name} />
 
@@ -65,14 +53,6 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
                 label="Price for Three or More"
                 value={`$${data?.price_for_three_or_more}`}
               />
-              <SimpleLabelValue
-                label="Created At"
-                value={new Date(data?.created_at).toLocaleString()}
-              />
-              <SimpleLabelValue
-                label="Updated At"
-                value={new Date(data?.updated_at).toLocaleString()}
-              />
 
               {options?.map((item) => {
                 return (
@@ -86,43 +66,34 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
                 );
               })}
 
-              {/* Additional data fields */}
               <SimpleLabelValue
                 label="Available Dates"
-                value={data?.available_dates || "N/A"}
+                value={data?.available_dates || "-"}
               />
               <SimpleLabelValue
                 label="Location"
-                value={data?.location || "N/A"}
+                value={data?.location || "-"}
               />
               <SimpleLabelValue
                 label="Duration"
-                value={data?.duration || "N/A"}
+                value={data?.duration || "-"}
               />
               <SimpleLabelValue
                 label="Inclusions"
-                value={data?.inclusions || "N/A"}
+                value={data?.inclusions || "-"}
               />
               <SimpleLabelValue
                 label="Group Price per Person"
-                value={data?.group_price_per_person || "N/A"}
+                value={data?.group_price_per_person || "-"}
               />
               <SimpleLabelValue
                 label="Group Price per Speaker"
-                value={data?.group_price_per_speaker || "N/A"}
+                value={data?.group_price_per_speaker || "-"}
               />
               <SimpleLabelValue
                 label="Trip Details"
-                value={data?.trip_details || "N/A"}
+                value={data?.trip_details || "-"}
               />
-              {/* Display all images */}
-              <h2>Images</h2>
-
-              <img src={`${backendUrlImages}${data?.image_1}`} alt="Image 1" />
-              <img src={`${backendUrlImages}${data?.image_2}`} alt="Image 2" />
-              <img src={`${backendUrlImages}${data?.image_3}`} alt="Image 3" />
-              <img src={`${backendUrlImages}${data?.image_4}`} alt="Image 4" />
-              <img src={`${backendUrlImages}${data?.image_5}`} alt="Image 5" />
             </div>
           </CustomFormWrapper>
         </MySideDrawer>

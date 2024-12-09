@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Events\NotificationSent;
 use App\Models\AirportTransferBooking;
+use App\Models\AirportTransferInvoice;
+use App\Models\AirportTransferPrice;
 use App\Models\Attendance;
 use App\Models\ConferenceUser;
 use App\Models\Notification;
@@ -54,6 +56,31 @@ class AirportTransferBookingController extends Controller
         // Select the first conference as an example
         $conferenceId = $conferences->first()->conference_id;
     
+        // Retrieve airport transfer prices for the conference
+        $airportTransferPrices = AirportTransferPrice::where('conference_id', $conferenceId)->first();
+    
+        if (!$airportTransferPrices) {
+            return response()->json([
+                'message' => 'No airport transfer prices found for the selected conference.',
+            ], 404);
+        }
+    
+        // Calculate invoice based on trip type
+        $invoice = 0;
+        switch ($request->trip_type) {
+            case 'One-way trip from the airport to the hotel':
+                $invoice = $airportTransferPrices->from_airport_price;
+                break;
+            case 'One-way trip from the hotel to the airport':
+                $invoice = $airportTransferPrices->to_airport_price;
+                break;
+            case 'Round trip':
+                $invoice = $airportTransferPrices->round_trip_price;
+                break;
+            default:
+                return response()->json(['message' => 'Invalid trip type provided.'], 400);
+        }
+    
         // Create a new booking
         $booking = AirportTransferBooking::create([
             'trip_type' => $request->trip_type,
@@ -78,44 +105,97 @@ class AirportTransferBookingController extends Controller
     
         broadcast(new NotificationSent($userNotification));
     
-        return response()->json($booking, 201);
+        // Create the airport transfer invoice with the calculated amount
+        $airportTransferInvoice = AirportTransferInvoice::create([
+            'airport_transfer_booking_id' => $booking->id,  // Foreign key
+            'total_price' => $invoice,
+            'status' => 'pending',
+        ]);
+    
+        // Return response with booking, airport transfer prices, and invoice
+        return response()->json([
+            'booking' => $booking,
+            'airport_transfer_prices' => $airportTransferPrices,
+            'invoice' => $invoice,
+        ], 201);
     }
     
+    
+    // public function index()
+    // {
+    //     try {
+    //         // الحصول على معرف المستخدم من التوكن
+    //         $userId = Auth::id();
+    
+    //         // استرجاع جميع الحجوزات الخاصة بالمستخدم
+    //         $bookings = AirportTransferBooking::where('user_id', $userId)->get();
+    
+    //         // تحقق من وجود حجوزات
+    //         if ($bookings->isEmpty()) {
+    //             return response()->json(['message' => 'لا توجد حجوزات متاحة.'], 404);
+    //         }
+    
+    //         // إضافة معلومات المتحدث أو الحضور لكل حجز
+    //         foreach ($bookings as $booking) {
+    //             // جلب معلومات المستخدم المرتبطة بالحجز
+    //             $user = User::find($booking->user_id);
+    
+    //             // تحقق من نوع التسجيل للمستخدم
+    //             if ($user->registration_type === 'speaker') {
+    //                 $speaker = Speaker::where('user_id', $user->id)->first();
+    //                 $booking->speaker = $speaker; // إضافة معلومات السبيكر
+    //             } elseif ($user->registration_type === 'attendance') {
+    //                 $attendance = Attendance::where('user_id', $user->id)->first();
+    //                 $booking->attendance = $attendance; // إضافة معلومات الحضور
+    //             }
+    //         }
+    
+    //         return response()->json($bookings, 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
+    //     }
+    // }
     public function index()
-    {
-        try {
-            // الحصول على معرف المستخدم من التوكن
-            $userId = Auth::id();
-    
-            // استرجاع جميع الحجوزات الخاصة بالمستخدم
-            $bookings = AirportTransferBooking::where('user_id', $userId)->get();
-    
-            // تحقق من وجود حجوزات
-            if ($bookings->isEmpty()) {
-                return response()->json(['message' => 'لا توجد حجوزات متاحة.'], 404);
-            }
-    
-            // إضافة معلومات المتحدث أو الحضور لكل حجز
-            foreach ($bookings as $booking) {
-                // جلب معلومات المستخدم المرتبطة بالحجز
-                $user = User::find($booking->user_id);
-    
-                // تحقق من نوع التسجيل للمستخدم
-                if ($user->registration_type === 'speaker') {
-                    $speaker = Speaker::where('user_id', $user->id)->first();
-                    $booking->speaker = $speaker; // إضافة معلومات السبيكر
-                } elseif ($user->registration_type === 'attendance') {
-                    $attendance = Attendance::where('user_id', $user->id)->first();
-                    $booking->attendance = $attendance; // إضافة معلومات الحضور
-                }
-            }
-    
-            return response()->json($bookings, 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
+{
+    try {
+        // الحصول على معرف المستخدم من التوكن
+        $userId = Auth::id();
+
+        // استرجاع جميع الحجوزات الخاصة بالمستخدم
+        $bookings = AirportTransferBooking::where('user_id', $userId)->get();
+
+        // تحقق من وجود حجوزات
+        if ($bookings->isEmpty()) {
+            return response()->json(['message' => 'لا توجد حجوزات متاحة.'], 404);
         }
+
+        // إضافة معلومات المتحدث أو الحضور لكل حجز
+        foreach ($bookings as $booking) {
+            // جلب معلومات المستخدم المرتبطة بالحجز
+            $user = User::find($booking->user_id);
+
+            // تحقق من نوع التسجيل للمستخدم
+            if ($user->registration_type === 'speaker') {
+                $speaker = Speaker::where('user_id', $user->id)->first();
+                $booking->speaker = $speaker; // إضافة معلومات السبيكر
+            } elseif ($user->registration_type === 'attendance') {
+                $attendance = Attendance::where('user_id', $user->id)->first();
+                $booking->attendance = $attendance; // إضافة معلومات الحضور
+            }
+
+            // جلب الفاتورة المرتبطة بالحجز من جدول airport_transfers_invoices
+            $invoice = AirportTransferInvoice::where('airport_transfer_booking_id', $booking->id)->first();
+            if ($invoice) {
+                $booking->invoice = $invoice; // إضافة بيانات الفاتورة
+            }
+        }
+
+        return response()->json($bookings, 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'حدث خطأ: ' . $e->getMessage()], 500);
     }
-    
+}
+
     
     
     // دالة لاسترجاع جميع الحجوزات

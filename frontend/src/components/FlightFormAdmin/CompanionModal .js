@@ -5,10 +5,13 @@ import CustomFormWrapper from "../../CoreComponent/CustomFormWrapper";
 import "./CompanionModal.scss";
 
 const FlightDetails = ({ flights }) => {
-  const flightsToDisplay = flights.slice(1);
+  console.log({flights});
+  
+  if (!flights?.length) return;
+  const flightsToDisplay = flights?.slice(1);
   return (
     <div className="FlightDetails">
-      {flightsToDisplay.map((flight) => (
+      {flightsToDisplay?.map((flight) => (
         <div key={flight.flight_id} className="FlightDetails-section">
           <SimpleLabelValue
             label="Passport Image"

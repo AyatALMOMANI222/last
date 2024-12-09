@@ -65,8 +65,7 @@ const AdditionalOptionsForm = () => {
         mergedOptions.filter((option) => option.isDiscounted)
       );
     } catch (error) {
-      console.error("Error fetching discount options:", error);
-      toast.error("Failed to load discount options.");
+      setDiscountedOptions([]);
     }
   };
   const handleSubmit = (e) => {

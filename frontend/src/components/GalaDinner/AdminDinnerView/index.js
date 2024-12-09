@@ -5,26 +5,29 @@ import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import MySideDrawer from "../../../CoreComponent/SideDrawer";
 import { useParams } from "react-router-dom";
+import CustomFormWrapper from "../../../CoreComponent/CustomFormWrapper";
 const SpeakerTable = () => {
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const [speakers, setSpeakers] = useState([]);
   const [selectedSpeaker, setSelectedSpeaker] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
-const {conferenceId} =useParams()
+  const { conferenceId } = useParams();
   useEffect(() => {
     const fetchSpeakers = async () => {
       try {
-        const response = await axios.get(`${BaseUrl}/dinner/attendees/${conferenceId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setSpeakers(response.data.data); // استخدام البيانات مباشرة
+        const response = await axios.get(
+          `${BaseUrl}/dinner/attendees/${conferenceId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setSpeakers(response.data.data);
         console.log(response.data.data);
-        
       } catch (error) {
         toast.error("Error fetching speakers data");
       } finally {
@@ -37,7 +40,7 @@ const {conferenceId} =useParams()
 
   const openModal = (speaker) => {
     setSelectedSpeaker(speaker);
-    console.log(speaker); // تحقق من البيانات هنا
+    console.log(speaker);
 
     setModalIsOpen(true);
   };
@@ -51,13 +54,12 @@ const {conferenceId} =useParams()
     <div className="speaker-table">
       <h2>Dinner Speakers List</h2>
       {loading ? (
-        <div>Loading...</div>
+        <div></div>
       ) : (
         <table>
           <thead>
             <tr>
               <th>Companion Name</th>
-              {/* <th>Created At</th> */}
               <th>Companion Price</th>
               <th>Actions</th>
             </tr>
@@ -66,10 +68,12 @@ const {conferenceId} =useParams()
             {speakers.map((speakerData) => (
               <tr key={speakerData.id}>
                 <td>{speakerData.companion_name || "N/A"}</td>
-                {/* <td>{new Date(speakerData.created_at).toLocaleString()}</td> */}
                 <td>{speakerData.companion_price || "N/A"}</td>
                 <td>
-                  <button onClick={() => openModal(speakerData.speaker)} className="view-button">
+                  <button
+                    onClick={() => openModal(speakerData.speaker)}
+                    className="view-button"
+                  >
                     View
                   </button>
                 </td>
@@ -80,25 +84,48 @@ const {conferenceId} =useParams()
       )}
 
       <MySideDrawer isOpen={modalIsOpen} setIsOpen={closeModal}>
-        {selectedSpeaker && (
-          <div className="modal-content">
-            <h2>Speaker Details</h2>
-            {/* <p><strong>ID:</strong> {selectedSpeaker.id}</p>
-            <p><strong>User ID:</strong> {selectedSpeaker.user_id}</p>
-            <p><strong>Conference ID:</strong> {selectedSpeaker.conference_id}</p> */}
-            <p><strong>Abstract:</strong> {selectedSpeaker.abstract || "N/A"}</p>
-            <p><strong>Topics:</strong> {selectedSpeaker.topics || "N/A"}</p>
-            <p><strong>Online Participation:</strong> {selectedSpeaker.online_participation ? "Yes" : "No"}</p>
-            <p><strong>Is Online Approved:</strong> {selectedSpeaker.is_online_approved ? "Yes" : "No"}</p>
-            <p><strong>Accommodation Status:</strong> {selectedSpeaker.accommodation_status ? "Yes" : "No"}</p>
-            <p><strong>Ticket Status:</strong> {selectedSpeaker.ticket_status ? "Active" : "Inactive"}</p>
-            <p><strong>Dinner Invitation:</strong> {selectedSpeaker.dinner_invitation ? "Yes" : "No"}</p>
-            <p><strong>Airport Pickup:</strong> {selectedSpeaker.airport_pickup ? "Yes" : "No"}</p>
-            <p><strong>Free Trip:</strong> {selectedSpeaker.free_trip ? "Yes" : "No"}</p>
-           
-            <button onClick={closeModal}>Close</button>
-          </div>
-        )}
+        <CustomFormWrapper
+          title="Speaker Details"
+          setOpenForm={setModalIsOpen}
+          noActions={true}
+        >
+          {selectedSpeaker && (
+            <div className="modal-content9">
+              <p>
+                <strong>Topics:</strong> {selectedSpeaker.topics || "N/A"}
+              </p>
+              <p>
+                <strong>Online Participation:</strong>{" "}
+                {selectedSpeaker.online_participation ? "Yes" : "No"}
+              </p>
+              <p>
+                <strong>Is Online Approved:</strong>{" "}
+                {selectedSpeaker.is_online_approved ? "Yes" : "No"}
+              </p>
+              <p>
+                <strong>Accommodation Status:</strong>{" "}
+                {selectedSpeaker.accommodation_status ? "Yes" : "No"}
+              </p>
+              <p>
+                <strong>Ticket Status:</strong>{" "}
+                {selectedSpeaker.ticket_status ? "Active" : "Inactive"}
+              </p>
+              <p>
+                <strong>Dinner Invitation:</strong>{" "}
+                {selectedSpeaker.dinner_invitation ? "Yes" : "No"}
+              </p>
+              <p>
+                <strong>Airport Pickup:</strong>{" "}
+                {selectedSpeaker.airport_pickup ? "Yes" : "No"}
+              </p>
+              <p>
+                <strong>Free Trip:</strong>{" "}
+                {selectedSpeaker.free_trip ? "Yes" : "No"}
+              </p>
+
+            </div>
+          )}
+        </CustomFormWrapper>
       </MySideDrawer>
     </div>
   );

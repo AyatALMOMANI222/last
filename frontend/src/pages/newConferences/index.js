@@ -71,7 +71,7 @@ const ConferenceDetails = () => {
         ) : (
           <div className="no-document">
             <div className="document-preview">
-              <img src="/path/to/no-document-icon.png" alt="No Document Icon" />
+              <img src="/path/to/no-document-icon.png" />
             </div>
             <div className="document-info">
               <h3>{label}</h3>

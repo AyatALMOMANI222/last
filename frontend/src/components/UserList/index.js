@@ -3,38 +3,42 @@ import axios from "axios";
 import Table from "../../CoreComponent/Table";
 import "./style.scss";
 import AddDiscountForm from "./discountForm";
+import Pagination from "../../CoreComponent/Pagination";
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [openDiscountForm, setOpenDiscountForm] = useState(false);
   const [userId, setUserId] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [status, setStatus] = useState("all"); // Track status filter
 
   const BaseUrl = process.env.REACT_APP_BASE_URL;
   const getAuthToken = () => localStorage.getItem("token");
 
   const fetchUsers = async () => {
     try {
-      const response = await axios({
-        method: "GET",
-        url: `${BaseUrl}/users`,
+      const response = await axios.get(`${BaseUrl}/users`, {
         headers: { Authorization: `Bearer ${getAuthToken()}` },
+        params: { page: currentPage },
       });
+
       console.log({ response });
 
-      // Assuming the response contains an array of users
-      setUsers(response.data.data || []); // Make sure to use the correct key from your API response
+      setTotalPages(response.data.pagination.total_pages);
+      setUsers(response.data.data || []);
     } catch (error) {
-      console.error("Error fetching users:", error); // Improved error logging
+      console.error("Error fetching users:", error);
     }
   };
 
   useEffect(() => {
     fetchUsers();
-  }, []); // The empty array ensures this only runs once when the component is mounted.
+  }, [currentPage]);
 
-  useEffect(() => {
-    console.log({ users });
-  }, [users]); // Debugging state updates
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const formattedData = users.map((user) => ({
     id: user.id,
@@ -46,6 +50,7 @@ const UsersList = () => {
           setOpenDiscountForm(true);
           setUserId(user.id);
         }}
+        className="link-button"
       >
         Add Discount
       </button>
@@ -62,7 +67,11 @@ const UsersList = () => {
         ]}
         data={formattedData}
       />
-
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
       <AddDiscountForm
         isOpen={openDiscountForm}
         setIsOpen={setOpenDiscountForm}

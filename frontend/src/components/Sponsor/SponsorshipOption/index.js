@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../common/AuthContext";
 import "./style.scss";
+import SponsorInvoice from "../../SpoonsotInvoice";
 
 const SponsorshipOption = ({ id, title, description, price, onSelect }) => {
   const [selected, setSelected] = useState(false);
@@ -76,16 +77,16 @@ const StandardBoothPackage = ({ onExhibitNumberChange }) => {
         <a href="mailto:admin@eventcons.com">admin@eventcons.com</a>
       </p>
 
-      <a
+   { floorPlanUrl &&  <a
         href={floorPlanUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="view-floor-plans-btn"
       >
         <button className="view-floor-plans-button">View Floor Plans</button>
-      </a>
+      </a>}
 
-      <div className="input-container">
+    { floorPlanUrl && <div className="input-container">
         <label htmlFor="exhibitNumber" className="input-label">
           Enter Exhibit Number:
         </label>
@@ -96,7 +97,7 @@ const StandardBoothPackage = ({ onExhibitNumberChange }) => {
           className="input-field"
           onChange={(e) => onExhibitNumberChange(e.target.value)}
         />
-      </div>
+      </div>}
     </div>
   );
 };
@@ -149,60 +150,61 @@ const BoothCostTable = ({
   if (error) return <p className="error-message">{error}</p>;
 
   return (
-    <div className="booth-cost-table">
-      <h2 className="booth-cost-table-header">Booth Cost Table</h2>
-      <h5 className="booth-cost-table-description">
-        Space only stand USD 1400 Per Meter - Depth = 3M
-      </h5>
-      <table className="booth-cost-table-table">
-        <thead>
-          <tr className="table-header-row">
-            <th className="table-header-cell">Booth Size (LM)</th>
-            <th className="table-header-cell">Cost (USD)</th>
-            <th className="table-header-cell">Lunch Invitations</th>
-            <th className="table-header-cell">Name Tags</th>
-            <th className="table-header-cell">Selected</th>
-          </tr>
-        </thead>
-        <tbody>
-          {boothData.map((booth) => (
-            <tr key={booth.id} className="table-row">
-              <td className="table-cell">
-                {booth.name}{" "}
-                {selectedBoothIds.includes(booth.id) ? "(Selected)" : ""}
-              </td>
-              <td className="table-cell">{booth.cost}</td>
-              <td className="table-cell">{booth.lunch_invitations}</td>
-              <td className="table-cell">{booth.name_tags}</td>
-              <td className="table-cell">
-                <input
-                  type="checkbox"
-                  checked={selectedBoothIds.includes(booth.id)}
-                  onChange={(e) => handleCheckboxChange(e, booth.id)}
-                />
-              </td>
+    Array.isArray(boothData) && boothData.length > 0 && (
+      <div className="booth-cost-table">
+        <h2 className="booth-cost-table-header">Booth Cost Table</h2>
+        <h5 className="booth-cost-table-description">
+          Space only stand USD 1400 Per Meter - Depth = 3M
+        </h5>
+        <table className="booth-cost-table-table">
+          <thead>
+            <tr className="table-header-row">
+              <th className="table-header-cell">Booth Size (LM)</th>
+              <th className="table-header-cell">Cost (USD)</th>
+              <th className="table-header-cell">Lunch Invitations</th>
+              <th className="table-header-cell">Name Tags</th>
+              <th className="table-header-cell">Selected</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {boothData.map((booth) => (
+              <tr key={booth.id} className="table-row">
+                <td className="table-cell">
+                  {booth.name}{" "}
+                  {selectedBoothIds.includes(booth.id) ? "(Selected)" : ""}
+                </td>
+                <td className="table-cell">{booth.cost}</td>
+                <td className="table-cell">{booth.lunch_invitations}</td>
+                <td className="table-cell">{booth.name_tags}</td>
+                <td className="table-cell">
+                  <input
+                    type="checkbox"
+                    checked={selectedBoothIds.includes(booth.id)}
+                    onChange={(e) => handleCheckboxChange(e, booth.id)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      <div className="shell-scheme">
-        <input
-          type="checkbox"
-          checked={shellSchemeSelected}
-          onChange={onShellSchemeChange}
-        />
-        <span className="shell-scheme-text">
-          Additional cost for Shell Scheme Booth (special build-up booth):{" "}
-          <strong className="shell-scheme-cost">
-            50 USD per square meter.
-          </strong>
-        </span>
+        <div className="shell-scheme">
+          <input
+            type="checkbox"
+            checked={shellSchemeSelected}
+            onChange={onShellSchemeChange}
+          />
+          <span className="shell-scheme-text">
+            Additional cost for Shell Scheme Booth (special build-up booth):{" "}
+            <strong className="shell-scheme-cost">
+              50 USD per square meter.
+            </strong>
+          </span>
+        </div>
       </div>
-    </div>
+    )
   );
 };
-
 const SponsorSection = () => {
   const [options, setOptions] = useState([]);
   const [selectedOptionIds, setSelectedOptionIds] = useState([]);
@@ -213,6 +215,7 @@ const SponsorSection = () => {
   const [chosenBooths, setChosenBooths] = useState([]);
   const [exhibitNumber, setExhibitNumber] = useState("");
   const [shellSchemeSelected, setShellSchemeSelected] = useState(false);
+  const [invoiceData, setInvoiceData] = useState(null);
 
   const handleShellSchemeChange = (event) => {
     setShellSchemeSelected(event.target.checked);
@@ -228,9 +231,11 @@ const SponsorSection = () => {
       }
     });
   };
+
   const handleSelectedSponsorshipsChange = (ids) => {
     setSelectedSponsorshipIds(ids);
   };
+
   const handleExhibitNumberChange = (number) => {
     setExhibitNumber(number);
   };
@@ -244,6 +249,7 @@ const SponsorSection = () => {
     setIsPopupOpen(false);
     toast.success("Agreement signed successfully!");
   };
+
   const { myConferenceId } = useAuth();
 
   const getSponsorshipOptions = async () => {
@@ -280,6 +286,7 @@ const SponsorSection = () => {
       }
     });
   };
+
   const { userId } = useAuth();
 
   const handleSubmit = async () => {
@@ -318,66 +325,97 @@ const SponsorSection = () => {
     }
   };
 
+
+  // Fetch the token from localStorage
+  const getAuthToken = () => localStorage.getItem("token");
+
+  const getInvoice = () => {
+    axios
+      .get(`http://127.0.0.1:8000/api/invoice/${myConferenceId}`, {
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      })
+      .then((response) => {
+        setInvoiceData(response.data.invoices[0]);
+     
+      })
+      .catch((error) => {
+      
+        console.error("Error fetching invoice data:", error);
+      });
+  };
+
+  useEffect(() => {
+    getInvoice();
+  }, [myConferenceId]);
+
   return (
     <div className="sponsor-section">
-      <h2>Sponsorship Opportunities</h2>
-      <div className="sponsorship-options">
-        {options.map((option) => (
-          <SponsorshipOption
-            key={option.id}
-            id={option.id}
-            title={option.title}
-            description={option.description}
-            price={option.price}
-            onSelect={handleSelectOption}
-          />
-        ))}
-      </div>
-      <SponsorshipTable
-        onSelectedSponsorshipsChange={handleSelectedSponsorshipsChange}
-      />{" "}
-      <BoothCostTable
-        selectedBoothIds={chosenBooths}
-        onSelectBooth={handleSelectBooth}
-        shellSchemeSelected={shellSchemeSelected}
-        onShellSchemeChange={handleShellSchemeChange}
-      />
-      <StandardBoothPackage onExhibitNumberChange={handleExhibitNumberChange} />
-      <div className="button-container">
-        <button onClick={openAgreementPopup}>Sign Agreement</button>
-        <button onClick={handleSubmit} className="submit-button">
-          Submit
-        </button>
-      </div>
-      {isAgreementSigned && (
-        <div className="agreement-status">
-          <p>Your agreement has been signed successfully!</p>
-        </div>
-      )}
-      {isPopupOpen && (
-        <div className="agreement-popup">
-          <div className="popup-content">
-            <h3>Agreement for Sponsorship</h3>
-            <p>
-              By signing this agreement, you confirm your commitment to sponsor
-              the event...
-            </p>
-            <div className="popup-buttons">
-              <button onClick={handleSignAgreement} className="btn-sign">
-                Sign Agreement
-              </button>
-              <button
-                onClick={() => setIsPopupOpen(false)}
-                className="btn-cancel"
-              >
-                Cancel
-              </button>
-            </div>
+
+      {/* شرط عرض مكون الفاتورة أو الخيارات بناءً على وجود invoiceData */}
+      {invoiceData ? (
+        <SponsorInvoice data={invoiceData} /> // إذا كانت invoiceData موجودة، يتم عرض هذا المكون
+      ) : (
+        <div>
+                {options && options.length > 0 && <h2>Sponsorship Opportunities</h2>}
+
+          <div className="sponsorship-options">
+            {options.map((option) => (
+              <SponsorshipOption
+                key={option.id}
+                id={option.id}
+                title={option.title}
+                description={option.description}
+                price={option.price}
+                onSelect={handleSelectOption}
+              />
+            ))}
           </div>
+
+          <SponsorshipTable onSelectedSponsorshipsChange={handleSelectedSponsorshipsChange} />
+          <BoothCostTable
+            selectedBoothIds={chosenBooths}
+            onSelectBooth={handleSelectBooth}
+            shellSchemeSelected={shellSchemeSelected}
+            onShellSchemeChange={handleShellSchemeChange}
+          />
+          <StandardBoothPackage onExhibitNumberChange={handleExhibitNumberChange} />
+          <div className="button-container">
+            <button onClick={openAgreementPopup}>Sign Agreement</button>
+            <button onClick={handleSubmit} className="submit-button">
+              Submit
+            </button>
+          </div>
+
+          {isAgreementSigned && (
+            <div className="agreement-status">
+              <p>Your agreement has been signed successfully!</p>
+            </div>
+          )}
+
+          {isPopupOpen && (
+            <div className="agreement-popup">
+              <div className="popup-content">
+                <h3>Agreement for Sponsorship</h3>
+                <p>
+                  By signing this agreement, you confirm your commitment to sponsor
+                  the event...
+                </p>
+                <div className="popup-buttons">
+                  <button onClick={handleSignAgreement} className="btn-sign">
+                    Sign Agreement
+                  </button>
+                  <button onClick={() => setIsPopupOpen(false)} className="btn-cancel">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 };
+
 
 export default SponsorSection;

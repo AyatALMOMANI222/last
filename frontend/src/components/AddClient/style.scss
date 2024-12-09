@@ -1,0 +1,80 @@
+.add-client {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+  
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+  
+      .form-group {
+        display: flex;
+        flex-direction: column;
+  
+        label {
+          font-size: 1rem;
+          margin-bottom: 8px;
+          color: #555;
+        }
+  
+        .file-input {
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 1rem;
+          color: #333;
+        }
+  
+        .error {
+          font-size: 0.875rem;
+          color: red;
+          margin-top: 5px;
+        }
+      }
+  
+      .submit-btn {
+        padding: 12px;
+        font-size: 1rem;
+        background-color: #c83222;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background-color: #bf4b3e;
+        }
+      }
+    }
+  
+    .success {
+      color: green;
+      text-align: center;
+      margin-top: 20px;
+    }
+  
+    @media (max-width: 600px) {
+      padding: 15px;
+      .form {
+        gap: 10px;
+      }
+  
+      .submit-btn {
+        font-size: 0.875rem;
+        padding: 10px;
+      }
+    }
+  }
+  

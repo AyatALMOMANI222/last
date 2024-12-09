@@ -145,8 +145,13 @@ class TripController extends Controller
     public function getAllTrips(Request $request)
     {
         try {
-            // استرجاع جميع الرحلات الخاصة فقط
-            $query = Trip::where('trip_type', 'private');
+            // استعلام الرحلات
+            $query = Trip::query();
+    
+            // تصفية حسب نوع الرحلة إذا تم توفيره
+            if ($request->has('trip_type')) {
+                $query->where('trip_type', $request->input('trip_type'));
+            }
     
             // تصفية حسب اسم الرحلة إذا تم توفيره
             if ($request->has('name')) {
@@ -161,6 +166,7 @@ class TripController extends Controller
             return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
+    
     
     public function getTripById($id)
     {

@@ -20,7 +20,21 @@ class MessageController extends Controller
         try {
             // تخزين الرسالة في قاعدة البيانات
             $message = Message::create($validatedData);
+                // إرسال الإشعار لجميع المدراء
+                $admins = User::where('isAdmin', true)->get();
+                foreach ($admins as $admin) {
+                    // إنشاء الإشعار
+                    $notification = Notification::create([
+                        'user_id' => $admin->id,
+                        // 'register_id' => $user->id,
+                        'message' =>"You have received a new message",
+                        'is_read' => false,
+                    ]);
     
+                    // بث الإشعار
+                    // broadcast(new NotificationSent($notification))->toOthers();
+    
+                }
             // إرجاع استجابة بنجاح
             return response()->json(['message' => 'Message sent successfully!'], 200);
         } catch (\Exception $e) {

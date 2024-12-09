@@ -71,8 +71,10 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
 
 Route::post('/users/{conference_id}', [UserController::class, 'store']);
+Route::post('/store/user', [UserController::class, 'storeAdmin']);
 // فقط الادمن يعدل على ال status   للمتحدث id 
 Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->middleware(['auth:sanctum', 'admin']);
+Route::put('/user/{userId}/update-admin-status', [UserController::class, 'updateAdminStatus'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/users', [UserController::class, 'getAllUsers'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/user', [UserController::class, 'getUserById'])->middleware(['auth:sanctum']);
 
@@ -247,6 +249,8 @@ Route::post('/dinner/attendees', [DinnerAttendeeController::class, 'store'])->mi
 Route::delete('/dinner-attendees/{id}', [DinnerAttendeeController::class, 'destroy'])->middleware('auth:sanctum');
 Route::get('/dinner-attendees', [DinnerAttendeeController::class, 'getAllAttendees'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/dinner/attendees/{conferenceId}', [DinnerAttendeeController::class, 'getAttendeesByConferenceId'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/getDinnerAttendeesBySpeakerId/{speakerId}', [DinnerAttendeeController::class, 'getDinnerAttendeesBySpeakerId']);
+Route::get('/dinner/invoice', [DinnerAttendeeController::class, 'getDinnerInfoFromToken'])->middleware('auth:sanctum');
 
 
 
@@ -266,7 +270,7 @@ Route::get('/admin/airport/{conferenceId}', [AirportTransferBookingController::c
 
 // airport-transfer-prices
 Route::post('/airport-transfer-prices', [AirportTransferPriceController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
-Route::get('/airport-transfer-prices/conference/{conferenceId}', [AirportTransferPriceController::class, 'getPricesByConferenceId'])->middleware('auth:sanctum');
+Route::get('/test/{conferenceId}', [AirportTransferPriceController::class, 'getPricesByConferenceId'])->middleware('auth:sanctum');
 // Sponsor
 Route::post('/sponsor', [SponsorController::class, 'store']);
 Route::post('/approve/sponsor', [SponsorController::class, 'approveSponsor'])->middleware(['auth:sanctum', 'admin']);

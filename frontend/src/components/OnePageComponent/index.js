@@ -2,30 +2,24 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./style.scss";
-import { useAuth } from "../../common/AuthContext";
 
 const OnePage = () => {
-  // const { conferenceId } = useParams();
+  const { conferenceId } = useParams();
   const [conInfo, setConInfo] = useState(null);
   const navigate = useNavigate(); // استخدام navigate للتنقل بين الأقسام
-  const { myConferenceId } = useAuth();
 
-  const fetchConferenceData = async (conferenceId) => {
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/con/id/${myConferenceId}`);
-      setConInfo(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching conference data:", error);
-    }
-  };
-
-  // استخدام useEffect لاستدعاء الدالة عند تغيير myConferenceId
   useEffect(() => {
-    if (myConferenceId) {
-      fetchConferenceData(myConferenceId);
-    }
-  }, [myConferenceId]);
+    axios
+      .get(`http://127.0.0.1:8000/api/con/id/${conferenceId}`)
+      .then((response) => {
+        setConInfo(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching conference data:", error);
+      });
+  }, [conferenceId]);
+
   if (!conInfo) {
     return <p>Loading conference details...</p>;
   }
@@ -48,7 +42,7 @@ const OnePage = () => {
           </li>
           <li>
             <button
-              onClick={() => navigate(`/conference/speaker/${myConferenceId}`)}
+              onClick={() => navigate(`/conference/speaker/${conferenceId}`)}
             >
               Speakers
             </button>
@@ -102,7 +96,7 @@ const OnePage = () => {
             </a>
           </li>
           <li>
-            <button onClick={() => navigate(`/paper/form/${myConferenceId}`)}>
+            <button onClick={() => navigate(`/paper/form/${conferenceId}`)}>
               Abstract
             </button>
           </li>
@@ -117,7 +111,7 @@ const OnePage = () => {
           </li>
           <li>
             <button
-              onClick={() => navigate(`/register/sponsor/${myConferenceId}`)}
+              onClick={() => navigate(`/register/sponsor/${conferenceId}`)}
             >
               Sponsors
             </button>

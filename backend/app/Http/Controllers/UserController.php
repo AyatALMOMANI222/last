@@ -15,6 +15,70 @@ use function Laravel\Prompts\error;
 
 class UserController extends Controller
 {
+    public function storeAdmin(Request $request)
+    {
+        try {
+            // Validate the required fields
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:8',
+            ], [
+                'email.unique' => 'The email address is already taken. Please choose another one.',
+            ]);
+
+            // Create the new admin user
+            $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => bcrypt($validatedData['password']),
+            ]);
+
+            // Return a success response
+            return response()->json([
+                'message' => 'Admin user created successfully!',
+                'user_id' => $user->id,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create admin user.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function updateAdminStatus(Request $request, $userId)
+    {
+        try {
+            // Validate the required fields
+            $validatedData = $request->validate([
+                'isAdmin' => 'required|boolean',  // Ensure isAdmin is a boolean
+                'status' => 'required|string|in:approved,pending,rejected',  // Ensure status is a valid value
+            ]);
+
+            // Find the user by id
+            $user = User::findOrFail($userId);
+
+            // Update the isAdmin and status fields
+            $user->isAdmin = $validatedData['isAdmin'];
+            $user->status = $validatedData['status'];
+
+            // Save the updated user
+            $user->save();
+
+            // Return a success response
+            return response()->json([
+                'message' => 'User admin status and approval status updated successfully!',
+                'user_id' => $user->id,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update user admin status and approval status.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
 
     public function store(Request $request, $conference_id)
@@ -35,7 +99,6 @@ class UserController extends Controller
                 'country_of_residence' => 'nullable|string|max:255',
                 'isAdmin' => 'sometimes|in:true,false',
                 'passenger_name' => 'nullable|string|max:255',
-
                 'company_name' => 'nullable|string|max:255',
                 'contact_person' => 'nullable|string|max:255',
                 'company_address' => 'nullable|string|max:255',
@@ -73,6 +136,7 @@ class UserController extends Controller
                 'company_name' => $validatedData['company_name'] ?? null,
                 'contact_person' => $validatedData['contact_person'] ?? null,
                 'company_address' => $validatedData['company_address'] ?? null,
+                'conference_id' => $conference_id ?? null,
             ]));
 
             // إضافة المستخدم إلى جدول conference_user
@@ -105,7 +169,7 @@ class UserController extends Controller
             // بث الإشعار للمستخدم الجديد
             broadcast(new NotificationSent($userNotification));
             $user->notify(new EmailNotification('Thank you for registering for the conference. Your profile will be reviewed shortly.'));
-    
+
 
             return response()->json([
                 'message' => 'User created, added to conference, and notifications sent successfully!',

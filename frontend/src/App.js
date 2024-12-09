@@ -110,6 +110,10 @@ import OneExhibit from "./components/OneExhibit";
 import "./style.scss";
 import FloorPlanUploader from "./components/FloorPlann";
 import GroupTripRegistration from "./components/GroupTripRegistration";
+import SpeakerUpdateForm from "./components/test";
+import RegisterOther from "./pages/registerOther";
+import AdminForm from "./components/Admin/AdminForm";
+import AddClient from "./components/AddClient";
 
 const App = () => {
   const location = useLocation();
@@ -145,6 +149,7 @@ const App = () => {
         {!noNavRoute.includes(location.pathname) &&
           !location.pathname.includes("/registerPage") &&
           !location.pathname.includes("/conference/details") &&
+          !location.pathname.includes("/other") &&
           !location.pathname.includes("/register/") && (
             <div className="layout-sidemenu">
               <SideMenu />
@@ -158,6 +163,7 @@ const App = () => {
               !noNavRoute.includes(location.pathname) &&
               !location.pathname.includes("/registerPage") &&
               !location.pathname.includes("/conference/details") &&
+              !location.pathname.includes("/other") &&
               !location.pathname.includes("/register/")
                 ? "calc(100% - 250px)"
                 : "100%",
@@ -165,6 +171,7 @@ const App = () => {
         >
           {!noNavRoute.includes(location.pathname) &&
             !location.pathname.includes("/registerPage") &&
+            !location.pathname.includes("/other") &&
             !location.pathname.includes("/register/") && (
               <div className="layout-navbar">
                 <NavBar />
@@ -173,6 +180,9 @@ const App = () => {
           <div className="layout-content">
             <Routes className="main">
               <Route path="/exhibitions" element={<Exhibitions />} />
+              <Route path="/adminForm/:userId" element={<AdminForm />} />
+              <Route path="/other" element={<RegisterOther />} />
+              <Route path="/test" element={<SpeakerUpdateForm />} />
               <Route
                 path="/conference/details/:conferenceId"
                 element={<ConferenceDetails />}
@@ -219,10 +229,7 @@ const App = () => {
               {/* //this route for view one trip for user not admin  */}
               <Route path="/view/trip/:id" element={<ViewOneTripUser />} />
               <Route path="/airport/transfer" element={<AirportTransfer />} />
-              <Route
-                path="/airport/transfer/price"
-                element={<AirportTransferPrice />}
-              />
+             
               <Route path="/gala" element={<GalaDinner />} />
               <Route path="/gala/dinner" element={<DinnerDetails />} />
               <Route path="/paper" element={<AddScientificPaper />} />
@@ -278,7 +285,7 @@ const App = () => {
                 path="/user/flight/update/:id"
                 element={<MainFlightFormUpdate />}
               />
-              <Route path="/companion" element={<GetCompanion />} />
+              {/* <Route path="/companion" element={<GetCompanion />} /> */}
               <Route
                 path="/admin/visa2/:registerId"
                 element={<UpdateVisaStatus />}
@@ -352,8 +359,10 @@ const App = () => {
               <Route path="/travel/hotel" element={<TravelFormHotel />} />
               <Route path="/room/prices" element={<RoomPriceForm />} />
               <Route path="/admin/invoice/sponsor" element={<InvoicesS />} />
-              <Route path="/admin/upload/floor" element={< FloorPlanUploader />} />
-
+              <Route
+                path="/admin/upload/floor"
+                element={<FloorPlanUploader />}
+              />
               <Route
                 path="/admin/excel/table"
                 element={<TableComponentExcel />}
@@ -364,7 +373,12 @@ const App = () => {
               />
               <Route path="/gallery" element={<ImageGallery />} />
               <Route path="/one/exhibits/:exhibitId" element={<OneExhibit />} />
-              <Route path="/group-trip/user/:tripId" element={<GroupTripRegistration />} />
+              <Route path="/add/client" element={< AddClient />} />
+
+              <Route
+                path="/group-trip/user/:tripId"
+                element={<GroupTripRegistration />}
+              />
             </Routes>
           </div>
         </div>

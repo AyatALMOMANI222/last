@@ -14,106 +14,6 @@ use Illuminate\Support\Facades\Auth;
 
 class VisaController extends Controller
 {
-//     public function postVisaByUser(Request $request)
-// {
-//     // تحقق من صحة البيانات المدخلة من قبل المستخدم
-//     $validatedData = $request->validate([
-//         'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-//         'arrival_date' => 'nullable|date',
-//         'departure_date' => 'nullable|date',
-//     ]);
-
-//     // إنشاء سجل جديد في جدول الفيزا
-//     $visa = new Visa();
-//     $visa->user_id = Auth::id(); // تعيين ID المتحدث الحالي
-//     $visa->passport_image = $request->file('passport_image') ? $request->file('passport_image')->store('passport_images') : null;
-//     $visa->arrival_date = $request->input('arrival_date');
-//     $visa->departure_date = $request->input('departure_date');
-//     // الفيزا قد تحتاج إلى قيمة تكلفة مبدئية إذا كان الدفع مطلوباً
-//     $visa->visa_cost = 0; // يمكن تعيين قيمة افتراضية إذا لزم الأمر
-//     $visa->payment_required = false; // سيتم تحديد ذلك لاحقاً من قبل الأدمن
-//     $visa->status = 'pending'; // تعيين الحالة إلى "معلق" افتراضيًا
-
-//     // حفظ السجل في قاعدة البيانات
-//     $visa->save();
-
-//     return response()->json(['success' => 'Visa request submitted successfully', 'visa' => $visa]);
-// }
-
-
-
-// public function postVisaByUser(Request $request)
-// {
-//     try {
-//         // تحقق من صحة البيانات المدخلة من قبل المستخدم
-//         $validatedData = $request->validate([
-//             'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-//             'arrival_date' => 'nullable|date',
-//             'departure_date' => 'nullable|date',
-//         ]);
-
-//         // جلب conference_id من جدول speakers بناءً على user_id
-//         $conference_id = Speaker::where('user_id', Auth::id())->value('conference_id');
-
-//         // جلب title من جدول conferences باستخدام conference_id
-//         $conferenceTitle = Conference::where('id', $conference_id)->value('title');
-
-//         // إنشاء سجل جديد في جدول الفيزا
-//         $visa = new Visa();
-//         $visa->user_id = Auth::id();
-
-//         // تخزين صورة جواز السفر في مجلد 'images' في 'public'
-//         if ($request->hasFile('passport_image')) {
-//             $imagePath = $request->file('passport_image')->store('images', 'public');
-//             $visa->passport_image = $imagePath; // قم بتحديث مسار الصورة
-//         } else {
-//             $visa->passport_image = null;
-//         }
-
-//         $visa->arrival_date = $request->input('arrival_date');
-//         $visa->departure_date = $request->input('departure_date');
-//         $visa->visa_cost = 0;
-//         $visa->payment_required = false;
-//         $visa->status = 'pending';
-
-//         // حفظ السجل في قاعدة البيانات
-//         $visa->save();
-
-//         // إشعار آخر للمستخدم بمدة العملية
-//         $userNotification = Notification::create([
-//             'user_id' => Auth::id(),
-//             'register_id' => Auth::id(),
-//             'conference_id' => $conference_id,
-//             'message' => 'This process takes approximately one month from the date of application, and you will be notified of any updates regarding the visa status.',
-//             'is_read' => false,
-//         ]);
-//         broadcast(new NotificationSent($userNotification));
-
-//         // إشعار للمدراء عن تقديم معلومات الفيزا
-//         $admins = User::where('isAdmin', true)->get();
-//         $userName = Auth::user()->name; // الحصول على اسم المستخدم
-
-//         foreach ($admins as $admin) {
-//             // إنشاء الإشعار مع conference_id و title
-//             $notification = Notification::create([
-//                 'user_id' => $admin->id,
-//                 'conference_id' => $conference_id,
-//                 'message' => 'New visa request from user: ' . $userName . ' for conference: ' . $conferenceTitle, // إضافة title في الرسالة
-//                 'is_read' => false,
-//             ]);
-
-//             // بث الإشعار
-//             broadcast(new NotificationSent($notification))->toOthers();
-//         }
-
-//         return response()->json(['success' => 'Visa request submitted successfully', 'visa' => $visa]);
-
-//     } catch (\Exception $e) {
-//         // إذا حدث خطأ، أعد رسالة خطأ مع تفاصيل الاستثناء
-//         return response()->json(['error' => 'An error occurred while processing the visa request. Please try again later.', 'message' => $e->getMessage()], 500);
-//     }
-// }
-
 public function postVisaByUser(Request $request)
 {
     try {
@@ -124,25 +24,31 @@ public function postVisaByUser(Request $request)
             'departure_date' => 'nullable|date',
         ]);
 
-        // جلب conference_id من جدول speakers بناءً على user_id
-        $conference_id = ConferenceUser::where('user_id', Auth::id())->value('conference_id');
-        
-// where اقارن الوقت start >now
-        // جلب title من جدول conferences باستخدام conference_id
-        $conferenceTitle = Conference::where('id', $conference_id)->value('title');
+        // جلب user_id الحالي من التوكن
+        $userId = Auth::id();
 
-        // استرجاع قيمة is_visa_payment_required من جدول conference_user
-        $userId = Auth::id(); // الحصول على user_id من التوكن
-        $conferenceUser = ConferenceUser::where('user_id', $userId)
-            ->where('conference_id', $conference_id)
-            ->first();
+        // جلب conference_id من جدول conference_user بناءً على user_id
+        $conferenceUser = ConferenceUser::where('user_id', $userId)->first();
 
         if (!$conferenceUser) {
             return response()->json(['error' => 'Conference user not found.'], 404);
         }
 
-        // الحصول على قيمة is_visa_payment_required
-        $isVisaPaymentRequired = $conferenceUser->is_visa_payment_required;
+        // استرجاع conference_id من جدول conference_user
+        $conference_id = $conferenceUser->conference_id;
+        $conferenceTitle = Conference::where('id', $conference_id)->value('title');
+
+        // جلب is_visa_payment_required من جدول speakers بناءً على user_id و conference_id
+        $speaker = Speaker::where('user_id', $userId)
+            ->where('conference_id', $conference_id)
+            ->first();
+
+        if (!$speaker) {
+            return response()->json(['error' => 'Speaker data not found.'], 404);
+        }
+
+        // الحصول على is_visa_payment_required من جدول speakers
+        $isVisaPaymentRequired = $speaker->is_visa_payment_required;
 
         // تعيين قيمة visa_cost بناءً على is_visa_payment_required
         $visaCost = $isVisaPaymentRequired ? Conference::where('id', $conference_id)->value('visa_price') : 0;
@@ -196,13 +102,104 @@ public function postVisaByUser(Request $request)
             broadcast(new NotificationSent($notification))->toOthers();
         }
 
-        return response()->json(['success' => 'Visa request submitted successfully', 'visa' => $visa , 'hh'=> $conference_id]);
+        return response()->json(['success' => 'Visa request submitted successfully', 'visa' => $visa , 'conference_id'=> $conference_id]);
 
     } catch (\Exception $e) {
         // إذا حدث خطأ، أعد رسالة خطأ مع تفاصيل الاستثناء
         return response()->json(['error' => 'An error occurred while processing the visa request. Please try again later.', 'message' => $e->getMessage()], 500);
     }
 }
+
+
+// public function postVisaByUser(Request $request)
+// {
+//     try {
+//         // تحقق من صحة البيانات المدخلة من قبل المستخدم
+//         $validatedData = $request->validate([
+//             'passport_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+//             'arrival_date' => 'nullable|date',
+//             'departure_date' => 'nullable|date',
+//         ]);
+
+//         // جلب conference_id من جدول speakers بناءً على user_id
+//         $conference_id = ConferenceUser::where('user_id', Auth::id())->value('conference_id');
+        
+// // where اقارن الوقت start >now
+//         // جلب title من جدول conferences باستخدام conference_id
+//         $conferenceTitle = Conference::where('id', $conference_id)->value('title');
+
+//         // استرجاع قيمة is_visa_payment_required من جدول conference_user
+//         $userId = Auth::id(); // الحصول على user_id من التوكن
+//         $conferenceUser = ConferenceUser::where('user_id', $userId)
+//             ->where('conference_id', $conference_id)
+//             ->first();
+
+//         if (!$conferenceUser) {
+//             return response()->json(['error' => 'Conference user not found.'], 404);
+//         }
+
+//         // الحصول على قيمة is_visa_payment_required
+//         $isVisaPaymentRequired = $conferenceUser->is_visa_payment_required;
+
+//         // تعيين قيمة visa_cost بناءً على is_visa_payment_required
+//         $visaCost = $isVisaPaymentRequired ? Conference::where('id', $conference_id)->value('visa_price') : 0;
+
+//         // إنشاء سجل جديد في جدول الفيزا
+//         $visa = new Visa();
+//         $visa->user_id = Auth::id();
+
+//         // تخزين صورة جواز السفر في مجلد 'images' في 'public'
+//         if ($request->hasFile('passport_image')) {
+//             $imagePath = $request->file('passport_image')->store('images', 'public');
+//             $visa->passport_image = $imagePath; // قم بتحديث مسار الصورة
+//         } else {
+//             $visa->passport_image = null;
+//         }
+
+//         $visa->arrival_date = $request->input('arrival_date');
+//         $visa->departure_date = $request->input('departure_date');
+//         $visa->visa_cost = $visaCost; // استخدام القيمة المحسوبة هنا
+//         $visa->payment_required = $isVisaPaymentRequired; // تحديث حالة الدفع
+//         $visa->status = 'pending';
+
+//         // حفظ السجل في قاعدة البيانات
+//         $visa->save();
+
+//         // إشعار آخر للمستخدم بمدة العملية
+//         $userNotification = Notification::create([
+//             'user_id' => Auth::id(),
+//             'register_id' => Auth::id(),
+//             'conference_id' => $conference_id,
+//             'message' => 'This process takes approximately one month from the date of application, and you will be notified of any updates regarding the visa status.',
+//             'is_read' => false,
+//         ]);
+//         broadcast(new NotificationSent($userNotification));
+
+//         // إشعار للمدراء عن تقديم معلومات الفيزا
+//         $admins = User::where('isAdmin', true)->get();
+//         $userName = Auth::user()->name; // الحصول على اسم المستخدم
+
+//         foreach ($admins as $admin) {
+//             // إنشاء الإشعار مع conference_id و title
+//             $notification = Notification::create([
+//                 'user_id' => $admin->id,
+//                 'conference_id' => $conference_id,
+//                 'message' => 'New visa request from user: ' . $userName . ' for conference: ' . $conferenceTitle, // إضافة title في الرسالة
+//                 'is_read' => false,
+//                 'register_id' => Auth::id(),
+//             ]);
+
+//             // بث الإشعار
+//             broadcast(new NotificationSent($notification))->toOthers();
+//         }
+
+//         return response()->json(['success' => 'Visa request submitted successfully', 'visa' => $visa , 'hh'=> $conference_id]);
+
+//     } catch (\Exception $e) {
+//         // إذا حدث خطأ، أعد رسالة خطأ مع تفاصيل الاستثناء
+//         return response()->json(['error' => 'An error occurred while processing the visa request. Please try again later.', 'message' => $e->getMessage()], 500);
+//     }
+// }
 
 
 

@@ -116,4 +116,26 @@
     text-align: center;
     margin: 20px 0;
   }
+  .btn {
+    background-color: #c83222;
+    color: white;
+    padding: 12px 10px;
+    margin-left: 10px;
+    border-radius: 4px;
+    border: none;
+    transition: all 0.3s ease;  /* تأثيرات الانتقال لتكون سلسة */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* إضافة تأثير shadow */
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    background-color: #a3271b;  /* تغيير اللون عند التمرير */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);  /* تكبير الظل عند التمرير */
+  }
+  
+  .btn:active {
+    transform: translateY(2px);  /* التحرك قليلًا للأسفل عند النقر */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);  /* تقليل الظل عند النقر */
+  }
+  
 }

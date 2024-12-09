@@ -96,6 +96,11 @@ const EditTrip = ({ isOpen, setIsOpen, tripId }) => {
     { label: "Group", value: "group" },
   ];
 
+  useEffect(()=>{
+    console.log(tripType);
+    
+  },[tripType])
+
   return (
     <div className="edit-trip-form-container">
       <MySideDrawer isOpen={isOpen} setIsOpen={setIsOpen}>
