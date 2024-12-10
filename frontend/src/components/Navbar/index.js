@@ -6,21 +6,31 @@ import { useAuth } from "../../common/AuthContext";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const { isAdmin, logout } = useAuth();
-  const { registrationType } = useAuth();
+  const { logout, isLoggedIn } = useAuth();
 
   const menuItems = [
     {
       title: "Home",
       links: [
+        { label: "Home", url: "/home" },
+              { label: "Conferences", url: "/conferences" },
+     { label: "Exhibitions", url: "/page/exhibitions" },
         { label: "Our Story", url: "/about_us" },
         { label: "Team", url: "/our_team" },
         { label: "Clients", url: "/our_clients" },
-        { label: "Gallery", url: "#" },
+        { label: "Gallery", url: "/gallery" },
         { label: "Careers", url: "/job/list" },
         { label: "FAQs", url: "/faq" },
       ],
     },
+
+
+   
+
+
+
+
+
     {
       title: "Services",
       links: [
@@ -55,84 +65,17 @@ const NavBar = () => {
           label: "Previous Events",
           url: "#",
           subMenu: "previous",
-          subLinks: [{ label: "Gallery", url: "/past/event" }],
+          subLinks: [{ label: "Gallery", url: "/gallery"}],
         },
       ],
     },
     {
       title: "Travel & Tourism",
-      links: [
-        { label: "Sights", url: "/tour_slider" },
-        // { label: "Packages", url: "/packages" },
-        // {
-        //   label: "Tailor Made",
-        //   url: "#",
-        //   subMenu: "tailorMade",
-        //   subLinks: [
-        //     { label: "Individuals (Form)", url: "#" },
-        //     { label: "Groups (Form)", url: "#" },
-        //   ],
-        // },
-        // { label: "Ticket Booking", url: "/ticket/booking" },
-        // { label: "Hotel Booking", url: "/hotel/booking" },
-        // { label: "Transportation", url: "/transportation" },
-      ],
+      links: [{ label: "Sights", url: "/tour_slider" }],
     },
-    {
-      title: "page",
-      links: [
-        { label: "Visa", url: "/visa" },
-        { label: "Flight", url: "/flight/form" },
-        { label: "Airport Transfer", url: "/airport/transfer" },
-        { label: "Gala Dinner", url: "/gala/dinner" },
-        { label: "Reservation", url: "/reservation/form" },
-        { label: "All Trips", url: "/view-user-trips" },
-
-        { label: "Gala Dinner", url: "/gala" },
-      ],
-    },
-    ...(isAdmin
-      ? [
-          {
-            title: "Admin",
-            links: [
-              { label: "Conferences", url: "/conferences/page" },
-              { label: "Exhibitions", url: "/exhibitions" },
-              { label: "Trips", url: "/create/trip" },
-              { label: "Flight Admin", url: "/flights" },
-              { label: "Gala Dinner", url: "/gala" },
-              { label: "Create Job", url: "/job" },
-              { label: "Messages", url: "/msgs" },
-              { label: "Job Applicants", url: "/job/admin" },
-              { label: "Sponsor Option Form", url: "/sponsor/option/form" },
-              { label: "Users", url: "/pending/users" },
-              { label: "Enter new flights", url: "/enter/new/flights" },
-              {
-                label: "Dinner Table Speaker static",
-                url: "/table/dinner/speaker/1",
-              },
-
-              {
-                label: "Admin Sponsorship Packages",
-                url: "/sponsor/admin/add/table",
-              },
-              {
-                label: "Admin Sponsorship Option",
-                url: "/sponsor/option/form",
-              },
-              { label: "Admin Booth Cost ", url: "/sponsor/admin/booth/cost" },
-              { label: "Sponsor Invoices ", url: "/admin/invoice/sponsor" },
-            ],
-          },
-        ]
-      : []),
     {
       title: "Contact Us",
       links: [{ label: "Contact Us", url: "/contact_us" }],
-    },
-    {
-      title: "Profile",
-      links: [{ label: "Profile", url: "/speaker/profile" }],
     },
   ];
 
@@ -181,29 +124,32 @@ const NavBar = () => {
   return (
     <nav className="new-navbar">
       <div className="navbar-logo">
-        {/* <img className="new-logo" src="/image/newLogo.png" alt="Logo" /> */}
+        {!isLoggedIn && (
+          <img className="new-logo" src="/image/newLogo.png" alt="Logo" />
+        )}
       </div>
-      {/* <ul className="navbar-links">{renderMenu()}</ul> */}
-
+      {!isLoggedIn && <ul className="navbar-links">{renderMenu()}</ul>}
       <div className="navbar-auth">
-        <div className="menuu">
-          <div
-            className="menu-title"
-            onClick={() => navigate("/home")}
-            style={{ cursor: "pointer" }}
-          >
-            {"Home"}
+        {isLoggedIn && (
+          <div className="menuu">
+            <div
+              className="menu-title"
+              onClick={() => navigate("/home")}
+              style={{ cursor: "pointer" }}
+            >
+              {"Home"}
+            </div>
+            <div
+              className="menu-title"
+              onClick={() => navigate("/about")}
+              style={{ cursor: "pointer" }}
+            >
+              {"About"}
+            </div>
           </div>
-          <div
-            className="menu-title"
-            onClick={() => navigate("/about")}
-            style={{ cursor: "pointer" }}
-          >
-            {"About"}
-          </div>
-        </div>
-        <NotificationDropdown />
-        {!localStorage.getItem("token") ? (
+        )}
+        {isLoggedIn && <NotificationDropdown />}{" "}
+        {!isLoggedIn ? (
           <Fragment>
             <div
               className="auth-btn"
@@ -227,8 +173,7 @@ const NavBar = () => {
             className="auth-btn register-btn"
             onClick={() => {
               logout();
-              // localStorage.removeItem("token");
-              navigate("login");
+              navigate("/login");
             }}
           >
             Logout

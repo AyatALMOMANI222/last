@@ -45,7 +45,7 @@ const UpcomingConferences2 = () => {
             title={conference.title}
             description={conference.description}
             // seeMoreLink={`/conference/${conference.id}`}
-            seeMoreLink={"https://www.eventscons.com/4th-diet-nutrition-expo-2015/"}
+            seeMoreLink={`/conference/details/${conference.id}`}
             galleryLink={conference.galleryLink}
             buttonText="Read More"
             galleryButtonText="Explore Gallery"

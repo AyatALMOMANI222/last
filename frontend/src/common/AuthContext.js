@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import httpService from "./httpService";
 
 const AuthContext = createContext(null);
 
@@ -18,9 +19,10 @@ export const AuthProvider = ({ children }) => {
     attendancesData: null,
     loading: true,
     name: "",
+    isLoggedIn: false,
   });
   useEffect(() => {
-    console.log({ authData });
+    console.log( authData?.isLoggedIn );
   }, [authData]);
 
   useEffect(() => {
@@ -65,42 +67,87 @@ export const AuthProvider = ({ children }) => {
       console.error("Failed to fetch speaker data:", error);
     }
   };
-
   const fetchUserData = async (authToken) => {
     try {
-      const response = await axios.get(`${BaseUrl}/user`, {
+      const response = await httpService({
+        method: "GET",
+        url: `${BaseUrl}/user`,
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
+        showLoader: true,
+        onSuccess:async (response) =>{
+          
+          const userData = response.user;
+          console.log({ userData });
+    
+          if (userData?.registration_type === "speaker") {
+            await fetchSpeakerData(authToken);
+          } else if (userData?.registration_type === "attendance") {
+            fetchAttendancesData(authToken);
+          }
+    
+          setAuthData((prevState) => ({
+            ...prevState,
+            userId: userData.id,
+            userName: userData.name,
+            userImage: userData.image,
+            myConferenceId: userData.conferences?.[0]?.id || null,
+            myConferenceName: userData.conferences?.[0]?.title || null,
+            registrationType: userData?.registration_type,
+            isAdmin: userData?.isAdmin,
+            loading: false,
+            isLoggedIn: true,
+          }));
+        },
+        onError: (error) => console.error("Failed to fetch user data:", error),
       });
+  
 
-      const userData = response.data.user;
-      console.log({ userData });
-
-      if (userData?.registration_type === "speaker") {
-        await fetchSpeakerData(authToken);
-      } else if (userData?.registration_type === "attendance") {
-        fetchAttendancesData(authToken);
-      }
-
-      setAuthData((prevState) => ({
-        ...prevState,
-        userId: userData.id,
-        userName: userData.name,
-        userImage: userData.image,
-        myConferenceId: userData.conferences?.[0]?.id || null,
-        myConferenceName: userData.conferences?.[0]?.title || null,
-        registrationType: userData?.registration_type,
-        isAdmin: userData?.isAdmin,
-        loading: false,
-      }));
     } catch (error) {
       console.error("Failed to fetch user data:", error);
     }
   };
+  // const fetchUserData = async (authToken) => {
+  //   try {
+  //     const response = await axios.get(`${BaseUrl}/user`, {
+  //       headers: {
+  //         Authorization: `Bearer ${authToken}`,
+  //       },
+  //     });
+
+  //     const userData = response.data.user;
+  //     console.log({ userData });
+
+  //     if (userData?.registration_type === "speaker") {
+  //       await fetchSpeakerData(authToken);
+  //     } else if (userData?.registration_type === "attendance") {
+  //       fetchAttendancesData(authToken);
+  //     }
+
+  //     setAuthData((prevState) => ({
+  //       ...prevState,
+  //       userId: userData.id,
+  //       userName: userData.name,
+  //       userImage: userData.image,
+  //       myConferenceId: userData.conferences?.[0]?.id || null,
+  //       myConferenceName: userData.conferences?.[0]?.title || null,
+  //       registrationType: userData?.registration_type,
+  //       isAdmin: userData?.isAdmin,
+  //       loading: false,
+  //       isLoggedIn: true,
+  //     }));
+  //   } catch (error) {
+  //     console.error("Failed to fetch user data:", error);
+  //   }
+  // };
 
   const login = (newToken) => {
-    setAuthData((prevState) => ({ ...prevState, token: newToken }));
+    setAuthData((prevState) => ({
+      ...prevState,
+      token: newToken,
+      isLoggedIn: true,
+    }));
     localStorage.setItem("token", newToken);
     fetchUserData(newToken);
   };
@@ -118,6 +165,8 @@ export const AuthProvider = ({ children }) => {
       attendancesData: null,
       loading: false,
       name: "",
+      isLoggedIn: true,
+      isLoggedIn: false,
     });
     localStorage.removeItem("token");
   };

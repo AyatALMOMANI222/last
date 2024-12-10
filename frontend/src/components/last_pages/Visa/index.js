@@ -13,7 +13,7 @@ import { useAuth } from "../../../common/AuthContext";
 const VisaPage = () => {
   const { userId } = useAuth();
   const BaseUrl = process.env.REACT_APP_BASE_URL;
-const { myConferenceId } = useAuth();
+  const { myConferenceId } = useAuth();
 
   const navigate = useNavigate(); // For navigation later
   const [showVisaForm, setShowVisaForm] = useState(false); // Control the display of the form
@@ -22,12 +22,9 @@ const { myConferenceId } = useAuth();
   const [departureDate, setDepartureDate] = useState("");
   const [error, setError] = useState("");
 
-
   const [visaPrice, setVisaPrice] = useState(0); // Changed initial state to null to check for data
   const [visaData, setVisaData] = useState(null); // Changed initial state to null to check for data
   const [speakerData, setSpeakerData] = useState(null);
-
-  
 
   const handleUserChoice = (choice) => {
     if (choice === "yes") {
@@ -37,21 +34,20 @@ const { myConferenceId } = useAuth();
     }
   };
 
-console.log(myConferenceId);
+  console.log(myConferenceId);
 
-const getConferenceById= () => {
-if(!myConferenceId) {
-  return
-}
-  try {
-    const response =  axios.get(`${BaseUrl}/con/id/1`);
+  const getConferenceById = () => {
+    if (!myConferenceId) {
+      return;
+    }
+    try {
+      const response = axios.get(`${BaseUrl}/con/id/1`);
       setVisaPrice(response.data.conference.visa_price);
       console.log(visaPrice);
-      
-} catch (error) {
-    console.error("Error fetching Conference details", error);
-  }
-};
+    } catch (error) {
+      console.error("Error fetching Conference details", error);
+    }
+  };
 
   useEffect(() => {
     getConferenceById();
@@ -105,7 +101,6 @@ if(!myConferenceId) {
       });
       setVisaData(data.visa);
 
-
       // Set fields based on the data
       if (data.visa) {
         setArrivalDate(data.arrival_date);
@@ -133,19 +128,17 @@ if(!myConferenceId) {
           Authorization: `Bearer ${token}`, // تمرير التوكن في الهيدر
         },
         onSuccess: (response) => setSpeakerData(response),
-       
-        
+
         onError: (err) => setError(err),
-        withToast: true, // عرض توست في حالة نجاح أو فشل الطلب
+        withToast: false, // عرض توست في حالة نجاح أو فشل الطلب
       });
 
       // حفظ البيانات في الـ state
       // setSpeakerData(data.speaker.is_visa_payment_required); // افترض أن البيانات المطلوبة تحت `speaker`
-      const speakerData =data.speaker.is_visa_payment_required
-console.log(data.speaker);
-console.log(speakerData);
+      const speakerData = data.speaker.is_visa_payment_required;
+      console.log(data.speaker);
+      console.log(speakerData);
       // إذا كانت البيانات موجودة
-   
     } catch (error) {
       setError("Error fetching speaker data."); // في حال حدوث خطأ
     }
@@ -159,8 +152,8 @@ console.log(speakerData);
     };
     fetchData();
   }, []);
-console.log(visaPrice);
-  
+  console.log(visaPrice);
+
   return (
     <div className="visa-page-container">
       {!visaData &&
@@ -186,8 +179,8 @@ console.log(visaPrice);
       {showVisaForm && ( // Show the form only if "Yes" was chosen
         <form onSubmit={handleSubmit} className="visa-form">
           <div className="fields-container">
-          <div>The Visa Price Is {speakerData ? visaPrice : 0} $</div>
-          <ImageUpload
+            <div>The Visa Price Is {speakerData ? visaPrice : 0} $</div>
+            <ImageUpload
               label="Upload Passport Image"
               inputValue={passportImage}
               setInputValue={setPassportImage}

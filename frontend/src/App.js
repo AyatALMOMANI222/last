@@ -114,10 +114,12 @@ import SpeakerUpdateForm from "./components/test";
 import RegisterOther from "./pages/registerOther";
 import AdminForm from "./components/Admin/AdminForm";
 import AddClient from "./components/AddClient";
+import { useAuth } from "./common/AuthContext";
 
 const App = () => {
   const location = useLocation();
   const [showLoader, setShowLoader] = useState(false);
+  const { isAdmin, registrationType, isLoggedIn } = useAuth();
 
   // Listen for showLoader and hideLoader events
   useEffect(() => {
@@ -150,7 +152,7 @@ const App = () => {
           !location.pathname.includes("/registerPage") &&
           !location.pathname.includes("/conference/details") &&
           !location.pathname.includes("/other") &&
-          !location.pathname.includes("/register/") && (
+          !location.pathname.includes("/register/") &&(
             <div className="layout-sidemenu">
               <SideMenu />
             </div>
@@ -164,6 +166,7 @@ const App = () => {
               !location.pathname.includes("/registerPage") &&
               !location.pathname.includes("/conference/details") &&
               !location.pathname.includes("/other") &&
+              isLoggedIn && 
               !location.pathname.includes("/register/")
                 ? "calc(100% - 250px)"
                 : "100%",
@@ -229,12 +232,12 @@ const App = () => {
               {/* //this route for view one trip for user not admin  */}
               <Route path="/view/trip/:id" element={<ViewOneTripUser />} />
               <Route path="/airport/transfer" element={<AirportTransfer />} />
-             
               <Route path="/gala" element={<GalaDinner />} />
               <Route path="/gala/dinner" element={<DinnerDetails />} />
               <Route path="/paper" element={<AddScientificPaper />} />
               <Route path="/visa" element={<VisaPage />} />
               <Route path="/home" element={<Home />} />
+              <Route path="/" element={<Home />} />
               <Route path="/about_us" element={<AboutUsEvent />} />
               <Route path="/our_clients" element={<OurClients />} />
               <Route path="/our_team" element={<OurTeams />} />
@@ -373,8 +376,7 @@ const App = () => {
               />
               <Route path="/gallery" element={<ImageGallery />} />
               <Route path="/one/exhibits/:exhibitId" element={<OneExhibit />} />
-              <Route path="/add/client" element={< AddClient />} />
-
+              <Route path="/add/client" element={<AddClient />} />
               <Route
                 path="/group-trip/user/:tripId"
                 element={<GroupTripRegistration />}

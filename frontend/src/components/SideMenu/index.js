@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./style.scss";
 import { useAuth } from "../../common/AuthContext";
 
 function SideMenu() {
   const [activeMenu, setActiveMenu] = useState(null); // To track the expanded menu
-  const { isAdmin, registrationType } = useAuth();
+  const { isAdmin, registrationType, isLoggedIn } = useAuth();
   const isSpeaker = registrationType === "speaker";
   const isAttendance = registrationType === "attendance";
   const isSponsor = registrationType === "sponsor";
@@ -186,47 +186,55 @@ function SideMenu() {
   };
 
   return (
-    <div className="side-menu">
-      <div className="menu-header">
-        <img
-          className="new-logo"
-          src="/image/newLogo.png"
-          alt="Logo"
-          height={"50px"}
-          // width={"50px"}
-        />
-      </div>
-      <ul className="menu-list">
-        {menuItems.map((item, index) => (
-          <li
-            key={index}
-            className={`menu-item ${activeMenu === index ? "expanded" : ""}`}
-          >
-            <div className="menu-title" onClick={() => toggleMenu(index)}>
-              <div>
-                <span className="icon">{item.icon}</span>
-                <span className="label">{item.label}</span>
-              </div>
+    <Fragment>
+      {isLoggedIn && (
+        <div className="side-menu">
+          <div className="menu-header">
+            <img
+              className="new-logo"
+              src="/image/newLogo.png"
+              alt="Logo"
+              height={"50px"}
+              // width={"50px"}
+            />
+          </div>
+          <ul className="menu-list">
+            {menuItems.map((item, index) => (
+              <li
+                key={index}
+                className={`menu-item ${
+                  activeMenu === index ? "expanded" : ""
+                }`}
+              >
+                <div className="menu-title" onClick={() => toggleMenu(index)}>
+                  <div>
+                    <span className="icon">{item.icon}</span>
+                    <span className="label">{item.label}</span>
+                  </div>
 
-              {item.children.length > 0 && (
-                <span className="arrow">
-                  {activeMenu === index ? "▲" : "▼"}
-                </span>
-              )}
-            </div>
-            {item.children.length > 0 && (
-              <ul className={`submenu ${activeMenu === index ? "open" : ""}`}>
-                {item.children.map((child, childIndex) => (
-                  <li key={childIndex} className="submenu-item">
-                    <NavLink to={child.path}>{child.label}</NavLink>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+                  {item.children.length > 0 && (
+                    <span className="arrow">
+                      {activeMenu === index ? "▲" : "▼"}
+                    </span>
+                  )}
+                </div>
+                {item.children.length > 0 && (
+                  <ul
+                    className={`submenu ${activeMenu === index ? "open" : ""}`}
+                  >
+                    {item.children.map((child, childIndex) => (
+                      <li key={childIndex} className="submenu-item">
+                        <NavLink to={child.path}>{child.label}</NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </Fragment>
   );
 }
 

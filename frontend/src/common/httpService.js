@@ -45,7 +45,9 @@ const httpService = async ({
     throw error;
   } finally {
     if (showLoader) {
-      window.dispatchEvent(new CustomEvent("hideLoader"));
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent("hideLoader"));
+      }, 300);
     }
   }
 };
