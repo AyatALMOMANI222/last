@@ -66,11 +66,12 @@ use Illuminate\Support\Facades\Route;
 
 // Sanctum::routes();
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum','verified');
 
 
 
 Route::post('/users/{conference_id}', [UserController::class, 'store']);
+// ->middleware(['verified']);
 Route::post('/store/user', [UserController::class, 'storeAdmin']);
 // فقط الادمن يعدل على ال status   للمتحدث id 
 Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->middleware(['auth:sanctum', 'admin']);
@@ -155,7 +156,9 @@ Route::post('/visa', [VisaController::class, 'postVisaByUser'])->middleware('aut
 Route::post('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/visa', [VisaController::class, 'getVisaByAuthUser'])->middleware('auth:sanctum');
 // Route::put('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin']);
-
+Route::middleware(['auth:sanctum'])->post('/broadcasting/auth', function (Illuminate\Http\Request $request) {
+    return Broadcast::auth($request);
+});
 
 // Flight
 Route::post('/flights', [FlightController::class, 'createFlight'])->middleware('auth:sanctum');

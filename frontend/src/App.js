@@ -136,6 +136,20 @@ const App = () => {
       window.removeEventListener("hideLoader", handleHideLoader);
     };
   }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   const noNavRoute = [
     "/registertype",
     "/register/speaker",

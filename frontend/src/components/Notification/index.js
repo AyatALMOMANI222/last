@@ -63,35 +63,52 @@ const NotificationDropdown = () => {
       console.error("Error fetching notifications", error);
     }
   };
+
   useEffect(() => {
     getAllNotifications();
 
+    // إنشاء اتصال مع Pusher
     const echo = new Echo({
       broadcaster: "pusher",
-      key: "743171d2766ff157a71a", // مفتاح Pusher
+      key: "d621cac4efd6817060d6", // مفتاح Pusher
       cluster: "ap2", // كلاستر Pusher
-      forceTLS: true,
-      authEndpoint: "http://yourapp.test/broadcasting/auth", // اضبطه كما هو مطلوب
+      forceTLS: true, // استخدام SSL
+      authEndpoint: "https://127.0.0.1:8000/api/broadcasting/auth", // استخدام https
       auth: {
         headers: {
-          Authorization: `Bearer ${getAuthToken()}`, // إذا كنت تستخدم JWT
+          Authorization: `Bearer ${getAuthToken()}`, // توكن المصادقة
         },
       },
     });
 
+    // الاشتراك في القناة و الاستماع للأحداث
+    const channel = echo.channel("your-channel-name"); // اسم القناة
+
+    // الاستماع للأحداث التي تأتي من Pusher
+    channel.listen("YourEvent", (event) => {
+      console.log("New notification received:", event);
+      // إضافة الإشعار إلى الحالة الخاصة بالإشعارات
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        event.notification, // event.notification يجب أن يحتوي على بيانات الإشعار
+      ]);
+      toast.info(event.notification.message); // عرض إشعار عبر Toast
+    });
+
     // تسجيل أحداث الاتصال
     echo.connector.pusher.connection.bind("connected", () => {
-      console.log("Successfully connected to Pusher!"); // طباعة رسالة نجاح الاتصال
+      console.log("Successfully connected to Pusher!");
     });
 
     echo.connector.pusher.connection.bind("failed", () => {
-      console.error("Failed to connect to Pusher."); // طباعة رسالة فشل الاتصال
+      console.error("Failed to connect to Pusher.");
     });
 
+    // التنظيف عند إلغاء الاشتراك
     return () => {
-      echo.disconnect(); // تنظيف الاتصال عند إزالة المكون
+      echo.disconnect();
     };
-  }, []); // تعمل فقط عند التركيب
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -128,7 +145,8 @@ const NotificationDropdown = () => {
               key={notification.id}
               className={`notification-item unread`}
               onClick={() => {
-                // read(notification.id);
+                read(notification.id);
+                // أضف التوجيه إلى الرابط عند النقر على الإشعار
                 if (
                   notification?.message?.includes("New speaker registration")
                 ) {
@@ -183,15 +201,14 @@ const NotificationDropdown = () => {
                 }
               }}
             >
-              {/* <span className="notification-dot"></span> */}
               <div className="notification-content">
                 <div className="notification-title">{notification.message}</div>
-                {/* <small>Unread</small> */}
               </div>
             </div>
           ))}
         </div>
       )}
+      <ToastContainer /> {/* عرض إشعارات Toast */}
     </div>
   );
 };

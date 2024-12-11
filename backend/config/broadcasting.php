@@ -10,13 +10,11 @@ return [
 
         'pusher' => [
             'driver' => 'pusher',
-            'key' => '743171d2766ff157a71a',
-            'secret' => 'b8c7d169bfb95a4713e1',
-            'app_id' => '1886913',
-            'options' => [
-                'cluster' => 'ap2',
-                'useTLS' => true,
-            ],
+            'key' => env('PUSHER_APP_KEY', 'd621cac4efd6817060d6'),
+            'secret' => env('PUSHER_APP_SECRET', 'e49c0bc9c9094f7eca2a'),
+            'app_id' => env('PUSHER_APP_ID', '1886910'),
+            'cluster' => env('PUSHER_APP_CLUSTER', 'ap2'),
+            'use_tls' => true,
         ],
 
         'redis' => [

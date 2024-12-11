@@ -36,23 +36,28 @@ const VisaPage = () => {
 
   console.log(myConferenceId);
 
-  const getConferenceById = () => {
+  const getConferenceById = async () => {
     if (!myConferenceId) {
       return;
     }
     try {
-      const response = axios.get(`${BaseUrl}/con/id/1`);
-      setVisaPrice(response.data.conference.visa_price);
-      console.log(visaPrice);
+      // إضافة await هنا للحصول على البيانات بشكل صحيح
+      const response = await axios.get(`${BaseUrl}/con/id/${myConferenceId}`);
+      
+      // تحقق من أن response.data.conference.visa_price موجود
+      const fetchedVisaPrice = response.data.conference.visa_price;
+      setVisaPrice(fetchedVisaPrice); // تحديث حالة visaPrice
+      
+      console.log("Visa Price:", fetchedVisaPrice); // للتحقق من القيمة المسترجعة
+  
     } catch (error) {
       console.error("Error fetching Conference details", error);
     }
   };
-
   useEffect(() => {
-    getConferenceById();
-  }, [myConferenceId]);
-
+    getConferenceById(); // استدعاء getConferenceById عند تغيير myConferenceId
+  }, [myConferenceId]); // Trigger whenever myConferenceId changes
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -63,6 +68,7 @@ const VisaPage = () => {
     formData.append("passport_image", passportImage); // Ensure passportImage is a file
     formData.append("arrival_date", arrivalDate);
     formData.append("departure_date", departureDate);
+    formData.append("visa_cost", visaPrice);
 
     try {
       const response = await axios.post(`${BaseUrl}/visa`, formData, {
@@ -114,40 +120,48 @@ const VisaPage = () => {
       setError("Error fetching visa data.");
     }
   };
-
-  // دالة للحصول على بيانات المتحدثين
-  const fetchSpeakerData = async () => {
     const token = localStorage.getItem("token"); // استرجاع التوكن
 
-    try {
-      // استدعاء الـ API باستخدام httpService
-      const data = await httpService({
-        method: "GET",
-        url: `${BaseUrl}/speakers/info`, // الـ URL الخاص بالمتحدثين
-        headers: {
-          Authorization: `Bearer ${token}`, // تمرير التوكن في الهيدر
-        },
-        onSuccess: (response) => setSpeakerData(response),
+  // const fetchSpeakerData = async () => {
+  
+  //   try {
+  //     // استدعاء الـ API باستخدام httpService
+  //     const data = await httpService({
+  //       method: "GET",
+  //       url: `${BaseUrl}/speakers/info`, // الـ URL الخاص بالمتحدثين
+  //       headers: {
+  //         Authorization: `Bearer ${token}`, // تمرير التوكن في الهيدر
+  //       },
+  //       onSuccess: (response) => setSpeakerData(response),
+  //       onError: (err) => setError(err),
+  //       withToast: false, // عرض توست في حالة نجاح أو فشل الطلب
+  //     });
+  
+  //     // تحقق من قيمة is_visa_payment_required داخل البيانات المسترجعة
+  //     const isVisaPaymentRequired = speakerData.speaker.is_visa_payment_required;
+  // console.log(isVisaPaymentRequired);
+  
 
-        onError: (err) => setError(err),
-        withToast: false, // عرض توست في حالة نجاح أو فشل الطلب
-      });
+  // // إذا كانت القيمة 1، قم بتحديث visaPrice
+  // if (isVisaPaymentRequired === 1) {
+  //   setVisaPrice(originalVisaPrice); // تعيين الـ visa_price المأخوذ من الـ API
+  // } else {
+  //   setVisaPrice(0); // تعيين السعر إلى 0 إذا لم يكن هناك حاجة لدفع الفيزا
+  // }
 
-      // حفظ البيانات في الـ state
-      // setSpeakerData(data.speaker.is_visa_payment_required); // افترض أن البيانات المطلوبة تحت `speaker`
-      const speakerData = data.speaker.is_visa_payment_required;
-      console.log(data.speaker);
-      console.log(speakerData);
-      // إذا كانت البيانات موجودة
-    } catch (error) {
-      setError("Error fetching speaker data."); // في حال حدوث خطأ
-    }
-  };
-
+  
+  //     console.log("Speaker Data:", data.speaker);
+  //     console.log("Visa Price:", data.speaker.visa_price);
+  
+  //   } catch (error) {
+  //     setError("Error fetching speaker data."); // في حال حدوث خطأ
+  //   }
+  // };
+  
   // استخدام useEffect لاستدعاء الدالة عند تحميل المكون
   useEffect(() => {
     const fetchData = async () => {
-      await fetchSpeakerData();
+      // await fetchSpeakerData();
       await fetchVisaData();
     };
     fetchData();
@@ -179,7 +193,9 @@ const VisaPage = () => {
       {showVisaForm && ( // Show the form only if "Yes" was chosen
         <form onSubmit={handleSubmit} className="visa-form">
           <div className="fields-container">
-            <div>The Visa Price Is {speakerData ? visaPrice : 0} $</div>
+            {/* <div>The Visa Price Is {visaPrice} $</div> */}
+            {/* <div>The Visa Price Is {visaPrice ? visaPrice : 0} $</div>  */}
+
             <ImageUpload
               label="Upload Passport Image"
               inputValue={passportImage}
