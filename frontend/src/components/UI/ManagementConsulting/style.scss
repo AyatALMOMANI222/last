@@ -1,104 +1,120 @@
-// .management-consulting {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   // background-color: #f7f9fc; /* Light background color */
-//   color: #333; /* Dark text color */
-//   // padding: 50px 20px;
-//   font-family: 'Arial', sans-serif; /* Clean, modern font */
-// }
-
-// .headline-section {
-//   position: relative;
-//   width: 100%;
-//   height: 200px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   background: url('https://source.unsplash.com/1600x900/?business,consulting') no-repeat center center;
-//   background-size: cover;
-// }
-
-// .overlay {
-//   // background-color: rgba(255, 255, 255, 0.7); /* Light semi-transparent overlay */
-//   padding: 20px;
-//   border-radius: 8px;
-//   // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-// }
-
-// .title {
-//   font-size: 3rem;
-//   font-weight: bold;
-//   text-transform: uppercase;
-//   text-align: center;
-//   animation: fadeIn 1.5s ease-in-out, slideUp 1s ease forwards;
-//   opacity: 0;
-// }
-//   @keyframes fadeIn {
-//     0% {
-//       opacity: 0;
-//     }
-//     100% {
-//       opacity: 1;
-//     }
-//   }
-
-//   @keyframes slideUp {
-//     0% {
-//       transform: translateY(20px);
-//     }
-//     100% {
-//       transform: translateY(0);
-//     }
-// }
-
-// .content-section {
-//   background-color: #ffffff; /* White background for content */
-//   border-radius: 8px;
-//   padding: 30px;
-//   max-width: 800px;
-//   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-//   animation: fadeInContent 0.8s ease-in-out forwards;
-//   opacity: 0;
-
-//   @keyframes fadeInContent {
-//     0% {
-//       opacity: 0;
-//       transform: translateY(20px);
-//     }
-//     100% {
-//       opacity: 1;
-//       transform: translateY(0);
-//     }
-// }
-
-// .subtitle {
-//   font-size: 2rem;
-//   margin-bottom: 15px;
-//   color: #007bff; /* Primary color for subtitle */
-// }
-
-// .description {
-//   font-size: 1.1rem;
-//   line-height: 1.6;
-//   margin-bottom: 15px;
-// }
-
-// .principles-title {
-//   font-size: 1.5rem;
-//   margin: 20px 0 10px;
-// }
-
-// .principles-list {
-//   list-style: none;
-//   padding-left: 0;
-//   font-size: 1.1rem;
-
-//   li {
-//     margin: 5px 0;
-//     background: #f1f1f1; /* Light grey for list items */
-//     padding: 10px;
-//     border-radius: 4px;
-//   }
-// }
-// }
+.management-consulting66 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333; /* Dark text color */
+    font-family: 'Arial', sans-serif; /* Clean, modern font */
+  
+    .headline-section {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('./ManagementConsulting.webp') no-repeat center center;
+      background-size: cover;
+      padding-top: 20px; /* Added padding to keep title visible */
+  
+      .overlay {
+        padding: 20px;
+        border-radius: 8px;
+  
+        .title {
+          color: #ffffff;
+        }
+      }
+    }
+  
+    .title {
+      font-size: 3rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-align: center;
+      opacity: 1; /* Ensure the title is visible without animation */
+      z-index: 2; /* Ensure title stays on top of any overlay */
+    }
+  
+    .content-section {
+      background-color: #ffffff; /* White background for content */
+      border-radius: 8px;
+      padding: 30px;
+      max-width: 800px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+  
+    .subtitle {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #c83222; /* Primary color for subtitle */
+    }
+  
+    .description {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+  
+    .principles-title {
+      font-size: 1.5rem;
+      margin: 20px 0 10px;
+    }
+  
+    .principles-list {
+      list-style: none;
+      padding-left: 0;
+      font-size: 1.1rem;
+  
+      li {
+        margin: 5px 0;
+        background: #f1f1f1; /* Light grey for list items */
+        padding: 10px;
+        border-radius: 4px;
+      }
+    }
+  
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .headline-section {
+        height: 250px;
+      }
+  
+      .title {
+        font-size: 2rem; /* Smaller title font on mobile */
+        text-align: left;
+        padding-left: 20px; /* Add padding to the left for better alignment */
+      }
+  
+      .content-section {
+        padding: 20px;
+        max-width: 100%;
+      }
+  
+      .subtitle {
+        font-size: 1.5rem;
+      }
+  
+      .description {
+        font-size: 1rem;
+      }
+    }
+  
+    @media (max-width: 480px) {
+      .headline-section {
+        height: 200px;
+      }
+  
+      .title {
+        font-size: 1.8rem; /* Smaller title font for smaller screens */
+      }
+  
+      .subtitle {
+        font-size: 1.3rem;
+      }
+  
+      .description {
+        font-size: 0.9rem;
+      }
+    }
+  }
+  

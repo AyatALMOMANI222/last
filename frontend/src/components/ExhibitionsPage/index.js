@@ -98,7 +98,7 @@ const ExhibitionsPage = () => {
                     <p className="exhibition-card-description">{description}</p>
                     <p className="exhibition-card-location">{location}</p>
                   </div>
-                  <div>
+                  <div className="two-btn">
                     <button className="btn"
                       onClick={() => {
                         navigate(`/one/exhibits/${id}`);

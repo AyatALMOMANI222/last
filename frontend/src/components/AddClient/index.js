@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./style.scss";
 import ImageUpload from "../../CoreComponent/ImageUpload";
+import { toast } from "react-toastify";
 
 const AddClient = () => {
   const [image, setImage] = useState(null);
@@ -39,13 +40,14 @@ const AddClient = () => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
       if (response.status === 200) {
+        toast.success("Client created successfully!");
+
         setSuccess(true);
         setImage(null);
         setError(null);

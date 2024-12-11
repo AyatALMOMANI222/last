@@ -28,5 +28,10 @@ class NotificationSent implements ShouldBroadcast
     {
         return 'notification.sent';
     }
+
+
+
+
+
 }
 

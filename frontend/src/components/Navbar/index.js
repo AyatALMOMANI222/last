@@ -125,7 +125,7 @@ const NavBar = () => {
     <nav className="new-navbar">
       <div className="navbar-logo">
         {!isLoggedIn && (
-          <img className="new-logo" src="/image/newLogo.png" alt="Logo" />
+          <img className="new-logo" src={require("./logo.jpg")} alt="Logo" />
         )}
       </div>
       {!isLoggedIn && <ul className="navbar-links">{renderMenu()}</ul>}

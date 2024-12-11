@@ -3,7 +3,7 @@ import './style.scss';
 
 const ManagementConsulting = () => {
   return (
-    <div className="management-consulting">
+    <div className="management-consulting66">
       {/* Headline Section with Background Image */}
       <div className="headline-section">
         <div className="overlay">

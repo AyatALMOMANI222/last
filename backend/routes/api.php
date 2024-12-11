@@ -160,6 +160,7 @@ Route::middleware(['auth:sanctum'])->post('/broadcasting/auth', function (Illumi
     return Broadcast::auth($request);
 });
 
+
 // Flight
 Route::post('/flights', [FlightController::class, 'createFlight'])->middleware('auth:sanctum');
 Route::get('/flight', [FlightController::class, 'getFlightByUserId'])->middleware('auth:sanctum');

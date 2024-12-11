@@ -1,71 +1,78 @@
+// General Container
+.conference-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: url('../../../../public//image/con7.jpeg') no-repeat center center;
+  background-size: cover;
+  min-height: 100vh; // Ensure full page height
+  position: relative; // Ensures overlay is positioned correctly
+}
 
+// Headline Section with Background Image
+.headline-picture {
+  position: relative;
+  text-align: center;
+  margin-bottom: 40px;
+  width: 100%;
+  min-height: 300px; // Ensure enough space for title
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // background: rgba(0, 0, 0, 0.5); // Dark overlay for image
+  border-bottom: 6px solid #b7a2a0; // Soft accent border color
+  color: #fff; // Ensures title is white for contrast
+}
 
-.conference-containerr {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: url('https://source.unsplash.com/1600x900/?conference,event') no-repeat center center;
-    background-size: cover;
-    // padding: 50px 20px;
-    color: #fff;
-  }
-  
-  .headline-picture {
-    position: relative;
-    text-align: center;
-    margin-bottom: 30px;
-    width: 100% !important;
-    height: 200px;
-    border-bottom: 6px solid red
+// Title Styling
+.headline-title {
+  font-size: 3rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff; // White color for title to contrast with dark background
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); // Stronger shadow for better visibility
+  z-index: 2; // Ensures title is on top
+  margin: 0;
+}
 
-  }
-  
+// Content Section below the Image
+.conference-content {
+  background-color: #fff; // White background for content
+  color: #333; // Dark text color for readability
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 900px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); // Soft shadow for content section
+  margin: 0 20px;
+  text-align: left;
+  font-size: 1.1rem;
+}
+
+// Intro Text Styling
+.intro-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #444; // Lighter text for intro
+}
+
+// Responsive Design for smaller screens
+@media (max-width: 768px) {
   .headline-title {
-    font-size: 3rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    animation: fadeIn 1.5s ease-in-out, slideUp 1s ease forwards;
-    opacity: 0;
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-  
-    @keyframes slideUp {
-      0% {
-        transform: translateY(20px);
-      }
-      100% {
-        transform: translateY(0);
-      }
+    font-size: 2rem; // Smaller font size for mobile
+  }
+
+  .conference-content {
+    padding: 20px; // Less padding on smaller screens
   }
 }
-  .conference-content {
-    // background-color: rgba(0, 0, 0, 0.6);
-    border-radius: 8px;
-    padding: 20px;
-    // max-width: 800px;
-    // box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    animation: fadeInContent 0.8s ease-in-out forwards;
-    opacity: 0;
-  
-    @keyframes fadeInContent {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+
+@media (max-width: 480px) {
+  .headline-title {
+    font-size: 1.5rem; // Smaller font size for very small screens
   }
-  
-  .intro-text {
-    font-size: 1.2rem;
-    line-height: 1.5;
+
+  .conference-content {
+    padding: 15px; // Less padding for compact view
   }
 }

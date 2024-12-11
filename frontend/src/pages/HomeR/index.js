@@ -95,13 +95,32 @@ const Home = () => {
         </p>
       </section>
 
+      {/* Display Upcoming Conferences */}
+      <section className="upcoming-conferences">
+        <h2>Upcoming Conferences</h2>
+        <div className="conference-images">
+          {allConferences.map((conference) => (
+            <div
+              key={conference.id}
+              className="conference-image"
+              onClick={() => handleConferenceClick(conference.id)}
+            >
+              <img
+                src={`${backendUrlImages}${conference.image}`}
+                alt={conference.title}
+                className="conference-thumbnail"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
       {/* Featured Services Section */}
       <section className="featured-section">
         <h2>Our Services</h2>
         <div className="features">
           <div className="feature">
             <img
-              src="/image/conff66.webp"
+              src={require("./Conferences.jpeg")}
               alt="Conferences"
               className="feature-icon"
             />
@@ -113,7 +132,7 @@ const Home = () => {
           </div>
           <div className="feature">
             <img
-              src="/image/conff66.webp"
+              src={require("./exhibitions.jpeg")}
               alt="Exhibitions"
               className="feature-icon"
             />
@@ -137,7 +156,7 @@ const Home = () => {
           </div>
           <div className="feature">
             <img
-              src="/image/conff66.webp"
+              src={require("./Media.jpeg")}
               alt="Media Campaign"
               className="feature-icon"
             />
@@ -150,25 +169,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Display Upcoming Conferences */}
-      <section className="upcoming-conferences">
-        <h2>Upcoming Conferences</h2>
-        <div className="conference-images">
-          {allConferences.map((conference) => (
-            <div
-              key={conference.id}
-              className="conference-image"
-              onClick={() => handleConferenceClick(conference.id)}
-            >
-              <img
-                src={`${backendUrlImages}${conference.image}`}
-                alt={conference.title}
-                className="conference-thumbnail"
-              />
-            </div>
-          ))}
-        </div>
-      </section>
 
       <Footer />
     </div>
