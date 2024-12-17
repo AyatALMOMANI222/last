@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "./style.scss";
 
-const AddOption = ({ isOpen, setIsOpen, tripId }) => {
+const AddOption = ({ isOpen, setIsOpen, tripId , fetchTrips }) => {
   // State for all options
   const [options, setOptions] = useState([
     { optionName: "", optionDescription: "", price: 0 },
@@ -55,6 +55,8 @@ const AddOption = ({ isOpen, setIsOpen, tripId }) => {
         );
         setIsOpen(false);
         toast.success("The data was updated successfully!");
+        fetchTrips()
+
       } catch (error) {
         console.error(
           "Error adding option:",

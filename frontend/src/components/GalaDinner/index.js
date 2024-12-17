@@ -7,6 +7,7 @@ import { useAuth } from "../../common/AuthContext";
 import { toast } from "react-toastify";
 import httpService from "../../common/httpService";
 import { useNavigate } from "react-router-dom";
+import SimpleLabelValue from "../SimpleLabelValue";
 const DinnerDetails = () => {
   const [dinnerDetail, setDinnerDetail] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,7 +17,7 @@ const DinnerDetails = () => {
   const [companionDinnerPrice, setCompanionDinnerPrice] = useState(""); // State for guest price
   const [dinnerInvoice, setDinnerInvoice] = useState(null); // State for dinnerInvoice
   const [invoice, setInvoice] = useState(null); // State for invoice
-const navigate = useNavigate()
+  const navigate = useNavigate();
   const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const getDinnerInvoice = () => {
@@ -77,7 +78,9 @@ const navigate = useNavigate()
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(`${BaseUrl}/con/id/${myConferenceId}`);
-      setCompanionDinnerPrice(response?.data?.conference.companion_dinner_price);
+      setCompanionDinnerPrice(
+        response?.data?.conference.companion_dinner_price
+      );
     } catch (error) {
       console.error("Error fetching Conference details", error);
     }
@@ -104,10 +107,16 @@ const navigate = useNavigate()
           "Content-Type": "application/json",
         },
       });
+      setTimeout(() => {
+        getDinnerInvoice();
+      }, [200]);
 
       toast.success("Attendance confirmed successfully!");
     } catch (error) {
-      console.error("Error:", error.response ? error.response.data : error.message);
+      console.error(
+        "Error:",
+        error.response ? error.response.data : error.message
+      );
       alert("An error occurred while confirming attendance. Please try again.");
     }
   };
@@ -124,41 +133,48 @@ const navigate = useNavigate()
         <h2 className="dinner-title">Gala Dinner Details</h2>
         {dinnerDetail ? (
           <>
-            <div className="dinner-detail-item">
-              <strong>Date:</strong>{" "}
-              <span>{new Date(dinnerDetail.dinner_date).toLocaleDateString()}</span>
-            </div>
-            <div className="dinner-detail-item">
-              <strong>Restaurant:</strong> <span>{dinnerDetail.restaurant_name}</span>
-            </div>
-            <div className="dinner-detail-item">
-              <strong>Location:</strong> <span>{dinnerDetail.location}</span>
-            </div>
-            <div className="dinner-detail-item">
-              <strong>Gathering Place:</strong>{" "}
-              <span>{dinnerDetail.gathering_place}</span>
-            </div>
-            <div className="dinner-detail-item">
-              <strong>Transportation:</strong>{" "}
-              <span>{dinnerDetail.transportation_method}</span>
-            </div>
-            <div className="dinner-detail-item">
-              <strong>Gathering Time:</strong> <span>{dinnerDetail.gathering_time}</span>
-            </div>
-            <div className="dinner-detail-item">
-              <strong>Dinner Time:</strong> <span>{dinnerDetail.dinner_time}</span>
-            </div>
-            <div className="dinner-detail-item">
-              <strong>Duration:</strong> <span>{dinnerDetail.duration} minutes</span>
-            </div>
-            <div className="dinner-detail-item">
-              <strong>Dress Code:</strong> <span>{dinnerDetail.dress_code}</span>
+            <div className="dinner-detail-section">
+              <SimpleLabelValue
+                label="Date"
+                value={new Date(dinnerDetail.dinner_date).toLocaleDateString()}
+              />
+              <SimpleLabelValue
+                label="Restaurant"
+                value={dinnerDetail.restaurant_name}
+              />
+              <SimpleLabelValue
+                label="Location"
+                value={dinnerDetail.location}
+              />
+              <SimpleLabelValue
+                label="Gathering Place"
+                value={dinnerDetail.gathering_place}
+              />
+              <SimpleLabelValue
+                label="Transportation"
+                value={dinnerDetail.transportation_method}
+              />
+              <SimpleLabelValue
+                label="Gathering Time"
+                value={dinnerDetail.gathering_time}
+              />
+              <SimpleLabelValue
+                label="Dinner Time"
+                value={dinnerDetail.dinner_time}
+              />
+              <SimpleLabelValue
+                label="Duration"
+                value={`${dinnerDetail.duration} minutes`}
+              />
+              <SimpleLabelValue
+                label="Dress Code"
+                value={dinnerDetail.dress_code}
+              />
             </div>
 
             {!dinnerInvoice && !invoice ? (
               <div className="attendance-section">
                 <h3>Attendance Confirmation</h3>
-
                 <Checkbox
                   label="Will you be attending?"
                   checkboxValue={attending}
@@ -186,9 +202,10 @@ const navigate = useNavigate()
                           inputValue={guestName}
                           setInputValue={setGuestName}
                         />
-                        <div className="price">
-                          Companion Dinner Price: {companionDinnerPrice} $
-                        </div>
+                        <SimpleLabelValue
+                          label="Companion Dinner Price"
+                          value={`${companionDinnerPrice} $`}
+                        />
                       </div>
                     )}
                     <button className="submit-btn" onClick={addDinnerAttendees}>
@@ -198,23 +215,25 @@ const navigate = useNavigate()
                 )}
               </div>
             ) : (
-              // عرض الفاتورة إذا كانت موجودة
               <div className="invoice-section">
                 <h3>Invoice Details</h3>
                 {dinnerInvoice && (
-                  <div className="invoice-item">
-                    <strong>Companion Name:</strong> <span>{dinnerInvoice.companion_name}</span>
-                  </div>
+                  <SimpleLabelValue
+                    label="Companion Name"
+                    value={dinnerInvoice.companion_name || "-"}
+                  />
                 )}
                 {dinnerInvoice && (
-                  <div className="invoice-item">
-                    <strong>Companion Price:</strong> <span>{dinnerInvoice.companion_price} $</span>
-                  </div>
+                  <SimpleLabelValue
+                    label="Companion Price"
+                    value={`${dinnerInvoice.companion_price  || 0} $`}
+                  />
                 )}
                 {invoice && (
-                  <div className="invoice-item">
-                    <strong>Invoice Status:</strong> <span>{invoice.status}</span>
-                  </div>
+                  <SimpleLabelValue
+                    label="Invoice Status"
+                    value={invoice.status}
+                  />
                 )}
                 <button className="pay-now-btn">Pay Now</button>
               </div>
@@ -224,9 +243,14 @@ const navigate = useNavigate()
           <p>No dinner details available.</p>
         )}
       </div>
-      <button className="btn" onClick={()=>{
-        navigate("/airport/transfer")
-      }}>Next</button>
+      <button
+        className="fixed-button"
+        onClick={() => {
+          navigate("/airport/transfer");
+        }}
+      >
+        Next
+      </button>
     </div>
   );
 };

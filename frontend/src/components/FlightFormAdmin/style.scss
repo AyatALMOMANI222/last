@@ -198,7 +198,26 @@
     }
   }
 }
+.flight-form2 {
+  height: calc(100vh - 60px);
+  overflow: overlay;
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
 
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
+}
 .flight-form {
   .flight-form-admin-header {
     margin: 20px;

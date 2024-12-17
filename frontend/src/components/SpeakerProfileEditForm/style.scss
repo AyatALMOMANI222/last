@@ -36,7 +36,7 @@ $transition-speed: 0.3s;
       background-color: #fff;
       border-radius: $border-radius;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 1rem 2rem;
+      padding: 0.1rem 2rem;
       max-width: 700px;
       width: 100%;
       transition: transform $transition-speed ease;
@@ -64,6 +64,8 @@ $transition-speed: 0.3s;
               font-size: 1.4rem;
               font-weight: bold;
               color: $font-color;
+              padding: 20px;
+              margin-top: 30px;
             }
 
             .profile-bio {
@@ -71,10 +73,10 @@ $transition-speed: 0.3s;
               color: darken($font-color, 20%);
 
               .bio {
-                padding: 20px;
+                padding:10px 20px;
                 width: 100%;
                 max-width: 500px;
-                margin: 20px auto;
+                margin: 5px auto;
                 box-sizing: border-box;
                 overflow-wrap: break-word;
               }

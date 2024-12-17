@@ -140,12 +140,17 @@ const RegisterGroupPage = () => {
 
   return (
     <div className="group-registration-page-container789">
+      {/* <DialogMessage
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        message={"Your organization has been successfully registered! You will be notified via email once the admin approves your registration."}
+      /> */}
+      <form onSubmit={handleRegister} className="register-form">
       <DialogMessage
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
         message={"Your organization has been successfully registered! You will be notified via email once the admin approves your registration."}
       />
-      <form onSubmit={handleRegister} className="register-form">
         <div className="title">
           <span>Register Organization</span>
         </div>

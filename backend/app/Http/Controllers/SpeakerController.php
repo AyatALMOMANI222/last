@@ -113,14 +113,17 @@ class SpeakerController extends Controller
                 'topics' => 'nullable|string', // التحقق من topics كقيمة نصية
                 'presentation_file' => 'nullable|file|mimes:ppt,pptx', // التحقق من presentation_file كملف
                 'online_participation' => 'nullable|boolean', // إضافة خيار الحضور عبر الإنترنت
+                'departure_date' => 'nullable|date', // التحقق من departure_date كـ تاريخ
+                'arrival_date' => 'nullable|date', // التحقق من arrival_date كـ تاريخ
+                'video' => 'nullable|file|mimes:mp4|max:200000', // التحقق من أن الفيديو هو MP4
             ]);
-
+    
             // Get the authenticated user's ID
             $user_id = Auth::id();
-
+    
             // Find the speaker associated with the authenticated user
             $speaker = Speaker::where('user_id', $user_id)->firstOrFail();
-
+    
             // Check if a presentation file is provided
             if ($request->hasFile('presentation_file')) {
                 // Store the presentation file and get the path
@@ -128,7 +131,7 @@ class SpeakerController extends Controller
                 // Update the speaker's presentation file path
                 $speaker->presentation_file = $presentationFilePath;
             }
-
+    
             // Check if an abstract file is provided
             if ($request->hasFile('abstract')) {
                 // Store the abstract file and get the path
@@ -136,13 +139,24 @@ class SpeakerController extends Controller
                 // Update the speaker's abstract file path
                 $speaker->abstract = $abstractFilePath;
             }
-
+    
+            // Check if a video file is provided
+            if ($request->hasFile('video')) {
+                // Store the video file and get the path
+                $videoFilePath = $request->file('video')->store('videos', 'public');
+                
+                // Update the speaker's video file path
+                $speaker->video = $videoFilePath;
+            }
+    
             // Update the speaker's other details using validated data
             $speaker->topics = $validatedData['topics'] ?? $speaker->topics; // تحديث المواضيع إذا كانت موجودة
             $speaker->online_participation = $validatedData['online_participation'] ?? $speaker->online_participation; // تحديث خيار الحضور عبر الإنترنت إذا كان موجودًا
-
+            $speaker->departure_date = $validatedData['departure_date'] ?? $speaker->departure_date; // تحديث departure_date إذا كانت موجودة
+            $speaker->arrival_date = $validatedData['arrival_date'] ?? $speaker->arrival_date; // تحديث arrival_date إذا كانت موجودة
+    
             $speaker->save(); // احفظ التغييرات في قاعدة البيانات
-
+    
             // Return a success response
             return response()->json([
                 'message' => 'Speaker details updated successfully',
@@ -167,7 +181,8 @@ class SpeakerController extends Controller
             ], 500);
         }
     }
-
+    
+    
 
     public function getSpeakerByConferenceId($conference_id)
     {
@@ -300,7 +315,10 @@ class SpeakerController extends Controller
             // العثور على المتحدث مع معلومات المستخدم بناءً على user_id
             $speaker = Speaker::where('user_id', $user_id)
                 ->join('users', 'users.id', '=', 'speakers.user_id') // إجراء join مع جدول users
-                ->select('speakers.*', 'users.*') // تحديد الأعمدة المراد جلبها
+                ->select('speakers.*', 'users.*'
+                
+           
+                ) // تحديد الأعمدة المراد جلبها
                 ->firstOrFail();
 
             // إعادة بيانات المتحدث مع بيانات المستخدم
@@ -325,7 +343,8 @@ class SpeakerController extends Controller
     }
 
 
-
+ 
+    
 
 
 

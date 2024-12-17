@@ -1,11 +1,15 @@
 // Topics.js
-import React from "react";
+import React, { useEffect } from "react";
 import Input from "../../CoreComponent/Input";
 import SVG from "react-inlinesvg";
 import deleteIcon from "../../icons/deleteIcon.svg";
 import "./style.scss";
 
 const Topics = ({ topics, handleTopicChange, handleRemoveTopic, handleAddTopic }) => {
+  useEffect(()=>{
+    console.log({topics});
+    
+  }, [topics])
   return (
     <div className="topic-section">
       <div className="topics-container">

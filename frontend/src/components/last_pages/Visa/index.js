@@ -43,13 +43,12 @@ const VisaPage = () => {
     try {
       // إضافة await هنا للحصول على البيانات بشكل صحيح
       const response = await axios.get(`${BaseUrl}/con/id/${myConferenceId}`);
-      
+
       // تحقق من أن response.data.conference.visa_price موجود
       const fetchedVisaPrice = response.data.conference.visa_price;
       setVisaPrice(fetchedVisaPrice); // تحديث حالة visaPrice
-      
+
       console.log("Visa Price:", fetchedVisaPrice); // للتحقق من القيمة المسترجعة
-  
     } catch (error) {
       console.error("Error fetching Conference details", error);
     }
@@ -57,7 +56,7 @@ const VisaPage = () => {
   useEffect(() => {
     getConferenceById(); // استدعاء getConferenceById عند تغيير myConferenceId
   }, [myConferenceId]); // Trigger whenever myConferenceId changes
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -120,10 +119,10 @@ const VisaPage = () => {
       setError("Error fetching visa data.");
     }
   };
-    const token = localStorage.getItem("token"); // استرجاع التوكن
+  const token = localStorage.getItem("token"); // استرجاع التوكن
 
   // const fetchSpeakerData = async () => {
-  
+
   //   try {
   //     // استدعاء الـ API باستخدام httpService
   //     const data = await httpService({
@@ -136,11 +135,10 @@ const VisaPage = () => {
   //       onError: (err) => setError(err),
   //       withToast: false, // عرض توست في حالة نجاح أو فشل الطلب
   //     });
-  
+
   //     // تحقق من قيمة is_visa_payment_required داخل البيانات المسترجعة
   //     const isVisaPaymentRequired = speakerData.speaker.is_visa_payment_required;
   // console.log(isVisaPaymentRequired);
-  
 
   // // إذا كانت القيمة 1، قم بتحديث visaPrice
   // if (isVisaPaymentRequired === 1) {
@@ -149,15 +147,14 @@ const VisaPage = () => {
   //   setVisaPrice(0); // تعيين السعر إلى 0 إذا لم يكن هناك حاجة لدفع الفيزا
   // }
 
-  
   //     console.log("Speaker Data:", data.speaker);
   //     console.log("Visa Price:", data.speaker.visa_price);
-  
+
   //   } catch (error) {
   //     setError("Error fetching speaker data."); // في حال حدوث خطأ
   //   }
   // };
-  
+
   // استخدام useEffect لاستدعاء الدالة عند تحميل المكون
   useEffect(() => {
     const fetchData = async () => {
@@ -254,6 +251,13 @@ const VisaPage = () => {
             )}
           </div>
           <div className="actions-section">
+            <button
+              className="next-button"
+              onClick={() => {
+              }}
+            >
+              Pay
+            </button>{" "}
             <button
               className="next-button"
               onClick={() => {

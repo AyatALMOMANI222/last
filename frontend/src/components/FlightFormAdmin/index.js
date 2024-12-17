@@ -11,6 +11,7 @@ import axios from "axios";
 import UpdateDeadline from "./SetUpdateDeadline";
 import UpdateTicket from "./SetTicket";
 import { useNavigate } from "react-router-dom";
+import Pagination from "../../CoreComponent/Pagination";
 
 const FlightFormAdmin = () => {
   const BaseUrl = process.env.REACT_APP_BASE_URL;
@@ -35,15 +36,21 @@ const FlightFormAdmin = () => {
   const [travelerName, setTravelerName] = useState("");
   const [openUpdateForm, setOpenUpdateForm] = useState(false);
   const [openTicketForm, setOpenTicketForm] = useState(false);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const getFlight = () => {
     const token = localStorage.getItem("token");
+    const url = `${BaseUrl}/user/pag/filter?page=${currentPage}`;
     axios
-      .get(`${BaseUrl}/user/pag/filter`, {
+      .get(url, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
+        console.log({response});
+        
         setFlights(response.data.data);
+        setTotalPages(response.data.pagination?.total_pages);
+        setCurrentPage(response.data.pagination?.current_page);
       })
       .catch((error) => {
         console.error(
@@ -51,6 +58,9 @@ const FlightFormAdmin = () => {
           error.response ? error.response.data : error.message
         );
       });
+  };
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const getCompanionFlights = (userId) => {
@@ -75,7 +85,7 @@ const FlightFormAdmin = () => {
 
   useEffect(() => {
     getFlight();
-  }, []);
+  }, [currentPage]);
 
   const handleTableData = () => {
     return flights?.map((item) => {
@@ -128,8 +138,9 @@ const FlightFormAdmin = () => {
   };
 
   return (
+    <div className="flight-form2">
     <div className="flight-form">
-      <div className="flight-form-admin-header">
+    <div className="flight-form-admin-header">
         <div className="header">
           <Input
             label="Passenger Name	"
@@ -143,6 +154,11 @@ const FlightFormAdmin = () => {
 
       <div className="flight-table-container">
         <Table headers={headers} data={handleTableData()} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
 
       <CompanionModal
@@ -168,8 +184,9 @@ const FlightFormAdmin = () => {
       <MySideDrawer isOpen={openTicketForm} setIsOpen={setOpenTicketForm}>
         <UpdateTicket data={selectedItem} setOpen={setOpenTicketForm} />
       </MySideDrawer>
-    </div>
-  );
+      </div>
+      </div>
+    );
 };
 
 export default FlightFormAdmin;

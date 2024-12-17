@@ -1,0 +1,114 @@
+.side-menu {
+  width: 250px;
+  background: #2b2d42;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  overflow: overlay;
+
+  &::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+    display: none;
+  }
+
+  .menu-header {
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    background: #2b2d42; /* Dark blue (charcoal blue) */
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+  }
+
+  .menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    .menu-item {
+      .menu-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: background 0.3s;
+        &:hover {
+          background: #3e4352; /* Lighter blue shade on hover */
+        }
+
+        .icon {
+          margin-right: 10px;
+        }
+
+        .arrow {
+          font-size: 12px;
+          color: #ffc9c9;
+        }
+      }
+
+      .submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background: #4a4e6d; /* Slightly lighter shade for submenu */
+
+        &.open {
+          max-height: 300px; /* Adjust based on content size */
+          overflow: overlay;
+          &::-webkit-scrollbar {
+            width: 10px; /* Width of the scrollbar */
+            display: none;
+          }
+
+          &::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Color of the track */
+            border-radius: 10px; /* Rounded edges for the track */
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background-color: #002b5a; /* Color of the scrollbar thumb */
+            border-radius: 10px; /* Rounded edges for the thumb */
+            border: 3px solid #f1f1f1; /* Creates padding around the thumb */
+          }
+
+          &::-webkit-scrollbar-thumb:hover {
+            background-color: #002b5a; /* Darker color on hover */
+          }
+
+          /* Styles for Firefox */
+          * {
+            scrollbar-width: thin; /* Makes scrollbar thinner */
+            scrollbar-color: #002b5a #f1f1f1; /* thumb color and track color */
+          }
+        }
+
+        .submenu-item {
+          padding: 10px 40px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+          a {
+            text-decoration: none;
+            color: #fff;
+            transition: color 0.3s;
+
+            &:hover {
+              color: #ffc9c9; /* Light red color on hover */
+            }
+          }
+        }
+      }
+
+      &.expanded {
+        .menu-title .arrow {
+          color: #fff;
+        }
+      }
+    }
+  }
+}

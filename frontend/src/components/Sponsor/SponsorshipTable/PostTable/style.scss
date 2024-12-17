@@ -1,3 +1,24 @@
+.container-sponsorship-list {
+  height: calc(100vh - 60px);
+  overflow: overlay;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
+}
 .container-sponsorship-packages {
   padding: 40px;
   font-family: Arial, sans-serif;
@@ -83,5 +104,15 @@
     background-color: #f1f1f1;
     color: #ccc;
     cursor: not-allowed;
+  }
+
+  .header-sponsorship-packages {
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
   }
 }

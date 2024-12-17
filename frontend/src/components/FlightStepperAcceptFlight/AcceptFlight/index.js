@@ -26,7 +26,7 @@ const AcceptFlight = ({ member, index }) => {
     isOther: 1,
   };
   const [availableFlights, setAvailableFlights] = useState([]);
-  const [selectedFlight, setSelectedFlight] = useState(null);
+  const [selectedFlight, setSelectedFlight] = useState({});
   const [noData, setNoData] = useState(false);
 
   const getAuthToken = () => localStorage.getItem("token");
@@ -47,7 +47,7 @@ const AcceptFlight = ({ member, index }) => {
       }
       setAvailableFlights([otherData, ...response?.available_flights] || []);
     } catch (error) {
-      toast.error("Failed to fetch available flights");
+      // toast.error("Failed to fetch available flights");
     }
   };
 

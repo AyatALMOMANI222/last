@@ -1,8 +1,28 @@
-
 $primary-color: #c82333;
 $error-color: #c82333;
 $success-color: #af0012;
+.container-create-list {
+  height: calc(100vh - 80px);
+  padding: 20px;
+  overflow: overlay;
 
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
+}
 .container-create-job {
   max-width: 600px;
   margin: 20px auto;

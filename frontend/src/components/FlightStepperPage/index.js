@@ -5,10 +5,12 @@ import FlightInformation from "./FlightInformation";
 import { FlightStepperProvider, useFlightStepper } from "./StepperContext";
 import CompanionInformation from "./CompanionInformation";
 import { removeFromLocalStorage } from "../../common/localStorage";
+import { useNavigate } from "react-router-dom";
 
 const FlightStepperPageContent = () => {
   const { currentStep, completedSteps, setCurrentStep, completeStep } =
     useFlightStepper();
+    const navigate = useNavigate();
 
   const stepperInfo = [
     { title: "Flight Information" },
@@ -16,7 +18,9 @@ const FlightStepperPageContent = () => {
   ];
 
   const componentsMap = [<FlightInformation />, <CompanionInformation />];
-
+  const handleBackClick = () => {
+    navigate(-1); // Navigates to the previous page
+  };
   useEffect(() => {
     return () => {
       removeFromLocalStorage("flightDetails");
@@ -25,7 +29,10 @@ const FlightStepperPageContent = () => {
   return (
     <div className="stepper-page-container">
       <div className="stepper-section">
-        <div className="back-section">Back</div>
+                <div className="back-section" onClick={handleBackClick}>
+          <span className="icon">🔙</span> {/* Example icon */}
+          <span className="label">Back</span>
+        </div>
         <div className="stepper-container-section">
           <Stepper
             stepperInfo={stepperInfo}

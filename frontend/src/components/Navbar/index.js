@@ -13,8 +13,8 @@ const NavBar = () => {
       title: "Home",
       links: [
         { label: "Home", url: "/home" },
-              { label: "Conferences", url: "/conferences" },
-     { label: "Exhibitions", url: "/page/exhibitions" },
+        { label: "Conferences", url: "/conferences" },
+        { label: "Exhibitions", url: "/page/exhibitions" },
         { label: "Our Story", url: "/about_us" },
         { label: "Team", url: "/our_team" },
         { label: "Clients", url: "/our_clients" },
@@ -23,13 +23,6 @@ const NavBar = () => {
         { label: "FAQs", url: "/faq" },
       ],
     },
-
-
-   
-
-
-
-
 
     {
       title: "Services",
@@ -65,7 +58,7 @@ const NavBar = () => {
           label: "Previous Events",
           url: "#",
           subMenu: "previous",
-          subLinks: [{ label: "Gallery", url: "/gallery"}],
+          subLinks: [{ label: "Gallery", url: "/gallery" }],
         },
       ],
     },
@@ -73,10 +66,14 @@ const NavBar = () => {
       title: "Travel & Tourism",
       links: [{ label: "Sights", url: "/tour_slider" }],
     },
-    {
-      title: "Contact Us",
-      links: [{ label: "Contact Us", url: "/contact_us" }],
-    },
+    // {
+    //   title: "Contact Us",
+    //   links: [{ label: "Contact Us", url: "/contact_us" }],
+    // },
+    // {
+    //   title: "About",
+    //   links: [{ label: "About", url: "//about" }],
+    // },
   ];
 
   const renderMenu = () => {
@@ -125,29 +122,29 @@ const NavBar = () => {
     <nav className="new-navbar">
       <div className="navbar-logo">
         {!isLoggedIn && (
-          <img className="new-logo" src={require("./logo.jpg")} alt="Logo" />
+          <img className="new-logo" src={require("./logo.png")} alt="Logo" />
         )}
       </div>
-      {!isLoggedIn && <ul className="navbar-links">{renderMenu()}</ul>}
-      <div className="navbar-auth">
-        {isLoggedIn && (
-          <div className="menuu">
-            <div
-              className="menu-title"
-              onClick={() => navigate("/home")}
-              style={{ cursor: "pointer" }}
-            >
-              {"Home"}
-            </div>
-            <div
-              className="menu-title"
-              onClick={() => navigate("/about")}
-              style={{ cursor: "pointer" }}
-            >
-              {"About"}
-            </div>
+      <div className="navbar-links">
+        {renderMenu()}
+        <div className="menuu">
+          <div
+            className="menu-title"
+            onClick={() => navigate("/contact_us")}
+            style={{ cursor: "pointer" }}
+          >
+            {"Contact Us"}
           </div>
-        )}
+          <div
+            className="menu-title"
+            onClick={() => navigate("/about")}
+            style={{ cursor: "pointer" }}
+          >
+            {"About"}
+          </div>
+        </div>
+      </div>
+      <div className="navbar-auth">
         {isLoggedIn && <NotificationDropdown />}{" "}
         {!isLoggedIn ? (
           <Fragment>

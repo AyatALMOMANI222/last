@@ -8,10 +8,12 @@ import AdditionalOptionsForm from "./AdditionalOptionsForm";
 import { removeFromLocalStorage } from "../../common/localStorage";
 import InvoiceTripForm from "./InvoiceTripForm";
 import PayForm from "./PayForm";
+import { useNavigate } from "react-router-dom";
 
 const TripsStepperPageContent = () => {
   const { currentStep, completedSteps, setCurrentStep, completeStep } =
     useTripsStepper();
+    const navigate = useNavigate();
 
   const stepperInfo = [
     { title: "Accommodation Details" },
@@ -28,7 +30,9 @@ const TripsStepperPageContent = () => {
     <InvoiceTripForm />,
     <PayForm />,
   ];
-
+  const handleBackClick = () => {
+    navigate(-1); // Navigates to the previous page
+  };
   useEffect(() => {
     return () => {
       removeFromLocalStorage("additionalOptions");
@@ -42,7 +46,10 @@ const TripsStepperPageContent = () => {
   return (
     <div className="stepper-page-container">
       <div className="stepper-section">
-        <div className="back-section">Back</div>
+                <div className="back-section" onClick={handleBackClick}>
+          <span className="icon">🔙</span> {/* Example icon */}
+          <span className="label">Back</span>
+        </div>
         <div className="stepper-container-section">
           <Stepper
             stepperInfo={stepperInfo}

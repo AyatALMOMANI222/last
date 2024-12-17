@@ -14,7 +14,7 @@ return [
             'secret' => env('PUSHER_APP_SECRET', 'e49c0bc9c9094f7eca2a'),
             'app_id' => env('PUSHER_APP_ID', '1886910'),
             'cluster' => env('PUSHER_APP_CLUSTER', 'ap2'),
-            'use_tls' => true,
+            'use_tls' => false,
         ],
 
         'redis' => [

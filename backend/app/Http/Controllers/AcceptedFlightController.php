@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use App\Models\AcceptedFlight;
 use App\Models\Flight;
@@ -26,19 +28,19 @@ class AcceptedFlightController extends Controller
                 'flights.*.is_free' => 'nullable|boolean', // New field validation
                 'flights.*.isOther' => 'nullable|boolean', // New field validation
             ]);
-    
+
             $acceptedFlights = [];
-    
+
             // Iterate through the validated data and insert each flight into the database
             foreach ($validatedData['flights'] as $flightData) {
                 // Check if the flight_id already exists in the AcceptedFlight table
                 $existingFlight = AcceptedFlight::where('flight_id', $flightData['flight_id'])->first();
-    
+
                 if ($existingFlight) {
                     // If the flight_id exists, remove the old record
                     $existingFlight->delete();
                 }
-    
+
                 // Create the accepted flight record (insert the new data)
                 $acceptedFlight = AcceptedFlight::create([
                     'flight_id' => $flightData['flight_id'],
@@ -51,15 +53,25 @@ class AcceptedFlightController extends Controller
                     'is_free' => $flightData['is_free'] ?? false,
                     'isOther' => $flightData['isOther'] ?? false, // Default to false if not provided
                 ]);
-    
+                // Check if 'isOther' is true, and send notification to all admins
+                // if ($flightData['isOther'] === true) {
+                //     $admins = User::where('isAdmin', true)->get();
+                //     foreach ($admins as $admin) {
+                //         $notification = new Notification();
+                //         $notification->user_id = $admin->id; // Save the admin user_id
+                //         $notification->message = "Flight {$acceptedFlight->flight_id} has been marked as 'Other' by user {$request->user()->id}.";
+                //         $notification->save();
+                //         broadcast(new NotificationSent($notification))->toOthers();
+                //     }
+                // }
                 $acceptedFlights[] = $acceptedFlight;
             }
-    
+
             return response()->json([
                 'message' => 'Accepted flights created/updated successfully',
                 'accepted_flights' => $acceptedFlights,
             ], 201);
-    
+
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'An error occurred',
@@ -67,9 +79,9 @@ class AcceptedFlightController extends Controller
             ], 500);
         }
     }
-    
-    
-    
+
+
+
 
 
     public function getAcceptedFlightByFlightId($flight_id)
@@ -103,7 +115,7 @@ class AcceptedFlightController extends Controller
             $acceptedFlights = AcceptedFlight::where('isOther', true)
                 ->with('flight') // Eager load the flight relationship
                 ->get();
-    
+
             return response()->json([
                 'message' => 'Accepted flights with isOther = true retrieved successfully',
                 'accepted_flights' => $acceptedFlights->map(function ($acceptedFlight) {
@@ -121,7 +133,7 @@ class AcceptedFlightController extends Controller
                     ];
                 }),
             ], 200);
-    
+
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'An error occurred',
@@ -129,8 +141,8 @@ class AcceptedFlightController extends Controller
             ], 500);
         }
     }
-    
-    
+
+
     // public function updateByAdmin(Request $request, $id)
 // {
 //     try {

@@ -1,9 +1,28 @@
 .sponsor-section {
-  padding: 15px;
+  // padding: 15px;
   background-color: #ffffff;
   color: #333333;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 58px);
+  overflow: overlay;
+  padding-bottom: 20px;
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 50px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+  }
 
   .sponsorship-options {
     display: flex;
@@ -44,11 +63,31 @@
   }
 
   .booth-package {
-    margin-top: 15px;
-    padding: 15px;
-    background-color: #f0f4f8;
-    border: 1px solid #d1d1d1;
     border-radius: 8px;
+    .booth-package-header8 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 10px;
+    }
+
+    .lst-sponser {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 20px;
+      li {
+        font-size: 13px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 500;
+      }
+
+      .desc-sponser {
+        font-size: 13px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 500;
+        margin-top: 10px;
+      }
+    }
   }
 
   .button-container {
@@ -88,7 +127,23 @@
   .booth-cost-table {
     margin-top: 15px;
   }
+  .booth-cost-table-header3 {
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .con-booth-cost-table-table {
+    padding: 20px;
+  }
 
+  .con-booth-cost-table-table,
+  .booth-cost-table-description {
+    padding: 0px 20px;
+  }
   table {
     width: 100%;
     border-collapse: collapse;
@@ -211,5 +266,110 @@
     margin-top: 15px;
     font-size: 14px;
     color: green;
+  }
+
+  .shell-scheme {
+    padding: 20px;
+  }
+  .shell-scheme-text {
+    padding-left: 20px;
+  }
+
+  .booth-package-header7 {
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+}
+.sponsorship-option-container0 {
+  display: grid;
+  flex-direction: column;
+  padding: 8px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &.selected {
+    border-color: #2579da;
+    background-color: #f0f9ff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  &:hover {
+    border-color: #2196f3;
+    background-color: #e3f2fd;
+  }
+
+  .option-container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+
+    h3 {
+      font-size: 14px;
+      margin: 0;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .option-price {
+      font-size: 14px;
+      color: #757575;
+      font-weight: bold;
+    }
+  }
+
+  .option-container-description {
+    font-size: 12px;
+    color: #616161;
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+
+  .option-container-checkbox {
+    margin-top: 4px;
+    input[type="checkbox"] {
+      transform: scale(0.9);
+      accent-color: #2579da;
+    }
+  }
+}
+.sponsorship-options-sect {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-row-gap: 5px;
+  grid-column-gap: 15px;
+}
+
+.header-sponsorship-opportunities {
+  font-size: 14px;
+  font-weight: 600;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  padding: 20px;
+}
+
+.button-container-list {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin: 20px;
+
+  .Sign-Agreement-button{
+    background-color: #28a745; /* Green background */
+    color: #fff; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 20px; /* Padding for size */
+    font-size: 16px; /* Text size */
+    cursor: pointer;
   }
 }

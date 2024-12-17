@@ -22,12 +22,12 @@ const TourSlider = () => {
   const navigate = useNavigate();
 
   const DestinationCard = ({ destination }) => (
-    <div className="destination">
+    <div className="destination-card">
       <div className="slider-container">
         <Slider {...sliderSettings}>
           {destination.images.map((img, imgIndex) => (
             <div key={imgIndex} className="slide">
-              <img src={img} alt={destination.title} />
+              <img src={img} alt={destination.title} className="slide-img" />
             </div>
           ))}
         </Slider>
@@ -38,9 +38,9 @@ const TourSlider = () => {
 
   const DestinationInfo = ({ destination }) => (
     <div className="destination-info">
-      <h1>{destination.title}</h1>
-      <p>{destination.description}</p>
-      <div className="button-container3">
+      <h1 className="destination-title">{destination.title}</h1>
+      <p className="destination-description">{destination.description}</p>
+      <div className="button-container">
         <button
           className="book-now-button"
           onClick={() => navigate("/registerType")}
@@ -52,8 +52,8 @@ const TourSlider = () => {
   );
 
   return (
-    <div className="tour-slider56">
-      <h1>Tourist Attractions in Jordan</h1>
+    <div className="tour-slider">
+      <h1 className="tour-slider-heading">Tourist Attractions in Jordan</h1>
       {destinations.map((destination, index) => (
         <DestinationCard key={index} destination={destination} />
       ))}

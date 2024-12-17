@@ -43,7 +43,7 @@ const ViewOneTripUser = () => {
         </div>
       )}
 
-      <div>
+      <div className="trip-name-section">
         {/* Display trip name if available */}
         {tripData?.name && <h1>{tripData?.name}</h1>}
 

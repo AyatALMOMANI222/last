@@ -1,4 +1,5 @@
-.view-one-trip-container{
+.trip-container-sec {
+  .view-one-trip-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-row-gap: 20px;
@@ -6,8 +7,13 @@
     background-color: #fff;
     border-radius: 5px;
 
-    img{
-        height: 100px;
-        width: 100px;
+    img {
+      height: 100px;
+      width: 100px;
     }
+  }
+  .additional_options {
+    color: red;
+    padding: 10px 0px;
+  }
 }

@@ -3,10 +3,12 @@ import SimpleLabelValue from "../../components/SimpleLabelValue";
 import { useNavigate } from "react-router-dom";
 import httpService from "../../common/httpService";
 import "./style.scss";
+import { useAuth } from "../../common/AuthContext";
 
 const ReservationDetails = ({ setDisabledButton }) => {
   const [reservations, setReservations] = useState([]);
   const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const { myConferenceId } = useAuth();
 
   const fetchReservations = async () => {
     try {
@@ -15,7 +17,7 @@ const ReservationDetails = ({ setDisabledButton }) => {
 
       const response = await httpService({
         method: "GET",
-        url: `${BASE_URL}/reservations/rooms/3`,
+        url: `${BASE_URL}/reservations/rooms/${myConferenceId}`,
         headers: { Authorization: `Bearer ${token}` },
         withToast: false,
         showLoader: true,

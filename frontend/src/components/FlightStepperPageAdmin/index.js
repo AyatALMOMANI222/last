@@ -7,6 +7,7 @@ import {
   useFlightStepperAdmin,
 } from "./StepperContext";
 import { removeFromLocalStorage, removeFromLocalStorageStartWith } from "../../common/localStorage";
+import { useNavigate } from "react-router-dom";
 
 const AdminFlightStepperPageContent = () => {
   const {
@@ -16,6 +17,7 @@ const AdminFlightStepperPageContent = () => {
     completeStep,
     flightMembers,
   } = useFlightStepperAdmin();
+  const navigate = useNavigate();
 
   // Dynamically generate steps based on the number of flight members
   const stepperInfo = flightMembers?.map((member, index) => ({
@@ -25,7 +27,9 @@ const AdminFlightStepperPageContent = () => {
   const componentsMap = flightMembers?.map((member, index) => (
     <FlightInformation key={index} member={member} index={index} />
   ));
-
+  const handleBackClick = () => {
+    navigate(-1); // Navigates to the previous page
+  };
   useEffect(() => {
     return () => {
       removeFromLocalStorage("flightDetails");
@@ -37,7 +41,10 @@ const AdminFlightStepperPageContent = () => {
   return (
     <div className="stepper-page-container">
       <div className="stepper-section">
-        <div className="back-section">Back</div>
+                <div className="back-section" onClick={handleBackClick}>
+          <span className="icon">🔙</span> {/* Example icon */}
+          <span className="label">Back</span>
+        </div>
         <div className="stepper-container-section">
           <Stepper
             stepperInfo={stepperInfo}

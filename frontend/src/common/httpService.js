@@ -29,18 +29,24 @@ const httpService = async ({
     });
 
     if (onSuccess) {
-      onSuccess(response.data);
+      onSuccess(response?.data);
     }
     if (withToast) {
-      toast.success(response?.data?.message);
+      if (response?.data?.message) {
+        if (toast && toast.props) {
+          toast.success(response?.data?.message || "");
+        }
+      }
     }
     return response.data;
   } catch (error) {
     if (onError) {
       onError(error.message);
     }
-    if (withToast) {
-      toast.error(error?.data?.message);
+    if (withToast && error?.data?.message) {
+      if (toast && toast.props) {
+        toast.error(error?.data?.message || "");
+      }
     }
     throw error;
   } finally {

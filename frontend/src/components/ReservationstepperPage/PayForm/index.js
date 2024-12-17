@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { getFromLocalStorage } from "..";
+import React from "react";
 import SimpleLabelValue from "../../SimpleLabelValue";
-import { toast } from "react-toastify";
-import httpService from "../../../common/httpService";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../common/AuthContext";
 import { useStepper } from "../StepperContext";
 import "./style.scss";
 
 const PayForm = () => {
   const { invoice } = useStepper();
-  const navigate = useNavigate();
-  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
-  const getAuthToken = () => localStorage.getItem("token");
   const submitReservation = async () => {};
 
   return (

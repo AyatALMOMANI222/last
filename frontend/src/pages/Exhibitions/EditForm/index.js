@@ -18,7 +18,7 @@ const EditExhibitionForm = ({ setIsOpen, getExhibitions, exhibitionData }) => {
   const [errorMsg, setErrorMsg] = useState(""); // Manage error messages
   const [allConference, setAllConference] = useState([]);
   const [conferenceId, setConferenceId] = useState([]);
-  const BaseUrl = process.env.REACT_APP_BASE_URL;;
+  const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const statusOptions = [
     {
@@ -78,7 +78,7 @@ const EditExhibitionForm = ({ setIsOpen, getExhibitions, exhibitionData }) => {
   useEffect(() => {
     getConference();
   }, []);
-// console.log();
+  // console.log();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission
@@ -189,7 +189,12 @@ const EditExhibitionForm = ({ setIsOpen, getExhibitions, exhibitionData }) => {
       </div>
 
       <div className="actions-section-container">
-        <button className="cancel-btn" onClick={() => {}}>
+        <button
+          className="cancel-btn"
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >
           Cancel
         </button>
         <button className="submit-btn" type="submit" onClick={handleSubmit}>

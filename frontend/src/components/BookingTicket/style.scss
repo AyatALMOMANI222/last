@@ -10,67 +10,61 @@ $button-hover-bg: #c0392b;
   margin: 0 auto;
   padding: 2rem;
   font-family: Arial, sans-serif;
-}
 
-.travel-form {
-  background: #fff;
-  padding: 2rem;
-  border-radius: $border-radius;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  color: $primary-color;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-
-  label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: #333;
-  }
-
-  input,
-  select,
-  textarea {
-    width: 100%;
-    padding: $input-padding;
-    border: 1px solid #ccc;
+  .travel-form {
+    background: #fff;
+    padding: 2rem;
     border-radius: $border-radius;
-    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 
-  input[type="file"] {
+  h2 {
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: $input-padding;
+      border: 1px solid #ccc;
+      border-radius: $border-radius;
+      font-size: 1rem;
+    }
+
+    input[type="file"] {
+      border: none;
+      padding: 0.5rem;
+    }
+  }
+
+  .submit-btn {
+    background-color: $button-bg;
+    color: #fff;
+    padding: 12px 20px;
     border: none;
-    padding: 0.5rem;
-  }
+    border-radius: $border-radius;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
 
-  input[type="date"],
-  input[type="time"] {
-    max-width: 200px;
-  }
-}
-
-.submit-btn {
-  background-color: $button-bg;
-  color: #fff;
-  padding: 12px 20px;
-  border: none;
-  border-radius: $border-radius;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: $button-hover-bg;
+    &:hover {
+      background-color: $button-hover-bg;
+    }
   }
 }
-
 @media (max-width: 768px) {
   .travel-form {
     padding: 1.5rem;

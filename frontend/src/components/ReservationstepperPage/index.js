@@ -6,6 +6,7 @@ import RoomForm from "./RoomForm";
 import InvoiceForm from "./InvoiceForm";
 import "./style.scss";
 import PayForm from "./PayForm";
+import { useNavigate } from "react-router-dom";
 
 export const saveToLocalStorage = (key, value) => {
   try {
@@ -37,6 +38,7 @@ export const removeFromLocalStorage = (key) => {
 const ParentComponentContent = () => {
   const { currentStep, completedSteps, setCurrentStep, completeStep } =
     useStepper();
+    const navigate = useNavigate();
 
   const stepperInfo = [
     { title: "Speaker Reservation" },
@@ -51,7 +53,9 @@ const ParentComponentContent = () => {
     <InvoiceForm />,
     <PayForm />,
   ];
-
+  const handleBackClick = () => {
+    navigate(-1); // Navigates to the previous page
+  };
   useEffect(() => {
     return () => {
       removeFromLocalStorage("mainRoom");
@@ -62,7 +66,10 @@ const ParentComponentContent = () => {
   return (
     <div className="stepper-page-container">
       <div className="stepper-section">
-        <div className="back-section">Back</div>
+                <div className="back-section" onClick={handleBackClick}>
+          <span className="icon">🔙</span> {/* Example icon */}
+          <span className="label">Back</span>
+        </div>
         <div className="stepper-container-section">
           <Stepper
             stepperInfo={stepperInfo}

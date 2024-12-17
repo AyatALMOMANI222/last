@@ -120,52 +120,54 @@ const SponsorshipTable2 = () => {
   const isFormEmpty = Object.values(formData).every((value) => value === "");
 
   return (
-    <div className="container-sponsorship-packages">
-      {!isFormEmpty && <h1 className="title">Sponsorship Packages</h1>}
+    <div className="container-sponsorship-list">
+      <div className="container-sponsorship-packages">
+        {!isFormEmpty && <div  className="header-sponsorship-opportunities">Sponsorship Packages</div>}
 
-      {error && <p className="error">{error}</p>}
+        {error && <p className="error">{error}</p>}
 
-      <div className="form-container">
-        <div className="sponsorship-packages-section">
-          {/* Conference Dropdown */}
-          <div className="input-group">
-            <Select
-              options={allConference}
-              value={conferenceId}
-              setValue={setConferenceId}
-              label="Conference"
-              placeholder="Select..."
-            />
-          </div>
-
-          {/* Sponsorship Form Inputs */}
-          {Object.keys(formData).map((key) => (
-            <div key={key} className="input-group">
-              <Input
-                className="input-field"
-                label={key
-                  .replace(/([A-Z])/g, " $1")
-                  .replace(/^./, (str) => str.toUpperCase())}
-                placeholder={`Enter ${key
-                  .replace(/([A-Z])/g, " $1")
-                  .toLowerCase()}`}
-                inputValue={formData[key]}
-                setInputValue={(value) =>
-                  handleInputChange({ target: { name: key, value } })
-                }
-                required={true}
-                errorMsg={error && error[key]} // Assuming error messages are structured similarly
+        <div className="form-container">
+          <div className="sponsorship-packages-section">
+            {/* Conference Dropdown */}
+            <div className="input-group">
+              <Select
+                options={allConference}
+                value={conferenceId}
+                setValue={setConferenceId}
+                label="Conference"
+                placeholder="Select..."
               />
             </div>
-          ))}
+
+            {/* Sponsorship Form Inputs */}
+            {Object.keys(formData).map((key) => (
+              <div key={key} className="input-group">
+                <Input
+                  className="input-field"
+                  label={key
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase())}
+                  placeholder={`Enter ${key
+                    .replace(/([A-Z])/g, " $1")
+                    .toLowerCase()}`}
+                  inputValue={formData[key]}
+                  setInputValue={(value) =>
+                    handleInputChange({ target: { name: key, value } })
+                  }
+                  required={true}
+                  errorMsg={error && error[key]} // Assuming error messages are structured similarly
+                />
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={handlePostRequest}
+            className="submit-button"
+            disabled={loading}
+          >
+            {loading ? "Submitting..." : "Submit"}
+          </button>
         </div>
-        <button
-          onClick={handlePostRequest}
-          className="submit-button"
-          disabled={loading}
-        >
-          {loading ? "Submitting..." : "Submit"}
-        </button>
       </div>
     </div>
   );

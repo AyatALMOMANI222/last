@@ -353,34 +353,70 @@ class FlightController extends Controller
 
 
 
+    // public function getAllFlightsPaginationAndFilter(Request $request)
+    // {
+
+    //     try {
+    //         // إعدادات الفلترة والصفحات
+    //         $perPage = $request->get('per_page', 10); // عدد العناصر في الصفحة (افتراضي 10)
+    //         $nameFilter = $request->get('name'); // فلترة بالاسم إذا تم توفيره
+
+    //         // بناء الاستعلام
+    //         $query = Flight::join('users', 'flights.user_id', '=', 'users.id')
+    //             ->select('flights.*', 'users.name as user_name'); // تحديد الحقول المراد إرجاعها
+
+    //         // إضافة فلتر للاسم إذا تم توفيره
+    //         if ($nameFilter) {
+    //             $query->where('users.name', 'LIKE', '%' . $nameFilter . '%');
+    //         }
+
+    //         // تنفيذ الاستعلام مع pagination
+    //         $flights = $query->paginate($perPage);
+
+    //         // إرجاع النتائج
+    //         return response()->json($flights, 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
+
     public function getAllFlightsPaginationAndFilter(Request $request)
     {
-
         try {
             // إعدادات الفلترة والصفحات
             $perPage = $request->get('per_page', 10); // عدد العناصر في الصفحة (افتراضي 10)
             $nameFilter = $request->get('name'); // فلترة بالاسم إذا تم توفيره
-
+    
             // بناء الاستعلام
             $query = Flight::join('users', 'flights.user_id', '=', 'users.id')
                 ->select('flights.*', 'users.name as user_name'); // تحديد الحقول المراد إرجاعها
-
+    
             // إضافة فلتر للاسم إذا تم توفيره
             if ($nameFilter) {
                 $query->where('users.name', 'LIKE', '%' . $nameFilter . '%');
             }
-
+    
             // تنفيذ الاستعلام مع pagination
             $flights = $query->paginate($perPage);
-
-            // إرجاع النتائج
-            return response()->json($flights, 200);
+    
+            // إعداد البيانات لتضمين معلومات التصفح
+            $pagination = [
+                'total' => $flights->total(),
+                'per_page' => $flights->perPage(),
+                'current_page' => $flights->currentPage(),
+                'total_pages' => $flights->lastPage(),
+            ];
+    
+            // إرجاع النتائج مع معلومات التصفح
+            return response()->json([
+                'data' => $flights->items(),
+                'pagination' => $pagination
+            ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
+    
 
 
 

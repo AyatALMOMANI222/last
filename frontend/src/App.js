@@ -120,7 +120,7 @@ const App = () => {
   const location = useLocation();
   const [showLoader, setShowLoader] = useState(false);
   const { isAdmin, registrationType, isLoggedIn } = useAuth();
-
+  const isSponsor = registrationType === "sponsor";
   // Listen for showLoader and hideLoader events
   useEffect(() => {
     const handleShowLoader = () => setShowLoader(true);
@@ -137,19 +137,6 @@ const App = () => {
     };
   }, []);
 
-
-
-
-
-
-
-
-
-
-
-
-
-  
   const noNavRoute = [
     "/registertype",
     "/register/speaker",
@@ -166,7 +153,8 @@ const App = () => {
           !location.pathname.includes("/registerPage") &&
           !location.pathname.includes("/conference/details") &&
           !location.pathname.includes("/other") &&
-          !location.pathname.includes("/register/") &&(
+          !isSponsor &&
+          !location.pathname.includes("/register/") && (
             <div className="layout-sidemenu">
               <SideMenu />
             </div>
@@ -180,7 +168,8 @@ const App = () => {
               !location.pathname.includes("/registerPage") &&
               !location.pathname.includes("/conference/details") &&
               !location.pathname.includes("/other") &&
-              isLoggedIn && 
+              isLoggedIn &&
+              !isSponsor &&
               !location.pathname.includes("/register/")
                 ? "calc(100% - 250px)"
                 : "100%",
@@ -329,7 +318,7 @@ const App = () => {
               />
               <Route path="/job/list" element={<JobList />} />
               <Route path="/job" element={<CreateJob />} />
-              <Route path="/job/admin" element={<JobApplicants />} />
+              <Route path="/applicants/job/admin" element={<JobApplicants />} />
               <Route path="/pending/users" element={<PendingUsersTable />} />
               <Route path="/enter/new/flights" element={<EnterNewFlights />} />
               {/* <Route path="/Attendance/profile" element={<AttendanceProfileForm />} /> */}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getFromLocalStorage } from "..";
 import SimpleLabelValue from "../../SimpleLabelValue";
-import { toast } from "react-toastify";
 import "./style.scss";
 import httpService from "../../../common/httpService";
 import { useNavigate } from "react-router-dom";
@@ -9,12 +8,7 @@ import { useAuth } from "../../../common/AuthContext";
 import { useStepper } from "../StepperContext";
 
 const InvoiceForm = () => {
-  const {
-    currentStep,
-    completeStep,
-    invoice,
-    setInvoice,
-  } = useStepper();
+  const { currentStep, completeStep, invoice, setInvoice } = useStepper();
   const navigate = useNavigate();
   const [mainRoom, setMainRoom] = useState(null);
   const [otherRooms, setOtherRooms] = useState([]);
@@ -29,50 +23,14 @@ const InvoiceForm = () => {
     setOtherRooms(otherRoomsFromStorage);
   }, []);
 
-  // function convertObject(obj) {
-  //   const rooms = [];
-
-  //   const formatDate = (dateStr) => {
-  //     const date = new Date(dateStr);
-  //     return date.toISOString().split("T")[0]; // Formats the date to YYYY-MM-DD
-  //   };
-
-  //   rooms.push({
-  //     room_type: obj.mainRoom.roomType.value,
-  //     occupant_name: "",
-  //     check_in_date: formatDate(obj.mainRoom.checkInDate),
-  //     check_out_date: formatDate(obj.mainRoom.checkOutDate),
-  //     total_nights: parseInt(obj.mainRoom.totalNights),
-  //     cost: 0,
-  //     additional_cost: 0,
-  //     late_check_out: obj.lateCheckOut || false,
-  //     early_check_in: obj.earlyCheckIn || false,
-  //   });
-
-  //   obj.otherRooms.forEach((room) => {
-  //     rooms.push({
-  //       room_type: room.roomType.value,
-  //       occupant_name: room.occupantName,
-  //       check_in_date: formatDate(room.checkInDate),
-  //       check_out_date: formatDate(room.checkOutDate),
-  //       total_nights: parseInt(room.totalNights),
-  //       cost: 0,
-  //       additional_cost: 0,
-  //       late_check_out: obj.lateCheckOut || false,
-  //       early_check_in: obj.earlyCheckIn || false,
-  //     });
-  //   });
-
-  //   return { rooms };
-  // }
   function convertObject(obj) {
     const rooms = [];
-  
+
     const formatDate = (dateStr) => {
       const date = new Date(dateStr);
       return date.toISOString().split("T")[0]; // Formats the date to YYYY-MM-DD
     };
-  
+
     // Add main room
     rooms.push({
       room_type: obj.mainRoom.roomType.value,
@@ -85,7 +43,7 @@ const InvoiceForm = () => {
       late_check_out: obj.mainRoom.lateCheckOut || false,
       early_check_in: obj.mainRoom.earlyCheckIn || false,
     });
-  
+
     // Add other rooms
     obj.otherRooms.forEach((room) => {
       rooms.push({
@@ -100,10 +58,10 @@ const InvoiceForm = () => {
         early_check_in: room.earlyCheckIn || false,
       });
     });
-  
+
     return { rooms };
   }
-  
+
   const getAuthToken = () => localStorage.getItem("token");
 
   const submitReservation = async () => {
@@ -114,10 +72,6 @@ const InvoiceForm = () => {
       mainRoom: { ...mainRoom, occupant_name: userName },
       otherRooms,
     });
-console.log({
-  mainRoom: { ...mainRoom, occupant_name: userName },
-  otherRooms,
-});
 
     try {
       const response = await httpService({
@@ -126,17 +80,11 @@ console.log({
         headers: { Authorization: `Bearer ${getAuthToken()}` },
         showLoader: true,
         data: { conference_id: myConferenceId, ...body },
-        withToast: true,
-        onError: (error) => {
-          toast.error("Failed to submit the form: " + error);
-        },
+        // withToast: true,
       });
 
       if (response) {
-        console.log("hedaya");
-        console.log(response);
         setInvoice(response);
-        toast.success("Reservation submitted successfully!");
         setReservationDetails(response);
         completeStep(currentStep);
       }

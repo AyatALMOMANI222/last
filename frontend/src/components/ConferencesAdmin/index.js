@@ -274,6 +274,8 @@ const ConferencesAdmin = ({ setIsOpen, getConference }) => {
         const id = response.data.id;
         toast.success("Conference created successfully!");
         addCommitteeMembers(id, committeeMembers);
+        setIsOpen(false);
+        getConference();
       })
       .catch((error) => {
         console.error("Error submitting data: ", error);

@@ -84,8 +84,7 @@ const AddDiscountForm = ({ isOpen, setIsOpen, userId }) => {
     }
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+  const handleFormSubmit = async () => {
     try {
       const discountData = {
         user_id: userId,
@@ -94,15 +93,14 @@ const AddDiscountForm = ({ isOpen, setIsOpen, userId }) => {
         price: discountAmount,
         show_price: true,
       };
-      console.log({ discountData });
-
       await httpService({
         method: "POST",
         url: `${BaseUrl}/discounts`,
         data: discountData,
         headers: { Authorization: `Bearer ${getAuthToken()}` },
-        onSuccess: () => {},
-        onError: (error) => toast.error(error),
+        onSuccess: () => {
+          setIsOpen(false);
+        },
         showLoader: true,
         withToast: true,
       });
@@ -138,7 +136,7 @@ const AddDiscountForm = ({ isOpen, setIsOpen, userId }) => {
         handleSubmit={handleFormSubmit}
         setOpenForm={setIsOpen}
       >
-        <form className="discount-form-container" onSubmit={handleFormSubmit}>
+        <form className="discount-form-container">
           <Select
             options={conferenceOptions}
             value={selectedConferenceId}

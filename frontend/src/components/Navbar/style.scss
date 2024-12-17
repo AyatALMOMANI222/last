@@ -9,11 +9,10 @@
   border-bottom: 1px solid #ebecf2;
   // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
-  .menuu{
+  .menuu {
     display: flex;
     flex-direction: row;
     gap: 20px;
-    
   }
   .menu-title {
     font-size: 16px;
@@ -27,6 +26,7 @@
   }
   .new-logo {
     height: 50px;
+    padding: 0px 20px;
   }
 
   .navbar-logo {
@@ -43,7 +43,7 @@
     display: flex;
     align-items: center;
     list-style: none;
-    gap: 15px;
+    gap: 25px;
 
     .menu-section {
       position: relative;

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./style.scss";
 import { useParams } from "react-router-dom";
-import Input from "../../CoreComponent/Input";  // استيراد المدخل المخصص
+import Input from "../../CoreComponent/Input"; // استيراد المدخل المخصص
+import DateInput from "../../CoreComponent/Date";
 
 const GroupTripRegistration = () => {
   // حالة لتخزين المدخلات
@@ -61,25 +62,23 @@ const GroupTripRegistration = () => {
       ) : (
         // نموذج المدخلات فقط إذا لم يتم إرسال البيانات بعد
         <form onSubmit={handleSubmit} className="registration-form">
-          <div className="form-group">
-            <Input
-              type="date"
+          <div className="form-group9">
+            <DateInput
               inputValue={selectedDate}
-             setInputValue={setSelectedDate}
+              setInputValue={setSelectedDate}
               label={"Selected Date"}
             />
-          </div>
-
-          <div className="form-group">
             <Input
               label={"Companions Count"}
               type="number"
               inputValue={companionsCount}
-             setInputValue={setCompanionsCount}
+              setInputValue={setCompanionsCount}
             />
           </div>
 
-          <button type="submit" className="submit-button">Submit</button>
+          <button type="submit" className="submit-button">
+            Submit
+          </button>
         </form>
       )}
 

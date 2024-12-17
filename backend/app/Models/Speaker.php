@@ -30,7 +30,10 @@ class Speaker extends Model
         'is_certificate_active',
         'room_type',
         'nights_covered',
-        'is_visa_payment_required'
+        'is_visa_payment_required',
+        'departure_date',
+        'arrival_date',
+        'video'
     ];
 
     // العلاقة مع نموذج User (متحدث ينتمي إلى مستخدم واحد)

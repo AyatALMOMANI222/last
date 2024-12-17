@@ -17,17 +17,19 @@ const SponsorshipOption = ({ id, title, description, price, onSelect }) => {
 
   return (
     <div
-      className={`sponsorship-option ${selected ? "selected" : ""}`}
+      className={`sponsorship-option-container0 ${selected ? "selected" : ""}`}
       onClick={handleSelect}
     >
-      <div className="option-header">
+      <div className="option-container-header">
         <h3>{title}</h3>
-        <p className="price">
+        <p className="option-price">
           <strong>{price}</strong>
         </p>
       </div>
-      <p>{description}</p>
-      <input type="checkbox" checked={selected} readOnly />
+      <p className="option-container-description">{description}</p>
+      <div className="option-container-checkbox">
+        <input type="checkbox" checked={selected} readOnly />
+      </div>
     </div>
   );
 };
@@ -53,51 +55,60 @@ const StandardBoothPackage = ({ onExhibitNumberChange }) => {
 
   return (
     <div className="booth-package">
-      <h2>Standard Booth Package</h2>
-      <img src={require("./both.jfif")} alt="Booth" />
-      <p>(Minimum space 9 sqm)</p>
-      <ul>
-        <li>Fascia board with company name & stand number.</li>
-        <li>White partitions.</li>
-        <li>Needle-punched carpeting.</li>
-        <li>Single-phase electrical socket (220V - 240V).</li>
-        <li>2 fluorescent lights.</li>
-        <li>2 folding chairs.</li>
-        <li>1 information counter.</li>
-        <li>1 waste paper basket.</li>
-      </ul>
-      <p>
-        Once the sponsor completes the options, they will have the option to
-        upload the agreement. After signing, a financial claim will be sent for
-        the fees.
-      </p>
-      <p>
-        For special buildup booths and other special requirements, please
-        contact the organizers:
-        <a href="mailto:admin@eventcons.com">admin@eventcons.com</a>
-      </p>
+      <div className="booth-package-header7">Standard Booth Package</div>
+      <div className="booth-package-header8">
+        <img src={require("./both.jfif")} alt="Booth" />
+        <div>
+          <p>(Minimum space 9 sqm)</p>
+          <ul className="lst-sponser">
+            <li>Fascia board with company name & stand number.</li>
+            <li>White partitions.</li>
+            <li>Needle-punched carpeting.</li>
+            <li>Single-phase electrical socket (220V - 240V).</li>
+            <li>2 fluorescent lights.</li>
+            <li>2 folding chairs.</li>
+            <li>1 information counter.</li>
+            <li>1 waste paper basket.</li>
+          </ul>
+          <p className="desc-sponser">
+            Once the sponsor completes the options, they will have the option to
+            upload the agreement. After signing, a financial claim will be sent
+            for the fees.
+          </p>
+          <p>
+            For special buildup booths and other special requirements, please
+            contact the organizers:
+            <a href="mailto:admin@eventcons.com">admin@eventcons.com</a>
+          </p>
 
-   { floorPlanUrl &&  <a
-        href={floorPlanUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="view-floor-plans-btn"
-      >
-        <button className="view-floor-plans-button">View Floor Plans</button>
-      </a>}
-
-    { floorPlanUrl && <div className="input-container">
-        <label htmlFor="exhibitNumber" className="input-label">
-          Enter Exhibit Number:
-        </label>
-        <input
-          type="text"
-          id="exhibitNumber"
-          placeholder="Enter the exhibit number"
-          className="input-field"
-          onChange={(e) => onExhibitNumberChange(e.target.value)}
-        />
-      </div>}
+          {floorPlanUrl && (
+            <a
+              href={floorPlanUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="view-floor-plans-btn"
+            >
+              <button className="view-floor-plans-button">
+                View Floor Plans
+              </button>
+            </a>
+          )}
+        </div>
+      </div>
+      {floorPlanUrl && (
+        <div className="input-container">
+          <label htmlFor="exhibitNumber" className="input-label">
+            Enter Exhibit Number:
+          </label>
+          <input
+            type="text"
+            id="exhibitNumber"
+            placeholder="Enter the exhibit number"
+            className="input-field"
+            onChange={(e) => onExhibitNumberChange(e.target.value)}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -150,43 +161,46 @@ const BoothCostTable = ({
   if (error) return <p className="error-message">{error}</p>;
 
   return (
-    Array.isArray(boothData) && boothData.length > 0 && (
+    Array.isArray(boothData) &&
+    boothData.length > 0 && (
       <div className="booth-cost-table">
-        <h2 className="booth-cost-table-header">Booth Cost Table</h2>
+        <div className="booth-cost-table-header3">Booth Cost Table</div>
         <h5 className="booth-cost-table-description">
           Space only stand USD 1400 Per Meter - Depth = 3M
         </h5>
-        <table className="booth-cost-table-table">
-          <thead>
-            <tr className="table-header-row">
-              <th className="table-header-cell">Booth Size (LM)</th>
-              <th className="table-header-cell">Cost (USD)</th>
-              <th className="table-header-cell">Lunch Invitations</th>
-              <th className="table-header-cell">Name Tags</th>
-              <th className="table-header-cell">Selected</th>
-            </tr>
-          </thead>
-          <tbody>
-            {boothData.map((booth) => (
-              <tr key={booth.id} className="table-row">
-                <td className="table-cell">
-                  {booth.name}{" "}
-                  {selectedBoothIds.includes(booth.id) ? "(Selected)" : ""}
-                </td>
-                <td className="table-cell">{booth.cost}</td>
-                <td className="table-cell">{booth.lunch_invitations}</td>
-                <td className="table-cell">{booth.name_tags}</td>
-                <td className="table-cell">
-                  <input
-                    type="checkbox"
-                    checked={selectedBoothIds.includes(booth.id)}
-                    onChange={(e) => handleCheckboxChange(e, booth.id)}
-                  />
-                </td>
+        <div className="con-booth-cost-table-table">
+          <table className="booth-cost-table-table">
+            <thead>
+              <tr className="table-header-row">
+                <th className="table-header-cell">Booth Size (LM)</th>
+                <th className="table-header-cell">Cost (USD)</th>
+                <th className="table-header-cell">Lunch Invitations</th>
+                <th className="table-header-cell">Name Tags</th>
+                <th className="table-header-cell">Selected</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {boothData.map((booth) => (
+                <tr key={booth.id} className="table-row">
+                  <td className="table-cell">
+                    {booth.name}{" "}
+                    {selectedBoothIds.includes(booth.id) ? "(Selected)" : ""}
+                  </td>
+                  <td className="table-cell">{booth.cost}</td>
+                  <td className="table-cell">{booth.lunch_invitations}</td>
+                  <td className="table-cell">{booth.name_tags}</td>
+                  <td className="table-cell">
+                    <input
+                      type="checkbox"
+                      checked={selectedBoothIds.includes(booth.id)}
+                      onChange={(e) => handleCheckboxChange(e, booth.id)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         <div className="shell-scheme">
           <input
@@ -325,7 +339,6 @@ const SponsorSection = () => {
     }
   };
 
-
   // Fetch the token from localStorage
   const getAuthToken = () => localStorage.getItem("token");
 
@@ -336,10 +349,8 @@ const SponsorSection = () => {
       })
       .then((response) => {
         setInvoiceData(response.data.invoices[0]);
-     
       })
       .catch((error) => {
-      
         console.error("Error fetching invoice data:", error);
       });
   };
@@ -350,15 +361,18 @@ const SponsorSection = () => {
 
   return (
     <div className="sponsor-section">
-
       {/* شرط عرض مكون الفاتورة أو الخيارات بناءً على وجود invoiceData */}
       {invoiceData ? (
         <SponsorInvoice data={invoiceData} /> // إذا كانت invoiceData موجودة، يتم عرض هذا المكون
       ) : (
         <div>
-                {options && options.length > 0 && <h2>Sponsorship Opportunities</h2>}
+          {options && options.length > 0 && (
+            <div className="header-sponsorship-opportunities">
+              Sponsorship Opportunities
+            </div>
+          )}
 
-          <div className="sponsorship-options">
+          <div className="sponsorship-options-sect">
             {options.map((option) => (
               <SponsorshipOption
                 key={option.id}
@@ -371,16 +385,20 @@ const SponsorSection = () => {
             ))}
           </div>
 
-          <SponsorshipTable onSelectedSponsorshipsChange={handleSelectedSponsorshipsChange} />
+          <SponsorshipTable
+            onSelectedSponsorshipsChange={handleSelectedSponsorshipsChange}
+          />
           <BoothCostTable
             selectedBoothIds={chosenBooths}
             onSelectBooth={handleSelectBooth}
             shellSchemeSelected={shellSchemeSelected}
             onShellSchemeChange={handleShellSchemeChange}
           />
-          <StandardBoothPackage onExhibitNumberChange={handleExhibitNumberChange} />
-          <div className="button-container">
-            <button onClick={openAgreementPopup}>Sign Agreement</button>
+          <StandardBoothPackage
+            onExhibitNumberChange={handleExhibitNumberChange}
+          />
+          <div className="button-container-list">
+            <button className="Sign-Agreement-button" onClick={openAgreementPopup}>Sign Agreement</button>
             <button onClick={handleSubmit} className="submit-button">
               Submit
             </button>
@@ -397,14 +415,17 @@ const SponsorSection = () => {
               <div className="popup-content">
                 <h3>Agreement for Sponsorship</h3>
                 <p>
-                  By signing this agreement, you confirm your commitment to sponsor
-                  the event...
+                  By signing this agreement, you confirm your commitment to
+                  sponsor the event...
                 </p>
                 <div className="popup-buttons">
                   <button onClick={handleSignAgreement} className="btn-sign">
                     Sign Agreement
                   </button>
-                  <button onClick={() => setIsPopupOpen(false)} className="btn-cancel">
+                  <button
+                    onClick={() => setIsPopupOpen(false)}
+                    className="btn-cancel"
+                  >
                     Cancel
                   </button>
                 </div>
@@ -416,6 +437,5 @@ const SponsorSection = () => {
     </div>
   );
 };
-
 
 export default SponsorSection;

@@ -4,7 +4,7 @@
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   height: 100vh;
-  overflow: hidden;
+  overflow: overlay;
   background-color: #d3d3d31d;
   .register-img {
     position: relative;
@@ -84,7 +84,7 @@
       text-decoration: none;
       text-align: center;
       transition: background-color 0.3s, color 0.3s;
-      margin-top: 10px;
+      // margin-top: 10px;
     }
 
     .register-btn:hover {

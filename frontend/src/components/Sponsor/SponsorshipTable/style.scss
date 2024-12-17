@@ -1,0 +1,79 @@
+.con-sponsorship {
+  .header-sponsorship-packages {
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+.con-sponsorship {
+  font-family: "Arial", sans-serif;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  .tab-con {
+    padding: 20px;
+    padding-top: 0px;
+  }
+  .sponsorship-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+
+    thead {
+      background-color: #d4d4d4;
+
+      tr {
+        th {
+          color: #333;
+          font-weight: bold;
+          padding: 8px;
+          text-align: center;
+          width: 250px;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          padding: 12px;
+          text-align: center;
+          border: 1px solid #d1d1d1;
+          font-size: 14px;
+          color: #333;
+        }
+
+        &:nth-child(even) {
+          background-color: #f9f9f9;
+        }
+
+        &:hover {
+          background-color: #f9f9f9;
+        }
+
+        input[type="checkbox"] {
+          margin-top: 8px;
+          transform: scale(1.2);
+          accent-color: #226ec5;
+        }
+      }
+    }
+  }
+
+  div {
+    &.loading {
+      color: #e63946;
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+    }
+  }
+  .sponsor-section th {
+    background-color: red;
+  }
+}

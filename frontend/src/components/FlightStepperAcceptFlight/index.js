@@ -11,6 +11,7 @@ import {
   removeFromLocalStorageStartWith,
 } from "../../common/localStorage";
 import Invoice from "./Invoice";
+import { useNavigate } from "react-router-dom";
 
 const StepperAcceptFlightPageContent = () => {
   const {
@@ -20,6 +21,7 @@ const StepperAcceptFlightPageContent = () => {
     completeStep,
     flightMembers,
   } = useFlightStepperAdmin();
+  const navigate = useNavigate();
 
   // Dynamically generate steps based on the number of flight members
   const stepperInfo =
@@ -39,7 +41,9 @@ const StepperAcceptFlightPageContent = () => {
       )),
       <Invoice />,
     ] || [];
-
+  const handleBackClick = () => {
+    navigate(-1); // Navigates to the previous page
+  };
   useEffect(() => {
     return () => {
       removeFromLocalStorageStartWith("Available_Trip_ID_");
@@ -49,7 +53,10 @@ const StepperAcceptFlightPageContent = () => {
   return (
     <div className="stepper-page-container">
       <div className="stepper-section">
-        <div className="back-section">Back</div>
+        <div className="back-section" onClick={handleBackClick}>
+          <span className="icon">🔙</span> {/* Example icon */}
+          <span className="label">Back</span>
+        </div>
         <div className="stepper-container-section">
           <Stepper
             stepperInfo={stepperInfo}

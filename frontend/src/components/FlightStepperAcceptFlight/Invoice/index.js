@@ -4,7 +4,6 @@ import httpService from "../../../common/httpService";
 import { toast } from "react-toastify";
 
 const Invoice = () => {
-  const [flightTrips, setFlightTrips] = useState([]);
   const [invoices, setInvoices] = useState([]);
   const BaseUrl = process.env.REACT_APP_BASE_URL;
 
@@ -29,7 +28,7 @@ const Invoice = () => {
   const getInvoice = async () => {
     const getAuthToken = () => localStorage.getItem("token");
     const flights = getFlights();
-    const ids = flights.map((item) => item?.flight_id);
+    const ids = flights?.map((item) => item?.flight_id);
     try {
       const data = await httpService({
         method: "POST",
@@ -41,14 +40,14 @@ const Invoice = () => {
         },
         withToast: true,
         onError: (error) => {
-          toast.error("Failed to submit the form: " + error);
+          // toast.error("Failed to submit the form: " + error);
         },
       });
-      console.log(data?.invoices);
+      // console.log(data?.invoices);
 
-      setInvoices(data?.invoices);
+      setInvoices(data?.invoices || []);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      // console.error("Error submitting form:", error);
     }
   };
 
@@ -63,24 +62,24 @@ const Invoice = () => {
       <div className="invoice__list">
         {invoices?.length > 0 ? (
           invoices?.map((invoice) => (
-            <div key={invoice.id} className="invoice__item">
+            <div key={invoice?.id} className="invoice__item">
               <div className="invoice__item-header">
                 <h3 className="invoice__flight-id">
-                  Flight ID: {invoice.flight_id}
+                  Flight ID: {invoice?.flight_id}
                 </h3>
-                <span className={`invoice__status ${invoice.status}`}>
-                  {invoice.status}
+                <span className={`invoice__status ${invoice?.status}`}>
+                  {invoice?.status}
                 </span>
               </div>
               <div className="invoice__details">
                 <p className="invoice__total-price">
-                  Total Price: ${invoice.total_price}
+                  Total Price: ${invoice?.total_price}
                 </p>
                 <p className="invoice__date">
-                  Created on: {new Date(invoice.created_at).toLocaleString()}
+                  Created on: {new Date(invoice?.created_at).toLocaleString()}
                 </p>
                 <p className="invoice__date">
-                  Last updated: {new Date(invoice.updated_at).toLocaleString()}
+                  Last updated: {new Date(invoice?.updated_at).toLocaleString()}
                 </p>
               </div>
             </div>

@@ -31,7 +31,9 @@ $font-family: "Roboto", sans-serif;
   &::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover-color);
   }
-
+  .trip-name-section {
+    margin-top: 50px;
+  }
   h1,
   h3 {
     color: $primary-color;
@@ -51,6 +53,10 @@ $font-family: "Roboto", sans-serif;
     height: auto;
     width: 700px;
     padding-top: 20px;
+
+    img {
+      margin-top: 50px;
+    }
   }
 
   .price-info {

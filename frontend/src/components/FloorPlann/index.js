@@ -16,7 +16,7 @@ const FloorPlanUploader = () => {
 
   // جلب قائمة المؤتمرات
   const getConference = () => {
-    const url = `${BaseUrl}/con`;
+    const url = `${BaseUrl}/conferences/all`;
 
     axios
       .get(url)

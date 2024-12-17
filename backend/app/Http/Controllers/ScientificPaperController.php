@@ -34,7 +34,7 @@ class PaperController extends Controller
             'nationality' => 'nullable|string|max:100',
             'country_of_residence' => 'nullable|string|max:100',
         ]);
-    
+
         // 2. تخزين البيانات في جدول `users` (تعيين isAdmin إلى false و registration_type إلى speaker)
         $user = User::create([
             'name' => $validatedData['name'],
@@ -47,7 +47,7 @@ class PaperController extends Controller
             'country_of_residence' => $validatedData['country_of_residence'],
             'isAdmin' => false, // تعيين isAdmin إلى false
         ]);
-        
+
         // 3. تخزين البيانات في جدول `papers` مع user_id من جدول users الذي تم إنشاؤه للتو
         $paper = Paper::create([
             'conference_id' => $validatedData['conference_id'],
@@ -58,7 +58,7 @@ class PaperController extends Controller
             'status' => $validatedData['status'],
             'submitted_at' => $validatedData['submitted_at'],
         ]);
-    
+
         // 4. إرسال إشعار للمسؤولين (admins)
         $admins = User::where('isAdmin', true)->get();
         foreach ($admins as $admin) {
@@ -71,7 +71,7 @@ class PaperController extends Controller
             ]);
             broadcast(new NotificationSent($notification))->toOthers(); // بث الإشعار إلى الآخرين
         }
-    
+
         // 5. إرسال إشعار للمستخدم
         $userNotification = Notification::create([
             'user_id' => $user->id,
@@ -80,7 +80,7 @@ class PaperController extends Controller
             'register_id' => null,
         ]);
         broadcast(new NotificationSent($userNotification)); // بث الإشعار للمستخدم
-    
+
         // 6. إرسال إشعار عبر البريد الإلكتروني
         try {
             Notification::route('mail', $user->email)->notify(new EmailNotification("Your abstract is currently under review by the congress scientific committee. You can log in to your profile at any time to check its status."));
@@ -90,7 +90,7 @@ class PaperController extends Controller
                 'error' => $e->getMessage(),
             ], 200);
         }
-    
+
         // 7. إرجاع استجابة ناجحة
         return response()->json([
             'message' => 'Paper and user created successfully, and notifications sent.',
@@ -98,6 +98,11 @@ class PaperController extends Controller
             'user' => $user,
         ], 201);
     }
-    
-    
+
+
+
+
+
+
+
 }

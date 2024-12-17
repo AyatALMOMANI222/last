@@ -46,7 +46,7 @@ const AboutUsEvent = () => {
               download 
               className="custom-button" 
             >
-              More on our company's profile
+            Company Profile
             </a>
           </button>
           <button className="custom-button" onClick={() => navigate("/contact_us")}>

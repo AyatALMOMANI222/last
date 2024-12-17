@@ -14,79 +14,163 @@ use Illuminate\Support\Facades\Auth;
 
 class DinnerAttendeeController extends Controller
 {
+    // public function store(Request $request)
+    // {
+    //     try {
+    //         // استخراج user_id من التوكن
+    //         $userId = Auth::id(); // على افتراض أنك تستخدم Laravel Passport أو Sanctum للمصادقة
+    
+    //         // البحث عن المتحدث المرتبط بالمستخدم
+    //         $speaker = Speaker::where('user_id', $userId)->firstOrFail();
+    
+    //         // إعداد البيانات للتحقق
+    //         $validatedData = $request->validate([
+    //             'companion_name' => 'nullable|string|max:255',
+    //             'notes' => 'nullable|string',
+    //             'paid' => 'boolean',
+    //             'is_companion_fee_applicable' => 'nullable|boolean',
+    //             'companion_price' => 'nullable|numeric',
+    //             'conference_id' => 'required|numeric|exists:conferences,id', // التحقق من وجود conference_id المدخل في جدول conferences
+    //         ]);
+    
+    //         // إضافة speaker_id إلى البيانات المدخلة
+    //         $validatedData['speaker_id'] = $speaker->id;
+    
+    //         // الحصول على companion_dinner_price من جدول conferences باستخدام conference_id
+    //         $conference = Conference::findOrFail($validatedData['conference_id']);
+    //         $companionDinnerPrice = $conference->companion_dinner_price;
+    
+    //         // إضافة companion_dinner_price إلى البيانات المدخلة
+    //         $validatedData['companion_dinner_price'] = $companionDinnerPrice;
+    
+    //         // إنشاء سجل جديد في جدول DinnerAttendee
+    //         $dinnerAttendee = DinnerAttendee::create($validatedData);
+    
+    //         // إنشاء سجل جديد في جدول DinnerAttendeesInvoice
+    //         $invoiceData = [
+    //             'price' => $companionDinnerPrice,
+    //             'status' => 'pending',  // يمكنك تعديل حالة الفاتورة هنا بناءً على الحاجة
+    //             'dinner_attendees_id' => $dinnerAttendee->id,  // ربط الفاتورة بحضور العشاء
+    //         ];
+    
+    //         DinnerAttendeesInvoice::create($invoiceData);
+    
+    //         // إرسال الإشعار
+    //         $message = 'All information related to the dinner will be confirmed through a message sent by the organizing company to your WhatsApp.';
+    //         $userNotification = Notification::create([
+    //             'user_id' => $speaker->user_id,  // إرسال الإشعار إلى user_id الخاص بالـ speaker
+    //             'message' => $message,
+    //             'is_read' => false,
+    //             'register_id' => $speaker->user_id,  // وضع register_id كـ user_id
+    //         ]);
+    //         broadcast(new NotificationSent($userNotification));
+    
+    //         // استجابة عند النجاح
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'The participant has been added successfully.',
+    //             'companion_dinner_price' => $companionDinnerPrice, // إرسال companion_dinner_price في الاستجابة
+    //         ], 201); // 201 تعني Created
+    
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         // استجابة عند حدوث خطأ في التحقق
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Validation error: ' . implode(', ', $e->errors()),
+    //         ], 422); // 422 تعني Unprocessable Entity
+    
+    //     } catch (\Exception $e) {
+    //         // استجابة عند حدوث خطأ
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'An error occurred while adding the participant: ' . $e->getMessage(),
+    //         ], 500); // 500 تعني Internal Server Error
+    //     }
+    // }
+
     public function store(Request $request)
-    {
-        try {
-            // استخراج user_id من التوكن
-            $userId = Auth::id(); // على افتراض أنك تستخدم Laravel Passport أو Sanctum للمصادقة
-    
-            // البحث عن المتحدث المرتبط بالمستخدم
-            $speaker = Speaker::where('user_id', $userId)->firstOrFail();
-    
-            // إعداد البيانات للتحقق
-            $validatedData = $request->validate([
-                'companion_name' => 'nullable|string|max:255',
-                'notes' => 'nullable|string',
-                'paid' => 'boolean',
-                'is_companion_fee_applicable' => 'nullable|boolean',
-                'companion_price' => 'nullable|numeric',
-                'conference_id' => 'required|numeric|exists:conferences,id', // التحقق من وجود conference_id المدخل في جدول conferences
-            ]);
-    
-            // إضافة speaker_id إلى البيانات المدخلة
-            $validatedData['speaker_id'] = $speaker->id;
-    
-            // الحصول على companion_dinner_price من جدول conferences باستخدام conference_id
-            $conference = Conference::findOrFail($validatedData['conference_id']);
-            $companionDinnerPrice = $conference->companion_dinner_price;
-    
-            // إضافة companion_dinner_price إلى البيانات المدخلة
-            $validatedData['companion_dinner_price'] = $companionDinnerPrice;
-    
-            // إنشاء سجل جديد في جدول DinnerAttendee
-            $dinnerAttendee = DinnerAttendee::create($validatedData);
-    
-            // إنشاء سجل جديد في جدول DinnerAttendeesInvoice
-            $invoiceData = [
-                'price' => $companionDinnerPrice,
-                'status' => 'pending',  // يمكنك تعديل حالة الفاتورة هنا بناءً على الحاجة
-                'dinner_attendees_id' => $dinnerAttendee->id,  // ربط الفاتورة بحضور العشاء
-            ];
-    
-            DinnerAttendeesInvoice::create($invoiceData);
-    
-            // إرسال الإشعار
-            $message = 'All information related to the dinner will be confirmed through a message sent by the organizing company to your WhatsApp.';
-            $userNotification = Notification::create([
-                'user_id' => $speaker->user_id,  // إرسال الإشعار إلى user_id الخاص بالـ speaker
-                'message' => $message,
-                'is_read' => false,
-                'register_id' => $speaker->user_id,  // وضع register_id كـ user_id
-            ]);
-            broadcast(new NotificationSent($userNotification));
-    
-            // استجابة عند النجاح
-            return response()->json([
-                'success' => true,
-                'message' => 'The participant has been added successfully.',
-                'companion_dinner_price' => $companionDinnerPrice, // إرسال companion_dinner_price في الاستجابة
-            ], 201); // 201 تعني Created
-    
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // استجابة عند حدوث خطأ في التحقق
+{
+    try {
+        // استخراج user_id من التوكن
+        $userId = Auth::id(); // على افتراض أنك تستخدم Laravel Passport أو Sanctum للمصادقة
+
+        // البحث عن المتحدث المرتبط بالمستخدم
+        $speaker = Speaker::where('user_id', $userId)->firstOrFail();
+
+        // التحقق مما إذا كان المتحدث مسجلاً بالفعل في DinnerAttendee
+        $existingDinnerAttendee = DinnerAttendee::where('speaker_id', $speaker->id)->first();
+        if ($existingDinnerAttendee) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error: ' . implode(', ', $e->errors()),
-            ], 422); // 422 تعني Unprocessable Entity
-    
-        } catch (\Exception $e) {
-            // استجابة عند حدوث خطأ
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while adding the participant: ' . $e->getMessage(),
-            ], 500); // 500 تعني Internal Server Error
+                'message' => 'The speaker has already been registered for the dinner.',
+            ], 400); // 400 تعني Bad Request
         }
+
+        // إعداد البيانات للتحقق
+        $validatedData = $request->validate([
+            'companion_name' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
+            'paid' => 'boolean',
+            'is_companion_fee_applicable' => 'nullable|boolean',
+            'companion_price' => 'nullable|numeric',
+            'conference_id' => 'required|numeric|exists:conferences,id', // التحقق من وجود conference_id المدخل في جدول conferences
+        ]);
+
+        // إضافة speaker_id إلى البيانات المدخلة
+        $validatedData['speaker_id'] = $speaker->id;
+
+        // الحصول على companion_dinner_price من جدول conferences باستخدام conference_id
+        $conference = Conference::findOrFail($validatedData['conference_id']);
+        $companionDinnerPrice = $conference->companion_dinner_price;
+
+        // إضافة companion_dinner_price إلى البيانات المدخلة
+        $validatedData['companion_dinner_price'] = $companionDinnerPrice;
+
+        // إنشاء سجل جديد في جدول DinnerAttendee
+        $dinnerAttendee = DinnerAttendee::create($validatedData);
+
+        // إنشاء سجل جديد في جدول DinnerAttendeesInvoice
+        $invoiceData = [
+            'price' => $companionDinnerPrice,
+            'status' => 'pending',  // يمكنك تعديل حالة الفاتورة هنا بناءً على الحاجة
+            'dinner_attendees_id' => $dinnerAttendee->id,  // ربط الفاتورة بحضور العشاء
+        ];
+
+        DinnerAttendeesInvoice::create($invoiceData);
+
+        // إرسال الإشعار
+        $message = 'All information related to the dinner will be confirmed through a message sent by the organizing company to your WhatsApp.';
+        $userNotification = Notification::create([
+            'user_id' => $speaker->user_id,  // إرسال الإشعار إلى user_id الخاص بالـ speaker
+            'message' => $message,
+            'is_read' => false,
+            'register_id' => $speaker->user_id,  // وضع register_id كـ user_id
+        ]);
+        broadcast(new NotificationSent($userNotification));
+
+        // استجابة عند النجاح
+        return response()->json([
+            'success' => true,
+            'message' => 'The participant has been added successfully.',
+            'companion_dinner_price' => $companionDinnerPrice, // إرسال companion_dinner_price في الاستجابة
+        ], 201); // 201 تعني Created
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // استجابة عند حدوث خطأ في التحقق
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation error: ' . implode(', ', $e->errors()),
+        ], 422); // 422 تعني Unprocessable Entity
+
+    } catch (\Exception $e) {
+        // استجابة عند حدوث خطأ
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred while adding the participant: ' . $e->getMessage(),
+        ], 500); // 500 تعني Internal Server Error
     }
+}
+
     public function getDinnerInfoFromToken()
     {
         try {
@@ -130,13 +214,14 @@ class DinnerAttendeeController extends Controller
         }
     }
     
-    
 
     public function getDinnerAttendeesBySpeakerId($speakerId)
     {
         try {
-            // البحث عن قائمة الحضور العشاء باستخدام speaker_id
-            $dinnerAttendees = DinnerAttendee::where('speaker_id', $speakerId)->get();
+            // جلب الحضور مع بيانات الفاتورة المرتبطة
+            $dinnerAttendees = DinnerAttendee::where('speaker_id', $speakerId)
+                ->with(['dinnerAttendeesInvoice']) // جلب العلاقة المرتبطة
+                ->get();
     
             // التحقق إذا كانت هناك سجلات أم لا
             if ($dinnerAttendees->isEmpty()) {
@@ -146,7 +231,7 @@ class DinnerAttendeeController extends Controller
                 ], 404); // 404 تعني Not Found
             }
     
-            // إرسال الاستجابة مع قائمة الحضور العشاء
+            // إرسال الاستجابة مع قائمة الحضور والفواتير المرتبطة
             return response()->json([
                 'success' => true,
                 'data' => $dinnerAttendees,
@@ -160,9 +245,6 @@ class DinnerAttendeeController extends Controller
             ], 500); // 500 تعني Internal Server Error
         }
     }
-    
-    
-    
     
     public function destroy($id)
     {

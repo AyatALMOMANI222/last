@@ -492,23 +492,62 @@ public function store(Request $request, $conference_id)
         }
     }
 
+    // public function getAllUsers(Request $request)
+    // {
+    //     try {
+    //         $status = $request->input('status');
+
+    //         $query = User::with([
+    //             'conferences' => function ($query) {
+    //                 $query->where('end_date', '>', now());
+    //             }
+    //         ]);
+
+    //         if ($status && $status !== 'all') {
+    //             $query->where('status', $status);
+    //         }
+
+    //         $users = $query->paginate(10);
+
+    //         return response()->json([
+    //             'message' => 'Users retrieved successfully!',
+    //             'data' => $users->items(),
+    //             'pagination' => [
+    //                 'total' => $users->total(),
+    //                 'per_page' => $users->perPage(),
+    //                 'current_page' => $users->currentPage(),
+    //                 'total_pages' => $users->lastPage(),
+    //             ],
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Failed to retrieve users.',
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
+
     public function getAllUsers(Request $request)
     {
         try {
             $status = $request->input('status');
-
+    
             $query = User::with([
                 'conferences' => function ($query) {
                     $query->where('end_date', '>', now());
+                },
+                'papers' => function ($query) {
+                    $query->select('id', 'user_id', 'title', 'abstract', 'status', 'submitted_at');
                 }
             ]);
-
+    
             if ($status && $status !== 'all') {
                 $query->where('status', $status);
             }
-
+    
             $users = $query->paginate(10);
-
+    
             return response()->json([
                 'message' => 'Users retrieved successfully!',
                 'data' => $users->items(),
@@ -526,9 +565,7 @@ public function store(Request $request, $conference_id)
             ], 500);
         }
     }
-
-
-
+    
 }
 
 

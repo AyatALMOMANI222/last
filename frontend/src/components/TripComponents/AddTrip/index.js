@@ -7,7 +7,56 @@ import DateInput from "../../../CoreComponent/Date";
 import ImageUpload from "../../../CoreComponent/ImageUpload";
 import axios from "axios";
 import { toast } from "react-toastify";
+import SVG from "react-inlinesvg";
 import "./style.scss";
+import { deleteIcon } from "../../../icons";
+
+const AvailableDatesManager = ({ availableDates, setAvailableDates }) => {
+  const [dateInputs, setDateInputs] = useState([""]);
+
+  const handleDateChange = (value, index) => {
+    const updatedDates = [...dateInputs];
+    updatedDates[index] = value;
+    setDateInputs(updatedDates);
+    const validDates = updatedDates.filter((date) => date.trim() !== "");
+    setAvailableDates(validDates);
+  };
+
+  const addDateInput = () => {
+    setDateInputs([...dateInputs, ""]);
+  };
+
+  const removeDateInput = (index) => {
+    const updatedDates = dateInputs.filter((_, i) => i !== index);
+    setDateInputs(updatedDates);
+    const validDates = updatedDates.filter((date) => date.trim() !== "");
+    setAvailableDates(validDates);
+  };
+
+  return (
+    <div className="available-dates-manager">
+      <div className="date-inputs">
+        {dateInputs.map((inputValue, index) => (
+          <div key={index} className="date-input-group-test">
+            <DateInput
+              label={`Available Date ${index + 1}`}
+              inputValue={inputValue}
+              setInputValue={(value) => handleDateChange(value, index)}
+            />
+            <SVG
+              className="delete-icon5"
+              src={deleteIcon}
+              onClick={() => removeDateInput(index)}
+            />
+          </div>
+        ))}
+        <button type="button" className="add-input-btn" onClick={addDateInput}>
+          Add Another Date
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const CreateTrip = ({ isOpen, setIsOpen, fetchTrips }) => {
   // State for trip parameters
@@ -52,6 +101,27 @@ const CreateTrip = ({ isOpen, setIsOpen, fetchTrips }) => {
         console.log("erooooooor");
       });
   };
+  const resetForm = () => {
+    setTripType("private");
+    setName("");
+    setDescription("");
+    setAdditionalInfo("");
+    setImage1(null);
+    setImage2(null);
+    setPricePerPerson(0);
+    setPriceForTwo(0);
+    setPriceForThreeOrMore(0);
+    setInclusions("");
+    setGroupPricePerPerson(0);
+    setGroupPricePerSpeaker(0);
+    setLocation("");
+    setDuration(0);
+    setAvailableDates("");
+    setTripDetails("");
+    setConferenceId(0);
+    setAllConference([]); // If you want to reset all conference data as well
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -78,12 +148,17 @@ const CreateTrip = ({ isOpen, setIsOpen, fetchTrips }) => {
     formData.append("price_for_three_or_more", priceForThreeOrMore);
 
     formData.append("inclusions", inclusions);
-    formData.append("group_price_per_person", groupPricePerPerson);
-    formData.append("group_price_per_speaker", groupPricePerSpeaker);
+    formData.append("group_accompanying_price", groupPricePerPerson);
     formData.append("location", location);
-    formData.append("duration", duration);
-    formData.append("available_dates", availableDates);
-    formData.append("trip_details", tripDetails);
+    if (tripType == "group") {
+      formData.append("duration", duration);
+      formData.append("available_dates", availableDates);
+      formData.append("trip_details", tripDetails);
+    } else {
+      formData.append("duration", 0);
+      formData.append("available_dates", null);
+      formData.append("trip_details", null);
+    }
 
     try {
       const response = await axios.post(`${BaseUrl}/trips`, formData, {
@@ -91,6 +166,7 @@ const CreateTrip = ({ isOpen, setIsOpen, fetchTrips }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+      resetForm();
       toast.success("The data was updated successfully!");
       setIsOpen(false);
       fetchTrips();
@@ -206,23 +282,13 @@ const CreateTrip = ({ isOpen, setIsOpen, fetchTrips }) => {
             />
             {tripType === "group" && (
               <Fragment>
-                {" "}
                 <Input
-                  label="Price per Person"
+                  label="Price per Companion"
                   inputValue={groupPricePerPerson}
                   setInputValue={(value) =>
                     setGroupPricePerPerson(parseFloat(value) || 0)
                   }
                   placeholder="Enter group price per person"
-                  type="number"
-                />
-                <Input
-                  label="Price per Speaker"
-                  inputValue={groupPricePerSpeaker}
-                  setInputValue={(value) =>
-                    setGroupPricePerSpeaker(parseFloat(value) || 0)
-                  }
-                  placeholder="Enter group price per speaker"
                   type="number"
                 />
               </Fragment>
@@ -233,24 +299,27 @@ const CreateTrip = ({ isOpen, setIsOpen, fetchTrips }) => {
               setInputValue={setLocation}
               placeholder="Enter location"
             />
-            <Input
-              label="Duration (in hours/days)"
-              inputValue={duration}
-              setInputValue={(value) => setDuration(parseInt(value) || 0)}
-              placeholder="Enter duration"
-              type="number"
-            />
-            <DateInput
-              label="Available Dates"
-              inputValue={availableDates}
-              setInputValue={setAvailableDates}
-            />
-            <Input
-              label="Trip Details"
-              inputValue={tripDetails}
-              setInputValue={setTripDetails}
-              placeholder="Enter trip details"
-            />
+            {tripType === "group" && (
+              <>
+                <Input
+                  label="Duration (in hours"
+                  inputValue={duration}
+                  setInputValue={(value) => setDuration(parseInt(value) || 0)}
+                  placeholder="Enter duration"
+                  type="number"
+                />
+                <AvailableDatesManager
+                  availableDates={availableDates}
+                  setAvailableDates={setAvailableDates}
+                />
+                <Input
+                  label="Trip Details"
+                  inputValue={tripDetails}
+                  setInputValue={setTripDetails}
+                  placeholder="Enter trip details"
+                />
+              </>
+            )}
           </form>
         </CustomFormWrapper>
       </MySideDrawer>

@@ -18,7 +18,7 @@ class AirportTransferBookingController extends Controller
 {
  
 
-    public function store(Request $request)
+    public function store(Request $request) 
     {
         $request->validate([
             'trip_type' => 'required|string',
@@ -41,10 +41,10 @@ class AirportTransferBookingController extends Controller
             ->whereHas('conference', function ($query) {
                 $today = now()->toDateString();
                 $query->where('start_date', '>=', $today)
-                      ->orWhere(function ($query) use ($today) {
-                          $query->where('start_date', '<=', $today)
-                                ->where('end_date', '>=', $today);
-                      });
+                    ->orWhere(function ($query) use ($today) {
+                        $query->where('start_date', '<=', $today)
+                            ->where('end_date', '>=', $today);
+                    });
             })
             ->get();
     
@@ -65,20 +65,29 @@ class AirportTransferBookingController extends Controller
             ], 404);
         }
     
-        // Calculate invoice based on trip type
-        $invoice = 0;
-        switch ($request->trip_type) {
-            case 'One-way trip from the airport to the hotel':
-                $invoice = $airportTransferPrices->from_airport_price;
-                break;
-            case 'One-way trip from the hotel to the airport':
-                $invoice = $airportTransferPrices->to_airport_price;
-                break;
-            case 'Round trip':
-                $invoice = $airportTransferPrices->round_trip_price;
-                break;
-            default:
-                return response()->json(['message' => 'Invalid trip type provided.'], 400);
+        // Check if the user is a speaker and if airport pickup is enabled
+        $speaker = Speaker::where('user_id', $userId)
+            ->where('conference_id', $conferenceId)
+            ->first();
+    
+        // If airport_pickup is 1, set all prices to 0, otherwise proceed with the regular pricing
+        if ($speaker && $speaker->airport_pickup == 1) {
+            $invoice = 0;
+        } else {
+            // Calculate invoice based on trip type
+            switch ($request->trip_type) {
+                case 'One-way trip from the airport to the hotel':
+                    $invoice = $airportTransferPrices->from_airport_price;
+                    break;
+                case 'One-way trip from the hotel to the airport':
+                    $invoice = $airportTransferPrices->to_airport_price;
+                    break;
+                case 'Round trip':
+                    $invoice = $airportTransferPrices->round_trip_price;
+                    break;
+                default:
+                    return response()->json(['message' => 'Invalid trip type provided.'], 400);
+            }
         }
     
         // Create a new booking

@@ -28,7 +28,7 @@ const ExhibitionForm = ({ setIsOpen, getExhibitions }) => {
   const BaseUrl = process.env.REACT_APP_BASE_URL;
 
   const getConference = () => {
-    const url = `${BaseUrl}/con`;
+    const url = `${BaseUrl}/conferences/all`;
 
     axios
       .get(url)

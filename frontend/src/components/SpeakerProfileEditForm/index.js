@@ -14,6 +14,8 @@ import "./style.scss";
 const SpeakerProfileForm = () => {
   const { speakerData, attendancesData, registrationType } = useAuth();
   const [speakerInfo, setSpeakerInfo] = useState(null);
+  const [video, setVideo] = useState(null);
+
   const [formFiles, setFormFiles] = useState({
     image: null,
     abstract: null,
@@ -23,6 +25,7 @@ const SpeakerProfileForm = () => {
     image: null,
     abstract: null,
     presentationFile: null,
+    video:null
   });
   const [attendanceOptions, setAttendanceOptions] = useState({
     showOnlineOption: false,
@@ -64,7 +67,12 @@ const SpeakerProfileForm = () => {
     formData.append(
       "online_participation",
       attendanceOptions.onlineParticipation ? 1 : 0
+
     );
+
+    formData.append("departure_date", departureDate);
+    formData.append("arrival_date", arrivalDate);
+    formData.append("video", video);
 
     try {
       const token = localStorage.getItem("token");
@@ -78,7 +86,7 @@ const SpeakerProfileForm = () => {
       });
       navigate("/visa");
     } catch (error) {
-      toast.error("An error occurred while updating.");
+      // toast.error("An error occurred while updating.");
     }
   };
 
@@ -124,16 +132,19 @@ const SpeakerProfileForm = () => {
           },
         }
       );
-      console.log({ hedaya: response.data.speaker });
-
+      const topics = JSON.parse(response.data.speaker.topics || "[]");
+      setTopics(topics)
       setFormFiles2({
         abstract: response?.data?.speaker?.abstract,
         image: response?.data?.speaker?.image,
         presentationFile: response?.data?.speaker?.presentation_file,
       });
+      setArrivalDate(response?.data?.speaker?.arrival_date)
+      setDepartureDate(response?.data?.speaker?.departure_date)
       setSpeakerInfo(response.data.speaker);
+      setVideo(response?.data?.speaker?.video)
     } catch (error) {
-      console.error("Error fetching speaker info:", error);
+      // console.error("Error fetching speaker info:", error);
     }
   };
 
@@ -147,6 +158,7 @@ const SpeakerProfileForm = () => {
     !(formFiles.presentationFile || formFiles2.presentationFile) ||
     !arrivalDate ||
     !departureDate ||
+    !video ||
     topics.length === 0 ||
     topics.some((topic) => !topic.trim());
 
@@ -190,6 +202,16 @@ const SpeakerProfileForm = () => {
               setInputValue={handleFileChange("presentationFile")}
               className="image-upload"
               placeholder="Presentation File"
+            />
+            <ImageUpload
+              required
+              label="Video"
+              allowedExtensions={["ppt", "pptx", "mp4"]}
+              inputValue={video}
+              existingFile={formFiles2.video}
+              setInputValue={setVideo}
+              className="image-upload"
+              placeholder="Video"
             />
             <DateInput
               label="Arrival Date"

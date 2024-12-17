@@ -20,6 +20,8 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
         },
       });
       setOptions(response.data.trip.additional_options);
+      console.log(response.data?.trip);
+
       setData(response.data?.trip);
     } catch (err) {}
   };
@@ -29,9 +31,9 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
 
   if (data && options) {
     return (
-      <div>
+      <div className="trip-container-sec">
         <MySideDrawer isOpen={isOpen} setIsOpen={setIsOpen}>
-          <CustomFormWrapper title="Create a New Trip" setOpenForm={setIsOpen}>
+          <CustomFormWrapper title="View Trip" setOpenForm={setIsOpen}>
             <div className="view-one-trip-container">
               <SimpleLabelValue label="Name" value={data?.name} />
 
@@ -41,34 +43,34 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
                 label="Additional Info"
                 value={data?.additional_info}
               />
-              <SimpleLabelValue
-                label="Price per Person"
-                value={`$${data?.price_per_person}`}
-              />
-              <SimpleLabelValue
-                label="Price for Two"
-                value={`$${data?.price_for_two}`}
-              />
-              <SimpleLabelValue
-                label="Price for Three or More"
-                value={`$${data?.price_for_three_or_more}`}
-              />
-
-              {options?.map((item) => {
-                return (
-                  <Fragment>
-                    <SimpleLabelValue
-                      label="Option Name"
-                      value={item?.option_name || ""}
-                    />
-                    <SimpleLabelValue label="Price" value={item?.price || ""} />
-                  </Fragment>
-                );
-              })}
+              {data?.trip_type == "private" ? (
+                <>
+                  <SimpleLabelValue
+                    label="Price per Person"
+                    value={`$${data?.price_per_person}`}
+                  />
+                  <SimpleLabelValue
+                    label="Price for Two"
+                    value={`$${data?.price_for_two}`}
+                  />
+                  <SimpleLabelValue
+                    label="Price for Three or More"
+                    value={`$${data?.price_for_three_or_more}`}
+                  />
+                </>
+              ) : (
+                <></>
+              )}
 
               <SimpleLabelValue
                 label="Available Dates"
-                value={data?.available_dates || "-"}
+                value={
+                  (data?.available_dates &&
+                    data?.available_dates.split(",").map((item) => {
+                      return <div> {item} </div>;
+                    })) ||
+                  "-"
+                }
               />
               <SimpleLabelValue
                 label="Location"
@@ -82,18 +84,37 @@ const ViewOneTrip = ({ isOpen, setIsOpen, tripId }) => {
                 label="Inclusions"
                 value={data?.inclusions || "-"}
               />
-              <SimpleLabelValue
-                label="Group Price per Person"
-                value={data?.group_price_per_person || "-"}
-              />
-              <SimpleLabelValue
-                label="Group Price per Speaker"
-                value={data?.group_price_per_speaker || "-"}
-              />
-              <SimpleLabelValue
-                label="Trip Details"
-                value={data?.trip_details || "-"}
-              />
+
+              {data?.trip_type !== "private" ? (
+                <>
+                  <SimpleLabelValue
+                    label="Group Price per Companion"
+                    value={data?.group_accompanying_price || "-"}
+                  />
+                </>
+              ) : (
+                <></>
+              )}
+            </div>
+            {data?.trip_type == "private" && (
+              <div className="additional_options">Additional Options</div>
+            )}{" "}
+            <div className="view-one-trip-container">
+              {data?.trip_type == "private" &&
+                options?.map((item) => {
+                  return (
+                    <Fragment>
+                      <SimpleLabelValue
+                        label="Option Name"
+                        value={item?.option_name || ""}
+                      />
+                      <SimpleLabelValue
+                        label="Price"
+                        value={item?.price || ""}
+                      />
+                    </Fragment>
+                  );
+                })}
             </div>
           </CustomFormWrapper>
         </MySideDrawer>
