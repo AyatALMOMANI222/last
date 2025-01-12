@@ -22,6 +22,11 @@ class Visa extends Model
         'payment_required',
         'status',
         'visa_updated_at',
+        'payment_method',
+        'payment_status',
+        'transaction_id',
+        'payment_date',
+        'visapdf'
     ];
 
     // العلاقة مع نموذج User (فيزا تنتمي إلى مستخدم واحد)

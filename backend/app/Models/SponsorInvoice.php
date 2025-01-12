@@ -21,7 +21,8 @@ class SponsorInvoice extends Model
         'conference_id',
         'total_amount',
         'price', // السعر
-        'exhibit_number'
+        'exhibit_number',
+        'shell_scheme_price'
     ];
 
     // تحويل الأعمدة من نوع JSON إلى مصفوفات/كائنات
@@ -63,4 +64,9 @@ class SponsorInvoice extends Model
     {
         return $this->hasMany(Sponsorship::class, 'conference_id', 'conference_id');
     }
+    public function sponsorInvoices()
+{
+    return $this->hasMany(SponsorInvoice::class, 'user_id', 'user_id');
+}
+
 }

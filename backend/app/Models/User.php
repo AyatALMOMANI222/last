@@ -31,7 +31,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'company_name',
         'contact_person',
         'company_address',
-        'conference_id'
+        'conference_id',
+        'certificatePDF'
     ];
 
     protected $hidden = [

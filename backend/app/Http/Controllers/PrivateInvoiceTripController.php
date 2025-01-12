@@ -63,5 +63,41 @@ public function getInvoiceByParticipantId($participant_id)
         ], 200);
     }
 
-
+    public function getInvoiceByParticipantIds(Request $request)
+    {
+        // Validate that the request contains an array of participant IDs
+        $validator = Validator::make($request->all(), [
+            'participant_ids' => 'required|array', // Ensure it's an array
+            'participant_ids.*' => 'exists:trip_participants,id' // Ensure each participant_id exists in the trip_participants table
+        ]);
+    
+        // If validation fails, return errors
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 400);
+        }
+    
+        // Get the list of participant IDs from the request
+        $participantIds = $request->participant_ids;
+    
+        // Retrieve all PrivateInvoiceTrips where participant_id is in the list of participant IDs
+        $privateInvoiceTrips = PrivateInvoiceTrip::whereIn('participant_id', $participantIds)->get();
+    
+        // If no invoice trips are found, return a message
+        if ($privateInvoiceTrips->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No invoices found for the provided participant IDs.'
+            ], 404);
+        }
+    
+        // Return the found PrivateInvoiceTrips
+        return response()->json([
+            'success' => true,
+            'data' => $privateInvoiceTrips
+        ], 200);
+    }
+    
 }

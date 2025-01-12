@@ -13,110 +13,20 @@ use Illuminate\Support\Facades\Validator; // تأكد من إضافة هذا ا�
 
 class FlightController extends Controller
 {
-    // public function createFlight(Request $request)
-    // {
-    //     try {
-    //         // Validate input data
-    //         $flights = $request->input('flights'); // تأكد من استدعاء 'flights' هنا
-    //         foreach ($flights as $flightData) {
-    //             Validator::make($flightData, [
-    //                 'departureAirport' => 'required|string|max:100',
-    //                 'returnAirport' => 'required|string|max:100',
-    //                 'departureDate' => 'required|date',
-    //                 'arrivalDate' => 'required|date',
-    //                 'ticket_count' => 'integer|min:1',
-    //                 'passportImage' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    //                 'flightNumber' => 'nullable|sometimes|string',
-    //                 'seatNumber' => 'nullable|sometimes|string',
-    //                 'upgradeClass' => 'nullable|sometimes|boolean',
-    //                 'otherRequests' => 'nullable|sometimes|string',
-    //                 'name' => 'nullable|sometimes|string',
-    //                 'specificFlightTime' => 'nullable|sometimes|string',
-    //             ])->validate();
-    //         }
 
-    //         // Get the current user
-    //         $user = Auth::user();
-
-    //         // Iterate through the provided flight data
-    //         foreach ($flights as $index => $flightData) {
-    //             // Create a new Flight instance
-    //             $flight = new Flight();
-
-    //             // Set mandatory fields from the flight data
-    //             $flight->departure_airport = $flightData['departureAirport'];
-    //             $flight->arrival_airport = $flightData['returnAirport'];
-    //             $flight->departure_date = $flightData['departureDate'];
-    //             $flight->arrival_date = $flightData['arrivalDate'];
-    //             $flight->specific_flight_time = $flightData['specificFlightTime'];
-
-    //             // Handle passenger information
-    //             if ($index === 0) { // Assuming the first entry is the main user
-    //                 $flight->user_id = $user->id; // Set the user ID
-    //                 $flight->ticket_count = 1; // Assuming one ticket for the main user
-    //                 $flight->main_user_id = null; // No main user ID for the main user
-    //                 $flight->passenger_name = $user->name; // Set the passenger name
-    //                 $flight->is_companion = false; // Main user is not a companion
-    //             } else { // For companions
-    //                 $flight->user_id = null; // Companions don't have a user ID
-    //                 $flight->ticket_count = 1; // Assuming one ticket for the companion
-    //                 $flight->main_user_id = $user->id; // Set the main user ID
-    //                 $flight->passenger_name = $flightData['name']; // Set the companion's name
-    //                 $flight->is_companion = true; // Companion flag
-    //             }
-
-    //             // Set additional fields
-    //             $flight->flight_number = $flightData['flightNumber'];
-    //             $flight->seat_preference = $flightData['seatNumber'];
-    //             $flight->upgrade_class = $flightData['upgradeClass'];
-    //             $flight->additional_requests = $flightData['otherRequests'];
-
-    //             // Save the passport image if present
-    //             if ($request->hasFile('passportImage')) {
-    //                 $imagePath = $request->file('passportImage')->store('images', 'public');
-    //                 $flight->passport_image = $imagePath; // قم بتحديث مسار الصورة
-    //             }
-
-    //             // Save the flight data in the database
-    //             $flight->created_at = Carbon::now('Asia/Amman'); // Specify the timezone
-    //             $flight->save();
-
-    //             // Notify the user about the created flight
-    //             $message = 'The ticket will be available shortly, and you will be notified on the website once it becomes available.';
-    //             Notification::create([
-    //                 'user_id' => $user->id,
-    //                 'message' => $message,
-    //                 'is_read' => false,
-    //                 'register_id' => null,
-    //             ]);
-
-    //             // Notify the admins about the new flight registration
-    //             $admins = User::where('isAdmin', true)->get();
-    //             foreach ($admins as $admin) {
-    //                 $notification = Notification::create([
-    //                     'user_id' => $admin->id,
-    //                     'message' => 'New flight registered by ' . $user->name . '. Log in to adjust the price.',
-    //                     'is_read' => false,
-    //                     'register_id' => $user->id,
-    //                 ]);
-    //                 broadcast(new NotificationSent($notification))->toOthers();
-    //             }
-    //         }
-
-    //         return response()->json(['message' => 'Flights created successfully'], 201);
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         // Return the validation errors
-    //         return response()->json(['errors' => $e->validator->errors()], 422);
-    //     } catch (\Exception $e) {
-    //         // Return the error message from the exception
-    //         return response()->json(['error' => 'An error occurred while creating the flights: ' . $e->getMessage()], 500);
-    //     }
-    // }
 
 
     public function createFlight(Request $request)
     {
         try {
+            $user = Auth::user();
+
+            // Check if the user already has a flight registered
+            $existingFlight = Flight::where('user_id', $user->id)->first();
+            if ($existingFlight) {
+                return response()->json(['error' => 'You already have an existing flight. You cannot create another flight.'], 400);
+            }
+    
             // Validate input data for each flight entry
             $flights = $request->input('flights');
             foreach ($flights as $flightData) {
@@ -126,7 +36,7 @@ class FlightController extends Controller
                     'departureDate' => 'required|date',
                     'arrivalDate' => 'required|date',
                     'ticket_count' => 'integer|min:1',
-                    'passportImage' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                    'passportImage' => 'nullable|image|mimes:jpeg,png,jpg', // تعديل الاسم
                     'flightNumber' => 'nullable|sometimes|string',
                     'seatNumber' => 'nullable|sometimes|string',
                     'upgradeClass' => 'nullable|sometimes|boolean',
@@ -174,9 +84,17 @@ class FlightController extends Controller
                 $flight->additional_requests = $flightData['otherRequests'];
 
                 // Save the passport image if present
-                if ($request->hasFile('passportImage')) {
-                    $imagePath = $request->file('passportImage')->store('images', 'public');
-                    $flight->passport_image = $imagePath;
+                // استبدال 'passportImage' بـ 'passport_image'
+                // if (isset($flightData['passportImage']) && $request->hasFile("flights.$index.passportImage")) {
+                //     // تخزين الصورة في مجلد passport_images
+                //     $passportImagePath = $request->file("flights.$index.passportImage")->store('passport_images', 'public');
+                //     $flight->passportImage = $passportImagePath;
+                // }
+                
+                if ($request->hasFile("flights.$index.passportImage") && $request->file("flights.$index.passportImage")->isValid()) {
+                    // Store image in 'passport_images' folder within public storage
+                    $passportImagePath = $request->file("flights.$index.passportImage")->store('passport_images', 'public');
+                    $flight->passportImage = $passportImagePath;
                 }
 
                 // Save the flight data in the database
@@ -219,6 +137,190 @@ class FlightController extends Controller
             return response()->json(['error' => 'An error occurred while creating the flights: ' . $e->getMessage()], 500);
         }
     }
+
+
+    public function updateDeadlineSAdmin(Request $request)
+    {
+        try {
+            // التحقق من صحة المدخلات
+            $validator = Validator::make($request->all(), [
+                'flight_id' => 'required|exists:flights,flight_id',  // التحقق من وجود الـ flight_id في جدول الرحلات
+                'admin_update_deadline' => 'required|date',   // التأكد من أن الـ admin_update_deadline هو تاريخ صحيح
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // العثور على الرحلة بناءً على الـ flight_id
+            $flight = Flight::find($request->input('flight_id'));
+
+            if (!$flight) {
+                return response()->json([
+                    'message' => 'Flight not found'
+                ], 404);
+            }
+
+            // تحديث الـ admin_update_deadline للرحلة
+            $flight->admin_update_deadline = $request->input('admin_update_deadline');
+            $flight->updated_at = now();  // تعيين الوقت الحالي كآخر تعديل من قبل المسؤول
+
+            // حفظ التغييرات
+            $flight->save();
+
+            // إرجاع استجابة ناجحة
+            return response()->json([
+                'message' => 'Flight deadline updated successfully',
+                'flight' => $flight
+            ], 200);
+
+        } catch (\Exception $e) {
+            // إرجاع استجابة في حالة حدوث خطأ غير متوقع
+            return response()->json([
+                'message' => 'An error occurred while updating the deadline.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }    public function deleteFlights(Request $request)
+    {
+        try {
+            // الحصول على المستخدم الحالي
+            $user = Auth::user();
+
+            // التحقق من وجود رحلة للمستخدم الأساسي
+            $mainFlight = Flight::where('user_id', $user->id)->first();
+
+            if (!$mainFlight) {
+                return response()->json(['error' => 'No flights found for this user'], 404);
+            }
+
+            // حذف جميع الرحلات التابعة بما في ذلك المستخدم الأساسي والمرافقين
+            Flight::where('main_user_id', $mainFlight->flight_id)
+                ->orWhere('flight_id', $mainFlight->flight_id)
+                ->delete();
+
+            // حذف الإشعارات المرتبطة بالمستخدم
+
+            //         // Send notification to all admins
+            $admins = User::where('isAdmin', true)->get();
+            foreach ($admins as $admin) {
+                $notification = new Notification();
+                $notification->user_id = $admin->id; // Save the admin user_id
+                $notification->message = "Flight has been marked as deleted by user {$user->email}.";
+                $notification->save();
+                broadcast(new NotificationSent($notification))->toOthers();
+            }
+            return response()->json(['message' => 'All flights and associated companions deleted successfully'], 200);
+        } catch (\Exception $e) {
+            // معالجة الأخطاء العامة
+            return response()->json(['error' => 'An error occurred while deleting flights: ' . $e->getMessage()], 500);
+        }
+    }
+
+
+
+
+    public function editNewFlight(Request $request)
+    {
+        try {
+            // Validate input data for each flight entry
+            $flights = $request->input('flights');
+            foreach ($flights as $flightData) {
+                Validator::make($flightData, [
+                    'flight_id' => 'nullable|exists:flights,flight_id', // Ensure the flight_id exists if provided
+                    'departureAirport' => 'required|string|max:100',
+                    'returnAirport' => 'required|string|max:100',
+                    'departureDate' => 'required|date',
+                    'arrivalDate' => 'required|date',
+                    'ticket_count' => 'integer|min:1',
+                    'passportImage' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                    'flightNumber' => 'nullable|sometimes|string',
+                    'seatNumber' => 'nullable|sometimes|string',
+                    'upgradeClass' => 'nullable|sometimes|boolean',
+                    'otherRequests' => 'nullable|sometimes|string',
+                    'name' => 'nullable|sometimes|string',
+                    'specificFlightTime' => 'nullable|sometimes|string',
+                    'main_user_id' => 'nullable|sometimes|string|integer',
+                ])->validate();
+            }
+
+            $user = Auth::user();
+            $mainFlightId = null; // Will store the flight ID for the main user
+
+            foreach ($flights as $index => $flightData) {
+                $flight = null;
+
+                // Check if this is an update or a new flight
+                if (isset($flightData['flight_id'])) {
+                    // Update existing flight
+                    $flight = Flight::where('flight_id', $flightData['flight_id'])->firstOrFail();
+                    if ($flight->admin_update_deadline && Carbon::parse($flight->admin_update_deadline)->isPast()) {
+                        return response()->json([
+                            'message' => 'You cannot modify the flight as the admin update deadline has passed.'
+                        ], 200);
+                    }
+
+                    
+                } else {
+                    // Create a new flight instance
+                    $flight = new Flight();
+                }
+                
+
+                // Set mandatory fields
+                $flight->departure_airport = $flightData['departureAirport'];
+                $flight->arrival_airport = $flightData['returnAirport'];
+                $flight->departure_date = $flightData['departureDate'];
+                $flight->arrival_date = $flightData['arrivalDate'];
+                $flight->specific_flight_time = $flightData['specificFlightTime'];
+
+                if ($index === 0) { // Main user flight entry
+                    $flight->user_id = $user->id;
+                    $flight->ticket_count = 1;
+                    $flight->main_user_id = null;
+                    $flight->passenger_name = $user->name;
+                    $flight->is_companion = false;
+                } else { // Companion entries
+                    $flight->user_id = null;
+                    $flight->ticket_count = 1;
+                    $flight->main_user_id = $flightData['main_user_id'];
+                    $flight->passenger_name = $flightData['name'];
+                    $flight->is_companion = true;
+                }
+
+                // Set additional fields
+                $flight->flight_number = $flightData['flightNumber'];
+                $flight->seat_preference = $flightData['seatNumber'];
+                $flight->upgrade_class = $flightData['upgradeClass'] ?? false;
+                $flight->additional_requests = $flightData['otherRequests'];
+
+                // Handle passport image upload
+                if ($request->hasFile('passportImage')) {
+                    $imagePath = $request->file('passportImage')->store('images', 'public');
+                    $flight->passport_image = $imagePath;
+                }
+
+                // Save or update the flight data in the database
+                $flight->updated_at = Carbon::now('Asia/Amman');
+                $flight->save();
+
+                if ($index === 0 && !isset($flightData['flight_id'])) {
+                    $mainFlightId = $flight->flight_id; // Store flight_id for new main user flights
+                }
+            }
+
+            return response()->json(['message' => 'Flights updated successfully'], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->validator->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while updating the flights: ' . $e->getMessage()], 500);
+        }
+    }
+
+
 
     public function updateByAdmin(Request $request)
     {
@@ -300,6 +402,7 @@ class FlightController extends Controller
 
 
 
+
     public function getFlightByUserId(Request $request)
     {
         try {
@@ -314,8 +417,16 @@ class FlightController extends Controller
                 return response()->json(['message' => 'No flights found for this user.'], 404);
             }
 
-            // إرجاع الرحلات
-            return response()->json($flights, 200);
+            // إرجاع الرحلات مع رفقاء الرحلة
+            $flightsWithCompanions = $flights->map(function ($flight) use ($user) {
+                $companions = Flight::where('main_user_id', $flight->flight_id)->get();
+                return [
+                    'flight' => $flight,
+                    'companions' => $companions,
+                ];
+            });
+
+            return response()->json($flightsWithCompanions, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -350,55 +461,26 @@ class FlightController extends Controller
 
 
 
-
-
-
-    // public function getAllFlightsPaginationAndFilter(Request $request)
-    // {
-
-    //     try {
-    //         // إعدادات الفلترة والصفحات
-    //         $perPage = $request->get('per_page', 10); // عدد العناصر في الصفحة (افتراضي 10)
-    //         $nameFilter = $request->get('name'); // فلترة بالاسم إذا تم توفيره
-
-    //         // بناء الاستعلام
-    //         $query = Flight::join('users', 'flights.user_id', '=', 'users.id')
-    //             ->select('flights.*', 'users.name as user_name'); // تحديد الحقول المراد إرجاعها
-
-    //         // إضافة فلتر للاسم إذا تم توفيره
-    //         if ($nameFilter) {
-    //             $query->where('users.name', 'LIKE', '%' . $nameFilter . '%');
-    //         }
-
-    //         // تنفيذ الاستعلام مع pagination
-    //         $flights = $query->paginate($perPage);
-
-    //         // إرجاع النتائج
-    //         return response()->json($flights, 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    // }
-
     public function getAllFlightsPaginationAndFilter(Request $request)
     {
         try {
             // إعدادات الفلترة والصفحات
             $perPage = $request->get('per_page', 10); // عدد العناصر في الصفحة (افتراضي 10)
             $nameFilter = $request->get('name'); // فلترة بالاسم إذا تم توفيره
-    
+
             // بناء الاستعلام
             $query = Flight::join('users', 'flights.user_id', '=', 'users.id')
                 ->select('flights.*', 'users.name as user_name'); // تحديد الحقول المراد إرجاعها
-    
+
             // إضافة فلتر للاسم إذا تم توفيره
             if ($nameFilter) {
                 $query->where('users.name', 'LIKE', '%' . $nameFilter . '%');
             }
-    
+            $query->orderBy('flights.created_at', 'desc'); // ترتيب حسب تاريخ الإنشاء بشكل تنازلي
+
             // تنفيذ الاستعلام مع pagination
             $flights = $query->paginate($perPage);
-    
+
             // إعداد البيانات لتضمين معلومات التصفح
             $pagination = [
                 'total' => $flights->total(),
@@ -406,7 +488,7 @@ class FlightController extends Controller
                 'current_page' => $flights->currentPage(),
                 'total_pages' => $flights->lastPage(),
             ];
-    
+
             // إرجاع النتائج مع معلومات التصفح
             return response()->json([
                 'data' => $flights->items(),
@@ -416,7 +498,7 @@ class FlightController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
+
 
 
 
@@ -573,40 +655,37 @@ class FlightController extends Controller
         return response()->json($flight, 200);
     }
 
-
-
-    public function deleteFlightByUser($flight_id)
+    public function getFlightsWithInvoicesByUserId($userId)
     {
         try {
-            // Get the authenticated user
-            $user = Auth::user();
-
-            // Find the flight by flight_id and user_id
-            $flight = Flight::where('flight_id', $flight_id)
-                ->where('user_id', $user->id)
-                ->where('is_deleted', false) // تأكد من أن الرحلة لم تُحذف سابقًا
-                ->firstOrFail();
-
-            // Mark companions as deleted where main_user_id is equal to the flight_id
-            Flight::where('main_user_id', $flight->flight_id)->update(['is_deleted' => true]);
-
-            // Mark the flight as deleted
-            $flight->is_deleted = true;
-            $flight->save();
-
-            // Send notification to all admins
-            $admins = User::where('isAdmin', true)->get();
-            foreach ($admins as $admin) {
-                $notification = new Notification();
-                $notification->user_id = $admin->id; // Save the admin user_id
-                $notification->message = "Flight {$flight->flight_id} has been marked as deleted by user {$user->id}.";
-                $notification->save();
-                broadcast(new NotificationSent($notification))->toOthers();
+            // Retrieve the first matching flight for the given user ID
+            $firstFlight = Flight::where('user_id', $userId)->first();
+    
+            if (!$firstFlight) {
+                return response()->json(['message' => 'No flights found for the specified user.'], 200);
             }
-
-            return response()->json(['message' => 'Flight and companions marked as deleted successfully'], 200);
+    
+            // Retrieve flights matching user_id
+            $userFlights = Flight::with('invoice')
+                ->where('user_id', $userId)
+                ->get();
+    
+            // Retrieve flights matching main_user_id with the first flight's ID
+            $companionFlights = Flight::with('invoice')
+                ->where('main_user_id', $firstFlight->flight_id)
+                ->get();
+    
+            return response()->json([
+                'user_flights' => $userFlights,
+                'companions' => $companionFlights,
+            ], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            // Handle exceptions
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
+    
+    
+
+
 }

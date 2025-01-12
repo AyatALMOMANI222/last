@@ -15,6 +15,7 @@ class InvoiceFlight extends Model
         'flight_id', // Foreign key
         'total_price',
         'status',
+        'ticketPDF'
     ];
 
     /**
@@ -24,4 +25,9 @@ class InvoiceFlight extends Model
     {
         return $this->belongsTo(Flight::class);
     }
+
+    public function invoice()
+{
+    return $this->hasOne(InvoiceFlight::class, 'flight_id', 'flight_id');
+}
 }

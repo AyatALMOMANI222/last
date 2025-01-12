@@ -23,15 +23,17 @@ class AdditionalOptionsController extends Controller
             'option_name' => 'required|string|max:255',
             'option_description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'multiply_by_nights' => 'required|boolean', // Add validation for multiply_by_nights
         ]);
     
         try {
-            // Create a new additional option without timestamps
+            // Create a new additional option
             $additionalOption = AdditionalOption::create([
                 'trip_id' => $request->trip_id,
                 'option_name' => $request->option_name,
                 'option_description' => $request->option_description,
                 'price' => $request->price,
+                'multiply_by_nights' => $request->multiply_by_nights, // Include the field
             ]);
     
             return response()->json([
@@ -50,6 +52,7 @@ class AdditionalOptionsController extends Controller
             ], 500);
         }
     }
+    
     
 
 

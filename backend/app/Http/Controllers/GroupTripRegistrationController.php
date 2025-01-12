@@ -40,4 +40,5 @@ class GroupTripRegistrationController extends Controller
             'data' => $registration,
         ], 201);
     }
+    
 }

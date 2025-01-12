@@ -26,4 +26,5 @@ class PrivateInvoiceTrip extends Model
     {
         return $this->belongsTo(TripParticipant::class, 'participant_id');
     }
+    
 }

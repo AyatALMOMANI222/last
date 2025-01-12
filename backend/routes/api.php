@@ -77,7 +77,11 @@ Route::post('/store/user', [UserController::class, 'storeAdmin']);
 Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->middleware(['auth:sanctum', 'admin']);
 Route::put('/user/{userId}/update-admin-status', [UserController::class, 'updateAdminStatus'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/users', [UserController::class, 'getAllUsers'])->middleware(['auth:sanctum', 'admin']);
-Route::get('/user', [UserController::class, 'getUserById'])->middleware(['auth:sanctum']);
+Route::get('/user', action: [UserController::class, 'getUserById'])->middleware(['auth:sanctum']);
+Route::get('/users/speaker-att/{conference_id}/{registration_type}', action: [UserController::class, 'getUsersByRegistrationTypeAndConference'])->middleware(['auth:sanctum', 'admin']);
+Route::post('/users/{userId}/certificate', [UserController::class, 'updateCertificate'])->middleware(['auth:sanctum', 'admin']);
+
+Route::delete('/delete/user/{id}', [UserController::class, 'delete'])->middleware(['auth:sanctum', 'admin']);
 
 // notification
 
@@ -145,7 +149,7 @@ Route::get('/speakers/info', [SpeakerController::class, 'getSpeakerInfoByToken']
 Route::get('/speakers/all/{conference_id}', [SpeakerController::class, 'getSpeakersByConference']);
 Route::get('/speakers/{conference_id}', [SpeakerController::class, 'getSpeakerByConferenceId'])->middleware('auth:sanctum');
 
-
+Route::get('/speakers', action: [SpeakerController::class, 'getSpeakers'])->middleware(['auth:sanctum', 'admin']);
 
 // sendNotification for user and admin  and store it in database
 Route::post('/not', [NotificationController::class, 'sendNotification']);
@@ -155,22 +159,34 @@ Route::get('/not', [NotificationController::class, 'getAllNotificationsByUserId'
 Route::post('/visa', [VisaController::class, 'postVisaByUser'])->middleware('auth:sanctum');
 Route::post('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/visa', [VisaController::class, 'getVisaByAuthUser'])->middleware('auth:sanctum');
-// Route::put('/admin/update-visa/{userId}', [VisaController::class, 'updateVisaByAdmin']);
-Route::middleware(['auth:sanctum'])->post('/broadcasting/auth', function (Illuminate\Http\Request $request) {
-    return Broadcast::auth($request);
-});
+Route::post('/visa/pay/{visaId}', [VisaController::class, 'pay'])->middleware('auth:sanctum');
+Route::get('/completed/visa', [VisaController::class, 'getAllCompletedVisas'])->middleware(['auth:sanctum', 'admin']);
+Route::post('/add/visaPDF/{visaId}', [VisaController::class, 'addVisaPdf'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/visa/pending', [VisaController::class, 'getPendingVisas'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/all/visas', [VisaController::class, 'getAllVisas'])->middleware(['auth:sanctum']);
+
+// Route::put('/admin/update-visa/{userId}', [VisaController::class, 'upd addVisaPdfateVisaByAdmin']);
+// Route::middleware(['auth:sanctum'])->post('/broadcasting/auth', function (Illuminate\Http\Request $request) {
+//     return Broadcast::auth($request);
+// });
 
 
 // Flight
 Route::post('/flights', [FlightController::class, 'createFlight'])->middleware('auth:sanctum');
+Route::post('/edit/flight', [FlightController::class, 'editNewFlight'])->middleware('auth:sanctum');
 Route::get('/flight', [FlightController::class, 'getFlightByUserId'])->middleware('auth:sanctum');
 Route::get('/companion-flight/{user_id}', [FlightController::class, 'getFlightByUserIdForCompanion'])->middleware('auth:sanctum');
 Route::get('/user/pag/filter', [FlightController::class, 'getAllFlightsPaginationAndFilter'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/flight/id/{flight_id}', [FlightController::class, 'getFlightById']);
+Route::put('/flights/update/deadLine', [FlightController::class, 'updateDeadlineSAdmin'])->middleware(['auth:sanctum', 'admin']);
+
+
+
 
 Route::post('/user/update-flight', [FlightController::class, 'updateFlightByUser'])->middleware('auth:sanctum');
 Route::post('/admin/update-flight', [FlightController::class, 'updateByAdmin'])->middleware(['auth:sanctum', 'admin']);
 Route::delete('/flights/{flight_id}', [FlightController::class, 'deleteFlightByUser'])->middleware('auth:sanctum');
+Route::delete('/flights/com/2', [FlightController::class, 'deleteFlights'])->middleware('auth:sanctum');
 
 // AvailableFlight
 Route::post('/available-flights', [AvailableFlightController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
@@ -187,6 +203,7 @@ Route::get('/other/accepted-flights', [AcceptedFlightController::class, 'getFlig
 
 
 Route::post('/reservation', [ReservationsController::class, 'createReservation'])->middleware('auth:sanctum');
+Route::post('/edit/reservation', [ReservationsController::class, 'editReservation'])->middleware('auth:sanctum');
 Route::delete('/reservation/{id}', [ReservationsController::class, 'deleteReservation'])->middleware('auth:sanctum');
 Route::put('/reservation/{id}', [ReservationsController::class, 'updateReservation'])->middleware('auth:sanctum');
 Route::get('/reservation', [ReservationsController::class, 'getReservationsByUserId'])->middleware('auth:sanctum');
@@ -218,9 +235,14 @@ Route::post('/group/trip/registrations', [GroupTripRegistrationController::class
 
 // trip-participants
 Route::post('/trip-participants', [TripParticipantController::class, 'addParticipant'])->middleware('auth:sanctum');
+Route::get('/trip-participants/group/all', [GroupTripParticipantController::class, 'getAllParticipants'])->middleware('auth:sanctum');
+
+
 Route::post('/group-trip-participants', [GroupTripParticipantController::class, 'store'])->middleware('auth:sanctum');
 // Route::post('/trip-participants_user_companion', [TripParticipantController::class, 'storeUserAndParticipant'])->middleware('auth:sanctum');
 Route::put('/trip-participants/update', [TripParticipantController::class, 'updateParticipant'])->middleware('auth:sanctum');
+Route::get('/trip-participants/all', [TripParticipantController::class, 'getAllParticipantsWithInvoice'])->middleware(['auth:sanctum', 'admin']);
+Route::get('/user/trip', [TripParticipantController::class, 'getUserTrips'])->middleware('auth:sanctum');
 
 // conference-trips
 Route::post('/conference-trips', [ConferenceTripController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
@@ -267,6 +289,8 @@ Route::post('/dinner-speaker-companion-fee', [DinnerSpeakerCompanionFeeControlle
 Route::get('/dinner-speaker-companion-fees/{dinnerId}', [DinnerSpeakerCompanionFeeController::class, 'getDinnerCompanionFees'])->middleware('auth:sanctum');
 // airport-transfer-bookings
 Route::post('/airport-transfer-bookings', [AirportTransferBookingController::class, 'store'])->middleware('auth:sanctum');
+Route::get('/airport-transfer-bookings/all', [AirportTransferBookingController::class, 'getBookings'])->middleware(['auth:sanctum', 'admin']);
+Route::post('/airport-transfer-bookings/edit/{id}', [AirportTransferBookingController::class, 'edit'])->middleware('auth:sanctum');
 Route::get('/user/airport-transfer-bookings', [AirportTransferBookingController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/admin/all_airport-transfer-bookings', [AirportTransferBookingController::class, 'getAllBooking'])->middleware('auth:sanctum');
 Route::put('/airport-transfer-bookings/{id}', [AirportTransferBookingController::class, 'update'])->middleware('auth:sanctum');
@@ -279,11 +303,13 @@ Route::get('/test/{conferenceId}', [AirportTransferPriceController::class, 'getP
 Route::post('/sponsor', [SponsorController::class, 'store']);
 Route::post('/approve/sponsor', [SponsorController::class, 'approveSponsor'])->middleware(['auth:sanctum', 'admin']);
 
-
+Route::get('/sponsor', [SponsorController::class, 'getAllSponsors']);
+Route::get('/sponsor/all', [SponsorController::class, 'getSponsors'])->middleware(['auth:sanctum', 'admin']);
 
 // attendance
 Route::post('/attendances', [AttendanceController::class, 'storeAttendance']);
-Route::get('/attendances', [AttendanceController::class, 'getAttendanceInfoByToken'])->middleware(['auth:sanctum']);
+Route::get('/attendances', action: [AttendanceController::class, 'getAttendanceInfoByToken'])->middleware(['auth:sanctum']);
+Route::get('/attendances/all', action: [AttendanceController::class, 'getAttendance'])->middleware(['auth:sanctum'])->middleware(['auth:sanctum', 'admin']);
 // group
 Route::post('/register/group', [GroupRegistrationController::class, 'store']);
 Route::put('/group/update/admin/{user_id}', [GroupRegistrationController::class, 'updateGroupByAdminByUserId'])->middleware(['auth:sanctum', 'admin']);
@@ -330,7 +356,9 @@ Route::get('/invoice', [InvoiceController::class, 'getAllInvoices'])->middleware
 
 
 Route::post('/private-invoice-trips', action: [PrivateInvoiceTripController::class, 'store'])->middleware(['auth:sanctum']);
-Route::get('/invoice/trip/{id}', [PrivateInvoiceTripController::class, 'getInvoiceByParticipantId'])->middleware(['auth:sanctum']);
+Route::get( '/invoice/trip/{id}', [PrivateInvoiceTripController::class, 'getInvoiceByParticipantId'])->middleware(['auth:sanctum']);
+
+Route::get( '/user/invoice/trip', [PrivateInvoiceTripController::class, 'getInvoiceByParticipantIds'])->middleware(['auth:sanctum']);
 // TourismTrip
 Route::post('/submit-tourism-trip', [TourismTripController::class, 'create']);
 
@@ -345,7 +373,10 @@ Route::post('/travel/booking', [TravelFormController::class, 'store']);
 
 
 Route::get('/trip/participant/get/{userId}', [TripController::class, 'getUserTripOptions'])->middleware(['auth:sanctum', 'admin']);
-Route::post('/reservation/invoice', [ReservationInvoiceController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/reservation/invoice', action: [ReservationInvoiceController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/reservation/pay/{invoiceId}', action: [ReservationInvoiceController::class, 'pay']);
+Route::get('/reservation/approved', action: [ReservationInvoiceController::class, 'getApprovedInvoices'])->middleware(['auth:sanctum', 'admin']);
+Route::post('/add/confirmation/{invoiceId}', action: [ReservationInvoiceController::class, 'addConfirmationPDF'])->middleware(['auth:sanctum', 'admin']);
 
 
 Route::post('/floor/plan', [StandardBoothPackageController::class, 'store'])->middleware(['auth:sanctum', 'admin']);
@@ -355,7 +386,40 @@ Route::get('/floor/plan/{conferenceId}', [StandardBoothPackageController::class,
 Route::get('/admin/all/excel', [GroupRegistrationController::class, 'getAllActiveRegistrations'])->middleware(['auth:sanctum', 'admin']);
 Route::get('/exhibitions/{type}', [ExhibitionController::class, 'getExhibitionsByType']);
 Route::post('/invoice/flight', [InvoiceFlightController::class, 'store']);
+Route::get('/flights-with-invoices/user/{userId}', [FlightController::class, 'getFlightsWithInvoicesByUserId']);
+
+Route::post('/pay/{invoiceId}', action: [InvoiceFlightController::class, 'pay'])->middleware('auth:sanctum');
+Route::get('/pay/approved', action: [InvoiceFlightController::class, 'getApprovedInvoices'])->middleware(['auth:sanctum', 'admin']);
+
+Route::post('/add/ticket/{invoiceId}', action: [InvoiceFlightController::class, 'addTicketPdf'])->middleware(['auth:sanctum', 'admin']);
+
+
 Route::get('/confe/all', [ConferenceController::class, 'index']);
 
 
 Route::get('/get/image', [ExhibitionImagesController::class, 'getAllImages']);
+
+Route::get('/invoice-flight/{flightId}', [InvoiceFlightController::class, 'getByFlightId']);
+Route::get('/conference/{conference_id}/online-speakers', [SpeakerController::class, 'getOnlineParticipants'])->middleware(['auth:sanctum', 'admin']);
+
+
+// paypal
+// Route::get('paypal/create-payment', [PayPalController::class, 'createPayment']);
+// Route::get('paypal/success', [PayPalController::class, 'success']);
+// Route::get('paypal/cancel', [PayPalController::class, 'cancel']);
+
+
+Route::post('/speakers/link', [SpeakerController::class, 'storeLink']);
+Route::get('/speakers/user/link', [SpeakerController::class, 'getLinkByToken'])->middleware('auth:sanctum');
+
+Route::get('/reservation/room', [ReservationsController::class, 'getAllReservationsWithRooms'])->middleware(['auth:sanctum', 'admin']);
+
+// visa
+
+
+
+
+// Route::post('paypal/visa/pay', [VisaController::class, 'pay'])->name('visa.pay');
+// Route::get('/paypal/return/{visa}', [VisaController::class, 'return'])->name('paypal.return');
+// Route::get('/paypal/cancel/{visa}', [VisaController::class, 'cancel'])->name('paypal.cancel');
+

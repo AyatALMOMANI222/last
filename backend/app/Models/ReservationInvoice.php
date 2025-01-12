@@ -20,7 +20,8 @@ class ReservationInvoice extends Model
         'total',
         'status',
         'late_check_out_price',
-        'early_check_in_price'
+        'early_check_in_price',
+        'confirmationPDF'
     ];
 
     // تعريف العلاقة مع جدول الغرف

@@ -19,6 +19,12 @@ class AvailableFlight extends Model
         'departure_time',
         'price',
         'is_free',
+        'departure_flight_number',  // رقم رحلة المغادرة
+        'departure_airport',        // مطار المغادرة
+        'arrival_flight_number',    // رقم رحلة الوصول
+        'arrival_date',             // تاريخ الوصول
+        'arrival_time',             // وقت الوصول
+        'arrival_airport',          // مطار الوصول
     ];
 
     public function flight()

@@ -141,11 +141,11 @@ class ConferenceController extends Controller
             'end_date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             // 'status' => 'nullable|in:upcoming,past',
-            'image' => 'nullable|image',
-            'first_announcement_pdf' => 'nullable|file|mimes:pdf',
-            'second_announcement_pdf' => 'nullable|file|mimes:pdf',
-            'conference_brochure_pdf' => 'nullable|file|mimes:pdf',
-            'conference_scientific_program_pdf' => 'nullable|file|mimes:pdf',
+            'image' => 'nullable',
+            'first_announcement_pdf' => 'nullable',
+            'second_announcement_pdf' => 'nullable',
+            'conference_brochure_pdf' => 'nullable',
+            'conference_scientific_program_pdf' => 'nullable',
             'scientific_topics' => 'nullable|string',
             'prices' => 'nullable|array',
             'prices.*.price_type' => 'required_with:prices|string|max:255',
@@ -231,6 +231,9 @@ class ConferenceController extends Controller
     }
 
 
+
+
+    
     public function getAllConferences(Request $request)
     {
         try {
@@ -281,6 +284,9 @@ class ConferenceController extends Controller
             ], 500);
         }
     }
+
+
+    
     public function getAllConferencesUpcoming(Request $request)
     {
         try {
@@ -288,7 +294,7 @@ class ConferenceController extends Controller
             $currentDate = new \DateTime();
 
             // جلب جميع المؤتمرات
-            $allConferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])->get();
+            $allConferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices' ])->get();
 
             // جلب المؤتمرات القادمة فقط (التي لم ينتهي تاريخها بعد)
             $upcomingConferences = Conference::with(['images', 'committeeMembers', 'scientificTopics', 'prices'])
@@ -310,6 +316,16 @@ class ConferenceController extends Controller
             ], 500);
         }
     }
+
+
+
+
+
+
+
+
+
+
 
     public function getConferenceById($id)
     {

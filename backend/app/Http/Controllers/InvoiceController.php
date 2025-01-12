@@ -9,6 +9,7 @@ use App\Models\BoothCost;
 use App\Models\SponsorshipOption;
 use App\Models\SponsorInvoice;
 use App\Models\Sponsorship;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,20 +21,25 @@ class InvoiceController extends Controller
         try {
             $validated = $request->validate([
                 'user_id' => 'required|exists:users,id',
-                'user_name' => 'required|string|max:255',
                 'conference_sponsorship_option_ids' => 'nullable|array',
                 'booth_cost_ids' => 'nullable|array',
                 'sponsorship_option_ids' => 'nullable|array',
                 'conference_id' => 'required|exists:conferences,id',
                 'additional_cost_for_shell_scheme_booth' => 'nullable|boolean',
                 'exhibit_number' => 'nullable|integer', // إضافة رقم المعرض
-
+                'square_meters' => 'nullable|integer', // إضافة قيمة square_meters
+                'shell_scheme_price' => 'nullable', // إضافة قيمة shell_scheme_price
             ]);
+            $user = User::find($validated['user_id']);
+            if (!$user) {
+                return response()->json(['message' => 'User not found!'], 404);
+            }
+            
+            $userName = $user->name;
             if ($validated['exhibit_number'] && SponsorInvoice::where('exhibit_number', $validated['exhibit_number'])->exists()) {
                 return response()->json(['message' => 'The exhibit number already exists. Please enter a unique number.'], 422);
             }
-            
-            
+    
             // استرجاع المؤتمر بناءً على ID المؤتمر
             $conference = Conference::find($validated['conference_id']);
             
@@ -51,13 +57,11 @@ class InvoiceController extends Controller
                     ->get();
                 $conferenceSponsorshipTotal = $conferenceSponsorshipOptions->sum(function ($option) {
                     return floatval($option->price); // تحويل إلى عدد عشري
-                        
                 });
                 // إضافة القيمة الإجمالية لخيار الرعاية
                 $totalPrice += $conferenceSponsorshipTotal;
-
             }
-            
+    
             // حساب تكلفة البوث
             if ($validated['booth_cost_ids']) {
                 $boothCosts = BoothCost::whereIn('id', $validated['booth_cost_ids'])
@@ -75,39 +79,33 @@ class InvoiceController extends Controller
                 $sponsorshipOptions = SponsorshipOption::whereIn('id', $validated['sponsorship_option_ids'])
                     ->where('conference_id', $validated['conference_id'])
                     ->get();
-            
-                // تحقق من محتويات الـ $sponsorshipOptions
-                // dd($sponsorshipOptions);  // هنا يمكنك التحقق من الخيارات المسترجعة
                 
                 $sponsorshipOptionTotal = $sponsorshipOptions->sum(function ($option) {
-                    // التحقق من أن القيمة ليست null، وإذا كانت null نعتبرها 0
-                    // dd($option->price); // هنا تحقق من القيمة التي يتم جمعها
                     return $option->price !== null ? floatval($option->price) : 0;
                 });
-            
-                // تحقق من المجموع الكلي
-                // dd($sponsorshipOptionTotal);  // هنا تحقق من المجموع الذي يتم حسابه
                 $totalPrice += $sponsorshipOptionTotal;
             }
-            
-            
     
             // إذا كان هناك تكلفة إضافية لبوث النظام الصدفي
             if ($validated['additional_cost_for_shell_scheme_booth'] === true) {
-                $totalPrice += 50; // إضافة 50 دولار إذا كانت القيمة true
+                if (isset($validated['square_meters']) && isset($validated['shell_scheme_price'])) {
+                    $totalPrice += $validated['square_meters'] * $validated['shell_scheme_price']; // ضرب square_meters و shell_scheme_price وإضافته للمجموع
+                }
             }
     
             // تخزين البيانات في قاعدة البيانات
             $invoice = new SponsorInvoice();
-            $invoice->user_name = $validated['user_name'];
+            $invoice->user_name = $userName; // استخدام user_name المسترجع من جدول users
             $invoice->total_amount = number_format($totalPrice, 2, '.', ''); // تأكيد أن المجموع هو قيمة عددية مع تنسيق
             $invoice->conference_sponsorship_option_ids = json_encode($validated['conference_sponsorship_option_ids'] ?? []);
             $invoice->booth_cost_ids = json_encode($validated['booth_cost_ids'] ?? []);
             $invoice->sponsorship_option_ids = json_encode($validated['sponsorship_option_ids'] ?? []);
             $invoice->conference_id = $validated['conference_id'];
             $invoice->user_id = $validated['user_id'];
+            $invoice->shell_scheme_price = $validated['shell_scheme_price'];
+            $invoice->square_meters = $validated['square_meters'];
             $invoice->exhibit_number = $validated['exhibit_number'] ?? null; // إضافة رقم المعرض
-
+    
             $invoice->save();
     
             // إرجاع استجابة بنجاح
@@ -124,38 +122,10 @@ class InvoiceController extends Controller
             ], 500);
         }
     }
-
-
-    // public function getInvoiceByUserIdAndConferenceId($conferenceId)
-    // {
-    //     try {
-    //         // الحصول على user_id من التوكن
-    //         $userId = Auth::id();  // أو Auth::user()->id في حال كان التوثيق بواسطة Sanatum أو JWT
     
-    //         // استرجاع الفواتير بناءً على user_id و conference_id
-    //         $invoices = SponsorInvoice::where('user_id', $userId)
-    //                                   ->where('conference_id', $conferenceId)
-    //                                   ->get();
-            
-    //         // التحقق إذا كانت هناك فواتير للمستخدم في المؤتمر المحدد
-    //         if ($invoices->isEmpty()) {
-    //             return response()->json(['message' => 'No invoices found for this user in the specified conference.'], 404);
-    //         }
-    
-    //         // إرجاع الفواتير للمستخدم في المؤتمر المحدد
-    //         return response()->json([
-    //             'message' => 'Invoices retrieved successfully!',
-    //             'invoices' => $invoices
-    //         ], 200);
-            
-    //     } catch (Exception $e) {
-    //         // التعامل مع الأخطاء وإرجاع رسالة مفصلة للمستخدم
-    //         return response()->json([
-    //             'message' => 'An error occurred while retrieving the invoices.',
-    //             'error' => $e->getMessage()
-    //         ], 500);
-    //     }
 
+
+   
     // }
     public function getInvoiceByUserIdAndConferenceId($conferenceId)
 {
@@ -189,13 +159,16 @@ class InvoiceController extends Controller
                 'conference_sponsorship_details' => $conferenceSponsorshipDetails,
                 'booth_cost_details' => $boothCostDetails,
                 'sponsorship_option_details' => $sponsorshipOptionDetails,
+                'shell_scheme_price' => $invoice->shell_scheme_price,  // إضافة هذا الحقل
+                'square_meters' => $invoice->square_meters,    
             ];
         });
 
         // إرجاع البيانات المجهزة
         return response()->json([
             'message' => 'Invoices retrieved successfully!',
-            'invoices' => $invoicesWithDetails
+            'invoices' => $invoicesWithDetails,
+
         ], 200);
 
     } catch (Exception $e) {

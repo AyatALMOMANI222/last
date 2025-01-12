@@ -9,10 +9,10 @@ class TripParticipant extends Model
 {
     use HasFactory;
 
-    // تعريف جدول البيانات
+    // Define the table name
     protected $table = 'trip_participants';
 
-    // تحديد الحقول القابلة للتعبئة
+    // Specify fillable fields
     protected $fillable = [
         'user_id',
         'main_user_id',
@@ -23,14 +23,13 @@ class TripParticipant extends Model
         'whatsapp_number',
         'is_companion',
         'include_accommodation',
-       
         'accommodation_stars',
         'nights_count',
         'check_in_date',
         'check_out_date',
     ];
 
-    // تعريف العلاقات
+    // Define relationships
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -40,8 +39,20 @@ class TripParticipant extends Model
     {
         return $this->belongsTo(Trip::class);
     }
+
     public function tripOptionsParticipants()
     {
         return $this->hasMany(TripOptionsParticipant::class);
+    }
+
+    public function privateInvoiceTrip()
+    {
+        return $this->hasOne(PrivateInvoiceTrip::class, 'participant_id');
+    }
+
+    // Add companions relationship
+    public function companions()
+    {
+        return $this->hasMany(TripParticipant::class, 'main_user_id');
     }
 }

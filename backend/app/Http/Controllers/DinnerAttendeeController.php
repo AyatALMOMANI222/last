@@ -9,6 +9,7 @@ use App\Models\DinnerAttendeesInvoice;
 use App\Models\Notification;
 use App\Models\Speaker;
 use App\Models\User;
+use App\Models\Visa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -246,42 +247,57 @@ class DinnerAttendeeController extends Controller
         }
     }
     
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
-            // البحث عن سجل DinnerAttendee باستخدام المعرف المحدد
+            // استخراج الحضور (DinnerAttendee) باستخدام $id
             $dinnerAttendee = DinnerAttendee::findOrFail($id);
     
-        // استخرج speaker_id
-        $speakerId = $dinnerAttendee->speaker_id;
-
-        // ابحث عن سجل Speaker المرتبط واحصل على user_id
-        $speaker = Speaker::where('id', $speakerId)->firstOrFail();
-        $userId = $speaker->user_id;
-
-        // تحقق مما إذا كان المستخدم الحالي هو مالك الـ user_id
-        if ($userId !== Auth::id()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'ليس لديك الإذن لحذف هذا المشارك.',
-            ], 403); // 403 تعني Forbidden
-        }
+            // استخدام speaker_id للبحث عن السبيكر في جدول Speaker
+            $speaker = Speaker::findOrFail($dinnerAttendee->speaker_id);
     
-            // حذف السجل
+            // استخراج user_id من جدول Speaker
+            $user = User::findOrFail($speaker->user_id);
+    
+            // حذف السجل من جدول DinnerAttendeesInvoice
+            DinnerAttendeesInvoice::where('dinner_attendees_id', $dinnerAttendee->id)->delete();
+    
+            // حذف السجل من جدول DinnerAttendee
             $dinnerAttendee->delete();
+    
+            // إرسال إشعار لجميع المشرفين
+            $admins = User::where('isAdmin', true)->get();
+            $conference = Conference::findOrFail($dinnerAttendee->conference_id);
+    
+            foreach ($admins as $admin) {
+                $notificationMessage = 'The user ' . $user->name . ' (Speaker: ' . $speaker->name . ') has canceled their dinner registration for the conference: ' . $conference->name;
+    
+                $notification = Notification::create([
+                    'user_id' => $admin->id,
+                    'register_id' => $user->id,
+                    'conference_id' => $conference->id,
+                    'message' => $notificationMessage,
+                    'is_read' => false,
+                ]);
+    
+                // بث الإشعار
+                broadcast(new NotificationSent($notification))->toOthers();
+            }
     
             // استجابة عند النجاح
             return response()->json([
                 'success' => true,
-                'message' => 'تم حذف المشارك بنجاح.',
-            ], 200); // 200 تعني OK
+                'message' => 'The dinner registration and associated invoice have been successfully canceled.',
+            ], 200);
     
         } catch (\Exception $e) {
             // استجابة عند حدوث خطأ
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ أثناء حذف المشارك: ' . $e->getMessage(),
-            ], 500); // 500 تعني Internal Server Error
+                'message' => 'An error occurred while canceling the dinner registration.',
+                'error' => $e->getMessage(), // عرض رسالة الخطأ
+                'trace' => config('app.debug') ? $e->getTraceAsString() : null, // عرض أثر الخطأ إذا كان في وضع التطوير
+            ], 500);
         }
     }
 
@@ -384,7 +400,55 @@ class DinnerAttendeeController extends Controller
             ], 500); // 500 means Internal Server Error
         }
     }
-    
+    public function pay(Request $request, $visaId)
+{
+    try {
+        // التحقق من وجود السجل في جدول الفيزا
+        $visa = Visa::find($visaId);
+
+        if (!$visa) {
+            return response()->json(['error' => 'Visa not found.'], 404);
+        }
+
+        // تحديث حالة الدفع إلى "approved" وإدخال تاريخ الدفع
+        $visa->payment_status = 'approved';
+        $visa->payment_date = now(); // تعيين تاريخ الدفع إلى الآن
+        $visa->save();
+
+        // جلب معلومات المستخدم والمؤتمر
+        $user = User::find($visa->user_id);
+        $conference = Conference::find($visa->conference_id);
+
+        if (!$conference || !$user) {
+            return response()->json(['error' => 'Invalid user or conference data.'], 404);
+        }
+
+        // إرسال إشعار إلى الإداريين
+        $admins = User::where('isAdmin', true)->get();
+
+        foreach ($admins as $admin) {
+            $notificationMessage = 'The user ' . $user->name . ' has completed the visa payment for the conference: ' . $conference->title;
+
+            $notification = Notification::create([
+                'user_id' => $admin->id,
+                'register_id' => $user->id,
+                'conference_id' => $conference->id,
+                'message' => $notificationMessage,
+                'is_read' => false,
+            ]);
+
+            // بث الإشعار
+            broadcast(new NotificationSent($notification))->toOthers();
+        }
+
+        return response()->json(['success' => 'Payment status updated to approved and notifications sent to admins.', 'visa' => $visa]);
+
+    } catch (\Exception $e) {
+        // معالجة الأخطاء
+        return response()->json(['error' => 'An error occurred while processing the payment.', 'message' => $e->getMessage()], 500);
+    }
+}
+
     
 
     

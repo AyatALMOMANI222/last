@@ -33,4 +33,8 @@ class Sponsor extends Model
             'password' => 'hashed',
         ];
     }
+    public function sponsorInvoices()
+    {
+        return $this->hasMany(SponsorInvoice::class, 'user_id', 'user_id');
+    }
 }

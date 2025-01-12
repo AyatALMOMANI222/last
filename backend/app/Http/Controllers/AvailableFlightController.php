@@ -8,145 +8,11 @@ use Illuminate\Http\Request;
 use App\Models\AvailableFlight;
 use App\Models\Flight;
 use App\Models\Notification;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class AvailableFlightController extends Controller
 {
-    // public function store(Request $request)
-    // {
-    //     try {
-    //         $validatedData = $request->validate([
-    //             'flight_id' => 'required|exists:flights,flight_id',  // تأكد من أن الرحلة موجودة
-    //             'departure_date' => 'required|date',
-    //             'departure_time' => 'required',
-    //             'price' => 'required|numeric|min:0',
-    //             'is_free' => 'boolean',
-    //         ]);
-
-    //         // إعداد المنطقة الزمنية إلى آسيا/عمان
-    //         date_default_timezone_set('Asia/Amman');
-
-    //         // استرجاع الرحلة المرتبطة بـ flight_id من جدول flights
-    //         $flight = Flight::where('flight_id', $validatedData['flight_id'])->first();
-
-    //         // التحقق إذا كان هناك user_id في هذه الرحلة
-    //         if ($flight) {
-    //             // إنشاء رحلة متاحة
-    //             $availableFlight = AvailableFlight::create([
-    //                 'flight_id' => $validatedData['flight_id'],
-    //                 'departure_date' => $validatedData['departure_date'],
-    //                 'departure_time' => $validatedData['departure_time'],
-    //                 'price' => $validatedData['price'],
-    //                 'is_free' => $validatedData['is_free'] ?? false,
-    //                 'created_at' => now(), // إضافة حقل created_at مع الوقت الحالي
-    //             ]);
-
-    //             // تحقق من وجود user_id قبل إرسال الإشعار
-    //             if (!empty($flight->user_id)) {
-    //                 // إرسال الإشعار
-    //                 $message = 'You can now visit the website to check the available flight options within the requested dates. Please visit the site as soon as possible and select the appropriate flight to proceed with the necessary arrangements.';
-    //                 $userNotification = Notification::create([
-    //                     'user_id' => $flight->user_id,  // إرسال الإشعار إلى user_id
-    //                     'message' => $message,
-    //                     'is_read' => false,
-    //                     'register_id' => $flight->user_id,  // تعيين register_id كـ user_id
-    //                 ]);
-    //                 broadcast(new NotificationSent($userNotification));
-    //             }
-
-    //             return response()->json([
-    //                 'message' => 'Available flight created successfully' . (empty($flight->user_id) ? ', but no notification sent as the user is not assigned.' : ''),
-    //                 'available_flight' => $availableFlight,
-    //             ], 201);
-    //         } else {
-    //             // إذا لم توجد الرحلة، ارجع رسالة خطأ
-    //             return response()->json([
-    //                 'message' => 'Flight not found.',
-    //             ], 404);
-    //         }
-
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         return response()->json([
-    //             'error' => 'Validation failed',
-    //             'messages' => $e->errors(),  
-    //         ], 422);
-
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'error' => 'An error occurred',
-    //             'message' => $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
-    // public function storeAll(Request $request)
-    // {
-    //     try {
-    //         $validatedData = $request->validate([
-    //             'flights' => 'required|array',
-    //             'flights.*.flight_id' => 'required|exists:flights,flight_id',
-    //             'flights.*.data' => 'required|array',  // إزالة التقييد بعدد الرحلات
-    //             'flights.*.data.*.departure_date' => 'required|date',
-    //             'flights.*.data.*.departure_time' => 'required',
-    //             'flights.*.data.*.price' => 'required|numeric|min:0',
-    //             'flights.*.data.*.is_free' => 'boolean',
-    //         ]);
-
-    //         $availableFlights = [];
-    //         $notifications = [];
-
-    //         foreach ($validatedData['flights'] as $flightData) {
-    //             $flight = Flight::where('flight_id', $flightData['flight_id'])->first();
-
-    //             if ($flight) {
-    //                 foreach ($flightData['data'] as $tripData) {
-    //                     date_default_timezone_set('Asia/Amman');
-
-    //                     // إنشاء رحلة متاحة
-    //                     $availableFlight = AvailableFlight::create([
-    //                         'flight_id' => $flightData['flight_id'],
-    //                         'departure_date' => $tripData['departure_date'],
-    //                         'departure_time' => $tripData['departure_time'],
-    //                         'price' => $tripData['price'],
-    //                         'is_free' => $tripData['is_free'] ?? false,
-    //                         'created_at' => now(),
-    //                     ]);
-
-    //                     $availableFlights[] = $availableFlight;
-    //                 }
-
-    //                 // تحقق من وجود user_id لإرسال الإشعار
-    //                 if (!empty($flight->user_id)) {
-    //                     $message = 'Check available flights on the website and select your option to proceed.';
-    //                     $userNotification = Notification::create([
-    //                         'user_id' => $flight->user_id,
-    //                         'message' => $message,
-    //                         'is_read' => false,
-    //                         'register_id' => $flight->user_id,
-    //                     ]);
-
-    //                     $notifications[] = $userNotification;
-    //                     broadcast(new NotificationSent($userNotification));
-    //                 }
-    //             }
-    //         }
-
-    //         return response()->json([
-    //             'message' => 'Available flights created successfully.',
-    //             'available_flights' => $availableFlights,
-    //             'notifications' => $notifications,
-    //         ], 201);
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         return response()->json([
-    //             'error' => 'Validation failed',
-    //             'messages' => $e->errors(),
-    //         ], 422);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'error' => 'An error occurred',
-    //             'message' => $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
     public function storeAll(Request $request)
     {
         try {
@@ -155,54 +21,76 @@ class AvailableFlightController extends Controller
                 'flights' => 'required|array',
                 'flights.*.flight_id' => 'required|exists:flights,flight_id',
                 'flights.*.data' => 'nullable|array', // جعل data غير إجباري
-                'flights.*.data.*.departure_date' => 'required_if:flights.*.data,!=,null|date', // جعل departure_date إجباري إذا كان هناك data
-                'flights.*.data.*.departure_time' => 'required_if:flights.*.data,!=,null',
-                'flights.*.data.*.price' => 'required_if:flights.*.data,!=,null|numeric|min:0',
-                'flights.*.data.*.is_free' => 'nullable|boolean',
+                'flights..data..departure_date' => 'required_if:flights.*.data,!=,null|date', // جعل departure_date إجباري إذا كان هناك data
+                'flights..data..departure_time' => 'required_if:flights.*.data,!=,null',
+                'flights..data..departure_flight_number' => 'nullable|string', // Optional
+                'flights..data..departure_airport' => 'nullable|string', // Optional
+                'flights..data..arrival_flight_number' => 'nullable|string', // Optional
+                'flights..data..arrival_date' => 'nullable|date', // Optional
+                'flights..data..arrival_time' => 'nullable', // Optional
+                'flights..data..arrival_airport' => 'nullable|string', // Optional    
+                'flights..data..price' => 'required_if:flights.*.data,!=,null|numeric|min:0',
+                'flights..data..is_free' => 'nullable|boolean',
                 'flights.*.main_user_id' => 'nullable|exists:users,id', // Optional main_user_id validation
             ]);
-    
+
             $availableFlights = [];
             $notifications = [];
-    
+
             foreach ($validatedData['flights'] as $flightData) {
                 $flight = Flight::where('flight_id', $flightData['flight_id'])->first();
-    
+
                 if ($flight) {
                     if (isset($flightData['data'])) { // تحقق إذا كانت data موجودة
                         foreach ($flightData['data'] as $tripData) {
                             date_default_timezone_set('Asia/Amman');
-    
+
                             // Create an available flight entry
                             $availableFlight = AvailableFlight::create([
                                 'flight_id' => $flightData['flight_id'],
-                                'departure_date' => $tripData['departure_date'],
-                                'departure_time' => $tripData['departure_time'],
-                                'price' => $tripData['price'],
+                                'departure_date' => $tripData['departure_date'] ?? null,
+                                'departure_time' => $tripData['departure_time'] ?? null,
+                                'departure_flight_number' => $tripData['departure_flight_number'] ?? null,
+                                'departure_airport' => $tripData['departure_airport'] ?? null,
+                                'arrival_flight_number' => $tripData['arrival_flight_number'] ?? null,
+                                'arrival_date' => $tripData['arrival_date'] ?? null,
+                                'arrival_time' => $tripData['arrival_time'] ?? null,
+                                'arrival_airport' => $tripData['arrival_airport'] ?? null,
+                                'price' => $tripData['price'] ?? null,
                                 'is_free' => $tripData['is_free'] ?? false,
                                 'created_at' => now(),
                             ]);
-    
+
                             $availableFlights[] = $availableFlight;
                         }
                     }
-    
+
                     // Check if main_user_id is provided for sending notification
-                    if (!empty($flightData['main_user_id'])) {
-                        $message = 'Check available flights on the website and select your option to proceed.';
-                        $userNotification = Notification::create([
-                            'user_id' => $flightData['main_user_id'],
-                            'message' => $message,
-                            'is_read' => false,
-                            'register_id' => $flightData['main_user_id'],
-                        ]);
-    
-                        $notifications[] = $userNotification;
-                        broadcast(new NotificationSent($userNotification)); // Notify user
+                    foreach ($validatedData['flights'] as $flightData) {
+                        $flight = Flight::where('flight_id', $flightData['flight_id'])->first();
+
+                        if ($flight) {
+                            // ابحث عن user_id المرتبط بـ flight_id (مثال باستخدام علاقة بين الطائرات والمستخدمين)
+                            $user = $flight->user; // أو استخدم الكود المناسب للعثور على الـ user_id المرتبط بالـ flight
+
+                            if ($user && !empty($user->id)) {
+                                // إرسال إشعار للمستخدم إذا كان user_id موجودًا
+                                $message = 'Check available flights on the website and select your option to proceed.';
+                                $userNotification = Notification::create([
+                                    'user_id' => $user->id,  // استخدم id من الـ user الذي تم العثور عليه
+                                    'message' => $message,
+                                    'is_read' => false,
+                                    'register_id' => $user->id,
+                                ]);
+
+                                $notifications[] = $userNotification;
+                                broadcast(new NotificationSent($userNotification)); // Notify user
+                            }
+                        }
                     }
                 }
             }
-    
+
             return response()->json([
                 'message' => 'Available flights created successfully.',
                 'available_flights' => $availableFlights,
@@ -220,7 +108,6 @@ class AvailableFlightController extends Controller
             ], 500);
         }
     }
-    
 
 
     public function getAvailableFlightByFlightId($flight_id)

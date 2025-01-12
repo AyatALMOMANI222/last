@@ -18,7 +18,7 @@ class Flight extends Model
         'user_id',
         'is_companion',
         'main_user_id',
-        'passport_image',
+        'passportImage',
         'departure_airport',
         'arrival_airport',
         'departure_date',
@@ -99,5 +99,8 @@ class Flight extends Model
         }
     });
 }
-
+public function invoice()
+{
+    return $this->hasOne(InvoiceFlight::class, 'flight_id', 'flight_id');
+}
 }

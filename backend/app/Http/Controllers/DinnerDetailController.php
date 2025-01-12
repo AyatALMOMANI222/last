@@ -28,7 +28,13 @@ class DinnerDetailController extends Controller
             'duration' => 'required|integer|min:1',
             'dress_code' => 'required|string|max:255',
         ]);
-    
+        $existingDinner = DinnerDetail::where('conference_id', $request->conference_id)
+        ->first();
+
+    if ($existingDinner) {
+        return response()->json(['message' => 'You have already added a dinner for this conference.'], 400);
+    }
+
         try {
             $dinnerDetail = DinnerDetail::create(array_merge($validatedData, ['user_id' => $userId]));
             

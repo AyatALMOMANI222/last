@@ -13,12 +13,17 @@ class CommitteeMemberController extends Controller
         $validatedData = $request->validate([
             'members' => 'required|array',
             'members.*.name' => 'required|string|max:255',
-            'members.*.committee_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'members.*.committee_image' => 'nullable',
             'members.*.conference_id' => 'required|exists:conferences,id',
         ]);
     
+        // Step 1: Remove all committee members with the same conference_id from the first member
+        $conferenceId = $validatedData['members'][0]['conference_id'];
+        CommitteeMember::where('conference_id', $conferenceId)->delete();
+    
         $committeeMembers = [];
     
+        // Step 2: Create the new committee members
         foreach ($validatedData['members'] as $index => $memberData) {
             // Handle the image upload if it exists
             $imagePath = null; 
@@ -38,6 +43,7 @@ class CommitteeMemberController extends Controller
     
         return response()->json(['message' => 'Committee members added successfully', 'data' => $committeeMembers], 201);
     }
+    
     
 
     public function getByConference($conference_id)

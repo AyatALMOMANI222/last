@@ -16,6 +16,9 @@ class StandardBoothPackage extends Model
     protected $fillable = [
         'conference_id',
         'floor_plan',
+        'shell_scheme_price_per_sqm',
+        'space_only_stand_depth',
+        'space_only_stand_price_usd'
     ];
 
     // العلاقة مع جدول conferences

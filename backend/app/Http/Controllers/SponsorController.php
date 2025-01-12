@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Events\NotificationSent;
+use App\Models\BoothCost;
 use App\Models\ConferenceUser;
 use App\Models\Notification;
 use App\Models\Sponsor;
+use App\Models\SponsorshipOption;
 use App\Models\User;
 use App\Notifications\EmailNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 
@@ -174,8 +177,145 @@ class SponsorController extends Controller
         }
     }
     
+    public function getAllSponsors()
+    {
+        try {
+            // جلب كل الsponsors مع ربط جدول المستخدمين باستخدام user_id
+            $sponsors = DB::table('sponsors')
+                ->join('users', 'sponsors.user_id', '=', 'users.id') // إجراء JOIN بين جدول sponsors وجدول users
+                ->select('sponsors.*', 'users.conference_id') // تحديد الأعمدة المطلوبة من كلا الجدولين
+                ->get();
+    
+            return response()->json([
+                'message' => 'Sponsors fetched successfully.',
+                'sponsors' => $sponsors,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch sponsors.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 
-
+    // public function getSponsors(Request $request)
+    // {
+    //     try {
+    //         // Get the 'page' query parameter, default to 1 if not provided
+    //         $page = $request->query('page', 1);
+    
+    //         // Define the number of sponsors per page
+    //         $sponsorsPerPage = 3;
+    
+    //         // Calculate the offset for the current page
+    //         $offset = ($page - 1) * $sponsorsPerPage;
+    
+    //         // Fetch total sponsor count for pagination
+    //         $totalSponsors = Sponsor::count();
+    
+    //         // Fetch sponsors along with related user and invoice data
+    //         $sponsors = Sponsor::with(['user', 'sponsorInvoices']) // Include user and invoices
+    //             ->skip($offset)
+    //             ->take($sponsorsPerPage)
+    //             ->get();
+    
+    //         // Calculate the total number of pages
+    //         $totalPages = ceil($totalSponsors / $sponsorsPerPage);
+    
+    //         // Prepare the response data
+    //         $response = [
+    //             'message' => 'Sponsors fetched successfully.',
+    //             'sponsors' => $sponsors,
+    //             'currentPage' => $page,
+    //             'totalPages' => $totalPages,
+    //         ];
+    
+    //         // Return the JSON response
+    //         return response()->json($response, 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Failed to fetch sponsors.',
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+    
+    public function getSponsors(Request $request)
+    {
+        try {
+            // Get the 'page' query parameter, default to 1 if not provided
+            $page = $request->query('page', 1);
+        
+            // Define the number of sponsors per page
+            $sponsorsPerPage = 3;
+        
+            // Calculate the offset for the current page
+            $offset = ($page - 1) * $sponsorsPerPage;
+        
+            // Fetch total sponsor count for pagination
+            $totalSponsors = Sponsor::count();
+        
+            // Fetch sponsors along with related user and invoice data
+            $sponsors = Sponsor::with([
+                'user',
+                'sponsorInvoices' => function($query) {
+                    // Include specific relationships for sponsorInvoices
+                    $query->with([
+                        'sponsorshipOptions', // Only the sponsorship options related to invoice
+                        'boothCosts' // Only the booth costs related to invoice
+                    ]);
+                }
+            ])
+            ->skip($offset)
+            ->take($sponsorsPerPage)
+            ->get();
+    
+            // Add custom logic to resolve sponsorship options and booth costs based on the JSON data
+            foreach ($sponsors as $sponsor) {
+                // Ensure sponsorInvoices exists and is not empty
+                if ($sponsor->sponsorInvoices->isNotEmpty()) {
+                    foreach ($sponsor->sponsorInvoices as $sponsorInvoice) {
+                        // Decode the JSON arrays for sponsorship_option_ids and booth_cost_ids
+                        $sponsorshipOptionIds = json_decode($sponsorInvoice->sponsorship_option_ids, true);
+                        $boothCostIds = json_decode($sponsorInvoice->booth_cost_ids, true);
+    
+                        // Fetch the corresponding sponsorship options if they exist
+                        if ($sponsorshipOptionIds) {
+                            $sponsorshipOptions = SponsorshipOption::whereIn('id', $sponsorshipOptionIds)->get();
+                            $sponsorInvoice->sponsorshipOptions = $sponsorshipOptions;
+                        }
+    
+                        // Fetch the corresponding booth costs if they exist
+                        if ($boothCostIds) {
+                            $boothCosts = BoothCost::whereIn('id', $boothCostIds)->get();
+                            $sponsorInvoice->boothCosts = $boothCosts;
+                        }
+                    }
+                }
+            }
+        
+            // Calculate the total number of pages
+            $totalPages = ceil($totalSponsors / $sponsorsPerPage);
+        
+            // Prepare the response data
+            $response = [
+                'message' => 'Sponsors fetched successfully.',
+                'sponsors' => $sponsors,
+                'currentPage' => $page,
+                'totalPages' => $totalPages,
+            ];
+        
+            // Return the JSON response
+            return response()->json($response, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch sponsors.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 
 
 }

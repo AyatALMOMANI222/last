@@ -22,7 +22,8 @@ return new class extends Migration
             $table->boolean('additional_cost_for_shell_scheme_booth')->default(false)->nullable(); // تكلفة إضافية لبوث النظام الصدفي
             $table->foreignId('conference_id')->constrained('conferences')->onDelete('cascade'); // ربط الفاتورة بالمؤتمر
             $table->decimal('total_amount', 10, 2)->nullable(); // إجمالي المبلغ: المجموع النهائي لجميع التكاليف
-            
+            $table->integer('square_meters')->nullable(); // إضافة الحقل الجديد
+
             // Adding the Exhibit Number column (nullable and type integer)
             $table->integer('exhibit_number')->nullable(); // رقم المعرض
             

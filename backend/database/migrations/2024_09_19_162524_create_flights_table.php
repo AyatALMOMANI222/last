@@ -21,7 +21,7 @@ class CreateFlightsTable extends Migration
             $table->unsignedBigInteger('main_user_id')->nullable();
 
          
-            $table->string('passport_image')->nullable();  // صورة جواز السفر
+            $table->string(column: 'passport_image')->nullable();  // صورة جواز السفر
             $table->string('departure_airport', 100);  // مطار المغادرة
             $table->string('arrival_airport', 100);  // مطار العودة
             $table->date('departure_date');  // تاريخ القدوم

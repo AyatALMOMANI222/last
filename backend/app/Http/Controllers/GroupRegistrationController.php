@@ -159,7 +159,7 @@ class GroupRegistrationController extends Controller
     {
         // تحقق من صحة المدخلات
         $request->validate([
-            'excel_file' => 'required|file|mimes:xlsx,csv,xls', // تحقق من صحة ملف إكسل
+            'excel_file' => 'required|mimes:xlsx,xls,csv', // السماح فقط بملفات Excel و CSV
         ]);
 
         try {
@@ -239,12 +239,68 @@ class GroupRegistrationController extends Controller
     }
 
 
+    // public function getAllActiveRegistrations(Request $request)
+    // {
+    //     try {
+    //         $search = $request->input('search', '');
+    //         $perPage = $request->input('per_page', 10); // Number of results per page
+
+    //         // Fetch active registrations with pagination
+    //         $registrations = GroupRegistration::where('is_active', true)
+    //             ->with('user') // Fetch the related user data
+    //             ->when($search, function ($query) use ($search) {
+    //                 $query->whereHas('user', function ($q) use ($search) {
+    //                     $q->where('name', 'LIKE', "%{$search}%")
+    //                         ->orWhere('email', 'LIKE', "%{$search}%")
+    //                         ->orWhere('phone', 'LIKE', "%{$search}%");
+    //                 })->orWhere('organization_name', 'LIKE', "%{$search}%")
+    //                     ->orWhere('contact_person', 'LIKE', "%{$search}%");
+    //             })
+    //             ->paginate($perPage);
+
+    //         // Modify the data to merge fields from both GroupRegistration and User tables
+    //         $registrationsWithDetails = $registrations->items();
+
+    //         $registrationsWithDetails = array_map(function ($registration) {
+    //             return [
+    //                 'user_name' => $registration->user->name ?? 'N/A', // From User table
+    //                 'user_email' => $registration->user->email ?? 'N/A', // From User table
+    //                 'contact_phone' => $registration->user->phone_number ?? 'N/A', // From User table
+    //                 'organization_name' => $registration->user->name ?? 'N/A', // تخزين اسم المستخدم في organization_name
+    //                 'contact_person' => $registration->contact_person,
+    //                 'contact_email' => $registration->contact_email,
+    //                 // 'contact_phone' => $registration->contact_phone,
+    //                 'number_of_doctors' => $registration->number_of_doctors,
+    //                 'excel_file' => $registration->excel_file,
+    //                 'update_deadline' => $registration->update_deadline,
+    //             ];
+    //         }, $registrationsWithDetails);
+
+    //         // Return the data with pagination details
+    //         return response()->json([
+    //             'message' => 'Active registrations retrieved successfully.',
+    //             'registrations' => [
+    //                 'data' => $registrationsWithDetails,
+    //                 'current_page' => $registrations->currentPage(),
+    //                 'last_page' => $registrations->lastPage(),
+    //                 'per_page' => $registrations->perPage(),
+    //                 'total' => $registrations->total(),
+    //             ],
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Failed to retrieve active registrations.',
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
     public function getAllActiveRegistrations(Request $request)
     {
         try {
             $search = $request->input('search', '');
             $perPage = $request->input('per_page', 10); // Number of results per page
-
+    
             // Fetch active registrations with pagination
             $registrations = GroupRegistration::where('is_active', true)
                 ->with('user') // Fetch the related user data
@@ -257,35 +313,30 @@ class GroupRegistrationController extends Controller
                         ->orWhere('contact_person', 'LIKE', "%{$search}%");
                 })
                 ->paginate($perPage);
-
+    
             // Modify the data to merge fields from both GroupRegistration and User tables
             $registrationsWithDetails = $registrations->items();
-
+    
             $registrationsWithDetails = array_map(function ($registration) {
                 return [
                     'user_name' => $registration->user->name ?? 'N/A', // From User table
                     'user_email' => $registration->user->email ?? 'N/A', // From User table
                     'contact_phone' => $registration->user->phone_number ?? 'N/A', // From User table
-                    'organization_name' => $registration->user->name ?? 'N/A', // تخزين اسم المستخدم في organization_name
+                    'organization_name' => $registration->user->name ?? 'N/A', // Storing user name in organization_name
                     'contact_person' => $registration->contact_person,
                     'contact_email' => $registration->contact_email,
-                    // 'contact_phone' => $registration->contact_phone,
                     'number_of_doctors' => $registration->number_of_doctors,
                     'excel_file' => $registration->excel_file,
                     'update_deadline' => $registration->update_deadline,
                 ];
             }, $registrationsWithDetails);
-
-            // Return the data with pagination details
+    
+            // Return the data with pagination details in the requested format
             return response()->json([
                 'message' => 'Active registrations retrieved successfully.',
-                'registrations' => [
-                    'data' => $registrationsWithDetails,
-                    'current_page' => $registrations->currentPage(),
-                    'last_page' => $registrations->lastPage(),
-                    'per_page' => $registrations->perPage(),
-                    'total' => $registrations->total(),
-                ],
+                'registrations' => $registrationsWithDetails,
+                'currentPage' => $registrations->currentPage(),
+                'totalPages' => $registrations->lastPage(),
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -294,8 +345,7 @@ class GroupRegistrationController extends Controller
             ], 500);
         }
     }
-
-
+    
 }
 
 

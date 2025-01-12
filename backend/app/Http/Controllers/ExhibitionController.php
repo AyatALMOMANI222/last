@@ -100,7 +100,7 @@ public function getExhibitionsByType($type)
             'location' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable',
             'status' => 'nullable|in:upcoming,past',
             'conference_id' => 'nullable|exists:conferences,id',
         ]);

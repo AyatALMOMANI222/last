@@ -33,7 +33,8 @@ class Speaker extends Model
         'is_visa_payment_required',
         'departure_date',
         'arrival_date',
-        'video'
+        'video',
+        'link'
     ];
 
     // العلاقة مع نموذج User (متحدث ينتمي إلى مستخدم واحد)

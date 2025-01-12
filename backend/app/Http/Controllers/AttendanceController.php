@@ -23,7 +23,7 @@ class AttendanceController extends Controller
         // Assuming user_id and conference_id are dynamically set or passed, not hardcoded
         $user_id = $request->input('user_id');
         $conference_id = $request->input('conference_id');
-    
+
         try {
             // Validate the incoming request data
             $validatedData = $request->validate([
@@ -38,23 +38,23 @@ class AttendanceController extends Controller
                 'is_visa_payment_required' => 'nullable|boolean', // The new field
                 // Include any other fields that need to be validated
             ]);
-    
+
             // Check if the Attendance already exists for this user and conference
             $existingAttendance = Attendance::where('user_id', $user_id)
                 ->where('conference_id', $conference_id)
                 ->first();
-    
+
             if ($existingAttendance) {
                 return response()->json([
                     'error' => 'Attendance already exists for this user and conference.'
                 ], 409); // Use 409 for conflict
             }
-    
+
             // Check if conference_user record exists and update only is_visa_payment_required
             $conferenceUser = ConferenceUser::where('user_id', $user_id)
                 ->where('conference_id', $conference_id)
                 ->first();
-    
+
             if ($conferenceUser) {
                 // Update only the is_visa_payment_required field
                 $conferenceUser->is_visa_payment_required = $request->input('is_visa_payment_required', false);
@@ -64,7 +64,7 @@ class AttendanceController extends Controller
                     'error' => 'ConferenceUser record not found for this user and conference.'
                 ], 404);
             }
-    
+
             // Create a new Attendance entry with the required default values
             $attendance = Attendance::create(array_merge($validatedData, [
                 'user_id' => $user_id,
@@ -76,12 +76,12 @@ class AttendanceController extends Controller
                 'includes_certificate' => $request->includes_certificate ?? 0,
                 'includes_lecture_attendance' => $request->includes_lecture_attendance ?? 0,
             ]));
-    
+
             // Update user status to "approved"
             $user = User::findOrFail($user_id);
             $user->status = 'approved';
             $user->save();
-    
+
             // إرسال إشعار إلى السبيكر باستخدام نموذج Notification
             $userNotification = Notification::create([
                 'user_id' => $user_id,
@@ -89,17 +89,17 @@ class AttendanceController extends Controller
                 'conference_id' => $conference_id,
                 'is_read' => false, // يمكنك تعيين القيمة حسب الحاجة
             ]);
-    
+
             // Broadcast the notification
             broadcast(new NotificationSent($userNotification));
-    
+
             // Return a success response
             return response()->json([
                 'message' => 'Attendance created successfully, and user status updated to approved.',
                 'attendance' => $attendance, // Fixed the typo: Attendance -> attendance
                 'conference_user' => $conferenceUser,
             ], 201); // Use 201 for created resource
-    
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors
             return response()->json([
@@ -114,7 +114,7 @@ class AttendanceController extends Controller
             ], 500);
         }
     }
-    
+
 
 
 
@@ -151,4 +151,37 @@ class AttendanceController extends Controller
             ], 500);
         }
     }
+    public function getAttendance(Request $request)
+    {
+        // Get the 'page' query parameter, default to 1 if not provided
+        $page = $request->query('page', 1);
+
+        // Define the number of attendance records per page
+        $attendancePerPage = 3;
+
+        // Calculate the offset for the current page
+        $offset = ($page - 1) * $attendancePerPage;
+
+        // Fetch attendance from the database and include user and conference data (using Eloquent's 'with' method to eager load the 'user' and 'conference' relationships)
+        $totalAttendance = Attendance::count(); // Total number of attendance records
+        $attendance = Attendance::with(['user', 'conference']) // Eager load user and conference data for each attendance record
+            ->skip($offset)
+            ->take($attendancePerPage)
+            ->get(); // Fetch paginated attendance records
+
+        // Calculate the total number of pages
+        $totalPages = ceil($totalAttendance / $attendancePerPage);
+
+        // Prepare the response data
+        $response = [
+            'message' => 'Attendance records fetched successfully.',
+            'attendance' => $attendance,
+            'currentPage' => $page,
+            'totalPages' => $totalPages
+        ];
+
+        // Return the JSON response
+        return response()->json($response);
+    }
+
 }
